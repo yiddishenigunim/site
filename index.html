@@ -6219,16 +6219,16 @@
 
         // Render home page
         function renderHomePage(container) {
-            // Use cached statistics from STATS table instead of calculating from loaded data
-            // This reduces Cloudflare API usage by not needing to load all songs
-            // Show loading state if stats haven't loaded yet
-            const totalSongs = cachedStats.niggunim || (allSongs.length > 0 ? allSongs.length : '<span class="stat-loading">...</span>');
-            const totalChatzeros = cachedStats.chatzeros || (Object.keys(categories.chatzeros).length > 0 ? Object.keys(categories.chatzeros).length : '<span class="stat-loading">...</span>');
-            const totalMechabrim = cachedStats.mechabrim || (Object.keys(categories.mechabrim).length > 0 ? Object.keys(categories.mechabrim).length : '<span class="stat-loading">...</span>');
-            const totalVerter = cachedStats.verter || (Object.keys(categories.verter).length > 0 ? Object.keys(categories.verter).length : '<span class="stat-loading">...</span>');
-            const totalZmanim = cachedStats.zmanim || (Object.keys(zmaninInfo).length > 0 ? Object.keys(zmaninInfo).length : '<span class="stat-loading">...</span>');
-            const totalCollections = cachedStats.collections || (Object.keys(categories.collections).length > 0 ? Object.keys(categories.collections).length : '<span class="stat-loading">...</span>');
-            const totalPiyutim = cachedStats.piyutim || (Object.keys(categories.zmanim).length > 0 ? Object.keys(categories.zmanim).length : '<span class="stat-loading">...</span>');
+            // Use ONLY the statistics from STATS table - never calculate from loaded data
+            // The STATS table contains Coda formulas that calculate the current accurate counts
+            // Show loading state (...) only if stats haven't loaded yet
+            const totalSongs = cachedStats.niggunim > 0 ? cachedStats.niggunim : '<span class="stat-loading">...</span>';
+            const totalChatzeros = cachedStats.chatzeros > 0 ? cachedStats.chatzeros : '<span class="stat-loading">...</span>';
+            const totalMechabrim = cachedStats.mechabrim > 0 ? cachedStats.mechabrim : '<span class="stat-loading">...</span>';
+            const totalVerter = cachedStats.verter > 0 ? cachedStats.verter : '<span class="stat-loading">...</span>';
+            const totalZmanim = cachedStats.zmanim > 0 ? cachedStats.zmanim : '<span class="stat-loading">...</span>';
+            const totalCollections = cachedStats.collections > 0 ? cachedStats.collections : '<span class="stat-loading">...</span>';
+            const totalPiyutim = cachedStats.piyutim > 0 ? cachedStats.piyutim : '<span class="stat-loading">...</span>';
             
             container.innerHTML = `
                 <div class="home-page">
