@@ -5098,7 +5098,7 @@
         const WORKER_URL = 'https://api.oitzerhanigunim.org/api/';
         const DOC_ID = '6QcJRx7e13';
         const TABLE_ID = 'grid-YycmDjJ8pS'; // Songs table
-        
+
         // Additional table IDs from Coda doc
         const MECHABRIM_TABLE_ID = 'grid-bCbfhDmi82'; // מחברים טעיבל
         const CHATZEROS_TABLE_ID = 'grid-4-KYWDJ5l9'; // חצרות טעיבל
@@ -5109,6 +5109,18 @@
         const RESOURCES_TABLE_ID = 'grid-8Gfz8rXNUV'; // רעסורסן טעיבל
         const DOCUMENTS_TABLE_ID = 'grid-3wKzDnkPg-'; // דאקומענטן טעיבל
         const ALBUMS_TABLE_ID = 'grid-bbTaa18Jhx'; // אלבומס טעיבל
+        const STATS_TABLE_ID = 'grid-0wlx_Yad4N'; // סטאטיסטיקס טעיבל
+
+        // Stats table column IDs (all in row 1)
+        const STATS_COLS = {
+            niggunim: 'c-3wC2msD8Ll',
+            mechabrim: 'c-5u6KHT3ZLF',
+            verter: 'c-IadpFStSEK',
+            chatzeros: 'c-i--tHnlwAu',
+            zmanim: 'c-ZFj4le3Q0t',
+            piyutim: 'c-0X_OHjkDDx',
+            collections: 'c-Y9SNk0BOGV'
+        };
 
         // Helper to escape strings for use in onclick attributes
         // Uses base64 encoding to safely handle ALL special characters including quotes
@@ -5141,6 +5153,17 @@
         let currentPageView = 'home';
         let searchQuery = ''; // Search query for songs
         let audioOnlyFilter = true; // Show only songs with audio (default on)
+
+        // Cached statistics from STATS table (to avoid reloading/recalculating)
+        let cachedStats = {
+            niggunim: 0,
+            mechabrim: 0,
+            verter: 0,
+            chatzeros: 0,
+            zmanim: 0,
+            piyutim: 0,
+            collections: 0
+        };
 
         // Category data
         let categories = {
@@ -5646,6 +5669,35 @@
             await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
         }
 
+        // Fetch statistics from STATS table (only row 1)
+        async function fetchStatistics() {
+            try {
+                const url = `${WORKER_URL}docs/${DOC_ID}/tables/${STATS_TABLE_ID}/rows?valueFormat=simple&limit=1`;
+                const response = await fetch(url);
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                const data = await response.json();
+
+                if (data.items && data.items.length > 0) {
+                    const row = data.items[0];
+                    const values = row.values;
+
+                    // Extract statistics from the row
+                    cachedStats.niggunim = parseInt(extractText(values[STATS_COLS.niggunim])) || 0;
+                    cachedStats.mechabrim = parseInt(extractText(values[STATS_COLS.mechabrim])) || 0;
+                    cachedStats.verter = parseInt(extractText(values[STATS_COLS.verter])) || 0;
+                    cachedStats.chatzeros = parseInt(extractText(values[STATS_COLS.chatzeros])) || 0;
+                    cachedStats.zmanim = parseInt(extractText(values[STATS_COLS.zmanim])) || 0;
+                    cachedStats.piyutim = parseInt(extractText(values[STATS_COLS.piyutim])) || 0;
+                    cachedStats.collections = parseInt(extractText(values[STATS_COLS.collections])) || 0;
+
+                    console.log('Statistics loaded from STATS table:', cachedStats);
+                }
+            } catch (error) {
+                console.log('Could not fetch statistics:', error.message);
+                // If fetching fails, we'll fall back to calculated stats when needed
+            }
+        }
+
         // Fetch songs from API
         async function fetchSongs() {
             try {
@@ -5655,8 +5707,9 @@
                     renderCurrentPage();
                 }
                 
-                // Fetch all the category info
+                // Fetch all the category info and statistics
                 const infoPromises = [
+                    fetchStatistics(), // Load statistics first
                     fetchChatzerosInfo(),
                     fetchMechabrimInfo(),
                     fetchVerterInfo(),
@@ -5705,11 +5758,14 @@
         }
         
         // Fetch songs in background with pagination
+        // Modified to load fewer pages at once to reduce Cloudflare API usage
         async function fetchSongsInBackground() {
             try {
                 let allRows = [];
                 let pageToken = null;
-                
+                let pagesLoaded = 0;
+                const maxPagesToLoad = 3; // Load only first 3 pages (~150-200 songs)
+
                 do {
                     const url = `${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows?valueFormat=rich${pageToken ? '&pageToken=' + pageToken : ''}`;
                     const response = await fetch(url);
@@ -5717,20 +5773,27 @@
                     const data = await response.json();
                     allRows = allRows.concat(data.items || []);
                     pageToken = data.nextPageToken;
-                    
+                    pagesLoaded++;
+
                     // Process songs so far and update counts
                     processSongsData(allRows);
-                    
-                    console.log(`Loaded ${allRows.length} songs...`);
+
+                    console.log(`Loaded ${allRows.length} songs (page ${pagesLoaded})...`);
+
+                    // Stop after loading maxPagesToLoad pages to reduce API usage
+                    if (pagesLoaded >= maxPagesToLoad) {
+                        console.log(`Loaded first ${pagesLoaded} pages. Total songs: ${allRows.length}`);
+                        break;
+                    }
                 } while (pageToken);
-                
-                console.log(`Finished loading ${allRows.length} total songs`);
-                
+
+                console.log(`Finished loading ${allRows.length} songs from ${pagesLoaded} pages`);
+
                 // Final re-render if on songs page
                 if (currentPageView === 'songs') {
                     renderCurrentPage();
                 }
-                
+
             } catch (error) {
                 console.error('Error loading songs:', error);
             }
@@ -6141,13 +6204,15 @@
 
         // Render home page
         function renderHomePage(container) {
-            const totalSongs = allSongs.length;
-            const totalChatzeros = Object.keys(categories.chatzeros).length;
-            const totalMechabrim = Object.keys(categories.mechabrim).length;
-            const totalVerter = Object.keys(categories.verter).length;
-            const totalZmanim = Object.keys(zmaninInfo).length;
-            const totalCollections = Object.keys(categories.collections).length;
-            const totalPiyutim = Object.keys(categories.zmanim).length;
+            // Use cached statistics from STATS table instead of calculating from loaded data
+            // This reduces Cloudflare API usage by not needing to load all songs
+            const totalSongs = cachedStats.niggunim || allSongs.length;
+            const totalChatzeros = cachedStats.chatzeros || Object.keys(categories.chatzeros).length;
+            const totalMechabrim = cachedStats.mechabrim || Object.keys(categories.mechabrim).length;
+            const totalVerter = cachedStats.verter || Object.keys(categories.verter).length;
+            const totalZmanim = cachedStats.zmanim || Object.keys(zmaninInfo).length;
+            const totalCollections = cachedStats.collections || Object.keys(categories.collections).length;
+            const totalPiyutim = cachedStats.piyutim || Object.keys(categories.zmanim).length;
             
             container.innerHTML = `
                 <div class="home-page">
