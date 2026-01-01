@@ -5207,6 +5207,14 @@
         let activeFilters = {
             chatzer: [],
             mechaber: [],
+            verter: [],
+            zman: [],
+            collection: [],
+            scale: [],
+            ritem: [],
+            gezungen: [],
+            maure: []
+        };
 
         // ========================================
         // CACHE MANAGER - Minimize API calls
@@ -5290,14 +5298,6 @@
 
         // Clear old caches on load
         CacheManager.clearOldCaches();
-            verter: [],
-            zman: [],
-            collection: [],
-            scale: [],
-            ritem: [],
-            gezungen: [],
-            maure: []
-        };
 
         // Audio player
         const audioPlayer = document.getElementById('audioPlayer');
