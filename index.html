@@ -514,6 +514,17 @@
             margin-bottom: 5px;
         }
 
+        .stat-loading {
+            color: var(--text-light);
+            opacity: 0.5;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
         .home-stat-label {
             font-size: 0.95em;
             color: var(--text-muted);
@@ -5689,8 +5700,6 @@
                     cachedStats.zmanim = parseInt(extractText(values[STATS_COLS.zmanim])) || 0;
                     cachedStats.piyutim = parseInt(extractText(values[STATS_COLS.piyutim])) || 0;
                     cachedStats.collections = parseInt(extractText(values[STATS_COLS.collections])) || 0;
-
-                    console.log('Statistics loaded from STATS table:', cachedStats);
                 }
             } catch (error) {
                 console.log('Could not fetch statistics:', error.message);
@@ -5707,9 +5716,17 @@
                     renderCurrentPage();
                 }
                 
-                // Fetch all the category info and statistics
-                const infoPromises = [
-                    fetchStatistics(), // Load statistics first
+                // Fetch statistics first and show immediately
+                await fetchStatistics();
+                console.log('Statistics loaded from STATS table:', cachedStats);
+
+                // Re-render home page with stats (don't wait for other category info)
+                if (!window.location.hash || window.location.hash === '#/home' || window.location.hash === '#/') {
+                    renderCurrentPage();
+                }
+
+                // Load category info in background
+                const categoryPromises = [
                     fetchChatzerosInfo(),
                     fetchMechabrimInfo(),
                     fetchVerterInfo(),
@@ -5720,9 +5737,9 @@
                     fetchDocumentsInfo(),
                     fetchAlbumsInfo()
                 ];
-                
+
                 // Wait for category info to load
-                await Promise.all(infoPromises);
+                await Promise.all(categoryPromises);
                 console.log('Category info loaded:',
                     'Chatzeros:', Object.keys(chatzerosInfo).length,
                     'Mechabrim:', Object.keys(mechabrimInfo).length,
@@ -5731,13 +5748,10 @@
                     'Piyutim:', Object.keys(piyutimInfo).length,
                     'Collections:', Object.keys(collectionsInfo).length
                 );
-                
+
                 // Navigate based on URL (if not home, now we have the data)
                 if (window.location.hash && window.location.hash !== '#/home' && window.location.hash !== '#/') {
                     handleURLChange();
-                } else {
-                    // Re-render home with actual data
-                    renderCurrentPage();
                 }
                 
                 // Now fetch songs in background
@@ -6206,13 +6220,14 @@
         function renderHomePage(container) {
             // Use cached statistics from STATS table instead of calculating from loaded data
             // This reduces Cloudflare API usage by not needing to load all songs
-            const totalSongs = cachedStats.niggunim || allSongs.length;
-            const totalChatzeros = cachedStats.chatzeros || Object.keys(categories.chatzeros).length;
-            const totalMechabrim = cachedStats.mechabrim || Object.keys(categories.mechabrim).length;
-            const totalVerter = cachedStats.verter || Object.keys(categories.verter).length;
-            const totalZmanim = cachedStats.zmanim || Object.keys(zmaninInfo).length;
-            const totalCollections = cachedStats.collections || Object.keys(categories.collections).length;
-            const totalPiyutim = cachedStats.piyutim || Object.keys(categories.zmanim).length;
+            // Show loading state if stats haven't loaded yet
+            const totalSongs = cachedStats.niggunim || (allSongs.length > 0 ? allSongs.length : '<span class="stat-loading">...</span>');
+            const totalChatzeros = cachedStats.chatzeros || (Object.keys(categories.chatzeros).length > 0 ? Object.keys(categories.chatzeros).length : '<span class="stat-loading">...</span>');
+            const totalMechabrim = cachedStats.mechabrim || (Object.keys(categories.mechabrim).length > 0 ? Object.keys(categories.mechabrim).length : '<span class="stat-loading">...</span>');
+            const totalVerter = cachedStats.verter || (Object.keys(categories.verter).length > 0 ? Object.keys(categories.verter).length : '<span class="stat-loading">...</span>');
+            const totalZmanim = cachedStats.zmanim || (Object.keys(zmaninInfo).length > 0 ? Object.keys(zmaninInfo).length : '<span class="stat-loading">...</span>');
+            const totalCollections = cachedStats.collections || (Object.keys(categories.collections).length > 0 ? Object.keys(categories.collections).length : '<span class="stat-loading">...</span>');
+            const totalPiyutim = cachedStats.piyutim || (Object.keys(categories.zmanim).length > 0 ? Object.keys(categories.zmanim).length : '<span class="stat-loading">...</span>');
             
             container.innerHTML = `
                 <div class="home-page">
