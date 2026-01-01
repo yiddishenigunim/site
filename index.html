@@ -5207,6 +5207,89 @@
         let activeFilters = {
             chatzer: [],
             mechaber: [],
+
+        // ========================================
+        // CACHE MANAGER - Minimize API calls
+        // ========================================
+        const CACHE_VERSION = 'v2'; // Increment when data structure changes
+        const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+        const CacheManager = {
+            // Get cached data if valid
+            get(key) {
+                try {
+                    const cacheKey = `${CACHE_VERSION}_${key}`;
+                    const cached = localStorage.getItem(cacheKey);
+                    if (!cached) return null;
+
+                    const { data, timestamp } = JSON.parse(cached);
+                    const now = Date.now();
+
+                    // Check if cache expired
+                    if (now - timestamp > CACHE_DURATION) {
+                        console.log(`⏰ Cache expired for ${key}`);
+                        localStorage.removeItem(cacheKey);
+                        return null;
+                    }
+
+                    console.log(`✅ Using cached ${key} (age: ${Math.round((now - timestamp) / 1000 / 60)} minutes)`);
+                    return data;
+                } catch (error) {
+                    console.error(`Cache read error for ${key}:`, error);
+                    return null;
+                }
+            },
+
+            // Save data to cache
+            set(key, data) {
+                try {
+                    const cacheKey = `${CACHE_VERSION}_${key}`;
+                    const cacheData = {
+                        data: data,
+                        timestamp: Date.now()
+                    };
+                    localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+                    console.log(`💾 Cached ${key}`);
+                } catch (error) {
+                    console.error(`Cache write error for ${key}:`, error);
+                    // If localStorage is full, clear old caches
+                    if (error.name === 'QuotaExceededError') {
+                        this.clearOldCaches();
+                        // Try again
+                        try {
+                            localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+                        } catch (e) {
+                            console.error('Failed to cache even after cleanup');
+                        }
+                    }
+                }
+            },
+
+            // Clear all caches (for testing or when structure changes)
+            clearAll() {
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (key.startsWith(CACHE_VERSION + '_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                console.log('🗑️ All caches cleared');
+            },
+
+            // Clear old version caches
+            clearOldCaches() {
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (!key.startsWith(CACHE_VERSION + '_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                console.log('🗑️ Old version caches cleared');
+            }
+        };
+
+        // Clear old caches on load
+        CacheManager.clearOldCaches();
             verter: [],
             zman: [],
             collection: [],
@@ -5311,9 +5394,20 @@
             return null;
         }
 
-        // Generic function to fetch table info with pagination
+        // Generic function to fetch table info with pagination - with caching
         async function fetchTableInfo(tableId, infoObject, tableName) {
             try {
+                // Check cache first
+                const cacheKey = `table_${tableId}`;
+                const cached = CacheManager.get(cacheKey);
+                if (cached) {
+                    Object.assign(infoObject, cached);
+                    console.log(`✅ ${tableName} loaded from cache (${Object.keys(cached).length} items)`);
+                    return;
+                }
+
+                console.log(`📡 Fetching ${tableName} from API...`);
+
                 // Get columns first
                 const columnsResponse = await fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${tableId}/columns`);
                 const columnsData = await columnsResponse.json();
@@ -5644,7 +5738,11 @@
                 if (sampleWithDesc) {
                     console.log(`Sample ${tableName} with description:`, sampleWithDesc[0], 'desc:', sampleWithDesc[1].description?.substring(0, 100));
                 }
-                
+
+                // Save to cache
+                CacheManager.set(cacheKey, infoObject);
+                console.log(`💾 ${tableName} cached`);
+
             } catch (error) {
                 console.log(`Could not fetch ${tableName} info:`, error.message);
             }
@@ -5687,12 +5785,19 @@
             await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
         }
 
-        // Fetch statistics from STATS table (only row 1)
+        // Fetch statistics from STATS table (only row 1) - with caching
         async function fetchStatistics() {
             try {
-                console.log('Fetching statistics from:', STATS_TABLE_ID);
+                // Check cache first
+                const cached = CacheManager.get('statistics');
+                if (cached) {
+                    Object.assign(cachedStats, cached);
+                    console.log('✅ Statistics loaded from cache:', cachedStats);
+                    return;
+                }
+
+                console.log('📡 Fetching statistics from API:', STATS_TABLE_ID);
                 const url = `${WORKER_URL}docs/${DOC_ID}/tables/${STATS_TABLE_ID}/rows?valueFormat=simple&limit=1`;
-                console.log('Stats URL:', url);
 
                 const response = await fetch(url);
                 console.log('Stats response status:', response.status);
@@ -5704,12 +5809,10 @@
                 }
 
                 const data = await response.json();
-                console.log('Stats data received:', data);
 
                 if (data.items && data.items.length > 0) {
                     const row = data.items[0];
                     const values = row.values;
-                    console.log('Stats row values:', values);
 
                     // Extract statistics from the row
                     cachedStats.niggunim = parseInt(extractText(values[STATS_COLS.niggunim])) || 0;
@@ -5720,7 +5823,10 @@
                     cachedStats.piyutim = parseInt(extractText(values[STATS_COLS.piyutim])) || 0;
                     cachedStats.collections = parseInt(extractText(values[STATS_COLS.collections])) || 0;
 
-                    console.log('✅ Statistics loaded successfully:', cachedStats);
+                    // Save to cache
+                    CacheManager.set('statistics', cachedStats);
+
+                    console.log('✅ Statistics loaded from API and cached:', cachedStats);
                 } else {
                     console.error('❌ No stats data in response');
                 }
