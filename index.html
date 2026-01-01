@@ -4288,6 +4288,22 @@
             opacity: 0.5;
         }
 
+        .loading-songs-message {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-muted);
+        }
+
+        .loading-songs-message .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--primary-pale);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .header-top {
@@ -5003,10 +5019,7 @@
 
     <!-- Main Content -->
     <main class="main-content" id="mainContent">
-        <div class="loading" id="loadingSpinner">
-            <div class="spinner"></div>
-            <p>לאדינג ניגונים...</p>
-        </div>
+        <!-- Content will be rendered by JavaScript -->
     </main>
 
     <!-- Player -->
@@ -5636,7 +5649,13 @@
         // Fetch songs from API
         async function fetchSongs() {
             try {
-                // Start fetching additional info in parallel
+                // Render home page immediately (before data loads)
+                if (!window.location.hash || window.location.hash === '#/home' || window.location.hash === '#/') {
+                    updateURL();
+                    renderCurrentPage();
+                }
+                
+                // Fetch all the category info
                 const infoPromises = [
                     fetchChatzerosInfo(),
                     fetchMechabrimInfo(),
@@ -5649,11 +5668,77 @@
                     fetchAlbumsInfo()
                 ];
                 
-                const response = await fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows?valueFormat=rich`);
-                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                const data = await response.json();
+                // Wait for category info to load
+                await Promise.all(infoPromises);
+                console.log('Category info loaded:',
+                    'Chatzeros:', Object.keys(chatzerosInfo).length,
+                    'Mechabrim:', Object.keys(mechabrimInfo).length,
+                    'Verter:', Object.keys(verterInfo).length,
+                    'Zmanim:', Object.keys(zmaninInfo).length,
+                    'Piyutim:', Object.keys(piyutimInfo).length,
+                    'Collections:', Object.keys(collectionsInfo).length
+                );
+                
+                // Navigate based on URL (if not home, now we have the data)
+                if (window.location.hash && window.location.hash !== '#/home' && window.location.hash !== '#/') {
+                    handleURLChange();
+                } else {
+                    // Re-render home with actual data
+                    renderCurrentPage();
+                }
+                
+                // Now fetch songs in background
+                fetchSongsInBackground();
 
-                allSongs = data.items.map((item, index) => {
+            } catch (error) {
+                console.error('Error:', error);
+                const spinner = document.getElementById('loadingSpinner');
+                if (spinner) {
+                    spinner.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">❌</div>
+                            <p>גרייז: ${error.message}</p>
+                        </div>
+                    `;
+                }
+            }
+        }
+        
+        // Fetch songs in background with pagination
+        async function fetchSongsInBackground() {
+            try {
+                let allRows = [];
+                let pageToken = null;
+                
+                do {
+                    const url = `${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows?valueFormat=rich${pageToken ? '&pageToken=' + pageToken : ''}`;
+                    const response = await fetch(url);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const data = await response.json();
+                    allRows = allRows.concat(data.items || []);
+                    pageToken = data.nextPageToken;
+                    
+                    // Process songs so far and update counts
+                    processSongsData(allRows);
+                    
+                    console.log(`Loaded ${allRows.length} songs...`);
+                } while (pageToken);
+                
+                console.log(`Finished loading ${allRows.length} total songs`);
+                
+                // Final re-render if on songs page
+                if (currentPageView === 'songs') {
+                    renderCurrentPage();
+                }
+                
+            } catch (error) {
+                console.error('Error loading songs:', error);
+            }
+        }
+        
+        // Process songs data array
+        function processSongsData(rows) {
+            allSongs = rows.map((item, index) => {
                     const values = item.values;
                     
                     // Find customId from any column ending with "ID"
@@ -5686,15 +5771,13 @@
                         return ext === 'pdf';
                     };
                     
-                    // Extract main audio (Recording 1)
+                    // Extract main audio from File column (c-XmTlDf3xfw)
                     let mainAudioUrl = null;
-                    const attachment1 = values['c-BL2nOfN1EQ'];
-                    if (Array.isArray(attachment1) && attachment1.length > 0 && attachment1[0].url) {
-                        if (isAudioFile(attachment1[0].name)) {
-                            mainAudioUrl = attachment1[0].url;
+                    const fileAttachment = values['c-XmTlDf3xfw'];
+                    if (Array.isArray(fileAttachment) && fileAttachment.length > 0 && fileAttachment[0].url) {
+                        if (isAudioFile(fileAttachment[0].name)) {
+                            mainAudioUrl = fileAttachment[0].url;
                         }
-                    } else if (typeof attachment1 === 'string' && attachment1.startsWith('http')) {
-                        mainAudioUrl = attachment1;
                     }
                     
                     // Extract additional recordings, images, and PDFs
@@ -5702,28 +5785,27 @@
                     const images = [];
                     const pdfs = [];
                     
-                    // Process attachment 1
-                    if (Array.isArray(attachment1) && attachment1.length > 0 && attachment1[0].url) {
-                        const file = attachment1[0];
-                        const details1 = extractText(values['c-Ixm4WDw3Kn']) || '';
+                    // Process File attachment (c-XmTlDf3xfw) - main attachment
+                    if (Array.isArray(fileAttachment) && fileAttachment.length > 0 && fileAttachment[0].url) {
+                        const file = fileAttachment[0];
                         if (isAudioFile(file.name)) {
                             recordings.push({
                                 url: file.url,
-                                name: file.name || 'רעקארדינג 1',
-                                details: details1
+                                name: file.name || 'רעקארדינג',
+                                details: ''
                             });
                         } else if (isImageFile(file.name)) {
-                            images.push({ url: file.url, name: file.name, details: details1 });
+                            images.push({ url: file.url, name: file.name, details: '' });
                         } else if (isPdfFile(file.name)) {
-                            pdfs.push({ url: file.url, name: file.name, details: details1 });
+                            pdfs.push({ url: file.url, name: file.name, details: '' });
                         }
                     }
                     
-                    // Process attachment 2
-                    const attachment2 = values['c-ThBM0qqqm4'];
+                    // Process attachment 2 (c-oqB3imNNfk with c-_TOU9FXYYn details)
+                    const attachment2 = values['c-oqB3imNNfk'];
                     if (Array.isArray(attachment2) && attachment2.length > 0 && attachment2[0].url) {
                         const file = attachment2[0];
-                        const details2 = extractText(values['c-E3E5DY6JA6']) || '';
+                        const details2 = extractText(values['c-_TOU9FXYYn']) || '';
                         if (isAudioFile(file.name)) {
                             recordings.push({
                                 url: file.url,
@@ -5737,11 +5819,11 @@
                         }
                     }
                     
-                    // Process attachment 3
-                    const attachment3 = values['c-NSlRJYIu9k'];
+                    // Process attachment 3 (c-oGF6C78GZl with c-dr-m1GnYty details)
+                    const attachment3 = values['c-oGF6C78GZl'];
                     if (Array.isArray(attachment3) && attachment3.length > 0 && attachment3[0].url) {
                         const file = attachment3[0];
-                        const details3 = extractText(values['c-avaiZTId4Z']) || '';
+                        const details3 = extractText(values['c-dr-m1GnYty']) || '';
                         if (isAudioFile(file.name)) {
                             recordings.push({
                                 url: file.url,
@@ -5754,12 +5836,48 @@
                             pdfs.push({ url: file.url, name: file.name, details: details3 });
                         }
                     }
+                    
+                    // Process attachment 4 (c-pf9zW3wypK with c-pbtldr4CXD details)
+                    const attachment4 = values['c-pf9zW3wypK'];
+                    if (Array.isArray(attachment4) && attachment4.length > 0 && attachment4[0].url) {
+                        const file = attachment4[0];
+                        const details4 = extractText(values['c-pbtldr4CXD']) || '';
+                        if (isAudioFile(file.name)) {
+                            recordings.push({
+                                url: file.url,
+                                name: file.name || 'רעקארדינג 4',
+                                details: details4
+                            });
+                        } else if (isImageFile(file.name)) {
+                            images.push({ url: file.url, name: file.name, details: details4 });
+                        } else if (isPdfFile(file.name)) {
+                            pdfs.push({ url: file.url, name: file.name, details: details4 });
+                        }
+                    }
+                    
+                    // Process attachment 6 (c-_q44nnca44 with c-l9TdqiWUNg details)
+                    const attachment6 = values['c-_q44nnca44'];
+                    if (Array.isArray(attachment6) && attachment6.length > 0 && attachment6[0].url) {
+                        const file = attachment6[0];
+                        const details6 = extractText(values['c-l9TdqiWUNg']) || '';
+                        if (isAudioFile(file.name)) {
+                            recordings.push({
+                                url: file.url,
+                                name: file.name || 'רעקארדינג 6',
+                                details: details6
+                            });
+                        } else if (isImageFile(file.name)) {
+                            images.push({ url: file.url, name: file.name, details: details6 });
+                        } else if (isPdfFile(file.name)) {
+                            pdfs.push({ url: file.url, name: file.name, details: details6 });
+                        }
+                    }
 
                     // Find personality field (פערזענליכקייט) - column c-mxsPhpZeVM
                     const songName = extractText(values['c-6qqDF7NYmv']) || '';
                     
                     // Extract personality from the known column
-                    const personalityNames = extractText(values['c-mxsPhpZeVM']) || ''; // פערזענליכקייט
+                    const personalityNames = extractText(values['c-6E02UJxxZW']) || ''; // פערזענליכקייט
                     
                     // Also try the specific ID column if customId not found
                     if (!customId) {
@@ -5808,40 +5926,6 @@
                 
                 // Update nav counts
                 updateNavCounts();
-                
-                // Wait for additional info to finish loading
-                await Promise.all(infoPromises);
-                console.log('Additional info loaded:',
-                    'Chatzeros:', Object.keys(chatzerosInfo).length,
-                    'Mechabrim:', Object.keys(mechabrimInfo).length,
-                    'Verter:', Object.keys(verterInfo).length,
-                    'Zmanim:', Object.keys(zmaninInfo).length,
-                    'Piyutim:', Object.keys(piyutimInfo).length,
-                    'Collections:', Object.keys(collectionsInfo).length
-                );
-
-                // Update nav counts again after all info is loaded
-                updateNavCounts();
-
-                document.getElementById('loadingSpinner').style.display = 'none';
-                
-                // Check URL and navigate accordingly
-                if (window.location.hash && window.location.hash !== '#/home') {
-                    handleURLChange();
-                } else {
-                    updateURL(); // Set initial URL
-                    renderCurrentPage();
-                }
-
-            } catch (error) {
-                console.error('Error:', error);
-                document.getElementById('loadingSpinner').innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-state-icon">❌</div>
-                        <p>גרייז: ${error.message}</p>
-                    </div>
-                `;
-            }
         }
 
         // Build category indices
@@ -6330,6 +6414,25 @@
 
         // Render all songs page
         function renderAllSongsPage(container) {
+            // Show loading if songs not yet loaded
+            if (allSongs.length === 0) {
+                container.innerHTML = `
+                    <div class="page-theme-nigun">
+                        <div class="page-title">
+                            <div class="page-title-bar">ניגונים</div>
+                            <div class="page-title-content">
+                                <div class="subtitle">לאדינג ניגונים...</div>
+                            </div>
+                        </div>
+                        <div class="loading-songs-message">
+                            <div class="loading-spinner"></div>
+                            <p>ניגונים ווערן געלאדן אין באקגראונד...</p>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+            
             const totalPages = Math.ceil(filteredSongs.length / songsPerPage);
             const startIdx = (currentPage - 1) * songsPerPage;
             const endIdx = Math.min(startIdx + songsPerPage, filteredSongs.length);
@@ -6407,6 +6510,7 @@
 
         // Render sidebar filter dropdown
         function renderSidebarFilter(key, label, data) {
+            if (!data) data = {};
             const options = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
             const selectedCount = activeFilters[key]?.length || 0;
             const selectedValue = selectedCount > 0 ? `(${selectedCount})` : '(אלע)';
@@ -6849,10 +6953,12 @@
         // Parse URL and navigate
         function handleURLChange() {
             const hash = window.location.hash || '#/home';
+            console.log('handleURLChange called with hash:', hash);
             const parts = hash.substring(2).split('/'); // Remove #/ and split
             
             const page = parts[0] || 'home';
             const idOrName = parts[1] ? decodeURIComponent(parts[1]) : null;
+            console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
             
             // Valid pages
             const validPages = ['home', 'songs', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'nigun', 'search'];
@@ -6872,6 +6978,7 @@
                 } else if (idOrName) {
                     // Find item by ID or name
                     const item = findItemByIdOrName(page, idOrName);
+                    console.log('Found item:', item);
                     const itemName = item?.name || idOrName;
                     const itemId = item?.id || idOrName;
                     
@@ -7380,11 +7487,15 @@
         
         // Render nigun detail page
         function renderNigunDetailPage(container, nigunName) {
-            // Find the song by name or by rowId
+            // Find the song by name, rowId, or customId
             let songIdx = allSongs.findIndex(s => s.name === nigunName);
             if (songIdx === -1) {
                 // Try finding by rowId
                 songIdx = allSongs.findIndex(s => s.rowId === nigunName);
+            }
+            if (songIdx === -1) {
+                // Try finding by customId
+                songIdx = allSongs.findIndex(s => s.customId === nigunName);
             }
             const song = allSongs[songIdx];
             
@@ -9162,7 +9273,7 @@
             if (!song) return;
             
             // Navigate to nigun detail page
-            currentDetailView = { type: 'nigun', name: song.name, id: song.rowId };
+            currentDetailView = { type: 'nigun', name: song.name, id: song.rowId, customId: song.customId };
             currentPageView = 'songs';
             updateURL();
             renderDetailPage();
