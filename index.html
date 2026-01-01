@@ -5719,15 +5719,18 @@
         // Fetch songs from API
         async function fetchSongs() {
             try {
-                // Render home page immediately (before data loads)
+                // FIRST: Load statistics immediately (before anything else)
+                await fetchStatistics();
+                console.log('Statistics loaded first:', cachedStats);
+
+                // Render home page NOW with statistics
                 if (!window.location.hash || window.location.hash === '#/home' || window.location.hash === '#/') {
                     updateURL();
                     renderCurrentPage();
                 }
-                
-                // Fetch all the category info and statistics
+
+                // THEN: Fetch all the category info in background
                 const infoPromises = [
-                    fetchStatistics(), // Load statistics first
                     fetchChatzerosInfo(),
                     fetchMechabrimInfo(),
                     fetchVerterInfo(),
@@ -5738,7 +5741,7 @@
                     fetchDocumentsInfo(),
                     fetchAlbumsInfo()
                 ];
-                
+
                 // Wait for category info to load
                 await Promise.all(infoPromises);
                 console.log('Category info loaded:',
@@ -5749,16 +5752,13 @@
                     'Piyutim:', Object.keys(piyutimInfo).length,
                     'Collections:', Object.keys(collectionsInfo).length
                 );
-                
+
                 // Navigate based on URL (if not home, now we have the data)
                 if (window.location.hash && window.location.hash !== '#/home' && window.location.hash !== '#/') {
                     handleURLChange();
-                } else {
-                    // Re-render home with actual data
-                    renderCurrentPage();
                 }
-                
-                // Now fetch songs in background
+
+                // FINALLY: Fetch songs in background (don't block on this)
                 fetchSongsInBackground();
 
             } catch (error) {
