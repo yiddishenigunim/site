@@ -5127,6 +5127,43 @@
         const RESOURCES_TABLE_ID = 'grid-8Gfz8rXNUV'; // רעסורסן טעיבל
         const DOCUMENTS_TABLE_ID = 'grid-3wKzDnkPg-'; // דאקומענטן טעיבל
         const ALBUMS_TABLE_ID = 'grid-bbTaa18Jhx'; // אלבומס טעיבל
+        const STATS_TABLE_ID = 'grid-a2Gi4A2J2w'; // סטעטיסטיקס טעיבל
+
+        // Stats column names from the Coda table
+        const STATS_COLS = {
+            niggunim: 'c-j-jjQxLPBP',
+            mechabrim: 'c-m0dJp5SWz0',
+            verter: 'c-jDnPcMWZ2F',
+            chatzeros: 'c-dxqnxbZb9n',
+            zmanim: 'c-0vqSUMNdqI',
+            piyutim: 'c-Eb87R_s-LG',
+            collections: 'c-hLbq_q0oTm'
+        };
+
+        // Cached statistics from stats table
+        let cachedStats = {
+            niggunim: 0,
+            mechabrim: 0,
+            verter: 0,
+            chatzeros: 0,
+            zmanim: 0,
+            piyutim: 0,
+            collections: 0
+        };
+
+        // Track which category data has been loaded
+        let loadedCategories = {
+            chatzeros: false,
+            mechabrim: false,
+            verter: false,
+            zmanim: false,
+            piyutim: false,
+            collections: false,
+            resources: false,
+            documents: false,
+            albums: false,
+            songs: false
+        };
 
         // Helper to escape strings for use in onclick attributes
         // Uses base64 encoding to safely handle ALL special characters including quotes
@@ -5150,8 +5187,15 @@
         let allSongs = [];
         let filteredSongs = [];
         let currentPage = 1;
-        const songsPerPage = 25;
+        const songsPerPage = 50; // 50 items per batch for infinite scroll
         let currentSongIndex = -1;
+
+        // Lazy loading state for songs page
+        let songsLazyState = {
+            currentIndex: 0,
+            batchSize: 50,
+            isLoading: false
+        };
         let currentPlaylist = []; // Track which songs are in current playlist
         let currentPlaylistPosition = -1; // Position within playlist
         let currentRecordingIndex = 0; // Track which recording of current song is playing
@@ -5275,6 +5319,15 @@
 
         // Clear old caches on load
         CacheManager.clearOldCaches();
+
+        // Helper functions for cache (aliases for CacheManager)
+        function getCachedData(key) {
+            return CacheManager.get(key);
+        }
+
+        function setCachedData(key, data) {
+            CacheManager.set(key, data);
+        }
 
         // Audio player
         const audioPlayer = document.getElementById('audioPlayer');
@@ -5703,24 +5756,9 @@
                 });
                 
                 console.log(`Loaded ${tableName} info:`, Object.keys(infoObject).length, 'items');
-                
-                // Cache the results
-                setCachedData(cacheKey, { ...infoObject });
-                
-                // Log sample with image
-                const sampleWithImage = Object.entries(infoObject).find(([k, v]) => v.image);
-                if (sampleWithImage) {
-                    console.log(`Sample ${tableName} with image:`, sampleWithImage[0], sampleWithImage[1]);
-                }
-                
-                // Log sample with description
-                const sampleWithDesc = Object.entries(infoObject).find(([k, v]) => v.description);
-                if (sampleWithDesc) {
-                    console.log(`Sample ${tableName} with description:`, sampleWithDesc[0], 'desc:', sampleWithDesc[1].description?.substring(0, 100));
-                }
 
-                // Save to cache
-                CacheManager.set(cacheKey, infoObject);
+                // Cache the results
+                setCachedData(cacheKey, infoObject);
                 console.log(`💾 ${tableName} cached`);
 
             } catch (error) {
@@ -5817,12 +5855,12 @@ async function fetchStatistics() {
     }
 }
 
-        // Fetch songs from API
+        // Fetch songs from API - OPTIMIZED: Only load stats, everything else is lazy loaded
         async function fetchSongs() {
             try {
-                console.log('🚀 Starting initialization...');
+                console.log('🚀 Starting initialization (optimized - lazy loading)...');
 
-                // FIRST: Load statistics immediately (before anything else)
+                // ONLY load statistics - no category info, no songs yet
                 try {
                     await fetchStatistics();
                     console.log('✅ Statistics loaded:', cachedStats);
@@ -5836,41 +5874,10 @@ async function fetchStatistics() {
                     updateURL();
                     renderCurrentPage();
                     console.log('✅ Home page rendered');
-                }
-// Fetch all the category info in background
-console.log('📥 Loading category info...');
-
-                const infoPromises = [
-                    fetchChatzerosInfo(),
-                    fetchMechabrimInfo(),
-                    fetchVerterInfo(),
-                    fetchZmanimInfo(),
-                    fetchPiyutimInfo(),
-                    fetchCollectionsInfo(),
-                    fetchResourcesInfo(),
-                    fetchDocumentsInfo(),
-                    fetchAlbumsInfo()
-                ];
-
-                // Wait for category info to load
-                await Promise.all(infoPromises);
-                console.log('✅ Category info loaded:',
-                    'Chatzeros:', Object.keys(chatzerosInfo).length,
-                    'Mechabrim:', Object.keys(mechabrimInfo).length,
-                    'Verter:', Object.keys(verterInfo).length,
-                    'Zmanim:', Object.keys(zmaninInfo).length,
-                    'Piyutim:', Object.keys(piyutimInfo).length,
-                    'Collections:', Object.keys(collectionsInfo).length
-                );
-
-                // Navigate based on URL (if not home, now we have the data)
-                if (window.location.hash && window.location.hash !== '#/home' && window.location.hash !== '#/') {
+                } else {
+                    // Navigate based on URL - category data will be loaded on demand
                     handleURLChange();
                 }
-
-                // FINALLY: Fetch songs in background (don't block on this)
-                console.log('🎵 Loading songs in background...');
-                fetchSongsInBackground();
 
             } catch (error) {
                 console.error('❌ Fatal error:', error);
@@ -5887,8 +5894,87 @@ console.log('📥 Loading category info...');
                 }
             }
         }
+
+        // Ensure required data is loaded for a specific page
+        async function ensureDataForPage(page) {
+            switch (page) {
+                case 'songs':
+                    if (!loadedCategories.songs) {
+                        await fetchSongsInBackground();
+                    }
+                    break;
+                case 'chatzeros':
+                    if (!loadedCategories.chatzeros) {
+                        await fetchChatzerosInfo();
+                        loadedCategories.chatzeros = true;
+                    }
+                    // Also need songs for counts
+                    if (!loadedCategories.songs) {
+                        fetchSongsInBackground();
+                    }
+                    break;
+                case 'mechabrim':
+                    if (!loadedCategories.mechabrim) {
+                        await fetchMechabrimInfo();
+                        loadedCategories.mechabrim = true;
+                    }
+                    if (!loadedCategories.songs) {
+                        fetchSongsInBackground();
+                    }
+                    break;
+                case 'verter':
+                    if (!loadedCategories.verter) {
+                        await fetchVerterInfo();
+                        loadedCategories.verter = true;
+                    }
+                    if (!loadedCategories.songs) {
+                        fetchSongsInBackground();
+                    }
+                    break;
+                case 'zmanim':
+                    if (!loadedCategories.zmanim) {
+                        await fetchZmanimInfo();
+                        loadedCategories.zmanim = true;
+                    }
+                    if (!loadedCategories.piyutim) {
+                        await fetchPiyutimInfo();
+                        loadedCategories.piyutim = true;
+                    }
+                    if (!loadedCategories.songs) {
+                        fetchSongsInBackground();
+                    }
+                    break;
+                case 'collections':
+                    if (!loadedCategories.collections) {
+                        await fetchCollectionsInfo();
+                        loadedCategories.collections = true;
+                    }
+                    if (!loadedCategories.songs) {
+                        fetchSongsInBackground();
+                    }
+                    break;
+                case 'resources':
+                    if (!loadedCategories.resources) {
+                        await fetchResourcesInfo();
+                        loadedCategories.resources = true;
+                    }
+                    break;
+                case 'documents':
+                    if (!loadedCategories.documents) {
+                        await fetchDocumentsInfo();
+                        loadedCategories.documents = true;
+                    }
+                    break;
+                case 'albums':
+                    if (!loadedCategories.albums) {
+                        await fetchAlbumsInfo();
+                        loadedCategories.albums = true;
+                    }
+                    break;
+            }
+        }
         
-        // Fetch songs in background with pagination
+        // Fetch songs in background with pagination - OPTIMIZED: first 50 items initially
         async function fetchSongsInBackground() {
             try {
                 // Check cache first
@@ -5896,6 +5982,7 @@ console.log('📥 Loading category info...');
                 if (cachedSongs && cachedSongs.length > 0) {
                     console.log(`Using cached songs: ${cachedSongs.length} items`);
                     allSongs = cachedSongs;
+                    loadedCategories.songs = true;
                     applyFilters();
                     buildCategoryIndices();
                     updateNavCounts();
@@ -5904,10 +5991,11 @@ console.log('📥 Loading category info...');
                     }
                     return;
                 }
-                
+
                 let allRows = [];
                 let pageToken = null;
-                
+                let isFirstBatch = true;
+
                 do {
                     const url = `${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows?valueFormat=rich${pageToken ? '&pageToken=' + pageToken : ''}`;
                     const response = await fetch(url);
@@ -5915,23 +6003,37 @@ console.log('📥 Loading category info...');
                     const data = await response.json();
                     allRows = allRows.concat(data.items || []);
                     pageToken = data.nextPageToken;
-                    
+
                     // Process songs so far and update counts
                     processSongsData(allRows);
-                    
+
+                    // After first batch, render immediately so user sees content fast
+                    if (isFirstBatch && allRows.length >= 50) {
+                        isFirstBatch = false;
+                        loadedCategories.songs = true;
+                        applyFilters();
+                        buildCategoryIndices();
+                        if (currentPageView === 'songs') {
+                            renderCurrentPage();
+                        }
+                    }
+
                     console.log(`Loaded ${allRows.length} songs...`);
                 } while (pageToken);
-                
+
                 console.log(`Finished loading ${allRows.length} total songs`);
-                
+                loadedCategories.songs = true;
+
                 // Cache the processed songs
                 setCachedData('songs', allSongs);
-                
+
                 // Final re-render if on songs page
+                applyFilters();
+                buildCategoryIndices();
                 if (currentPageView === 'songs') {
                     renderCurrentPage();
                 }
-                
+
             } catch (error) {
                 console.error('Error loading songs:', error);
             }
@@ -6239,18 +6341,50 @@ console.log('📥 Loading category info...');
             // Nav counts removed - function kept for compatibility
         }
 
-        // Navigation
-        function navigateTo(page) {
+        // Navigation - with lazy loading
+        async function navigateTo(page) {
             hideAllDropdowns();
             currentPageView = page;
             currentPage = 1;
             currentDetailView = null; // Clear any detail view
 
             updateURL();
+
+            // Show loading state for pages that need data
+            if (page !== 'home') {
+                const content = document.getElementById('mainContent');
+                if (content && !isDataLoadedForPage(page)) {
+                    content.innerHTML = `
+                        <div class="empty-state">
+                            <div class="empty-state-icon">⏳</div>
+                            <h2>לאָודט...</h2>
+                        </div>
+                    `;
+                }
+                // Load required data for this page
+                await ensureDataForPage(page);
+            }
+
             renderCurrentPage();
-            
+
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Check if data is already loaded for a page
+        function isDataLoadedForPage(page) {
+            switch (page) {
+                case 'songs': return loadedCategories.songs && allSongs.length > 0;
+                case 'chatzeros': return loadedCategories.chatzeros && Object.keys(chatzerosInfo).length > 0;
+                case 'mechabrim': return loadedCategories.mechabrim && Object.keys(mechabrimInfo).length > 0;
+                case 'verter': return loadedCategories.verter && Object.keys(verterInfo).length > 0;
+                case 'zmanim': return loadedCategories.zmanim && Object.keys(zmaninInfo).length > 0;
+                case 'collections': return loadedCategories.collections && Object.keys(collectionsInfo).length > 0;
+                case 'resources': return loadedCategories.resources && Object.keys(resourcesInfo).length > 0;
+                case 'documents': return loadedCategories.documents && Object.keys(documentsInfo).length > 0;
+                case 'albums': return loadedCategories.albums && Object.keys(albumsInfo).length > 0;
+                default: return true;
+            }
         }
 
         // Scroll to section on home page
@@ -6342,14 +6476,15 @@ console.log('📥 Loading category info...');
 
         // Render home page
         function renderHomePage(container) {
-            const totalSongs = allSongs.length;
-            const totalChatzeros = Object.keys(categories.chatzeros).length;
-            const totalMechabrim = Object.keys(categories.mechabrim).length;
-            const totalVerter = Object.keys(categories.verter).length;
-            const totalZmanim = Object.keys(zmaninInfo).length;
-            const totalCollections = Object.keys(categories.collections).length;
-            const totalPiyutim = Object.keys(categories.zmanim).length;
-            
+            // Use cached stats from the stats table (fast, no counting needed)
+            const totalSongs = cachedStats.niggunim || 0;
+            const totalChatzeros = cachedStats.chatzeros || 0;
+            const totalMechabrim = cachedStats.mechabrim || 0;
+            const totalVerter = cachedStats.verter || 0;
+            const totalZmanim = cachedStats.zmanim || 0;
+            const totalCollections = cachedStats.collections || 0;
+            const totalPiyutim = cachedStats.piyutim || 0;
+
             container.innerHTML = `
                 <div class="home-page">
                     <!-- Hero Banner -->
@@ -6360,19 +6495,19 @@ console.log('📥 Loading category info...');
                             <p class="home-subtitle">די גרעסטע זאמלונג פון חסידישע ניגונים</p>
                         </div>
                     </div>
-                    
+
                     <!-- Search Box -->
                     <div class="home-search-section">
                         <div class="home-search-box">
-                            <input type="text" 
-                                   id="homeSearchInput" 
-                                   class="home-search-input" 
+                            <input type="text"
+                                   id="homeSearchInput"
+                                   class="home-search-input"
                                    placeholder="זוך א ניגון, מחבר, חצר..."
                                    onkeyup="handleHomeSearch(event)">
                             <button class="home-search-btn" onclick="executeHomeSearch()">זוכן</button>
                         </div>
                     </div>
-                    
+
                     <!-- Statistics -->
                     <div class="home-stats">
                         <div class="home-stat-card" onclick="navigateTo('songs')">
@@ -6633,11 +6768,13 @@ console.log('📥 Loading category info...');
                 `;
                 return;
             }
-            
-            const totalPages = Math.ceil(filteredSongs.length / songsPerPage);
-            const startIdx = (currentPage - 1) * songsPerPage;
-            const endIdx = Math.min(startIdx + songsPerPage, filteredSongs.length);
-            const pageSongs = filteredSongs.slice(startIdx, endIdx);
+
+            // Reset lazy loading state
+            songsLazyState = {
+                currentIndex: 0,
+                batchSize: 50,
+                isLoading: false
+            };
 
             container.innerHTML = `
                 <div class="page-theme-nigun">
@@ -6651,31 +6788,17 @@ console.log('📥 Loading category info...');
                     <div class="songs-page-layout">
                         <div class="songs-main-content">
                             <div class="songs-card">
-                                <div class="all-songs-grid">
-                                    ${(() => {
-                                        const playlistIndices = filteredSongs.map(song => allSongs.indexOf(song));
-                                        return pageSongs.map((song, idx) => {
-                                            const globalIdx = allSongs.indexOf(song);
-                                            return renderSongItem(song, globalIdx, startIdx + idx + 1, playlistIndices);
-                                        }).join('');
-                                    })()}
+                                <div class="all-songs-grid" id="songsGrid">
                                 </div>
-
-                                <div class="pagination">
-                                    <button class="page-btn" onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button>
-                                    <button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
-                                    <span class="page-info">בלאט ${currentPage} פון ${totalPages}</span>
-                                    <button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
-                                    <button class="page-btn" onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>»</button>
-                                </div>
+                                <div id="songsLoadMoreIndicator" style="text-align: center; padding: 20px; color: var(--text-muted);"></div>
                             </div>
                         </div>
 
                         <div class="songs-sidebar">
                             <div class="sidebar-search-box">
-                                <input type="text" 
-                                       id="songsSearchInput" 
-                                       class="sidebar-search-input" 
+                                <input type="text"
+                                       id="songsSearchInput"
+                                       class="sidebar-search-input"
                                        placeholder="זוכט א ניגון..."
                                        value="${searchQuery || ''}"
                                        onkeypress="if(event.key==='Enter')handleSongsSearch(this.value)">
@@ -6706,7 +6829,63 @@ console.log('📥 Loading category info...');
                 </div>
             `;
 
+            // Load first batch of songs
+            loadMoreSongs();
+
+            // Setup infinite scroll observer
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    loadMoreSongs();
+                }
+            }, { rootMargin: '200px' });
+
+            const indicator = document.getElementById('songsLoadMoreIndicator');
+            if (indicator) observer.observe(indicator);
+
             renderActiveFilterTags();
+        }
+
+        // Load more songs (for infinite scroll)
+        function loadMoreSongs() {
+            if (songsLazyState.isLoading) return;
+            if (songsLazyState.currentIndex >= filteredSongs.length) return;
+
+            songsLazyState.isLoading = true;
+            const grid = document.getElementById('songsGrid');
+            if (!grid) {
+                songsLazyState.isLoading = false;
+                return;
+            }
+
+            const endIndex = Math.min(
+                songsLazyState.currentIndex + songsLazyState.batchSize,
+                filteredSongs.length
+            );
+
+            const batch = filteredSongs.slice(songsLazyState.currentIndex, endIndex);
+            const playlistIndices = filteredSongs.map(song => allSongs.indexOf(song));
+
+            const html = batch.map((song, idx) => {
+                const globalIdx = allSongs.indexOf(song);
+                const displayNum = songsLazyState.currentIndex + idx + 1;
+                return renderSongItem(song, globalIdx, displayNum, playlistIndices);
+            }).join('');
+
+            grid.insertAdjacentHTML('beforeend', html);
+            songsLazyState.currentIndex = endIndex;
+            songsLazyState.isLoading = false;
+
+            // Update indicator
+            const indicator = document.getElementById('songsLoadMoreIndicator');
+            if (indicator) {
+                if (songsLazyState.currentIndex >= filteredSongs.length) {
+                    indicator.textContent = '';
+                } else {
+                    indicator.textContent = `${songsLazyState.currentIndex} / ${filteredSongs.length}`;
+                }
+            }
+
+            console.log(`Loaded ${batch.length} songs (${songsLazyState.currentIndex}/${filteredSongs.length})`);
         }
 
         // Render sidebar filter dropdown
@@ -6918,33 +7097,24 @@ console.log('📥 Loading category info...');
             }
         }
 
-        // Update just the songs list without re-rendering sidebar
+        // Update just the songs list without re-rendering sidebar (for filters)
         function updateSongsList() {
-            const container = document.querySelector('.all-songs-grid');
-            if (!container) return;
-            
-            const totalPages = Math.ceil(filteredSongs.length / songsPerPage);
-            const startIdx = (currentPage - 1) * songsPerPage;
-            const endIdx = Math.min(startIdx + songsPerPage, filteredSongs.length);
-            const pageSongs = filteredSongs.slice(startIdx, endIdx);
-            
-            const playlistIndices = filteredSongs.map(song => allSongs.indexOf(song));
-            container.innerHTML = pageSongs.map((song, idx) => {
-                const globalIdx = allSongs.indexOf(song);
-                return renderSongItem(song, globalIdx, startIdx + idx + 1, playlistIndices);
-            }).join('');
-            
-            // Update pagination
-            const paginationContainer = document.querySelector('.pagination');
-            if (paginationContainer) {
-                paginationContainer.innerHTML = `
-                    <button class="page-btn" onclick="goToPage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button>
-                    <button class="page-btn" onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>
-                    <span class="page-info">בלאט ${currentPage} פון ${totalPages}</span>
-                    <button class="page-btn" onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>
-                    <button class="page-btn" onclick="goToPage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>»</button>
-                `;
-            }
+            const grid = document.getElementById('songsGrid');
+            if (!grid) return;
+
+            // Reset lazy loading state and re-render with new filtered songs
+            songsLazyState = {
+                currentIndex: 0,
+                batchSize: 50,
+                isLoading: false
+            };
+
+            // Clear grid and load first batch
+            grid.innerHTML = '';
+            loadMoreSongs();
+
+            // Update subtitle with count
+            updateSongsCount();
         }
 
         // Update songs count display
@@ -7151,30 +7321,46 @@ console.log('📥 Loading category info...');
             return null;
         }
 
-        // Parse URL and navigate
-        function handleURLChange() {
+        // Parse URL and navigate - with lazy loading
+        async function handleURLChange() {
             const hash = window.location.hash || '#/home';
             console.log('handleURLChange called with hash:', hash);
             const parts = hash.substring(2).split('/'); // Remove #/ and split
-            
+
             const page = parts[0] || 'home';
             const idOrName = parts[1] ? decodeURIComponent(parts[1]) : null;
             console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
-            
+
             // Valid pages
             const validPages = ['home', 'songs', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'nigun', 'search'];
-            
+
             if (validPages.includes(page)) {
+                // Show loading state if data not loaded
+                const targetPage = page === 'zman' ? 'zmanim' : (page === 'nigun' ? 'songs' : page);
+                if (targetPage !== 'home' && !isDataLoadedForPage(targetPage)) {
+                    const content = document.getElementById('mainContent');
+                    if (content) {
+                        content.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-state-icon">⏳</div>
+                                <h2>לאָודט...</h2>
+                            </div>
+                        `;
+                    }
+                    // Load required data
+                    await ensureDataForPage(targetPage);
+                }
+
                 if (page === 'search' && idOrName) {
                     // Search results page
                     searchQuery = idOrName;
                     currentPageView = 'search';
                     currentDetailView = null;
-                    
+
                     // Update search input
                     const searchInput = document.getElementById('globalSearch');
                     if (searchInput) searchInput.value = idOrName;
-                    
+
                     renderCurrentPage();
                 } else if (idOrName) {
                     // Find item by ID or name
@@ -7182,7 +7368,7 @@ console.log('📥 Loading category info...');
                     console.log('Found item:', item);
                     const itemName = item?.name || idOrName;
                     const itemId = item?.id || idOrName;
-                    
+
                     // Navigate to detail page
                     if (page === 'zman') {
                         // Zman detail page (shows piyutim and collections for a zman)
@@ -7196,26 +7382,26 @@ console.log('📥 Loading category info...');
                         currentPageView = page;
                         currentDetailView = { type: page, name: itemName, id: itemId };
                     }
-                    
+
                     // Update nav buttons
                     document.querySelectorAll('.nav-btn').forEach(btn => {
                         const btnPage = btn.dataset.page;
                         const activePage = page === 'zman' ? 'zmanim' : (page === 'nigun' ? 'songs' : page);
                         btn.classList.toggle('active', btnPage === activePage);
                     });
-                    
+
                     renderDetailPage();
                 } else {
                     // Navigate to category page
                     currentDetailView = null;
                     currentPageView = page;
                     currentPage = 1;
-                    
+
                     // Update nav buttons
                     document.querySelectorAll('.nav-btn').forEach(btn => {
                         btn.classList.toggle('active', btn.dataset.page === page);
                     });
-                    
+
                     renderCurrentPage();
                 }
             }
