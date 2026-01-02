@@ -93,6 +93,10 @@
             box-sizing: border-box;
         }
 
+        html {
+            overflow-x: hidden;
+        }
+
         body {
             font-family: 'Heebo', 'David Libre', sans-serif;
             background: var(--bg-cream);
@@ -100,6 +104,7 @@
             direction: rtl;
             color: var(--text-dark);
             padding-bottom: 140px;
+            overflow-x: hidden;
         }
 
         /* Header */
@@ -870,6 +875,52 @@
         .page-theme-resource .page-title-bar { background: var(--color-resource); }
         .page-theme-document .page-title-bar { background: var(--color-document); }
         .page-theme-album .page-title-bar { background: var(--color-album); }
+
+        /* Full-width page theme backgrounds */
+        .page-theme-chatzer,
+        .page-theme-mechaber,
+        .page-theme-verter,
+        .page-theme-zman,
+        .page-theme-collection,
+        .page-theme-nigun,
+        .page-theme-resource,
+        .page-theme-document,
+        .page-theme-album,
+        .page-theme-music {
+            position: relative;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            padding-left: calc(50vw - 50%);
+            padding-right: calc(50vw - 50%);
+            min-height: calc(100vh - 180px);
+        }
+
+        .page-theme-chatzer { background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .page-theme-mechaber { background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .page-theme-verter { background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .page-theme-zman { background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .page-theme-collection { background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .page-theme-nigun { background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .page-theme-resource { background: linear-gradient(180deg, var(--color-resource-pale) 0%, color-mix(in srgb, var(--color-resource-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .page-theme-document { background: linear-gradient(180deg, var(--color-document-pale) 0%, color-mix(in srgb, var(--color-document-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .page-theme-album { background: linear-gradient(180deg, var(--color-album-pale) 0%, color-mix(in srgb, var(--color-album-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .page-theme-music { background: linear-gradient(180deg, var(--color-music-pale) 0%, color-mix(in srgb, var(--color-music-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+
+        /* Center content within full-width themed pages */
+        .page-theme-chatzer > *,
+        .page-theme-mechaber > *,
+        .page-theme-verter > *,
+        .page-theme-zman > *,
+        .page-theme-collection > *,
+        .page-theme-nigun > *,
+        .page-theme-resource > *,
+        .page-theme-document > *,
+        .page-theme-album > *,
+        .page-theme-music > * {
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
 
         /* Resources Page */
         .category-group {
@@ -2269,9 +2320,37 @@
             margin: 0 auto;
         }
 
+        /* Detail pages with page-theme classes need full-width override */
+        .detail-page.page-theme-album,
+        .detail-page.page-theme-document,
+        .detail-page.page-theme-resource {
+            max-width: none;
+        }
+
+        .detail-page.page-theme-album > *,
+        .detail-page.page-theme-document > *,
+        .detail-page.page-theme-resource > * {
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
         /* Nigun Detail Page */
         .nigun-detail-page {
+            max-width: none;
+            position: relative;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            padding-left: calc(50vw - 50%);
+            padding-right: calc(50vw - 50%);
+            min-height: calc(100vh - 180px);
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+        }
+
+        .nigun-detail-page > * {
             max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .nigun-detail-header {
@@ -3059,8 +3138,42 @@
         .detail-page.theme-collection .detail-category-bar {
             background: var(--color-collection);
         }
-        .detail-page.theme-collection .detail-title { 
-            color: var(--color-collection-dark); 
+        .detail-page.theme-collection .detail-title {
+            color: var(--color-collection-dark);
+        }
+
+        /* Full-width detail page theme backgrounds */
+        .detail-page.theme-chatzer,
+        .detail-page.theme-mechaber,
+        .detail-page.theme-verter,
+        .detail-page.theme-zman,
+        .detail-page.theme-piyut,
+        .detail-page.theme-collection {
+            position: relative;
+            margin-left: calc(-50vw + 50%);
+            margin-right: calc(-50vw + 50%);
+            padding-left: calc(50vw - 50%);
+            padding-right: calc(50vw - 50%);
+            min-height: calc(100vh - 180px);
+        }
+
+        .detail-page.theme-chatzer { background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .detail-page.theme-mechaber { background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .detail-page.theme-verter { background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .detail-page.theme-zman { background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .detail-page.theme-piyut { background: linear-gradient(180deg, #e8f5e9 0%, color-mix(in srgb, #e8f5e9 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+        .detail-page.theme-collection { background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%); }
+
+        /* Center content within full-width themed detail pages */
+        .detail-page.theme-chatzer > *,
+        .detail-page.theme-mechaber > *,
+        .detail-page.theme-verter > *,
+        .detail-page.theme-zman > *,
+        .detail-page.theme-piyut > *,
+        .detail-page.theme-collection > * {
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* Detail page sections and actions */
