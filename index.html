@@ -5693,14 +5693,14 @@
                     const row = data.items[0];
                     const values = row.values;
 
-                    // Extract statistics from the row
-                    cachedStats.niggunim = parseInt(extractText(values[STATS_COLS.niggunim])) || 0;
-                    cachedStats.mechabrim = parseInt(extractText(values[STATS_COLS.mechabrim])) || 0;
-                    cachedStats.verter = parseInt(extractText(values[STATS_COLS.verter])) || 0;
-                    cachedStats.chatzeros = parseInt(extractText(values[STATS_COLS.chatzeros])) || 0;
-                    cachedStats.zmanim = parseInt(extractText(values[STATS_COLS.zmanim])) || 0;
-                    cachedStats.piyutim = parseInt(extractText(values[STATS_COLS.piyutim])) || 0;
-                    cachedStats.collections = parseInt(extractText(values[STATS_COLS.collections])) || 0;
+                    // Extract statistics from the row (valueFormat=simple returns plain numbers)
+                    cachedStats.niggunim = parseInt(values[STATS_COLS.niggunim]) || 0;
+                    cachedStats.mechabrim = parseInt(values[STATS_COLS.mechabrim]) || 0;
+                    cachedStats.verter = parseInt(values[STATS_COLS.verter]) || 0;
+                    cachedStats.chatzeros = parseInt(values[STATS_COLS.chatzeros]) || 0;
+                    cachedStats.zmanim = parseInt(values[STATS_COLS.zmanim]) || 0;
+                    cachedStats.piyutim = parseInt(values[STATS_COLS.piyutim]) || 0;
+                    cachedStats.collections = parseInt(values[STATS_COLS.collections]) || 0;
                 }
             } catch (error) {
                 console.log('Could not fetch statistics:', error.message);
