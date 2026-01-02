@@ -381,6 +381,14 @@
 
         /* Home Page Styles */
         .home-page {
+            max-width: 100%;
+            padding: 0;
+            min-height: calc(100vh - 140px);
+            background: linear-gradient(180deg, var(--primary-pale) 0%, var(--bg-cream) 400px);
+            animation: pageSlideIn 0.4s ease-out forwards;
+        }
+
+        .home-page-inner {
             max-width: 1000px;
             margin: 0 auto;
             padding: 30px 20px;
@@ -898,6 +906,77 @@
         .page-theme-resource .page-title-bar { background: var(--color-resource); }
         .page-theme-document .page-title-bar { background: var(--color-document); }
         .page-theme-album .page-title-bar { background: var(--color-album); }
+
+        /* Full-width page themes with subtle color backgrounds */
+        .page-theme-chatzer,
+        .page-theme-mechaber,
+        .page-theme-verter,
+        .page-theme-zman,
+        .page-theme-collection,
+        .page-theme-nigun,
+        .page-theme-resource,
+        .page-theme-document,
+        .page-theme-album {
+            max-width: 100%;
+            padding: 0;
+            min-height: calc(100vh - 140px);
+            animation: pageSlideIn 0.4s ease-out forwards;
+        }
+
+        .page-theme-chatzer { background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, var(--bg-cream) 300px); }
+        .page-theme-mechaber { background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, var(--bg-cream) 300px); }
+        .page-theme-verter { background: linear-gradient(180deg, var(--color-verter-pale) 0%, var(--bg-cream) 300px); }
+        .page-theme-zman { background: linear-gradient(180deg, var(--color-zman-pale) 0%, var(--bg-cream) 300px); }
+        .page-theme-collection { background: linear-gradient(180deg, var(--color-collection-pale) 0%, var(--bg-cream) 300px); }
+        .page-theme-nigun { background: linear-gradient(180deg, var(--color-nigun-pale) 0%, var(--bg-cream) 300px); }
+        .page-theme-resource { background: linear-gradient(180deg, var(--color-resource-pale) 0%, var(--bg-cream) 300px); }
+        .page-theme-document { background: linear-gradient(180deg, var(--color-document-pale) 0%, var(--bg-cream) 300px); }
+        .page-theme-album { background: linear-gradient(180deg, var(--color-album-pale) 0%, var(--bg-cream) 300px); }
+
+        /* Page slide-in animation */
+        @keyframes pageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(15px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Main content transition */
+        .main-content {
+            transition: opacity 0.2s ease-out;
+        }
+        .main-content.transitioning {
+            opacity: 0;
+        }
+
+        /* Inner content wrapper for full-width pages */
+        .page-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        /* Full-width page title */
+        .page-title-full {
+            padding: 30px 20px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-title-full h1 {
+            font-size: 2em;
+            margin: 0 0 8px 0;
+            font-weight: 700;
+        }
+
+        .page-title-full .subtitle {
+            color: var(--text-muted);
+            font-size: 1em;
+        }
 
         /* Resources Page */
         .category-group {
@@ -5984,7 +6063,7 @@
                 if (spinner) {
                     spinner.innerHTML = `
                         <div class="empty-state">
-                            <div class="empty-state-icon">❌</div>
+                            <div class="empty-state-icon">X</div>
                             <p>גרייז: ${error.message}</p>
                         </div>
                     `;
@@ -6343,9 +6422,16 @@
             // Nav counts removed - function kept for compatibility
         }
 
-        // Navigation - with lazy loading support
+        // Navigation - with lazy loading support and page transition
         async function navigateTo(page) {
             hideAllDropdowns();
+            const content = document.getElementById('mainContent');
+
+            // Add transition class for fade out
+            if (content) {
+                content.classList.add('transitioning');
+            }
+
             currentPageView = page;
             currentPage = 1;
             currentDetailView = null; // Clear any detail view
@@ -6355,7 +6441,15 @@
             // Lazy load data if needed before rendering
             await ensureDataForPage(page);
 
+            // Small delay for transition effect
+            await new Promise(resolve => setTimeout(resolve, 150));
+
             renderCurrentPage();
+
+            // Remove transition class for fade in
+            if (content) {
+                content.classList.remove('transitioning');
+            }
 
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -6463,10 +6557,11 @@
             
             container.innerHTML = `
                 <div class="home-page">
+                  <div class="home-page-inner">
                     <!-- Hero Banner -->
                     <div class="home-hero animate-scale-in">
                         <div class="home-hero-content">
-                            <div class="home-logo animate-fade-in-down" style="font-size: 4em; animation-delay: 0.2s; opacity: 0;">🎼</div>
+                            <div class="home-logo animate-fade-in-down" style="animation-delay: 0.2s; opacity: 0;"></div>
                             <h1 class="home-title animate-fade-in-up" style="animation-delay: 0.3s; opacity: 0;">אוצר הניגונים</h1>
                             <p class="home-subtitle animate-fade-in-up" style="animation-delay: 0.4s; opacity: 0;">די גרעסטע זאמלונג פון חסידישע ניגונים</p>
                         </div>
@@ -6487,32 +6582,26 @@
                     <!-- Statistics -->
                     <div class="home-stats">
                         <div class="home-stat-card hover-lift animate-fade-in-up stagger-1" onclick="navigateTo('songs')">
-                            <div class="home-stat-icon">🎵</div>
                             <div class="home-stat-number">${totalSongs}</div>
                             <div class="home-stat-label">ניגונים</div>
                         </div>
                         <div class="home-stat-card hover-lift animate-fade-in-up stagger-2" onclick="navigateTo('chatzeros')">
-                            <div class="home-stat-icon">🏛️</div>
                             <div class="home-stat-number">${totalChatzeros}</div>
                             <div class="home-stat-label">חצרות</div>
                         </div>
                         <div class="home-stat-card hover-lift animate-fade-in-up stagger-3" onclick="navigateTo('mechabrim')">
-                            <div class="home-stat-icon">✍️</div>
                             <div class="home-stat-number">${totalMechabrim}</div>
                             <div class="home-stat-label">מחברים</div>
                         </div>
                         <div class="home-stat-card hover-lift animate-fade-in-up stagger-4" onclick="navigateTo('verter')">
-                            <div class="home-stat-icon">📜</div>
                             <div class="home-stat-number">${totalVerter}</div>
                             <div class="home-stat-label">ווערטער</div>
                         </div>
                         <div class="home-stat-card hover-lift animate-fade-in-up stagger-5" onclick="navigateTo('zmanim')">
-                            <div class="home-stat-icon">📅</div>
                             <div class="home-stat-number">${totalZmanim}</div>
                             <div class="home-stat-label">זמנים</div>
                         </div>
                         <div class="home-stat-card hover-lift animate-fade-in-up stagger-6" onclick="navigateTo('collections')">
-                            <div class="home-stat-icon">📚</div>
                             <div class="home-stat-number">${totalCollections}</div>
                             <div class="home-stat-label">קאלעקשאנס</div>
                         </div>
@@ -6523,42 +6612,36 @@
                         <h2 class="home-section-title">בלעטער אין אוצר</h2>
                         <div class="home-links-grid">
                             <div class="home-link-card hover-lift" onclick="navigateTo('songs')">
-                                <div class="home-link-icon">🎵</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">אלע ניגונים</div>
                                     <div class="home-link-desc">בלעטער דורך אלע ${totalSongs} ניגונים</div>
                                 </div>
                             </div>
                             <div class="home-link-card hover-lift" onclick="navigateTo('chatzeros')">
-                                <div class="home-link-icon">🏛️</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">חצרות</div>
                                     <div class="home-link-desc">${totalChatzeros} חסידישע חצרות</div>
                                 </div>
                             </div>
                             <div class="home-link-card hover-lift" onclick="navigateTo('mechabrim')">
-                                <div class="home-link-icon">✍️</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">מחברים</div>
                                     <div class="home-link-desc">${totalMechabrim} מחברי ניגונים</div>
                                 </div>
                             </div>
                             <div class="home-link-card hover-lift" onclick="navigateTo('verter')">
-                                <div class="home-link-icon">📜</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">ווערטער</div>
                                     <div class="home-link-desc">${totalVerter} ניגונים מיט ווערטער</div>
                                 </div>
                             </div>
                             <div class="home-link-card hover-lift" onclick="navigateTo('zmanim')">
-                                <div class="home-link-icon">📅</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">זמנים</div>
                                     <div class="home-link-desc">${totalZmanim} זמנים, ${totalPiyutim} פיוטים</div>
                                 </div>
                             </div>
                             <div class="home-link-card hover-lift" onclick="navigateTo('collections')">
-                                <div class="home-link-icon">📚</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">קאלעקשאנס</div>
                                     <div class="home-link-desc">${totalCollections} קאלעקשאנס</div>
@@ -6697,6 +6780,7 @@
                             <p>פאר פראגעס אדער באמערקונגען, קען מען זיך ווענדן דורך די קאנטאקט אינפארמאציע.</p>
                         </div>
                     </div>
+                  </div>
                 </div>
             `;
         }
@@ -6792,12 +6876,12 @@
                                        oninput="debouncedSongsSearch(this.value)"
                                        onkeypress="if(event.key==='Enter')handleSongsSearch(this.value)">
                                 ${searchQuery ? '<button class="sidebar-search-clear" onclick="clearSearch()">×</button>' : ''}
-                                <button class="sidebar-search-btn" onclick="handleSongsSearch(document.getElementById('songsSearchInput').value)">🔍</button>
+                                <button class="sidebar-search-btn" onclick="handleSongsSearch(document.getElementById('songsSearchInput').value)">זוך</button>
                             </div>
 
                             <label class="sidebar-audio-toggle">
                                 <input type="checkbox" ${audioOnlyFilter ? 'checked' : ''} onchange="toggleAudioOnly()">
-                                <span>נאר ניגונים מיט אודיאו 🎵</span>
+                                <span>נאר ניגונים מיט אודיאו</span>
                             </label>
 
                             <div class="sidebar-section">
@@ -7138,7 +7222,7 @@
 
             // Add clear all button if there are filters
             if (hasFilters) {
-                html += `<button class="clear-filters-btn" onclick="clearAllFilters()">🗑️ נעם אראפ אלעס</button>`;
+                html += `<button class="clear-filters-btn" onclick="clearAllFilters()">נעם אראפ אלעס</button>`;
             }
 
             container.innerHTML = html;
@@ -7883,7 +7967,7 @@
                                     ${mechaberInfo && mechaberInfo.image ? `
                                         <img class="nigun-mechaber-image" src="${mechaberInfo.image}" alt="${mechaberName || ''}">
                                     ` : `
-                                        <div class="nigun-mechaber-placeholder">👤</div>
+                                        <div class="nigun-mechaber-placeholder"></div>
                                     `}
                                     <div class="nigun-mechaber-name">${song.mechaber}</div>
                                 </div>
@@ -7902,7 +7986,7 @@
                                             ${personInfo.image ? `
                                                 <img class="nigun-personality-image" src="${personInfo.image}" alt="${personName}">
                                             ` : `
-                                                <div class="nigun-personality-placeholder">👤</div>
+                                                <div class="nigun-personality-placeholder"></div>
                                             `}
                                             <div class="nigun-personality-name">${personName}</div>
                                         </div>
@@ -8599,7 +8683,7 @@
                                 <div class="document-preview">
                                     <iframe class="document-preview-frame" data-src="${previewUrl}" loading="lazy"></iframe>
                                     <div class="document-preview-overlay" onclick="openPdfPopup('${encodeURIComponent(info.file)}', '${encodeURIComponent(key)}')">
-                                        <span class="preview-expand-icon">🔍</span>
+                                        <span class="preview-expand-icon">+</span>
                                     </div>
                                 </div>
                             ` : ''}
@@ -9788,7 +9872,7 @@
                 html += `
                     <div class="search-section">
                         <div class="search-section-header">
-                            <h3 style="color: var(--color-nigun);">🎵 ניגונים (${matchingSongs.length})</h3>
+                            <h3 style="color: var(--color-nigun);">ניגונים (${matchingSongs.length})</h3>
                             ${matchingSongs.length > 10 ? `<button class="see-all-btn" onclick="navigateTo('songs');">זע אלע →</button>` : ''}
                         </div>
                         <div class="search-songs-list">
@@ -9818,7 +9902,7 @@
                 html += `
                     <div class="search-section">
                         <div class="search-section-header">
-                            <h3 style="color: var(--color-album);">💿 אלבומס (${matchingAlbums.length})</h3>
+                            <h3 style="color: var(--color-album);">אלבומס (${matchingAlbums.length})</h3>
                         </div>
                         <div class="search-results-grid">
                             ${matchingAlbums.map(name => {
@@ -9839,7 +9923,7 @@
                 html += `
                     <div class="search-section">
                         <div class="search-section-header">
-                            <h3 style="color: var(--color-chatzer);">🏛️ חצרות (${matchingChatzeros.length})</h3>
+                            <h3 style="color: var(--color-chatzer);">חצרות (${matchingChatzeros.length})</h3>
                         </div>
                         <div class="search-results-grid">
                             ${matchingChatzeros.map(name => `
@@ -9858,7 +9942,7 @@
                 html += `
                     <div class="search-section">
                         <div class="search-section-header">
-                            <h3 style="color: var(--color-mechaber);">👤 מחברים (${matchingMechabrim.length})</h3>
+                            <h3 style="color: var(--color-mechaber);">מחברים (${matchingMechabrim.length})</h3>
                         </div>
                         <div class="search-results-grid">
                             ${matchingMechabrim.map(name => `
@@ -9877,7 +9961,7 @@
                 html += `
                     <div class="search-section">
                         <div class="search-section-header">
-                            <h3 style="color: var(--color-collection);">📁 קאלעקשאנס (${matchingCollections.length})</h3>
+                            <h3 style="color: var(--color-collection);">קאלעקשאנס (${matchingCollections.length})</h3>
                         </div>
                         <div class="search-results-grid">
                             ${matchingCollections.map(name => `
@@ -9896,7 +9980,7 @@
                 html += `
                     <div class="search-section">
                         <div class="search-section-header">
-                            <h3 style="color: var(--color-verter);">📝 ווערטער (${matchingVerter.length})</h3>
+                            <h3 style="color: var(--color-verter);">ווערטער (${matchingVerter.length})</h3>
                         </div>
                         <div class="search-results-grid">
                             ${matchingVerter.map(name => `
@@ -9915,7 +9999,7 @@
                 html += `
                     <div class="search-section">
                         <div class="search-section-header">
-                            <h3 style="color: var(--color-zman);">📅 זמנים (${matchingZmanim.length})</h3>
+                            <h3 style="color: var(--color-zman);">זמנים (${matchingZmanim.length})</h3>
                         </div>
                         <div class="search-results-grid">
                             ${matchingZmanim.map(name => `
@@ -9933,7 +10017,7 @@
                 html += `
                     <div class="search-section">
                         <div class="search-section-header">
-                            <h3 style="color: #2e8b2e;">🎤 געזונגען אויף (${matchingGezungen.length})</h3>
+                            <h3 style="color: #2e8b2e;">געזונגען אויף (${matchingGezungen.length})</h3>
                         </div>
                         <div class="search-results-grid">
                             ${matchingGezungen.map(name => `
@@ -9952,7 +10036,7 @@
                 html += `
                     <div class="search-section">
                         <div class="search-section-header">
-                            <h3 style="color: var(--color-music);">🥁 ריטעם (${matchingRitem.length})</h3>
+                            <h3 style="color: var(--color-music);">ריטעם (${matchingRitem.length})</h3>
                         </div>
                         <div class="search-results-grid">
                             ${matchingRitem.map(name => `
@@ -9971,7 +10055,7 @@
                 html += `
                     <div class="search-section">
                         <div class="search-section-header">
-                            <h3 style="color: var(--color-nigun);">🎼 סקעיל (${matchingScale.length})</h3>
+                            <h3 style="color: var(--color-nigun);">סקעיל (${matchingScale.length})</h3>
                         </div>
                         <div class="search-results-grid">
                             ${matchingScale.map(name => `
@@ -9988,7 +10072,7 @@
             if (totalResults === 0) {
                 html += `
                     <div class="no-results">
-                        <div class="no-results-icon">🔍</div>
+                        <div class="no-results-icon">?</div>
                         <p>קיין רעזולטאטן נישט געפונען פאר "${searchQuery}"</p>
                         <p class="no-results-hint">פרובירט א אנדער זוך</p>
                     </div>
