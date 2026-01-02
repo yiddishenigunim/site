@@ -514,17 +514,6 @@
             margin-bottom: 5px;
         }
 
-        .stat-loading {
-            color: var(--text-light);
-            opacity: 0.5;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.3; }
-            50% { opacity: 0.7; }
-        }
-
         .home-stat-label {
             font-size: 0.95em;
             color: var(--text-muted);
@@ -5109,7 +5098,7 @@
         const WORKER_URL = 'https://api.oitzerhanigunim.org/api/';
         const DOC_ID = '6QcJRx7e13';
         const TABLE_ID = 'grid-YycmDjJ8pS'; // Songs table
-
+        
         // Additional table IDs from Coda doc
         const MECHABRIM_TABLE_ID = 'grid-bCbfhDmi82'; // מחברים טעיבל
         const CHATZEROS_TABLE_ID = 'grid-4-KYWDJ5l9'; // חצרות טעיבל
@@ -5164,17 +5153,6 @@
         let currentPageView = 'home';
         let searchQuery = ''; // Search query for songs
         let audioOnlyFilter = true; // Show only songs with audio (default on)
-
-        // Cached statistics from STATS table (to avoid reloading/recalculating)
-        let cachedStats = {
-            niggunim: 0,
-            mechabrim: 0,
-            verter: 0,
-            chatzeros: 0,
-            zmanim: 0,
-            piyutim: 0,
-            collections: 0
-        };
 
         // Category data
         let categories = {
@@ -5304,9 +5282,48 @@
             return null;
         }
 
+        // Cache helpers
+        const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+        
+        function getCachedData(key) {
+            try {
+                const cached = localStorage.getItem(`oitzer_${key}`);
+                if (cached) {
+                    const { data, timestamp } = JSON.parse(cached);
+                    if (Date.now() - timestamp < CACHE_DURATION) {
+                        console.log(`Using cached data for ${key}`);
+                        return data;
+                    }
+                }
+            } catch (e) {
+                console.log('Cache read error:', e);
+            }
+            return null;
+        }
+        
+        function setCachedData(key, data) {
+            try {
+                localStorage.setItem(`oitzer_${key}`, JSON.stringify({
+                    data,
+                    timestamp: Date.now()
+                }));
+            } catch (e) {
+                console.log('Cache write error:', e);
+            }
+        }
+
         // Generic function to fetch table info with pagination
         async function fetchTableInfo(tableId, infoObject, tableName) {
             try {
+                // Check cache first
+                const cacheKey = `table_${tableName}`;
+                const cachedData = getCachedData(cacheKey);
+                if (cachedData) {
+                    Object.assign(infoObject, cachedData);
+                    console.log(`Loaded ${tableName} info from cache: ${Object.keys(cachedData).length} items`);
+                    return;
+                }
+                
                 // Get columns first
                 const columnsResponse = await fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${tableId}/columns`);
                 const columnsData = await columnsResponse.json();
@@ -5626,6 +5643,9 @@
                 
                 console.log(`Loaded ${tableName} info:`, Object.keys(infoObject).length, 'items');
                 
+                // Cache the results
+                setCachedData(cacheKey, { ...infoObject });
+                
                 // Log sample with image
                 const sampleWithImage = Object.entries(infoObject).find(([k, v]) => v.image);
                 if (sampleWithImage) {
@@ -5708,6 +5728,7 @@
             }
         }
 
+
         // Fetch songs from API
         async function fetchSongs() {
             try {
@@ -5717,17 +5738,8 @@
                     renderCurrentPage();
                 }
                 
-                // Fetch statistics first and show immediately
-                await fetchStatistics();
-                console.log('Statistics loaded from STATS table:', cachedStats);
-
-                // Re-render home page with stats (don't wait for other category info)
-                if (!window.location.hash || window.location.hash === '#/home' || window.location.hash === '#/') {
-                    renderCurrentPage();
-                }
-
-                // Load category info in background
-                const categoryPromises = [
+                // Fetch all the category info
+                const infoPromises = [
                     fetchChatzerosInfo(),
                     fetchMechabrimInfo(),
                     fetchVerterInfo(),
@@ -5738,9 +5750,9 @@
                     fetchDocumentsInfo(),
                     fetchAlbumsInfo()
                 ];
-
+                
                 // Wait for category info to load
-                await Promise.all(categoryPromises);
+                await Promise.all(infoPromises);
                 console.log('Category info loaded:',
                     'Chatzeros:', Object.keys(chatzerosInfo).length,
                     'Mechabrim:', Object.keys(mechabrimInfo).length,
@@ -5749,10 +5761,13 @@
                     'Piyutim:', Object.keys(piyutimInfo).length,
                     'Collections:', Object.keys(collectionsInfo).length
                 );
-
+                
                 // Navigate based on URL (if not home, now we have the data)
                 if (window.location.hash && window.location.hash !== '#/home' && window.location.hash !== '#/') {
                     handleURLChange();
+                } else {
+                    // Re-render home with actual data
+                    renderCurrentPage();
                 }
                 
                 // Now fetch songs in background
@@ -5773,14 +5788,25 @@
         }
         
         // Fetch songs in background with pagination
-        // Modified to load fewer pages at once to reduce Cloudflare API usage
         async function fetchSongsInBackground() {
             try {
+                // Check cache first
+                const cachedSongs = getCachedData('songs');
+                if (cachedSongs && cachedSongs.length > 0) {
+                    console.log(`Using cached songs: ${cachedSongs.length} items`);
+                    allSongs = cachedSongs;
+                    applyFilters();
+                    buildCategoryIndices();
+                    updateNavCounts();
+                    if (currentPageView === 'songs') {
+                        renderCurrentPage();
+                    }
+                    return;
+                }
+                
                 let allRows = [];
                 let pageToken = null;
-                let pagesLoaded = 0;
-                const maxPagesToLoad = 3; // Load only first 3 pages (~150-200 songs)
-
+                
                 do {
                     const url = `${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows?valueFormat=rich${pageToken ? '&pageToken=' + pageToken : ''}`;
                     const response = await fetch(url);
@@ -5788,27 +5814,23 @@
                     const data = await response.json();
                     allRows = allRows.concat(data.items || []);
                     pageToken = data.nextPageToken;
-                    pagesLoaded++;
-
+                    
                     // Process songs so far and update counts
                     processSongsData(allRows);
-
-                    console.log(`Loaded ${allRows.length} songs (page ${pagesLoaded})...`);
-
-                    // Stop after loading maxPagesToLoad pages to reduce API usage
-                    if (pagesLoaded >= maxPagesToLoad) {
-                        console.log(`Loaded first ${pagesLoaded} pages. Total songs: ${allRows.length}`);
-                        break;
-                    }
+                    
+                    console.log(`Loaded ${allRows.length} songs...`);
                 } while (pageToken);
-
-                console.log(`Finished loading ${allRows.length} songs from ${pagesLoaded} pages`);
-
+                
+                console.log(`Finished loading ${allRows.length} total songs`);
+                
+                // Cache the processed songs
+                setCachedData('songs', allSongs);
+                
                 // Final re-render if on songs page
                 if (currentPageView === 'songs') {
                     renderCurrentPage();
                 }
-
+                
             } catch (error) {
                 console.error('Error loading songs:', error);
             }
@@ -7327,7 +7349,7 @@
             container.innerHTML = `
                 <div class="detail-page ${themeClass}" data-type="${type}">
                     <button class="back-button" onclick="goBackFromDetail()">
-                        → חזור
+                        → צוריק
                     </button>
                     
                     <div class="detail-header">
@@ -7832,7 +7854,7 @@
                                     <a href="${pdf.url}" target="_blank" class="nigun-pdf-item">
                                         <div class="nigun-pdf-icon">📄</div>
                                         <div class="nigun-pdf-name">${pdf.name}</div>
-                                        <div class="nigun-pdf-action">פתח</div>
+                                        <div class="nigun-pdf-action">עפן</div>
                                     </a>
                                 `).join('')}
                             </div>
@@ -7884,7 +7906,7 @@
             let html = `
                 <div class="detail-page theme-zman">
                     <button class="back-button" onclick="navigateTo('zmanim')">
-                        → חזור צו זמנים
+                        → זמנים בלאט
                     </button>
                     
                     <div class="detail-header">
@@ -8272,7 +8294,7 @@
                             <div class="resource-card-footer">
                                 ${hasLink ? `
                                     <a href="${linkUrl}" target="_blank" class="resource-link-btn">
-                                        פתח לינק
+                                        עפן לינק
                                     </a>
                                 ` : isPhone ? `
                                     <div class="resource-phone-number">${phoneNumber}</div>
@@ -8509,7 +8531,7 @@
             container.innerHTML = `
                 <div class="detail-page page-theme-album">
                     <button class="back-button" onclick="navigateTo('albums')">
-                        → חזור צו אלבומס
+                        → אלבומס בלאט
                     </button>
                     
                     <div class="detail-header">
@@ -8589,7 +8611,7 @@
             container.innerHTML = `
                 <div class="detail-page page-theme-document">
                     <button class="back-button" onclick="navigateTo('documents')">
-                        → חזור צו דאקומענטן
+                        → דאקומענטן בלאט
                     </button>
                     
                     <div class="detail-header">
@@ -8621,7 +8643,7 @@
                         <div class="detail-actions">
                             ${hasFile ? `
                                 <button class="detail-action-btn document-pdf-btn" onclick="openPdfPopup('${encodeURIComponent(fileUrl)}', '${encodeURIComponent(docName)}')">
-                                    📄 פתח PDF
+                                    📄 עפן PDF
                                 </button>
                             ` : ''}
                             ${hasLink ? `
@@ -8677,7 +8699,7 @@
             container.innerHTML = `
                 <div class="detail-page page-theme-resource">
                     <button class="back-button" onclick="navigateTo('resources')">
-                        → חזור צו רעסורסן
+                        → רעסורסן בלאט
                     </button>
                     
                     <div class="detail-header">
@@ -8708,7 +8730,7 @@
                     ${hasLink ? `
                         <div class="detail-actions">
                             <a href="${linkUrl}" target="_blank" class="detail-action-btn resource-link-btn">
-                                🔗 פתח לינק
+                                🔗 עפן לינק
                             </a>
                         </div>
                     ` : ''}
@@ -9797,6 +9819,17 @@
         function closeImageModal() {
             const modal = document.getElementById('imageModal');
             if (modal) modal.classList.remove('active');
+        }
+
+        // Register Service Worker for caching
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js')
+                .then((registration) => {
+                    console.log('Service Worker registered:', registration.scope);
+                })
+                .catch((error) => {
+                    console.log('Service Worker registration failed:', error);
+                });
         }
 
         // Initialize
