@@ -5240,7 +5240,7 @@
         // ========================================
         // CACHE MANAGER - Minimize API calls
         // ========================================
-        const CACHE_VERSION = 'v2'; // Increment when data structure changes
+        const CACHE_VERSION = 'v3'; // Increment when data structure changes
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
         const CacheManager = {
@@ -5835,14 +5835,24 @@ async function fetchStatistics() {
 
             console.log('📊 Stats row values:', values);
 
+            // Helper to get number from value (handles both direct numbers and strings)
+            const getNum = (val) => {
+                if (val === null || val === undefined) return 0;
+                if (typeof val === 'number') return val;
+                if (typeof val === 'string') return parseInt(val) || 0;
+                return parseInt(extractText(val)) || 0;
+            };
+
             // Extract statistics using exact column IDs
-            cachedStats.niggunim = parseInt(extractText(values[STATS_COLS.niggunim])) || 0;
-            cachedStats.mechabrim = parseInt(extractText(values[STATS_COLS.mechabrim])) || 0;
-            cachedStats.verter = parseInt(extractText(values[STATS_COLS.verter])) || 0;
-            cachedStats.chatzeros = parseInt(extractText(values[STATS_COLS.chatzeros])) || 0;
-            cachedStats.zmanim = parseInt(extractText(values[STATS_COLS.zmanim])) || 0;
-            cachedStats.piyutim = parseInt(extractText(values[STATS_COLS.piyutim])) || 0;
-            cachedStats.collections = parseInt(extractText(values[STATS_COLS.collections])) || 0;
+            cachedStats.niggunim = getNum(values[STATS_COLS.niggunim]);
+            cachedStats.mechabrim = getNum(values[STATS_COLS.mechabrim]);
+            cachedStats.verter = getNum(values[STATS_COLS.verter]);
+            cachedStats.chatzeros = getNum(values[STATS_COLS.chatzeros]);
+            cachedStats.zmanim = getNum(values[STATS_COLS.zmanim]);
+            cachedStats.piyutim = getNum(values[STATS_COLS.piyutim]);
+            cachedStats.collections = getNum(values[STATS_COLS.collections]);
+
+            console.log('📊 Parsed stats:', cachedStats);
 
             // Save to cache
             setCachedData(cacheKey, { ...cachedStats });
