@@ -410,6 +410,24 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Fade in up animation for cards */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Animate cards on load */
+        .animate-on-load {
+            opacity: 0;
+            animation: fadeInUp 0.6s ease-out forwards;
+        }
+
         .home-hero-content {
             position: relative;
             z-index: 1;
@@ -5175,6 +5193,89 @@
             maure: []
         };
 
+        // ========================================
+        // CACHE MANAGER - Minimize API calls
+        // ========================================
+        const CACHE_VERSION = 'v2'; // Increment when data structure changes
+        const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
+
+        const CacheManager = {
+            // Get cached data if valid
+            get(key) {
+                try {
+                    const cacheKey = `${CACHE_VERSION}_${key}`;
+                    const cached = localStorage.getItem(cacheKey);
+                    if (!cached) return null;
+
+                    const { data, timestamp } = JSON.parse(cached);
+                    const now = Date.now();
+
+                    // Check if cache expired
+                    if (now - timestamp > CACHE_DURATION) {
+                        console.log(`⏰ Cache expired for ${key}`);
+                        localStorage.removeItem(cacheKey);
+                        return null;
+                    }
+
+                    console.log(`✅ Using cached ${key} (age: ${Math.round((now - timestamp) / 1000 / 60)} minutes)`);
+                    return data;
+                } catch (error) {
+                    console.error(`Cache read error for ${key}:`, error);
+                    return null;
+                }
+            },
+
+            // Save data to cache
+            set(key, data) {
+                try {
+                    const cacheKey = `${CACHE_VERSION}_${key}`;
+                    const cacheData = {
+                        data: data,
+                        timestamp: Date.now()
+                    };
+                    localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+                    console.log(`💾 Cached ${key}`);
+                } catch (error) {
+                    console.error(`Cache write error for ${key}:`, error);
+                    // If localStorage is full, clear old caches
+                    if (error.name === 'QuotaExceededError') {
+                        this.clearOldCaches();
+                        // Try again
+                        try {
+                            localStorage.setItem(cacheKey, JSON.stringify(cacheData));
+                        } catch (e) {
+                            console.error('Failed to cache even after cleanup');
+                        }
+                    }
+                }
+            },
+
+            // Clear all caches (for testing or when structure changes)
+            clearAll() {
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (key.startsWith(CACHE_VERSION + '_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                console.log('🗑️ All caches cleared');
+            },
+
+            // Clear old version caches
+            clearOldCaches() {
+                const keys = Object.keys(localStorage);
+                keys.forEach(key => {
+                    if (!key.startsWith(CACHE_VERSION + '_')) {
+                        localStorage.removeItem(key);
+                    }
+                });
+                console.log('🗑️ Old version caches cleared');
+            }
+        };
+
+        // Clear old caches on load
+        CacheManager.clearOldCaches();
+
         // Audio player
         const audioPlayer = document.getElementById('audioPlayer');
 
@@ -5270,48 +5371,20 @@
             return null;
         }
 
-        // Cache helpers
-        const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
-        
-        function getCachedData(key) {
-            try {
-                const cached = localStorage.getItem(`oitzer_${key}`);
-                if (cached) {
-                    const { data, timestamp } = JSON.parse(cached);
-                    if (Date.now() - timestamp < CACHE_DURATION) {
-                        console.log(`Using cached data for ${key}`);
-                        return data;
-                    }
-                }
-            } catch (e) {
-                console.log('Cache read error:', e);
-            }
-            return null;
-        }
-        
-        function setCachedData(key, data) {
-            try {
-                localStorage.setItem(`oitzer_${key}`, JSON.stringify({
-                    data,
-                    timestamp: Date.now()
-                }));
-            } catch (e) {
-                console.log('Cache write error:', e);
-            }
-        }
-
-        // Generic function to fetch table info with pagination
+        // Generic function to fetch table info with pagination - with caching
         async function fetchTableInfo(tableId, infoObject, tableName) {
             try {
                 // Check cache first
-                const cacheKey = `table_${tableName}`;
-                const cachedData = getCachedData(cacheKey);
-                if (cachedData) {
-                    Object.assign(infoObject, cachedData);
-                    console.log(`Loaded ${tableName} info from cache: ${Object.keys(cachedData).length} items`);
+                const cacheKey = `table_${tableId}`;
+                const cached = CacheManager.get(cacheKey);
+                if (cached) {
+                    Object.assign(infoObject, cached);
+                    console.log(`✅ ${tableName} loaded from cache (${Object.keys(cached).length} items)`);
                     return;
                 }
-                
+
+                console.log(`📡 Fetching ${tableName} from API...`);
+
                 // Get columns first
                 const columnsResponse = await fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${tableId}/columns`);
                 const columnsData = await columnsResponse.json();
@@ -5645,7 +5718,11 @@
                 if (sampleWithDesc) {
                     console.log(`Sample ${tableName} with description:`, sampleWithDesc[0], 'desc:', sampleWithDesc[1].description?.substring(0, 100));
                 }
-                
+
+                // Save to cache
+                CacheManager.set(cacheKey, infoObject);
+                console.log(`💾 ${tableName} cached`);
+
             } catch (error) {
                 console.log(`Could not fetch ${tableName} info:`, error.message);
             }
@@ -5688,16 +5765,81 @@
             await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
         }
 
+// Fetch statistics from STATS table (only row 1) - with caching
+async function fetchStatistics() {
+    try {
+        // Check cache first
+        const cacheKey = 'statistics';
+        const cached = getCachedData(cacheKey);
+        if (cached) {
+            Object.assign(cachedStats, cached);
+            console.log('✅ Statistics loaded from cache:', cachedStats);
+            return;
+        }
+
+        console.log('📡 Fetching statistics from API:', STATS_TABLE_ID);
+        const url = `${WORKER_URL}docs/${DOC_ID}/tables/${STATS_TABLE_ID}/rows?valueFormat=simple&limit=1`;
+
+        const response = await fetch(url);
+        console.log('Stats response status:', response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Stats API error:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.items && data.items.length > 0) {
+            const row = data.items[0];
+            const values = row.values;
+
+            // Extract statistics from the row
+            cachedStats.niggunim = parseInt(extractText(values[STATS_COLS.niggunim])) || 0;
+            cachedStats.mechabrim = parseInt(extractText(values[STATS_COLS.mechabrim])) || 0;
+            cachedStats.verter = parseInt(extractText(values[STATS_COLS.verter])) || 0;
+            cachedStats.chatzeros = parseInt(extractText(values[STATS_COLS.chatzeros])) || 0;
+            cachedStats.zmanim = parseInt(extractText(values[STATS_COLS.zmanim])) || 0;
+            cachedStats.piyutim = parseInt(extractText(values[STATS_COLS.piyutim])) || 0;
+            cachedStats.collections = parseInt(extractText(values[STATS_COLS.collections])) || 0;
+
+            // Save to cache
+            setCachedData(cacheKey, { ...cachedStats });
+
+            console.log('✅ Statistics loaded from API and cached:', cachedStats);
+        } else {
+            console.error('❌ No stats data in response');
+        }
+    } catch (error) {
+        console.error('❌ Statistics fetch error:', error);
+        throw error;
+    }
+}
+
         // Fetch songs from API
         async function fetchSongs() {
             try {
-                // Render home page immediately (before data loads)
+                console.log('🚀 Starting initialization...');
+
+                // FIRST: Load statistics immediately (before anything else)
+                try {
+                    await fetchStatistics();
+                    console.log('✅ Statistics loaded:', cachedStats);
+                } catch (statsError) {
+                    console.error('⚠️ Statistics failed to load, using defaults:', statsError);
+                    // Continue anyway with default 0 values
+                }
+
+                // Render home page NOW with statistics (or defaults)
                 if (!window.location.hash || window.location.hash === '#/home' || window.location.hash === '#/') {
                     updateURL();
                     renderCurrentPage();
+                    console.log('✅ Home page rendered');
                 }
-                
-                // Fetch all the category info
+// Fetch all the category info in background
+console.log('📥 Loading category info...');
+
                 const infoPromises = [
                     fetchChatzerosInfo(),
                     fetchMechabrimInfo(),
@@ -5709,10 +5851,10 @@
                     fetchDocumentsInfo(),
                     fetchAlbumsInfo()
                 ];
-                
+
                 // Wait for category info to load
                 await Promise.all(infoPromises);
-                console.log('Category info loaded:',
+                console.log('✅ Category info loaded:',
                     'Chatzeros:', Object.keys(chatzerosInfo).length,
                     'Mechabrim:', Object.keys(mechabrimInfo).length,
                     'Verter:', Object.keys(verterInfo).length,
@@ -5720,26 +5862,26 @@
                     'Piyutim:', Object.keys(piyutimInfo).length,
                     'Collections:', Object.keys(collectionsInfo).length
                 );
-                
+
                 // Navigate based on URL (if not home, now we have the data)
                 if (window.location.hash && window.location.hash !== '#/home' && window.location.hash !== '#/') {
                     handleURLChange();
-                } else {
-                    // Re-render home with actual data
-                    renderCurrentPage();
                 }
-                
-                // Now fetch songs in background
+
+                // FINALLY: Fetch songs in background (don't block on this)
+                console.log('🎵 Loading songs in background...');
                 fetchSongsInBackground();
 
             } catch (error) {
-                console.error('Error:', error);
-                const spinner = document.getElementById('loadingSpinner');
-                if (spinner) {
-                    spinner.innerHTML = `
+                console.error('❌ Fatal error:', error);
+                const content = document.getElementById('mainContent');
+                if (content) {
+                    content.innerHTML = `
                         <div class="empty-state">
                             <div class="empty-state-icon">❌</div>
-                            <p>גרייז: ${error.message}</p>
+                            <h2>גרייז לאָודינג</h2>
+                            <p>${error.message}</p>
+                            <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">פּרוּוו ווידער</button>
                         </div>
                     `;
                 }
@@ -8078,11 +8220,167 @@
             navigateTo('songs');
         }
 
-        // Render category page
+        // Lazy loading state for categories
+        let categoryLazyState = {
+            currentIndex: 0,
+            batchSize: 50,
+            allKeys: [],
+            isLoading: false
+        };
+
+        // Render a single category card
+        function renderCategoryCard(key, categoryKey, icon, infoObj, data) {
+            const info = infoObj[key] || {};
+            const hasImage = !!info.image;
+            const songCount = data[key].length;
+
+            // Only show chatzer tags for mechabrim
+            const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
+                ? info.chatzer.split(',').map(c => c.trim()).filter(Boolean)
+                : [];
+
+            // Count mechabrim for chatzeros
+            let mechabrimCount = 0;
+            if (categoryKey === 'chatzeros') {
+                mechabrimCount = Object.entries(mechabrimInfo)
+                    .filter(([mechName, mechInfo]) => {
+                        if (!mechInfo.chatzer) return false;
+                        const mechChatzeros = mechInfo.chatzer.split(',').map(c => c.trim());
+                        return mechChatzeros.includes(key);
+                    }).length;
+            }
+
+            return `
+            <div class="category-card ${hasImage ? 'has-image' : ''}" onclick="navigateToDetail('${categoryKey}', '${escapeAttr(key)}')">
+                <div class="card-header">
+                    ${hasImage ? `
+                        <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="card-icon" style="display:none;">${icon}</div>
+                    ` : `
+                        <div class="card-icon">${icon}</div>
+                    `}
+                    <div class="card-header-text">
+                        ${(() => {
+                            if (categoryKey === 'mechabrim') {
+                                // Build full name like tooltip does
+                                const nameParts = [info.title, info.firstName, info.lastName, info.suffix].filter(Boolean);
+                                const fullName = nameParts.length > 0 ? nameParts.join(' ') : key;
+
+                                // Build full dates
+                                const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
+                                const deathParts = [info.deathDay, info.deathMonth, info.deathYear].filter(Boolean);
+                                const birthDate = birthParts.join(' ');
+                                const deathDate = deathParts.join(' ');
+                                const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
+
+                                return `
+                                    <div class="card-title">${fullName}</div>
+                                    ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
+                                `;
+                            } else {
+                                return `<div class="card-title">${key}</div>`;
+                            }
+                        })()}
+                        ${chatzeros.length > 0 ? `
+                            <div class="card-tags" onclick="event.stopPropagation();">
+                                ${chatzeros.map(chatzer => `
+                                    <span class="card-chatzer-tag"
+                                          onclick="event.stopPropagation(); navigateToWithFilter('chatzeros', 'chatzer', '${escapeAttr(chatzer)}')"
+                                          onmouseenter="showTooltip(event, '${escapeAttr(chatzer)}', 'chatzer')"
+                                          onmouseleave="hideTooltip()">${chatzer}</span>
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                        <div class="card-stats">
+                            ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${mechabrimCount} מחברים</span>` : ''}
+                            <span class="card-stat">${songCount} ניגונים</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        }
+
+        // Load more category cards (lazy loading)
+        function loadMoreCategoryCards(categoryKey, icon, infoObj, data) {
+            if (categoryLazyState.isLoading) return;
+            if (categoryLazyState.currentIndex >= categoryLazyState.allKeys.length) return;
+
+            categoryLazyState.isLoading = true;
+            const grid = document.getElementById('categoryGrid');
+            const endIndex = Math.min(
+                categoryLazyState.currentIndex + categoryLazyState.batchSize,
+                categoryLazyState.allKeys.length
+            );
+
+            const batch = categoryLazyState.allKeys.slice(categoryLazyState.currentIndex, endIndex);
+            const html = batch.map(key => renderCategoryCard(key, categoryKey, icon, infoObj, data)).join('');
+
+            grid.insertAdjacentHTML('beforeend', html);
+            categoryLazyState.currentIndex = endIndex;
+            categoryLazyState.isLoading = false;
+
+            console.log(`Loaded ${batch.length} cards (${categoryLazyState.currentIndex}/${categoryLazyState.allKeys.length})`);
+        }
+
+        // Render category page with lazy loading
         function renderCategoryPage(container, categoryKey, title, icon, subtitle) {
             const data = categories[categoryKey];
             const sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
-            
+
+            // Reset lazy loading state
+            categoryLazyState = {
+                currentIndex: 0,
+                batchSize: 50,
+                allKeys: sortedKeys,
+                isLoading: false
+            };
+
+            // Get the right info object and theme class for this category
+            let infoObj = {};
+            let themeClass = '';
+            switch(categoryKey) {
+                case 'chatzeros': infoObj = chatzerosInfo; themeClass = 'page-theme-chatzer'; break;
+                case 'mechabrim': infoObj = mechabrimInfo; themeClass = 'page-theme-mechaber'; break;
+                case 'verter': infoObj = verterInfo; themeClass = 'page-theme-verter'; break;
+                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); themeClass = 'page-theme-zman'; break;
+                case 'collections': infoObj = collectionsInfo; themeClass = 'page-theme-collection'; break;
+            }
+
+            container.innerHTML = `
+                <div class="${themeClass}">
+                    <div class="page-title">
+                        <div class="page-title-bar">${title}</div>
+                        <div class="page-title-content">
+                            <div class="subtitle">${subtitle} • ${sortedKeys.length} קאטעגאריעס</div>
+                        </div>
+                    </div>
+
+                    <div class="category-grid" id="categoryGrid">
+                    </div>
+                    <div id="loadMoreIndicator" style="text-align: center; padding: 20px; color: var(--text-muted);"></div>
+                </div>
+            `;
+
+            // Load first batch
+            loadMoreCategoryCards(categoryKey, icon, infoObj, data);
+
+            // Setup infinite scroll
+            const observer = new IntersectionObserver((entries) => {
+                if (entries[0].isIntersecting) {
+                    loadMoreCategoryCards(categoryKey, icon, infoObj, data);
+                }
+            }, { rootMargin: '200px' });
+
+            const indicator = document.getElementById('loadMoreIndicator');
+            if (indicator) observer.observe(indicator);
+        }
+
+        // OLD CODE BELOW - keeping structure for reference
+        function renderCategoryPage_OLD(container, categoryKey, title, icon, subtitle) {
+            const data = categories[categoryKey];
+            const sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
+
             // Get the right info object and theme class for this category
             let infoObj = {};
             let themeClass = '';
@@ -9777,16 +10075,38 @@
             if (modal) modal.classList.remove('active');
         }
 
-        // Register Service Worker for caching
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/sw.js')
-                .then((registration) => {
-                    console.log('Service Worker registered:', registration.scope);
-                })
-                .catch((error) => {
-                    console.log('Service Worker registration failed:', error);
-                });
-        }
+ // Animate cards on page load with staggered delays
+function animateCards() {
+    // Select all cards that should animate
+    const cards = document.querySelectorAll(
+        '.category-card, .home-stat-card, .home-link-card, .song-item, .zman-item-card'
+    );
+
+    cards.forEach((card, index) => {
+        // Add animation class with staggered delay
+        card.classList.add('animate-on-load');
+        card.style.animationDelay = `${index * 0.1}s`;
+    });
+}
+
+// Override renderCurrentPage to add animations after render
+const originalRenderCurrentPage = renderCurrentPage;
+renderCurrentPage = function () {
+    originalRenderCurrentPage();
+    // Animate cards after a brief delay to ensure DOM is ready
+    setTimeout(animateCards, 50);
+};
+
+// Register Service Worker for caching
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+            console.log('Service Worker registered:', registration.scope);
+        })
+        .catch((error) => {
+            console.log('Service Worker registration failed:', error);
+        });
+}
 
         // Initialize
         fetchSongs();
