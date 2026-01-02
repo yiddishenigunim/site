@@ -368,6 +368,18 @@
             background: #999;
         }
 
+        /* Navigation items text colors on hover */
+        .nav-dropdown-item[data-dest="songs"]:hover { color: var(--color-nigun-dark); background: var(--color-nigun-pale); }
+        .nav-dropdown-item[data-dest="mechabrim"]:hover { color: var(--color-mechaber-dark); background: var(--color-mechaber-pale); }
+        .nav-dropdown-item[data-dest="chatzeros"]:hover { color: var(--color-chatzer-dark); background: var(--color-chatzer-pale); }
+        .nav-dropdown-item[data-dest="verter"]:hover { color: var(--color-verter-dark); background: var(--color-verter-pale); }
+        .nav-dropdown-item[data-dest="zmanim"]:hover { color: var(--color-zman-dark); background: var(--color-zman-pale); }
+        .nav-dropdown-item[data-dest="music"]:hover { color: var(--color-music-dark); background: var(--color-music-pale); }
+        .nav-dropdown-item[data-dest="collections"]:hover { color: var(--color-collection-dark); background: var(--color-collection-pale); }
+        .nav-dropdown-item[data-dest="resources"]:hover { color: var(--color-resource-dark); background: var(--color-resource-pale); }
+        .nav-dropdown-item[data-dest="albums"]:hover { color: var(--color-album-dark); background: var(--color-album-pale); }
+        .nav-dropdown-item[data-dest="documents"]:hover { color: var(--color-document-dark); background: var(--color-document-pale); }
+
         .nav-dropdown-divider {
             height: 1px;
             background: #eee;
@@ -609,6 +621,34 @@
             color: var(--text-muted);
         }
 
+        /* Category-colored stat cards on home page */
+        .home-stat-card.stat-nigun .home-stat-number { color: var(--color-nigun-dark); }
+        .home-stat-card.stat-nigun .home-stat-label { color: var(--color-nigun); }
+        .home-stat-card.stat-nigun:hover { border-color: var(--color-nigun); background: var(--color-nigun-pale); }
+
+        .home-stat-card.stat-chatzer .home-stat-number { color: var(--color-chatzer-dark); }
+        .home-stat-card.stat-chatzer .home-stat-label { color: var(--color-chatzer); }
+        .home-stat-card.stat-chatzer:hover { border-color: var(--color-chatzer); background: var(--color-chatzer-pale); }
+
+        .home-stat-card.stat-mechaber .home-stat-number { color: var(--color-mechaber-dark); }
+        .home-stat-card.stat-mechaber .home-stat-label { color: var(--color-mechaber); }
+        .home-stat-card.stat-mechaber:hover { border-color: var(--color-mechaber); background: var(--color-mechaber-pale); }
+
+        .home-stat-card.stat-verter .home-stat-number { color: var(--color-verter-dark); }
+        .home-stat-card.stat-verter .home-stat-label { color: var(--color-verter); }
+        .home-stat-card.stat-verter:hover { border-color: var(--color-verter); background: var(--color-verter-pale); }
+
+        .home-stat-card.stat-zman .home-stat-number { color: var(--color-zman-dark); }
+        .home-stat-card.stat-zman .home-stat-label { color: var(--color-zman); }
+        .home-stat-card.stat-zman:hover { border-color: var(--color-zman); background: var(--color-zman-pale); }
+
+        .home-stat-card.stat-collection .home-stat-number { color: var(--color-collection-dark); }
+        .home-stat-card.stat-collection .home-stat-label { color: var(--color-collection); }
+        .home-stat-card.stat-collection:hover { border-color: var(--color-collection); background: var(--color-collection-pale); }
+
+        /* Category-colored stat cards need border */
+        .home-stat-card[class*="stat-"] { border: 2px solid transparent; }
+
         .home-section-title {
             text-align: center;
             color: var(--primary-deep);
@@ -640,6 +680,34 @@
             transform: translateX(-5px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.12);
         }
+
+        /* Category-colored link cards on home page */
+        .home-link-card.link-nigun .home-link-title { color: var(--color-nigun-dark); }
+        .home-link-card.link-nigun:hover { border-color: var(--color-nigun); background: var(--color-nigun-pale); }
+
+        .home-link-card.link-chatzer .home-link-title { color: var(--color-chatzer-dark); }
+        .home-link-card.link-chatzer:hover { border-color: var(--color-chatzer); background: var(--color-chatzer-pale); }
+
+        .home-link-card.link-mechaber .home-link-title { color: var(--color-mechaber-dark); }
+        .home-link-card.link-mechaber:hover { border-color: var(--color-mechaber); background: var(--color-mechaber-pale); }
+
+        .home-link-card.link-verter .home-link-title { color: var(--color-verter-dark); }
+        .home-link-card.link-verter:hover { border-color: var(--color-verter); background: var(--color-verter-pale); }
+
+        .home-link-card.link-zman .home-link-title { color: var(--color-zman-dark); }
+        .home-link-card.link-zman:hover { border-color: var(--color-zman); background: var(--color-zman-pale); }
+
+        .home-link-card.link-collection .home-link-title { color: var(--color-collection-dark); }
+        .home-link-card.link-collection:hover { border-color: var(--color-collection); background: var(--color-collection-pale); }
+
+        .home-link-card.link-resource .home-link-title { color: var(--color-resource-dark); }
+        .home-link-card.link-resource:hover { border-color: var(--color-resource); background: var(--color-resource-pale); }
+
+        .home-link-card.link-document .home-link-title { color: var(--color-document-dark); }
+        .home-link-card.link-document:hover { border-color: var(--color-document); background: var(--color-document-pale); }
+
+        .home-link-card.link-album .home-link-title { color: var(--color-album-dark); }
+        .home-link-card.link-album:hover { border-color: var(--color-album); background: var(--color-album-pale); }
 
         .home-link-icon {
             font-size: 2.5em;
@@ -2245,6 +2313,28 @@
             color: var(--text-muted);
         }
 
+        /* Search result card category colors */
+        .search-result-card.result-chatzer .result-name { color: var(--color-chatzer-dark); }
+        .search-result-card.result-chatzer:hover { background: var(--color-chatzer-pale); }
+        .search-result-card.result-mechaber .result-name { color: var(--color-mechaber-dark); }
+        .search-result-card.result-mechaber:hover { background: var(--color-mechaber-pale); }
+        .search-result-card.result-nigun .result-name { color: var(--color-nigun-dark); }
+        .search-result-card.result-nigun:hover { background: var(--color-nigun-pale); }
+        .search-result-card.result-verter .result-name { color: var(--color-verter-dark); }
+        .search-result-card.result-verter:hover { background: var(--color-verter-pale); }
+        .search-result-card.result-zman .result-name { color: var(--color-zman-dark); }
+        .search-result-card.result-zman:hover { background: var(--color-zman-pale); }
+        .search-result-card.result-collection .result-name { color: var(--color-collection-dark); }
+        .search-result-card.result-collection:hover { background: var(--color-collection-pale); }
+        .search-result-card.result-resource .result-name { color: var(--color-resource-dark); }
+        .search-result-card.result-resource:hover { background: var(--color-resource-pale); }
+        .search-result-card.result-document .result-name { color: var(--color-document-dark); }
+        .search-result-card.result-document:hover { background: var(--color-document-pale); }
+        .search-result-card.result-album .result-name { color: var(--color-album-dark); }
+        .search-result-card.result-album:hover { background: var(--color-album-pale); }
+        .search-result-card.result-music .result-name { color: var(--color-music-dark); }
+        .search-result-card.result-music:hover { background: var(--color-music-pale); }
+
         .no-results {
             text-align: center;
             padding: 60px 20px;
@@ -2440,6 +2530,48 @@
         .chatzer-tag:hover {
             background: var(--color-chatzer-dark);
         }
+
+        /* Category-specific text colors - for use anywhere on the site */
+        .text-chatzer { color: var(--color-chatzer-dark); }
+        .text-chatzer:hover { color: var(--color-chatzer); }
+        .text-mechaber { color: var(--color-mechaber-dark); }
+        .text-mechaber:hover { color: var(--color-mechaber); }
+        .text-nigun { color: var(--color-nigun-dark); }
+        .text-nigun:hover { color: var(--color-nigun); }
+        .text-verter { color: var(--color-verter-dark); }
+        .text-verter:hover { color: var(--color-verter); }
+        .text-zman { color: var(--color-zman-dark); }
+        .text-zman:hover { color: var(--color-zman); }
+        .text-collection { color: var(--color-collection-dark); }
+        .text-collection:hover { color: var(--color-collection); }
+        .text-resource { color: var(--color-resource-dark); }
+        .text-resource:hover { color: var(--color-resource); }
+        .text-document { color: var(--color-document-dark); }
+        .text-document:hover { color: var(--color-document); }
+        .text-album { color: var(--color-album-dark); }
+        .text-album:hover { color: var(--color-album); }
+        .text-music { color: var(--color-music-dark); }
+        .text-music:hover { color: var(--color-music); }
+
+        /* Category text links with underlines */
+        .link-chatzer { color: var(--color-chatzer-dark); text-decoration: underline; text-decoration-color: var(--color-chatzer-light); cursor: pointer; }
+        .link-chatzer:hover { color: var(--color-chatzer); text-decoration-color: var(--color-chatzer); }
+        .link-mechaber { color: var(--color-mechaber-dark); text-decoration: underline; text-decoration-color: var(--color-mechaber-light); cursor: pointer; }
+        .link-mechaber:hover { color: var(--color-mechaber); text-decoration-color: var(--color-mechaber); }
+        .link-nigun { color: var(--color-nigun-dark); text-decoration: underline; text-decoration-color: var(--color-nigun-light); cursor: pointer; }
+        .link-nigun:hover { color: var(--color-nigun); text-decoration-color: var(--color-nigun); }
+        .link-verter { color: var(--color-verter-dark); text-decoration: underline; text-decoration-color: var(--color-verter-light); cursor: pointer; }
+        .link-verter:hover { color: var(--color-verter); text-decoration-color: var(--color-verter); }
+        .link-zman { color: var(--color-zman-dark); text-decoration: underline; text-decoration-color: var(--color-zman-light); cursor: pointer; }
+        .link-zman:hover { color: var(--color-zman); text-decoration-color: var(--color-zman); }
+        .link-collection { color: var(--color-collection-dark); text-decoration: underline; text-decoration-color: var(--color-collection-light); cursor: pointer; }
+        .link-collection:hover { color: var(--color-collection); text-decoration-color: var(--color-collection); }
+        .link-resource { color: var(--color-resource-dark); text-decoration: underline; text-decoration-color: var(--color-resource-light); cursor: pointer; }
+        .link-resource:hover { color: var(--color-resource); text-decoration-color: var(--color-resource); }
+        .link-document { color: var(--color-document-dark); text-decoration: underline; text-decoration-color: var(--color-document-light); cursor: pointer; }
+        .link-document:hover { color: var(--color-document); text-decoration-color: var(--color-document); }
+        .link-album { color: var(--color-album-dark); text-decoration: underline; text-decoration-color: var(--color-album-light); cursor: pointer; }
+        .link-album:hover { color: var(--color-album); text-decoration-color: var(--color-album); }
 
         /* Nigun sections */
         .nigun-section {
@@ -6716,32 +6848,32 @@ async function fetchStatistics() {
 
                     <!-- Statistics -->
                     <div class="home-stats">
-                        <div class="home-stat-card" onclick="navigateTo('songs')">
+                        <div class="home-stat-card stat-nigun" onclick="navigateTo('songs')">
                             <div class="home-stat-icon"></div>
                             <div class="home-stat-number">${totalSongs}</div>
                             <div class="home-stat-label">ניגונים</div>
                         </div>
-                        <div class="home-stat-card" onclick="navigateTo('chatzeros')">
+                        <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
                             <div class="home-stat-icon"></div>
                             <div class="home-stat-number">${totalChatzeros}</div>
                             <div class="home-stat-label">חצרות</div>
                         </div>
-                        <div class="home-stat-card" onclick="navigateTo('mechabrim')">
+                        <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
                             <div class="home-stat-icon"></div>
                             <div class="home-stat-number">${totalMechabrim}</div>
                             <div class="home-stat-label">מחברים</div>
                         </div>
-                        <div class="home-stat-card" onclick="navigateTo('verter')">
+                        <div class="home-stat-card stat-verter" onclick="navigateTo('verter')">
                             <div class="home-stat-icon"></div>
                             <div class="home-stat-number">${totalVerter}</div>
                             <div class="home-stat-label">ווערטער</div>
                         </div>
-                        <div class="home-stat-card" onclick="navigateTo('zmanim')">
+                        <div class="home-stat-card stat-zman" onclick="navigateTo('zmanim')">
                             <div class="home-stat-icon"></div>
                             <div class="home-stat-number">${totalZmanim}</div>
                             <div class="home-stat-label">זמנים</div>
                         </div>
-                        <div class="home-stat-card" onclick="navigateTo('collections')">
+                        <div class="home-stat-card stat-collection" onclick="navigateTo('collections')">
                             <div class="home-stat-icon"></div>
                             <div class="home-stat-number">${totalCollections}</div>
                             <div class="home-stat-label">קאלעקשאנס</div>
@@ -6752,42 +6884,42 @@ async function fetchStatistics() {
                     <div class="home-quick-links">
                         <h2 class="home-section-title">בלעטער אין אוצר</h2>
                         <div class="home-links-grid">
-                            <div class="home-link-card" onclick="navigateTo('songs')">
+                            <div class="home-link-card link-nigun" onclick="navigateTo('songs')">
                                 <div class="home-link-icon"></div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">אלע ניגונים</div>
                                     <div class="home-link-desc">בלעטער דורך אלע ${totalSongs} ניגונים</div>
                                 </div>
                             </div>
-                            <div class="home-link-card" onclick="navigateTo('chatzeros')">
+                            <div class="home-link-card link-chatzer" onclick="navigateTo('chatzeros')">
                                 <div class="home-link-icon"></div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">חצרות</div>
                                     <div class="home-link-desc">${totalChatzeros} חסידישע חצרות</div>
                                 </div>
                             </div>
-                            <div class="home-link-card" onclick="navigateTo('mechabrim')">
+                            <div class="home-link-card link-mechaber" onclick="navigateTo('mechabrim')">
                                 <div class="home-link-icon"></div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">מחברים</div>
                                     <div class="home-link-desc">${totalMechabrim} מחברי ניגונים</div>
                                 </div>
                             </div>
-                            <div class="home-link-card" onclick="navigateTo('verter')">
+                            <div class="home-link-card link-verter" onclick="navigateTo('verter')">
                                 <div class="home-link-icon"></div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">ווערטער</div>
                                     <div class="home-link-desc">${totalVerter} ניגונים מיט ווערטער</div>
                                 </div>
                             </div>
-                            <div class="home-link-card" onclick="navigateTo('zmanim')">
+                            <div class="home-link-card link-zman" onclick="navigateTo('zmanim')">
                                 <div class="home-link-icon"></div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">זמנים</div>
                                     <div class="home-link-desc">${totalZmanim} זמנים, ${totalPiyutim} פיוטים</div>
                                 </div>
                             </div>
-                            <div class="home-link-card" onclick="navigateTo('collections')">
+                            <div class="home-link-card link-collection" onclick="navigateTo('collections')">
                                 <div class="home-link-icon"></div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">קאלעקשאנס</div>
@@ -10308,7 +10440,7 @@ async function fetchStatistics() {
                             ${matchingAlbums.map(name => {
                                 const albumData = albumsInfo[name];
                                 return `
-                                <div class="search-result-card" onclick="navigateToDetail('albums', '${escapeAttr(name)}')" style="border-right-color: var(--color-album);">
+                                <div class="search-result-card result-album" onclick="navigateToDetail('albums', '${escapeAttr(name)}')" style="border-right-color: var(--color-album);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${albumData?.songs?.length || 0} ניגונים</div>
                                 </div>
@@ -10327,7 +10459,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingChatzeros.map(name => `
-                                <div class="search-result-card" onclick="navigateToDetail('chatzeros', '${escapeAttr(name)}')" style="border-right-color: var(--color-chatzer);">
+                                <div class="search-result-card result-chatzer" onclick="navigateToDetail('chatzeros', '${escapeAttr(name)}')" style="border-right-color: var(--color-chatzer);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.chatzeros[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -10346,7 +10478,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingMechabrim.map(name => `
-                                <div class="search-result-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(name)}')" style="border-right-color: var(--color-mechaber);">
+                                <div class="search-result-card result-mechaber" onclick="navigateToDetail('mechabrim', '${escapeAttr(name)}')" style="border-right-color: var(--color-mechaber);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.mechabrim[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -10365,7 +10497,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingCollections.map(name => `
-                                <div class="search-result-card" onclick="navigateToDetail('collections', '${escapeAttr(name)}')" style="border-right-color: var(--color-collection);">
+                                <div class="search-result-card result-collection" onclick="navigateToDetail('collections', '${escapeAttr(name)}')" style="border-right-color: var(--color-collection);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.collections[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -10384,7 +10516,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingVerter.map(name => `
-                                <div class="search-result-card" onclick="navigateToDetail('verter', '${escapeAttr(name)}')" style="border-right-color: var(--color-verter);">
+                                <div class="search-result-card result-verter" onclick="navigateToDetail('verter', '${escapeAttr(name)}')" style="border-right-color: var(--color-verter);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.verter[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -10403,7 +10535,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingZmanim.map(name => `
-                                <div class="search-result-card" onclick="navigateToZmanDetail('${escapeAttr(name)}')" style="border-right-color: var(--color-zman);">
+                                <div class="search-result-card result-zman" onclick="navigateToZmanDetail('${escapeAttr(name)}')" style="border-right-color: var(--color-zman);">
                                     <div class="result-name">${name}</div>
                                 </div>
                             `).join('')}
@@ -10440,7 +10572,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingRitem.map(name => `
-                                <div class="search-result-card" onclick="navigateToWithFilter('songs', 'ritem', '${escapeAttr(name)}')" style="border-right-color: var(--color-music);">
+                                <div class="search-result-card result-music" onclick="navigateToWithFilter('songs', 'ritem', '${escapeAttr(name)}')" style="border-right-color: var(--color-music);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.ritem[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -10459,7 +10591,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingScale.map(name => `
-                                <div class="search-result-card" onclick="navigateToWithFilter('songs', 'scale', '${escapeAttr(name)}')" style="border-right-color: var(--color-nigun);">
+                                <div class="search-result-card result-nigun" onclick="navigateToWithFilter('songs', 'scale', '${escapeAttr(name)}')" style="border-right-color: var(--color-nigun);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.scale[name]?.length || 0} ניגונים</div>
                                 </div>
