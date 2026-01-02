@@ -5116,7 +5116,7 @@
         const WORKER_URL = 'https://api.oitzerhanigunim.org/api/';
         const DOC_ID = '6QcJRx7e13';
         const TABLE_ID = 'grid-YycmDjJ8pS'; // Songs table
-
+        
         // Additional table IDs from Coda doc
         const MECHABRIM_TABLE_ID = 'grid-bCbfhDmi82'; // מחברים טעיבל
         const CHATZEROS_TABLE_ID = 'grid-4-KYWDJ5l9'; // חצרות טעיבל
@@ -5127,18 +5127,6 @@
         const RESOURCES_TABLE_ID = 'grid-8Gfz8rXNUV'; // רעסורסן טעיבל
         const DOCUMENTS_TABLE_ID = 'grid-3wKzDnkPg-'; // דאקומענטן טעיבל
         const ALBUMS_TABLE_ID = 'grid-bbTaa18Jhx'; // אלבומס טעיבל
-        const STATS_TABLE_ID = 'grid-0wlx_Yad4N'; // סטאטיסטיקס טעיבל
-
-        // Stats table column IDs (all in row 1)
-        const STATS_COLS = {
-            niggunim: 'c-3wC2msD8Ll',
-            mechabrim: 'c-5u6KHT3ZLF',
-            verter: 'c-IadpFStSEK',
-            chatzeros: 'c-i--tHnlwAu',
-            zmanim: 'c-ZFj4le3Q0t',
-            piyutim: 'c-0X_OHjkDDx',
-            collections: 'c-Y9SNk0BOGV'
-        };
 
         // Helper to escape strings for use in onclick attributes
         // Uses base64 encoding to safely handle ALL special characters including quotes
@@ -5171,17 +5159,6 @@
         let currentPageView = 'home';
         let searchQuery = ''; // Search query for songs
         let audioOnlyFilter = true; // Show only songs with audio (default on)
-
-        // Cached statistics from STATS table (to avoid reloading/recalculating)
-        let cachedStats = {
-            niggunim: 0,
-            mechabrim: 0,
-            verter: 0,
-            chatzeros: 0,
-            zmanim: 0,
-            piyutim: 0,
-            collections: 0
-        };
 
         // Category data
         let categories = {
@@ -5727,6 +5704,9 @@
                 
                 console.log(`Loaded ${tableName} info:`, Object.keys(infoObject).length, 'items');
                 
+                // Cache the results
+                setCachedData(cacheKey, { ...infoObject });
+                
                 // Log sample with image
                 const sampleWithImage = Object.entries(infoObject).find(([k, v]) => v.image);
                 if (sampleWithImage) {
@@ -5785,57 +5765,57 @@
             await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
         }
 
-        // Fetch statistics from STATS table (only row 1) - with caching
-        async function fetchStatistics() {
-            try {
-                // Check cache first
-                const cached = CacheManager.get('statistics');
-                if (cached) {
-                    Object.assign(cachedStats, cached);
-                    console.log('✅ Statistics loaded from cache:', cachedStats);
-                    return;
-                }
-
-                console.log('📡 Fetching statistics from API:', STATS_TABLE_ID);
-                const url = `${WORKER_URL}docs/${DOC_ID}/tables/${STATS_TABLE_ID}/rows?valueFormat=simple&limit=1`;
-
-                const response = await fetch(url);
-                console.log('Stats response status:', response.status);
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    console.error('Stats API error:', errorText);
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-
-                const data = await response.json();
-
-                if (data.items && data.items.length > 0) {
-                    const row = data.items[0];
-                    const values = row.values;
-
-                    // Extract statistics from the row
-                    cachedStats.niggunim = parseInt(extractText(values[STATS_COLS.niggunim])) || 0;
-                    cachedStats.mechabrim = parseInt(extractText(values[STATS_COLS.mechabrim])) || 0;
-                    cachedStats.verter = parseInt(extractText(values[STATS_COLS.verter])) || 0;
-                    cachedStats.chatzeros = parseInt(extractText(values[STATS_COLS.chatzeros])) || 0;
-                    cachedStats.zmanim = parseInt(extractText(values[STATS_COLS.zmanim])) || 0;
-                    cachedStats.piyutim = parseInt(extractText(values[STATS_COLS.piyutim])) || 0;
-                    cachedStats.collections = parseInt(extractText(values[STATS_COLS.collections])) || 0;
-
-                    // Save to cache
-                    CacheManager.set('statistics', cachedStats);
-
-                    console.log('✅ Statistics loaded from API and cached:', cachedStats);
-                } else {
-                    console.error('❌ No stats data in response');
-                }
-            } catch (error) {
-                console.error('❌ Statistics fetch error:', error);
-                console.error('Error details:', error.message, error.stack);
-                throw error; // Re-throw to let caller handle it
-            }
+// Fetch statistics from STATS table (only row 1) - with caching
+async function fetchStatistics() {
+    try {
+        // Check cache first
+        const cacheKey = 'statistics';
+        const cached = getCachedData(cacheKey);
+        if (cached) {
+            Object.assign(cachedStats, cached);
+            console.log('✅ Statistics loaded from cache:', cachedStats);
+            return;
         }
+
+        console.log('📡 Fetching statistics from API:', STATS_TABLE_ID);
+        const url = `${WORKER_URL}docs/${DOC_ID}/tables/${STATS_TABLE_ID}/rows?valueFormat=simple&limit=1`;
+
+        const response = await fetch(url);
+        console.log('Stats response status:', response.status);
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Stats API error:', errorText);
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        if (data.items && data.items.length > 0) {
+            const row = data.items[0];
+            const values = row.values;
+
+            // Extract statistics from the row
+            cachedStats.niggunim = parseInt(extractText(values[STATS_COLS.niggunim])) || 0;
+            cachedStats.mechabrim = parseInt(extractText(values[STATS_COLS.mechabrim])) || 0;
+            cachedStats.verter = parseInt(extractText(values[STATS_COLS.verter])) || 0;
+            cachedStats.chatzeros = parseInt(extractText(values[STATS_COLS.chatzeros])) || 0;
+            cachedStats.zmanim = parseInt(extractText(values[STATS_COLS.zmanim])) || 0;
+            cachedStats.piyutim = parseInt(extractText(values[STATS_COLS.piyutim])) || 0;
+            cachedStats.collections = parseInt(extractText(values[STATS_COLS.collections])) || 0;
+
+            // Save to cache
+            setCachedData(cacheKey, { ...cachedStats });
+
+            console.log('✅ Statistics loaded from API and cached:', cachedStats);
+        } else {
+            console.error('❌ No stats data in response');
+        }
+    } catch (error) {
+        console.error('❌ Statistics fetch error:', error);
+        throw error;
+    }
+}
 
         // Fetch songs from API
         async function fetchSongs() {
@@ -5857,9 +5837,9 @@
                     renderCurrentPage();
                     console.log('✅ Home page rendered');
                 }
+// Fetch all the category info in background
+console.log('📥 Loading category info...');
 
-                // THEN: Fetch all the category info in background
-                console.log('📥 Loading category info...');
                 const infoPromises = [
                     fetchChatzerosInfo(),
                     fetchMechabrimInfo(),
@@ -5909,14 +5889,25 @@
         }
         
         // Fetch songs in background with pagination
-        // Modified to load fewer pages at once to reduce Cloudflare API usage
         async function fetchSongsInBackground() {
             try {
+                // Check cache first
+                const cachedSongs = getCachedData('songs');
+                if (cachedSongs && cachedSongs.length > 0) {
+                    console.log(`Using cached songs: ${cachedSongs.length} items`);
+                    allSongs = cachedSongs;
+                    applyFilters();
+                    buildCategoryIndices();
+                    updateNavCounts();
+                    if (currentPageView === 'songs') {
+                        renderCurrentPage();
+                    }
+                    return;
+                }
+                
                 let allRows = [];
                 let pageToken = null;
-                let pagesLoaded = 0;
-                const maxPagesToLoad = 3; // Load only first 3 pages (~150-200 songs)
-
+                
                 do {
                     const url = `${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows?valueFormat=rich${pageToken ? '&pageToken=' + pageToken : ''}`;
                     const response = await fetch(url);
@@ -5924,27 +5915,23 @@
                     const data = await response.json();
                     allRows = allRows.concat(data.items || []);
                     pageToken = data.nextPageToken;
-                    pagesLoaded++;
-
+                    
                     // Process songs so far and update counts
                     processSongsData(allRows);
-
-                    console.log(`Loaded ${allRows.length} songs (page ${pagesLoaded})...`);
-
-                    // Stop after loading maxPagesToLoad pages to reduce API usage
-                    if (pagesLoaded >= maxPagesToLoad) {
-                        console.log(`Loaded first ${pagesLoaded} pages. Total songs: ${allRows.length}`);
-                        break;
-                    }
+                    
+                    console.log(`Loaded ${allRows.length} songs...`);
                 } while (pageToken);
-
-                console.log(`Finished loading ${allRows.length} songs from ${pagesLoaded} pages`);
-
+                
+                console.log(`Finished loading ${allRows.length} total songs`);
+                
+                // Cache the processed songs
+                setCachedData('songs', allSongs);
+                
                 // Final re-render if on songs page
                 if (currentPageView === 'songs') {
                     renderCurrentPage();
                 }
-
+                
             } catch (error) {
                 console.error('Error loading songs:', error);
             }
@@ -6355,15 +6342,13 @@
 
         // Render home page
         function renderHomePage(container) {
-            // Use cached statistics from STATS table instead of calculating from loaded data
-            // This reduces Cloudflare API usage by not needing to load all songs
-            const totalSongs = cachedStats.niggunim || allSongs.length;
-            const totalChatzeros = cachedStats.chatzeros || Object.keys(categories.chatzeros).length;
-            const totalMechabrim = cachedStats.mechabrim || Object.keys(categories.mechabrim).length;
-            const totalVerter = cachedStats.verter || Object.keys(categories.verter).length;
-            const totalZmanim = cachedStats.zmanim || Object.keys(zmaninInfo).length;
-            const totalCollections = cachedStats.collections || Object.keys(categories.collections).length;
-            const totalPiyutim = cachedStats.piyutim || Object.keys(categories.zmanim).length;
+            const totalSongs = allSongs.length;
+            const totalChatzeros = Object.keys(categories.chatzeros).length;
+            const totalMechabrim = Object.keys(categories.mechabrim).length;
+            const totalVerter = Object.keys(categories.verter).length;
+            const totalZmanim = Object.keys(zmaninInfo).length;
+            const totalCollections = Object.keys(categories.collections).length;
+            const totalPiyutim = Object.keys(categories.zmanim).length;
             
             container.innerHTML = `
                 <div class="home-page">
@@ -7462,7 +7447,7 @@
             container.innerHTML = `
                 <div class="detail-page ${themeClass}" data-type="${type}">
                     <button class="back-button" onclick="goBackFromDetail()">
-                        → חזור
+                        → צוריק
                     </button>
                     
                     <div class="detail-header">
@@ -7967,7 +7952,7 @@
                                     <a href="${pdf.url}" target="_blank" class="nigun-pdf-item">
                                         <div class="nigun-pdf-icon">📄</div>
                                         <div class="nigun-pdf-name">${pdf.name}</div>
-                                        <div class="nigun-pdf-action">פתח</div>
+                                        <div class="nigun-pdf-action">עפן</div>
                                     </a>
                                 `).join('')}
                             </div>
@@ -8019,7 +8004,7 @@
             let html = `
                 <div class="detail-page theme-zman">
                     <button class="back-button" onclick="navigateTo('zmanim')">
-                        → חזור צו זמנים
+                        → זמנים בלאט
                     </button>
                     
                     <div class="detail-header">
@@ -8563,7 +8548,7 @@
                             <div class="resource-card-footer">
                                 ${hasLink ? `
                                     <a href="${linkUrl}" target="_blank" class="resource-link-btn">
-                                        פתח לינק
+                                        עפן לינק
                                     </a>
                                 ` : isPhone ? `
                                     <div class="resource-phone-number">${phoneNumber}</div>
@@ -8800,7 +8785,7 @@
             container.innerHTML = `
                 <div class="detail-page page-theme-album">
                     <button class="back-button" onclick="navigateTo('albums')">
-                        → חזור צו אלבומס
+                        → אלבומס בלאט
                     </button>
                     
                     <div class="detail-header">
@@ -8880,7 +8865,7 @@
             container.innerHTML = `
                 <div class="detail-page page-theme-document">
                     <button class="back-button" onclick="navigateTo('documents')">
-                        → חזור צו דאקומענטן
+                        → דאקומענטן בלאט
                     </button>
                     
                     <div class="detail-header">
@@ -8912,7 +8897,7 @@
                         <div class="detail-actions">
                             ${hasFile ? `
                                 <button class="detail-action-btn document-pdf-btn" onclick="openPdfPopup('${encodeURIComponent(fileUrl)}', '${encodeURIComponent(docName)}')">
-                                    📄 פתח PDF
+                                    📄 עפן PDF
                                 </button>
                             ` : ''}
                             ${hasLink ? `
@@ -8968,7 +8953,7 @@
             container.innerHTML = `
                 <div class="detail-page page-theme-resource">
                     <button class="back-button" onclick="navigateTo('resources')">
-                        → חזור צו רעסורסן
+                        → רעסורסן בלאט
                     </button>
                     
                     <div class="detail-header">
@@ -8999,7 +8984,7 @@
                     ${hasLink ? `
                         <div class="detail-actions">
                             <a href="${linkUrl}" target="_blank" class="detail-action-btn resource-link-btn">
-                                🔗 פתח לינק
+                                🔗 עפן לינק
                             </a>
                         </div>
                     ` : ''}
@@ -10090,27 +10075,38 @@
             if (modal) modal.classList.remove('active');
         }
 
-        // Animate cards on page load with staggered delays
-        function animateCards() {
-            // Select all cards that should animate
-            const cards = document.querySelectorAll(
-                '.category-card, .home-stat-card, .home-link-card, .song-item, .zman-item-card'
-            );
+ // Animate cards on page load with staggered delays
+function animateCards() {
+    // Select all cards that should animate
+    const cards = document.querySelectorAll(
+        '.category-card, .home-stat-card, .home-link-card, .song-item, .zman-item-card'
+    );
 
-            cards.forEach((card, index) => {
-                // Add animation class with staggered delay
-                card.classList.add('animate-on-load');
-                card.style.animationDelay = `${index * 0.1}s`;
-            });
-        }
+    cards.forEach((card, index) => {
+        // Add animation class with staggered delay
+        card.classList.add('animate-on-load');
+        card.style.animationDelay = `${index * 0.1}s`;
+    });
+}
 
-        // Override renderCurrentPage to add animations after render
-        const originalRenderCurrentPage = renderCurrentPage;
-        renderCurrentPage = function() {
-            originalRenderCurrentPage();
-            // Animate cards after a brief delay to ensure DOM is ready
-            setTimeout(animateCards, 50);
-        };
+// Override renderCurrentPage to add animations after render
+const originalRenderCurrentPage = renderCurrentPage;
+renderCurrentPage = function () {
+    originalRenderCurrentPage();
+    // Animate cards after a brief delay to ensure DOM is ready
+    setTimeout(animateCards, 50);
+};
+
+// Register Service Worker for caching
+if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+        .then((registration) => {
+            console.log('Service Worker registered:', registration.scope);
+        })
+        .catch((error) => {
+            console.log('Service Worker registration failed:', error);
+        });
+}
 
         // Initialize
         fetchSongs();
