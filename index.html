@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>אוצר הניגונים</title>
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext x='50' y='80' font-size='80' text-anchor='middle'%3E♪%3C/text%3E%3C/svg%3E">
-    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&family=David+Libre:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Preconnect for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@400;500;600;700&family=David+Libre:wght@500;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary-deep: #4a1259;
@@ -408,6 +411,116 @@
         @keyframes shimmer {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
+        }
+
+        /* Modern animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* Animation utility classes */
+        .animate-fade-in { animation: fadeIn 0.4s ease-out forwards; }
+        .animate-fade-in-up { animation: fadeInUp 0.5s ease-out forwards; }
+        .animate-fade-in-down { animation: fadeInDown 0.5s ease-out forwards; }
+        .animate-slide-in-right { animation: slideInRight 0.5s ease-out forwards; }
+        .animate-slide-in-left { animation: slideInLeft 0.5s ease-out forwards; }
+        .animate-scale-in { animation: scaleIn 0.4s ease-out forwards; }
+
+        /* Stagger animations for lists */
+        .stagger-1 { animation-delay: 0.05s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.1s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.15s; opacity: 0; }
+        .stagger-4 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-5 { animation-delay: 0.25s; opacity: 0; }
+        .stagger-6 { animation-delay: 0.3s; opacity: 0; }
+
+        /* Hover animations */
+        .hover-lift {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+        }
+        .hover-lift:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 40px rgba(74, 18, 89, 0.15);
+        }
+
+        .hover-scale {
+            transition: transform 0.2s ease;
+        }
+        .hover-scale:hover {
+            transform: scale(1.02);
+        }
+
+        .hover-glow {
+            transition: box-shadow 0.3s ease;
+        }
+        .hover-glow:hover {
+            box-shadow: 0 0 20px rgba(123, 31, 162, 0.3);
         }
 
         .home-hero-content {
@@ -5164,15 +5277,53 @@
         };
         
         // Extended info for all categories (from separate tables)
-        let chatzerosInfo = {}; 
-        let mechabrimInfo = {}; 
-        let verterInfo = {}; 
-        let zmaninInfo = {}; 
+        let chatzerosInfo = {};
+        let mechabrimInfo = {};
+        let verterInfo = {};
+        let zmaninInfo = {};
         let piyutimInfo = {};
         let collectionsInfo = {};
         let resourcesInfo = {};
         let documentsInfo = {};
         let albumsInfo = {};
+
+        // Statistics from STATS table (cached to avoid recalculation)
+        let cachedStats = {
+            niggunim: 0,
+            mechabrim: 0,
+            verter: 0,
+            chatzeros: 0,
+            zmanim: 0,
+            piyutim: 0,
+            collections: 0
+        };
+
+        // Lazy loading flags - track which tables have been fetched
+        const tableLoaded = {
+            chatzeros: false,
+            mechabrim: false,
+            verter: false,
+            zmanim: false,
+            piyutim: false,
+            collections: false,
+            resources: false,
+            documents: false,
+            albums: false,
+            songs: false
+        };
+
+        // Debounce utility function
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
 
         // Active filters for all-songs view
         let activeFilters = {
@@ -5663,41 +5814,112 @@
             }
         }
 
-        // Fetch functions for each table
+        // Fetch functions for each table - with lazy loading support
         async function fetchChatzerosInfo() {
+            if (tableLoaded.chatzeros) return;
             await fetchTableInfo(CHATZEROS_TABLE_ID, chatzerosInfo, 'Chatzeros');
+            tableLoaded.chatzeros = true;
         }
 
         async function fetchMechabrimInfo() {
+            if (tableLoaded.mechabrim) return;
             await fetchTableInfo(MECHABRIM_TABLE_ID, mechabrimInfo, 'Mechabrim');
+            tableLoaded.mechabrim = true;
         }
-        
+
         async function fetchVerterInfo() {
+            if (tableLoaded.verter) return;
             await fetchTableInfo(VERTER_TABLE_ID, verterInfo, 'Verter');
+            tableLoaded.verter = true;
         }
-        
+
         async function fetchZmanimInfo() {
+            if (tableLoaded.zmanim) return;
             await fetchTableInfo(ZMANIM_TABLE_ID, zmaninInfo, 'Zmanim');
+            tableLoaded.zmanim = true;
         }
-        
+
         async function fetchPiyutimInfo() {
+            if (tableLoaded.piyutim) return;
             await fetchTableInfo(PIYUTIM_TABLE_ID, piyutimInfo, 'Piyutim');
+            tableLoaded.piyutim = true;
         }
-        
+
         async function fetchCollectionsInfo() {
+            if (tableLoaded.collections) return;
             await fetchTableInfo(COLLECTIONS_TABLE_ID, collectionsInfo, 'Collections');
+            tableLoaded.collections = true;
         }
-        
+
         async function fetchResourcesInfo() {
+            if (tableLoaded.resources) return;
             await fetchTableInfo(RESOURCES_TABLE_ID, resourcesInfo, 'Resources');
+            tableLoaded.resources = true;
         }
-        
+
         async function fetchDocumentsInfo() {
+            if (tableLoaded.documents) return;
             await fetchTableInfo(DOCUMENTS_TABLE_ID, documentsInfo, 'Documents');
+            tableLoaded.documents = true;
         }
-        
+
         async function fetchAlbumsInfo() {
+            if (tableLoaded.albums) return;
             await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
+            tableLoaded.albums = true;
+        }
+
+        // Lazy load data for a specific page
+        async function ensureDataForPage(pageView, itemName = null) {
+            const loadingPromises = [];
+
+            switch (pageView) {
+                case 'home':
+                    // Home page only needs statistics - already loaded
+                    break;
+                case 'songs':
+                    // Songs page needs filters data - load in background
+                    if (!tableLoaded.chatzeros) loadingPromises.push(fetchChatzerosInfo());
+                    if (!tableLoaded.mechabrim) loadingPromises.push(fetchMechabrimInfo());
+                    if (!tableLoaded.collections) loadingPromises.push(fetchCollectionsInfo());
+                    break;
+                case 'chatzeros':
+                    if (!tableLoaded.chatzeros) loadingPromises.push(fetchChatzerosInfo());
+                    break;
+                case 'mechabrim':
+                    if (!tableLoaded.mechabrim) loadingPromises.push(fetchMechabrimInfo());
+                    break;
+                case 'verter':
+                    if (!tableLoaded.verter) loadingPromises.push(fetchVerterInfo());
+                    break;
+                case 'zmanim':
+                    if (!tableLoaded.zmanim) loadingPromises.push(fetchZmanimInfo());
+                    if (!tableLoaded.piyutim) loadingPromises.push(fetchPiyutimInfo());
+                    break;
+                case 'collections':
+                    if (!tableLoaded.collections) loadingPromises.push(fetchCollectionsInfo());
+                    break;
+                case 'resources':
+                    if (!tableLoaded.resources) loadingPromises.push(fetchResourcesInfo());
+                    break;
+                case 'documents':
+                    if (!tableLoaded.documents) loadingPromises.push(fetchDocumentsInfo());
+                    break;
+                case 'albums':
+                    if (!tableLoaded.albums) loadingPromises.push(fetchAlbumsInfo());
+                    break;
+                case 'detail':
+                    // Detail pages might need specific category data
+                    if (itemName) {
+                        // Load relevant table based on where user came from
+                        // This will be handled by the detail page itself
+                    }
+                    break;
+            }
+
+            if (loadingPromises.length > 0) {
+                await Promise.all(loadingPromises);
+            }
         }
 
         // Fetch statistics from STATS table (only row 1)
@@ -5729,48 +5951,31 @@
         }
 
 
-        // Fetch songs from API
+        // Fetch songs from API - OPTIMIZED with lazy loading
         async function fetchSongs() {
             try {
-                // Render home page immediately (before data loads)
+                // STEP 1: Fetch statistics FIRST (fast - only 1 row, uses valueFormat=simple)
+                // This is needed for the home page to show counts
+                await fetchStatistics();
+                console.log('Statistics loaded:', cachedStats);
+
+                // STEP 2: Render home page immediately with statistics
                 if (!window.location.hash || window.location.hash === '#/home' || window.location.hash === '#/') {
                     updateURL();
                     renderCurrentPage();
                 }
-                
-                // Fetch all the category info
-                const infoPromises = [
-                    fetchChatzerosInfo(),
-                    fetchMechabrimInfo(),
-                    fetchVerterInfo(),
-                    fetchZmanimInfo(),
-                    fetchPiyutimInfo(),
-                    fetchCollectionsInfo(),
-                    fetchResourcesInfo(),
-                    fetchDocumentsInfo(),
-                    fetchAlbumsInfo()
-                ];
-                
-                // Wait for category info to load
-                await Promise.all(infoPromises);
-                console.log('Category info loaded:',
-                    'Chatzeros:', Object.keys(chatzerosInfo).length,
-                    'Mechabrim:', Object.keys(mechabrimInfo).length,
-                    'Verter:', Object.keys(verterInfo).length,
-                    'Zmanim:', Object.keys(zmaninInfo).length,
-                    'Piyutim:', Object.keys(piyutimInfo).length,
-                    'Collections:', Object.keys(collectionsInfo).length
-                );
-                
-                // Navigate based on URL (if not home, now we have the data)
-                if (window.location.hash && window.location.hash !== '#/home' && window.location.hash !== '#/') {
+
+                // STEP 3: Check if we need to load data for a specific page (deep link)
+                const hash = window.location.hash;
+                if (hash && hash !== '#/home' && hash !== '#/') {
+                    // Parse the hash to determine what data is needed
+                    const pageView = hash.replace('#/', '').split('/')[0];
+                    await ensureDataForPage(pageView);
                     handleURLChange();
-                } else {
-                    // Re-render home with actual data
-                    renderCurrentPage();
                 }
-                
-                // Now fetch songs in background
+
+                // STEP 4: Start loading songs in background (for search and songs page)
+                // This happens asynchronously and doesn't block the UI
                 fetchSongsInBackground();
 
             } catch (error) {
@@ -6138,16 +6343,20 @@
             // Nav counts removed - function kept for compatibility
         }
 
-        // Navigation
-        function navigateTo(page) {
+        // Navigation - with lazy loading support
+        async function navigateTo(page) {
             hideAllDropdowns();
             currentPageView = page;
             currentPage = 1;
             currentDetailView = null; // Clear any detail view
 
             updateURL();
+
+            // Lazy load data if needed before rendering
+            await ensureDataForPage(page);
+
             renderCurrentPage();
-            
+
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -6255,101 +6464,101 @@
             container.innerHTML = `
                 <div class="home-page">
                     <!-- Hero Banner -->
-                    <div class="home-hero">
+                    <div class="home-hero animate-scale-in">
                         <div class="home-hero-content">
-                            <div class="home-logo"></div>
-                            <h1 class="home-title">אוצר הניגונים</h1>
-                            <p class="home-subtitle">די גרעסטע זאמלונג פון חסידישע ניגונים</p>
+                            <div class="home-logo animate-fade-in-down" style="font-size: 4em; animation-delay: 0.2s; opacity: 0;">🎼</div>
+                            <h1 class="home-title animate-fade-in-up" style="animation-delay: 0.3s; opacity: 0;">אוצר הניגונים</h1>
+                            <p class="home-subtitle animate-fade-in-up" style="animation-delay: 0.4s; opacity: 0;">די גרעסטע זאמלונג פון חסידישע ניגונים</p>
                         </div>
                     </div>
-                    
+
                     <!-- Search Box -->
-                    <div class="home-search-section">
+                    <div class="home-search-section animate-fade-in-up" style="animation-delay: 0.5s; opacity: 0;">
                         <div class="home-search-box">
-                            <input type="text" 
-                                   id="homeSearchInput" 
-                                   class="home-search-input" 
+                            <input type="text"
+                                   id="homeSearchInput"
+                                   class="home-search-input"
                                    placeholder="זוך א ניגון, מחבר, חצר..."
                                    onkeyup="handleHomeSearch(event)">
-                            <button class="home-search-btn" onclick="executeHomeSearch()">זוכן</button>
+                            <button class="home-search-btn hover-scale" onclick="executeHomeSearch()">זוכן</button>
                         </div>
                     </div>
                     
                     <!-- Statistics -->
                     <div class="home-stats">
-                        <div class="home-stat-card" onclick="navigateTo('songs')">
-                            <div class="home-stat-icon"></div>
+                        <div class="home-stat-card hover-lift animate-fade-in-up stagger-1" onclick="navigateTo('songs')">
+                            <div class="home-stat-icon">🎵</div>
                             <div class="home-stat-number">${totalSongs}</div>
                             <div class="home-stat-label">ניגונים</div>
                         </div>
-                        <div class="home-stat-card" onclick="navigateTo('chatzeros')">
-                            <div class="home-stat-icon"></div>
+                        <div class="home-stat-card hover-lift animate-fade-in-up stagger-2" onclick="navigateTo('chatzeros')">
+                            <div class="home-stat-icon">🏛️</div>
                             <div class="home-stat-number">${totalChatzeros}</div>
                             <div class="home-stat-label">חצרות</div>
                         </div>
-                        <div class="home-stat-card" onclick="navigateTo('mechabrim')">
-                            <div class="home-stat-icon"></div>
+                        <div class="home-stat-card hover-lift animate-fade-in-up stagger-3" onclick="navigateTo('mechabrim')">
+                            <div class="home-stat-icon">✍️</div>
                             <div class="home-stat-number">${totalMechabrim}</div>
                             <div class="home-stat-label">מחברים</div>
                         </div>
-                        <div class="home-stat-card" onclick="navigateTo('verter')">
-                            <div class="home-stat-icon"></div>
+                        <div class="home-stat-card hover-lift animate-fade-in-up stagger-4" onclick="navigateTo('verter')">
+                            <div class="home-stat-icon">📜</div>
                             <div class="home-stat-number">${totalVerter}</div>
                             <div class="home-stat-label">ווערטער</div>
                         </div>
-                        <div class="home-stat-card" onclick="navigateTo('zmanim')">
-                            <div class="home-stat-icon"></div>
+                        <div class="home-stat-card hover-lift animate-fade-in-up stagger-5" onclick="navigateTo('zmanim')">
+                            <div class="home-stat-icon">📅</div>
                             <div class="home-stat-number">${totalZmanim}</div>
                             <div class="home-stat-label">זמנים</div>
                         </div>
-                        <div class="home-stat-card" onclick="navigateTo('collections')">
-                            <div class="home-stat-icon"></div>
+                        <div class="home-stat-card hover-lift animate-fade-in-up stagger-6" onclick="navigateTo('collections')">
+                            <div class="home-stat-icon">📚</div>
                             <div class="home-stat-number">${totalCollections}</div>
                             <div class="home-stat-label">קאלעקשאנס</div>
                         </div>
                     </div>
                     
                     <!-- Quick Links -->
-                    <div class="home-quick-links">
+                    <div class="home-quick-links animate-fade-in">
                         <h2 class="home-section-title">בלעטער אין אוצר</h2>
                         <div class="home-links-grid">
-                            <div class="home-link-card" onclick="navigateTo('songs')">
-                                <div class="home-link-icon"></div>
+                            <div class="home-link-card hover-lift" onclick="navigateTo('songs')">
+                                <div class="home-link-icon">🎵</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">אלע ניגונים</div>
                                     <div class="home-link-desc">בלעטער דורך אלע ${totalSongs} ניגונים</div>
                                 </div>
                             </div>
-                            <div class="home-link-card" onclick="navigateTo('chatzeros')">
-                                <div class="home-link-icon"></div>
+                            <div class="home-link-card hover-lift" onclick="navigateTo('chatzeros')">
+                                <div class="home-link-icon">🏛️</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">חצרות</div>
                                     <div class="home-link-desc">${totalChatzeros} חסידישע חצרות</div>
                                 </div>
                             </div>
-                            <div class="home-link-card" onclick="navigateTo('mechabrim')">
-                                <div class="home-link-icon"></div>
+                            <div class="home-link-card hover-lift" onclick="navigateTo('mechabrim')">
+                                <div class="home-link-icon">✍️</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">מחברים</div>
                                     <div class="home-link-desc">${totalMechabrim} מחברי ניגונים</div>
                                 </div>
                             </div>
-                            <div class="home-link-card" onclick="navigateTo('verter')">
-                                <div class="home-link-icon"></div>
+                            <div class="home-link-card hover-lift" onclick="navigateTo('verter')">
+                                <div class="home-link-icon">📜</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">ווערטער</div>
                                     <div class="home-link-desc">${totalVerter} ניגונים מיט ווערטער</div>
                                 </div>
                             </div>
-                            <div class="home-link-card" onclick="navigateTo('zmanim')">
-                                <div class="home-link-icon"></div>
+                            <div class="home-link-card hover-lift" onclick="navigateTo('zmanim')">
+                                <div class="home-link-icon">📅</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">זמנים</div>
                                     <div class="home-link-desc">${totalZmanim} זמנים, ${totalPiyutim} פיוטים</div>
                                 </div>
                             </div>
-                            <div class="home-link-card" onclick="navigateTo('collections')">
-                                <div class="home-link-icon"></div>
+                            <div class="home-link-card hover-lift" onclick="navigateTo('collections')">
+                                <div class="home-link-icon">📚</div>
                                 <div class="home-link-text">
                                     <div class="home-link-title">קאלעקשאנס</div>
                                     <div class="home-link-desc">${totalCollections} קאלעקשאנס</div>
@@ -6575,11 +6784,12 @@
 
                         <div class="songs-sidebar">
                             <div class="sidebar-search-box">
-                                <input type="text" 
-                                       id="songsSearchInput" 
-                                       class="sidebar-search-input" 
+                                <input type="text"
+                                       id="songsSearchInput"
+                                       class="sidebar-search-input"
                                        placeholder="זוכט א ניגון..."
                                        value="${searchQuery || ''}"
+                                       oninput="debouncedSongsSearch(this.value)"
                                        onkeypress="if(event.key==='Enter')handleSongsSearch(this.value)">
                                 ${searchQuery ? '<button class="sidebar-search-clear" onclick="clearSearch()">×</button>' : ''}
                                 <button class="sidebar-search-btn" onclick="handleSongsSearch(document.getElementById('songsSearchInput').value)">🔍</button>
@@ -6632,7 +6842,7 @@
                                        class="dropdown-search-input" 
                                        placeholder="זוך..."
                                        onclick="event.stopPropagation()"
-                                       oninput="filterDropdownOptions('${key}', this.value)">
+                                       oninput="debouncedFilterDropdownOptions('${key}', this.value)">
                             </div>
                             <div class="dropdown-options" id="dropdown-options-${key}">
                                 ${options.map(opt => {
@@ -6658,7 +6868,7 @@
             const container = document.getElementById('dropdown-options-' + key);
             const options = container.querySelectorAll('.sidebar-filter-option[data-value]');
             const term = searchTerm.toLowerCase();
-            
+
             options.forEach(option => {
                 const value = option.getAttribute('data-value');
                 if (value.includes(term)) {
@@ -6668,6 +6878,18 @@
                 }
             });
         }
+
+        // Debounced version of filterDropdownOptions (150ms delay)
+        const debouncedFilterDropdownOptions = debounce((key, searchTerm) => {
+            filterDropdownOptions(key, searchTerm);
+        }, 150);
+
+        // Debounced search handler (300ms delay)
+        const debouncedSongsSearch = debounce((value) => {
+            searchQuery = value.trim();
+            currentPage = 1;
+            applyFilters();
+        }, 300);
 
         // Toggle sidebar dropdown
         function toggleSidebarDropdown(key) {
@@ -7053,30 +7275,33 @@
             return null;
         }
 
-        // Parse URL and navigate
-        function handleURLChange() {
+        // Parse URL and navigate - with lazy loading
+        async function handleURLChange() {
             const hash = window.location.hash || '#/home';
             console.log('handleURLChange called with hash:', hash);
             const parts = hash.substring(2).split('/'); // Remove #/ and split
-            
+
             const page = parts[0] || 'home';
             const idOrName = parts[1] ? decodeURIComponent(parts[1]) : null;
             console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
-            
+
             // Valid pages
             const validPages = ['home', 'songs', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'nigun', 'search'];
-            
+
             if (validPages.includes(page)) {
+                // Lazy load required data
+                await ensureDataForPage(page);
+
                 if (page === 'search' && idOrName) {
                     // Search results page
                     searchQuery = idOrName;
                     currentPageView = 'search';
                     currentDetailView = null;
-                    
+
                     // Update search input
                     const searchInput = document.getElementById('globalSearch');
                     if (searchInput) searchInput.value = idOrName;
-                    
+
                     renderCurrentPage();
                 } else if (idOrName) {
                     // Find item by ID or name
@@ -7126,9 +7351,13 @@
         // Listen to browser back/forward
         window.addEventListener('popstate', handleURLChange);
 
-        // Navigate to detail page
-        function navigateToDetail(categoryKey, name, id = null) {
+        // Navigate to detail page - with lazy loading
+        async function navigateToDetail(categoryKey, name, id = null) {
             const decodedName = decodeAttr(name);
+
+            // Ensure data is loaded for this category
+            await ensureDataForPage(categoryKey);
+
             // If no ID provided, try to get it from info object
             if (!id) {
                 let infoObj = {};
