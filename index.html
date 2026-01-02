@@ -462,11 +462,11 @@
             animation: cardFadeIn 0.4s ease-out forwards;
         }
 
-        /* Page transition animation (RTL - right to left) */
+        /* Page transition animation (LTR - left to right) */
         @keyframes pageSlideIn {
             from {
                 opacity: 0;
-                transform: translateX(50px);
+                transform: translateX(-50px);
             }
             to {
                 opacity: 1;
@@ -481,7 +481,7 @@
             }
             to {
                 opacity: 0;
-                transform: translateX(-50px);
+                transform: translateX(50px);
             }
         }
 
