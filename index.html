@@ -5127,7 +5127,18 @@
         const RESOURCES_TABLE_ID = 'grid-8Gfz8rXNUV'; // רעסורסן טעיבל
         const DOCUMENTS_TABLE_ID = 'grid-3wKzDnkPg-'; // דאקומענטן טעיבל
         const ALBUMS_TABLE_ID = 'grid-bbTaa18Jhx'; // אלבומס טעיבל
-        const STATS_TABLE_ID = 'grid-sumy4kv5'; // סטעטיסטיקס טעיבל
+        const STATS_TABLE_ID = 'table-CbrETqO5E9'; // סטעטיסטיקס טעיבל
+
+        // Stats column IDs (exact IDs from Coda)
+        const STATS_COLS = {
+            niggunim: 'c-3wC2msD8Ll',
+            mechabrim: 'c-5u6KHT3ZLF',
+            verter: 'c-IadpFStSEK',
+            chatzeros: 'c-i--tHnlwAu',
+            zmanim: 'c-ZFj4le3Q0t',
+            piyutim: 'c-0X_OHjkDDx',
+            collections: 'c-Y9SNk0BOGV'
+        };
 
         // Cached statistics from stats table
         let cachedStats = {
@@ -5806,27 +5817,9 @@ async function fetchStatistics() {
 
         console.log('📡 Fetching statistics from API:', STATS_TABLE_ID);
 
-        // First fetch columns to get column name mapping
-        const columnsUrl = `${WORKER_URL}docs/${DOC_ID}/tables/${STATS_TABLE_ID}/columns`;
-        const columnsResponse = await fetch(columnsUrl);
-        if (!columnsResponse.ok) {
-            throw new Error(`Columns fetch error: ${columnsResponse.status}`);
-        }
-        const columnsData = await columnsResponse.json();
-
-        // Build column ID to name mapping
-        const columnMap = {};
-        if (columnsData.items) {
-            columnsData.items.forEach(col => {
-                columnMap[col.id] = col.name.toLowerCase();
-            });
-        }
-        console.log('📊 Stats columns:', columnMap);
-
-        // Now fetch the stats row
+        // Fetch stats row directly using known column IDs
         const url = `${WORKER_URL}docs/${DOC_ID}/tables/${STATS_TABLE_ID}/rows?valueFormat=simple&limit=1`;
         const response = await fetch(url);
-        console.log('Stats response status:', response.status);
 
         if (!response.ok) {
             const errorText = await response.text();
@@ -5842,28 +5835,14 @@ async function fetchStatistics() {
 
             console.log('📊 Stats row values:', values);
 
-            // Extract statistics by matching column names
-            for (const [colId, value] of Object.entries(values)) {
-                const colName = columnMap[colId] || '';
-                const numValue = parseInt(extractText(value)) || 0;
-
-                // Match column names to stats (flexible matching)
-                if (colName.includes('ניגונים') || colName.includes('nigun') || colName.includes('song')) {
-                    cachedStats.niggunim = numValue;
-                } else if (colName.includes('מחברים') || colName.includes('mechab') || colName.includes('composer')) {
-                    cachedStats.mechabrim = numValue;
-                } else if (colName.includes('ווערטער') || colName.includes('verter') || colName.includes('lyric')) {
-                    cachedStats.verter = numValue;
-                } else if (colName.includes('חצרות') || colName.includes('chatzer') || colName.includes('court')) {
-                    cachedStats.chatzeros = numValue;
-                } else if (colName.includes('זמנים') || colName.includes('zman') || colName.includes('time')) {
-                    cachedStats.zmanim = numValue;
-                } else if (colName.includes('פיוטים') || colName.includes('piyut')) {
-                    cachedStats.piyutim = numValue;
-                } else if (colName.includes('קאלעקשאנס') || colName.includes('collection')) {
-                    cachedStats.collections = numValue;
-                }
-            }
+            // Extract statistics using exact column IDs
+            cachedStats.niggunim = parseInt(extractText(values[STATS_COLS.niggunim])) || 0;
+            cachedStats.mechabrim = parseInt(extractText(values[STATS_COLS.mechabrim])) || 0;
+            cachedStats.verter = parseInt(extractText(values[STATS_COLS.verter])) || 0;
+            cachedStats.chatzeros = parseInt(extractText(values[STATS_COLS.chatzeros])) || 0;
+            cachedStats.zmanim = parseInt(extractText(values[STATS_COLS.zmanim])) || 0;
+            cachedStats.piyutim = parseInt(extractText(values[STATS_COLS.piyutim])) || 0;
+            cachedStats.collections = parseInt(extractText(values[STATS_COLS.collections])) || 0;
 
             // Save to cache
             setCachedData(cacheKey, { ...cachedStats });
