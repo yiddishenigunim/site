@@ -428,6 +428,73 @@
             animation: fadeInUp 0.6s ease-out forwards;
         }
 
+        /* Staggered card animation */
+        @keyframes cardFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-stagger {
+            opacity: 0;
+            animation: cardFadeIn 0.4s ease-out forwards;
+        }
+
+        /* Page transition animation (RTL - right to left) */
+        @keyframes pageSlideIn {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes pageSlideOut {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+        }
+
+        .page-enter {
+            animation: pageSlideIn 0.35s ease-out forwards;
+        }
+
+        .page-exit {
+            animation: pageSlideOut 0.2s ease-in forwards;
+        }
+
+        /* Count-up number animation */
+        @keyframes numberPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            60% {
+                transform: scale(1.1);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .number-animate {
+            animation: numberPop 0.4s ease-out forwards;
+        }
+
         .home-hero-content {
             position: relative;
             z-index: 1;
@@ -6356,6 +6423,15 @@ async function fetchStatistics() {
         // Navigation - with lazy loading
         async function navigateTo(page) {
             hideAllDropdowns();
+            const content = document.getElementById('mainContent');
+
+            // Add exit animation
+            if (content && content.children.length > 0) {
+                content.classList.add('page-exit');
+                await new Promise(r => setTimeout(r, 200));
+                content.classList.remove('page-exit');
+            }
+
             currentPageView = page;
             currentPage = 1;
             currentDetailView = null; // Clear any detail view
@@ -6364,7 +6440,6 @@ async function fetchStatistics() {
 
             // Show loading state for pages that need data
             if (page !== 'home') {
-                const content = document.getElementById('mainContent');
                 if (content && !isDataLoadedForPage(page)) {
                     content.innerHTML = `
                         <div class="empty-state">
@@ -6378,6 +6453,12 @@ async function fetchStatistics() {
             }
 
             renderCurrentPage();
+
+            // Add enter animation
+            if (content) {
+                content.classList.add('page-enter');
+                setTimeout(() => content.classList.remove('page-enter'), 350);
+            }
 
             // Scroll to top
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -6735,8 +6816,55 @@ async function fetchStatistics() {
                     </div>
                 </div>
             `;
+
+            // Apply staggered animations to cards
+            requestAnimationFrame(() => {
+                // Animate stat cards
+                const statCards = container.querySelectorAll('.home-stat-card');
+                statCards.forEach((card, i) => {
+                    card.style.animationDelay = `${i * 0.08}s`;
+                    card.classList.add('card-stagger');
+                });
+
+                // Animate link cards
+                const linkCards = container.querySelectorAll('.home-link-card');
+                linkCards.forEach((card, i) => {
+                    card.style.animationDelay = `${(statCards.length * 0.08) + (i * 0.08)}s`;
+                    card.classList.add('card-stagger');
+                });
+
+                // Animate count-up for stat numbers
+                const statNumbers = container.querySelectorAll('.home-stat-number');
+                statNumbers.forEach((el, i) => {
+                    const finalValue = parseInt(el.textContent) || 0;
+                    if (finalValue > 0) {
+                        el.textContent = '0';
+                        el.classList.add('number-animate');
+                        el.style.animationDelay = `${i * 0.08}s`;
+
+                        // Count up animation
+                        setTimeout(() => {
+                            const duration = 600;
+                            const startTime = performance.now();
+                            const animate = (currentTime) => {
+                                const elapsed = currentTime - startTime;
+                                const progress = Math.min(elapsed / duration, 1);
+                                // Easing function for smooth count
+                                const eased = 1 - Math.pow(1 - progress, 3);
+                                el.textContent = Math.floor(eased * finalValue);
+                                if (progress < 1) {
+                                    requestAnimationFrame(animate);
+                                } else {
+                                    el.textContent = finalValue;
+                                }
+                            };
+                            requestAnimationFrame(animate);
+                        }, i * 80 + 200);
+                    }
+                });
+            });
         }
-        
+
         // Handle home search
         function handleHomeSearch(event) {
             if (event.key === 'Enter') {
@@ -6869,6 +6997,7 @@ async function fetchStatistics() {
                 return;
             }
 
+            const existingCount = grid.children.length;
             const endIndex = Math.min(
                 songsLazyState.currentIndex + songsLazyState.batchSize,
                 filteredSongs.length
@@ -6886,6 +7015,15 @@ async function fetchStatistics() {
             grid.insertAdjacentHTML('beforeend', html);
             songsLazyState.currentIndex = endIndex;
             songsLazyState.isLoading = false;
+
+            // Apply staggered animation to newly added songs
+            requestAnimationFrame(() => {
+                const newItems = Array.from(grid.children).slice(existingCount);
+                newItems.forEach((item, i) => {
+                    item.style.animationDelay = `${i * 0.02}s`;
+                    item.classList.add('card-stagger');
+                });
+            });
 
             // Update indicator
             const indicator = document.getElementById('songsLoadMoreIndicator');
@@ -8506,6 +8644,7 @@ async function fetchStatistics() {
 
             categoryLazyState.isLoading = true;
             const grid = document.getElementById('categoryGrid');
+            const existingCount = grid.children.length;
             const endIndex = Math.min(
                 categoryLazyState.currentIndex + categoryLazyState.batchSize,
                 categoryLazyState.allKeys.length
@@ -8517,6 +8656,15 @@ async function fetchStatistics() {
             grid.insertAdjacentHTML('beforeend', html);
             categoryLazyState.currentIndex = endIndex;
             categoryLazyState.isLoading = false;
+
+            // Apply staggered animation to newly added cards
+            requestAnimationFrame(() => {
+                const newCards = Array.from(grid.children).slice(existingCount);
+                newCards.forEach((card, i) => {
+                    card.style.animationDelay = `${i * 0.04}s`;
+                    card.classList.add('card-stagger');
+                });
+            });
 
             console.log(`Loaded ${batch.length} cards (${categoryLazyState.currentIndex}/${categoryLazyState.allKeys.length})`);
         }
