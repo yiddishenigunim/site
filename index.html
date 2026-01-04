@@ -5027,7 +5027,10 @@
             background: var(--color-verter);
         }
         .hover-tooltip.tooltip-verter .hover-tooltip-title {
-            color: var(--color-verter-dark);
+            color: var(--text-dark);
+            font-weight: 400;
+            font-size: 1em;
+            line-height: 1.5;
         }
 
         .hover-tooltip.tooltip-zman .hover-tooltip-type {
@@ -10316,6 +10319,10 @@ async function fetchStatistics() {
                 if (nameParts.length > 0) {
                     displayName = nameParts.join(' ');
                 }
+            }
+            // For verter, show the full text if available
+            if (fieldType === 'verter' && extraInfo && extraInfo.fullText) {
+                displayName = extraInfo.fullText;
             }
             titleEl.textContent = displayName;
             
