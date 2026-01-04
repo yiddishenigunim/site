@@ -10203,6 +10203,10 @@ async function fetchStatistics() {
                     displayName = nameParts.join(' ');
                 }
             }
+            // For verter, show the full text if available
+            if (fieldType === 'verter' && extraInfo && extraInfo.fullText) {
+                displayName = extraInfo.fullText;
+            }
             titleEl.textContent = displayName;
             
             // Handle image
