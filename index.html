@@ -4012,37 +4012,55 @@
             color: white;
         }
 
-        /* Entity-specific meta links - maintains entity colors when referenced on other pages */
+        /* Entity-specific meta links - pill buttons maintaining entity colors when referenced on other pages */
         .song-meta-link-mechaber {
-            color: var(--color-mechaber-dark);
+            display: inline-block;
+            background: var(--color-mechaber);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
             text-decoration: none;
             transition: var(--transition-smooth);
         }
         .song-meta-link-mechaber:hover {
-            color: var(--color-mechaber);
-            text-decoration: underline;
+            background: var(--color-mechaber-dark);
+            transform: scale(1.05);
+            text-decoration: none;
         }
         .song-item.active .song-meta-link-mechaber {
-            color: var(--color-mechaber-light);
+            background: var(--color-mechaber-light);
+            color: white;
         }
         .song-item.active .song-meta-link-mechaber:hover {
-            color: var(--color-mechaber-pale);
+            background: var(--color-mechaber-pale);
+            color: var(--color-mechaber-dark);
         }
 
         .song-meta-link-chatzer {
-            color: var(--color-chatzer-dark);
+            display: inline-block;
+            background: var(--color-chatzer);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
             text-decoration: none;
             transition: var(--transition-smooth);
         }
         .song-meta-link-chatzer:hover {
-            color: var(--color-chatzer);
-            text-decoration: underline;
+            background: var(--color-chatzer-dark);
+            transform: scale(1.05);
+            text-decoration: none;
         }
         .song-item.active .song-meta-link-chatzer {
-            color: var(--color-chatzer-light);
+            background: var(--color-chatzer-light);
+            color: white;
         }
         .song-item.active .song-meta-link-chatzer:hover {
-            color: var(--color-chatzer-pale);
+            background: var(--color-chatzer-pale);
+            color: var(--color-chatzer-dark);
         }
 
         .song-play-btn {
