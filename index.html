@@ -485,12 +485,43 @@
             }
         }
 
+        /* Home page specific animation (bottom to top) */
+        @keyframes pageSlideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pageSlideOutDown {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+        }
+
         .page-enter {
             animation: pageSlideIn 0.35s ease-out forwards;
         }
 
         .page-exit {
             animation: pageSlideOut 0.2s ease-in forwards;
+        }
+
+        .page-enter-up {
+            animation: pageSlideInUp 0.35s ease-out forwards;
+        }
+
+        .page-exit-down {
+            animation: pageSlideOutDown 0.2s ease-in forwards;
         }
 
         /* Count-up number animation */
@@ -5254,9 +5285,6 @@
                             <div class="nav-dropdown-item" data-dest="info" onclick="event.stopPropagation(); scrollToSection('instructions')">
                                 <span>אנווייזונגען</span>
                             </div>
-                            <div class="nav-dropdown-item" data-dest="info" onclick="event.stopPropagation(); scrollToSection('stats')">
-                                <span>סטאטיסטיקס</span>
-                            </div>
                             <div class="nav-dropdown-item" data-dest="info" onclick="event.stopPropagation(); scrollToSection('credits')">
                                 <span>קרעדיטס</span>
                             </div>
@@ -5300,17 +5328,17 @@
                     </button>
                     <div class="nav-dropdown-content">
                         <div class="dropdown-inner">
-                            <div class="nav-dropdown-item" data-dest="verter" onclick="event.stopPropagation(); navigateTo('verter')">
-                                <span>ווערטער</span>
-                            </div>
                             <div class="nav-dropdown-item" data-dest="zmanim" onclick="event.stopPropagation(); navigateTo('zmanim')">
                                 <span>מועדים וזמנים</span>
                             </div>
-                            <div class="nav-dropdown-item" data-dest="music" onclick="event.stopPropagation(); navigateTo('music')">
-                                <span>ריטעם</span>
-                            </div>
                             <div class="nav-dropdown-item" data-dest="collections" onclick="event.stopPropagation(); navigateTo('collections')">
                                 <span>קאלעקשאנס</span>
+                            </div>
+                            <div class="nav-dropdown-item" data-dest="verter" onclick="event.stopPropagation(); navigateTo('verter')">
+                                <span>ווערטער</span>
+                            </div>
+                            <div class="nav-dropdown-item" data-dest="music" onclick="event.stopPropagation(); navigateTo('music')">
+                                <span>ריטעם</span>
                             </div>
                         </div>
                     </div>
@@ -6669,6 +6697,7 @@ async function fetchStatistics() {
         async function navigateTo(page) {
             hideAllDropdowns();
             const content = document.getElementById('mainContent');
+            const isHomePage = page === 'home';
 
             // Add exit animation
             if (content && content.children.length > 0) {
@@ -6699,10 +6728,11 @@ async function fetchStatistics() {
 
             renderCurrentPage();
 
-            // Add enter animation
+            // Add enter animation - home page uses bottom-up, others use left-to-right
             if (content) {
-                content.classList.add('page-enter');
-                setTimeout(() => content.classList.remove('page-enter'), 350);
+                const enterClass = isHomePage ? 'page-enter-up' : 'page-enter';
+                content.classList.add(enterClass);
+                setTimeout(() => content.classList.remove(enterClass), 350);
             }
 
             // Scroll to top
@@ -6970,48 +7000,7 @@ async function fetchStatistics() {
                             </div>
                         </div>
                     </div>
-                    
-                    <!-- Stats Section -->
-                    <div class="home-section" id="stats">
-                        <h2 class="home-section-title">סטאטיסטיקס</h2>
-                        <div class="home-section-content">
-                            <div class="stats-detailed">
-                                <div class="stat-row">
-                                    <span class="stat-label-lg">ניגונים אין דאטאבאנק:</span>
-                                    <span class="stat-value-lg">${totalSongs}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label-lg">חצרות:</span>
-                                    <span class="stat-value-lg">${totalChatzeros}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label-lg">מחברים:</span>
-                                    <span class="stat-value-lg">${totalMechabrim}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label-lg">ניגונים מיט ווערטער:</span>
-                                    <span class="stat-value-lg">${totalVerter}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label-lg">זמנים און מועדים:</span>
-                                    <span class="stat-value-lg">${totalZmanim}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label-lg">קאלעקשאנס:</span>
-                                    <span class="stat-value-lg">${totalCollections}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label-lg">אלבומס:</span>
-                                    <span class="stat-value-lg">${Object.keys(albumsInfo).length}</span>
-                                </div>
-                                <div class="stat-row">
-                                    <span class="stat-label-lg">דאקומענטן:</span>
-                                    <span class="stat-value-lg">${Object.keys(documentsInfo).length}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
+
                     <!-- Credits Section -->
                     <div class="home-section" id="credits">
                         <h2 class="home-section-title">קרעדיטס</h2>
