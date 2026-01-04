@@ -1690,8 +1690,8 @@
         }
 
         .collection-zman-tag {
-            background: var(--color-zman-pale);
-            color: var(--color-zman-dark);
+            background: var(--color-zman);
+            color: white;
             padding: 2px 8px;
             border-radius: 10px;
             font-size: 0.75em;
@@ -1700,8 +1700,8 @@
         }
 
         .collection-zman-tag:hover {
-            background: var(--color-zman);
-            color: white;
+            background: var(--color-zman-dark);
+            transform: scale(1.05);
         }
 
         .collection-zman-more {
@@ -2039,19 +2039,17 @@
 
         .card-zman-tag {
             display: inline-block;
-            background: var(--color-zman-pale);
-            color: var(--color-zman-dark);
+            background: var(--color-zman);
+            color: white;
             padding: 3px 10px;
             border-radius: 12px;
             font-size: 0.75em;
             cursor: pointer;
             transition: var(--transition-smooth);
-            border: 1px solid var(--color-zman-light);
         }
 
         .card-zman-tag:hover {
-            background: var(--color-zman);
-            color: white;
+            background: var(--color-zman-dark);
             transform: scale(1.05);
         }
 
@@ -2560,6 +2558,151 @@
 
         .chatzer-tag:hover {
             background: var(--color-chatzer-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone mechaber tag for use in cards */
+        .mechaber-tag {
+            display: inline-block;
+            background: var(--color-mechaber);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .mechaber-tag:hover {
+            background: var(--color-mechaber-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone verter tag for use in cards */
+        .verter-tag {
+            display: inline-block;
+            background: var(--color-verter);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .verter-tag:hover {
+            background: var(--color-verter-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone zman tag for use in cards */
+        .zman-tag {
+            display: inline-block;
+            background: var(--color-zman);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .zman-tag:hover {
+            background: var(--color-zman-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone collection tag for use in cards */
+        .collection-tag {
+            display: inline-block;
+            background: var(--color-collection);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .collection-tag:hover {
+            background: var(--color-collection-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone nigun tag for use in cards */
+        .nigun-tag-pill {
+            display: inline-block;
+            background: var(--color-nigun);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .nigun-tag-pill:hover {
+            background: var(--color-nigun-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone album tag for use in cards */
+        .album-tag {
+            display: inline-block;
+            background: var(--color-album);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .album-tag:hover {
+            background: var(--color-album-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone document tag for use in cards */
+        .document-tag {
+            display: inline-block;
+            background: var(--color-document);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .document-tag:hover {
+            background: var(--color-document-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone resource tag for use in cards */
+        .resource-tag {
+            display: inline-block;
+            background: var(--color-resource);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .resource-tag:hover {
+            background: var(--color-resource-dark);
+            transform: scale(1.05);
+        }
+
+        /* Tags container for displaying multiple tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
         }
 
         /* Category-specific text colors - for use anywhere on the site */
@@ -2816,80 +2959,73 @@
         }
 
         .nigun-tag-inline.tag-zman {
-            background: var(--color-zman-pale);
-            color: var(--color-zman-dark);
-            border: 1px solid var(--color-zman-light);
-        }
-
-        .nigun-tag-inline.tag-zman:hover {
             background: var(--color-zman);
             color: white;
         }
 
-        .nigun-tag-inline.tag-piyut {
-            background: #e8f5e9;
-            color: #1b5e20;
-            border: 1px solid #81c784;
+        .nigun-tag-inline.tag-zman:hover {
+            background: var(--color-zman-dark);
+            transform: scale(1.05);
         }
 
-        .nigun-tag-inline.tag-piyut:hover {
+        .nigun-tag-inline.tag-piyut {
             background: #2e8b2e;
             color: white;
         }
 
-        .nigun-tag-inline.tag-collection {
-            background: var(--color-collection-pale);
-            color: var(--color-collection-dark);
-            border: 1px solid var(--color-collection-light);
+        .nigun-tag-inline.tag-piyut:hover {
+            background: #1b5e20;
+            transform: scale(1.05);
         }
 
-        .nigun-tag-inline.tag-collection:hover {
+        .nigun-tag-inline.tag-collection {
             background: var(--color-collection);
             color: white;
         }
 
-        .nigun-tag-inline.tag-album {
-            background: var(--color-album-pale);
-            color: var(--color-album-dark);
-            border: 1px solid var(--color-album-light);
+        .nigun-tag-inline.tag-collection:hover {
+            background: var(--color-collection-dark);
+            transform: scale(1.05);
         }
 
-        .nigun-tag-inline.tag-album:hover {
+        .nigun-tag-inline.tag-album {
             background: var(--color-album);
             color: white;
         }
 
-        .nigun-tag-inline.tag-document {
-            background: var(--color-document-pale);
-            color: var(--color-document-dark);
-            border: 1px solid var(--color-document-light);
+        .nigun-tag-inline.tag-album:hover {
+            background: var(--color-album-dark);
+            transform: scale(1.05);
         }
 
-        .nigun-tag-inline.tag-document:hover {
+        .nigun-tag-inline.tag-document {
             background: var(--color-document);
             color: white;
         }
 
-        .nigun-tag-inline.tag-resource {
-            background: var(--color-resource-pale);
-            color: var(--color-resource-dark);
-            border: 1px solid var(--color-resource-light);
+        .nigun-tag-inline.tag-document:hover {
+            background: var(--color-document-dark);
+            transform: scale(1.05);
         }
 
-        .nigun-tag-inline.tag-resource:hover {
+        .nigun-tag-inline.tag-resource {
             background: var(--color-resource);
             color: white;
         }
 
+        .nigun-tag-inline.tag-resource:hover {
+            background: var(--color-resource-dark);
+            transform: scale(1.05);
+        }
+
         .nigun-tag-inline.tag-verter {
-            background: var(--color-verter-pale);
-            color: var(--color-verter-dark);
-            border: 1px solid var(--color-verter-light);
+            background: var(--color-verter);
+            color: white;
         }
 
         .nigun-tag-inline.tag-verter:hover {
-            background: var(--color-verter);
-            color: white;
+            background: var(--color-verter-dark);
+            transform: scale(1.05);
         }
 
         .nigun-section h3 {
@@ -8079,16 +8215,9 @@ async function fetchStatistics() {
                     ${mechabrimFromChatzer.length > 0 ? `
                         <div class="detail-mechabrim-section">
                             <h3>${mechabrimFromChatzer.length} מחברים</h3>
-                            <div class="mechabrim-grid">
+                            <div class="tags-container">
                                 ${mechabrimFromChatzer.map(mech => `
-                                    <div class="mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">
-                                        ${mech.image ? `
-                                            <img class="mechaber-card-image" src="${mech.image}" alt="${mech.name}">
-                                        ` : `
-                                            <div class="mechaber-card-icon"></div>
-                                        `}
-                                        <div class="mechaber-card-name">${mech.name}</div>
-                                    </div>
+                                    <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">${mech.name}</span>
                                 `).join('')}
                             </div>
                         </div>
@@ -8317,36 +8446,19 @@ async function fetchStatistics() {
                     ${song.mechaber ? `
                         <div class="nigun-mechaber-section">
                             <div class="nigun-mechaber-title">מחבר הניגון</div>
-                            <div class="nigun-mechaber-grid">
-                                <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mechaberName || '')}')">
-                                    ${mechaberInfo && mechaberInfo.image ? `
-                                        <img class="nigun-mechaber-image" src="${mechaberInfo.image}" alt="${mechaberName || ''}">
-                                    ` : `
-                                        <div class="nigun-mechaber-placeholder">👤</div>
-                                    `}
-                                    <div class="nigun-mechaber-name">${song.mechaber}</div>
-                                </div>
+                            <div class="tags-container">
+                                <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(mechaberName || '')}')">${song.mechaber}</span>
                             </div>
                         </div>
                     ` : ''}
-                    
+
                     ${song.personality ? `
                         <div class="nigun-personality-section">
                             <div class="nigun-personality-title">פערזענליכקייטן וואס האבן א שייכות מיט דעם ניגון</div>
-                            <div class="nigun-personality-grid">
-                                ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
-                                    const personInfo = mechabrimInfo[personName] || {};
-                                    return `
-                                        <div class="nigun-personality-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">
-                                            ${personInfo.image ? `
-                                                <img class="nigun-personality-image" src="${personInfo.image}" alt="${personName}">
-                                            ` : `
-                                                <div class="nigun-personality-placeholder">👤</div>
-                                            `}
-                                            <div class="nigun-personality-name">${personName}</div>
-                                        </div>
-                                    `;
-                                }).join('')}
+                            <div class="tags-container">
+                                ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => `
+                                    <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">${personName}</span>
+                                `).join('')}
                             </div>
                         </div>
                     ` : ''}
