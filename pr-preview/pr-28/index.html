@@ -4500,8 +4500,7 @@
         .player-hide-btn {
             position: absolute;
             top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
+            right: 30px;
             width: 36px;
             height: 24px;
             background: white;
@@ -4510,7 +4509,8 @@
             box-shadow: 0 -3px 10px rgba(74, 18, 89, 0.15);
             cursor: pointer;
             color: var(--text-muted);
-            font-size: 14px;
+            font-size: 18px;
+            font-weight: bold;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -4525,8 +4525,8 @@
         .player-show-btn {
             position: fixed;
             bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
+            left: 20px;
+            transform: translateY(100px);
             opacity: 0;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             color: white;
@@ -4546,13 +4546,13 @@
         }
 
         .player-show-btn.visible {
-            transform: translateX(-50%) translateY(0);
+            transform: translateY(0);
             opacity: 1;
             pointer-events: auto;
         }
 
         .player-show-btn:hover {
-            transform: translateX(-50%) translateY(-3px);
+            transform: translateY(-3px);
             box-shadow: 0 6px 25px rgba(123, 31, 162, 0.5);
         }
 
@@ -5956,13 +5956,12 @@
 
     <!-- Player Show Button (when minimized) -->
     <button class="player-show-btn" id="playerShowBtn" onclick="showPlayerBanner()">
-        <span>▲</span>
         <span id="showBtnSongName">ווייז פלעיער</span>
     </button>
 
     <!-- Player -->
     <div class="player-section">
-        <button class="player-hide-btn" onclick="hidePlayerBanner()" title="באהאלט פלעיער">▼</button>
+        <button class="player-hide-btn" onclick="hidePlayerBanner()" title="באהאלט פלעיער">−</button>
         <div class="player-inner">
             <div class="player-info">
                 <div class="player-song-name" id="playerSongName">קליק אויף א ניגון צו שפילן</div>
