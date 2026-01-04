@@ -4039,15 +4039,20 @@
             padding: 12px;
             border-radius: 10px;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: all 0.3s ease;
             margin-bottom: 8px;
             background: var(--color-nigun-pale);
             border: 1px solid transparent;
         }
 
+        .song-item .song-name,
+        .song-item .song-number {
+            transition: all 0.3s ease;
+        }
+
         .song-item:hover {
-            background: linear-gradient(135deg, #1a3a5a 0%, #2d5aa0 100%);
-            border-color: #1a3a5a;
+            background: #4a7cc9;
+            border-color: #4a7cc9;
             transform: translateX(-5px);
             color: white;
         }
@@ -4057,7 +4062,7 @@
         }
 
         .song-item:hover .song-number {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.25);
             color: white;
         }
 
@@ -4073,8 +4078,8 @@
 
         .song-item.no-audio:hover {
             opacity: 1;
-            background: linear-gradient(135deg, #1a3a5a 0%, #2d5aa0 100%);
-            border-color: #1a3a5a;
+            background: #4a7cc9;
+            border-color: #4a7cc9;
             color: white;
         }
 
@@ -4083,7 +4088,7 @@
         }
 
         .song-item.no-audio:hover .song-number {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.25);
             color: white;
         }
 
@@ -4097,13 +4102,13 @@
         }
 
         .song-item.active {
-            background: linear-gradient(135deg, #1a3a5a 0%, #2d5aa0 100%) !important;
+            background: #4a7cc9 !important;
             color: white !important;
-            border-color: #1a3a5a !important;
+            border-color: #4a7cc9 !important;
         }
 
         .song-item.active:hover {
-            background: linear-gradient(135deg, #1a3a5a 0%, #2d5aa0 100%) !important;
+            background: #3d6bb5 !important;
         }
 
         .song-item.active .song-meta {
