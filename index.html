@@ -2945,16 +2945,14 @@
         }
 
         .nigun-tag-inline.tag-scale {
-            background: var(--color-nigun-pale);
-            color: var(--color-nigun-dark);
-            border: 1px solid var(--color-nigun-light);
+            background: var(--color-music);
+            color: white;
             cursor: default;
         }
 
         .nigun-tag-inline.tag-ritem {
-            background: var(--color-nigun-pale);
-            color: var(--color-nigun-dark);
-            border: 1px solid var(--color-nigun-light);
+            background: var(--color-music);
+            color: white;
             cursor: default;
         }
 
@@ -4122,11 +4120,10 @@
         }
 
         .song-meta {
-            font-size: 0.85em;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            align-items: center;
         }
 
         .song-meta-link {
@@ -4148,37 +4145,11 @@
             color: white;
         }
 
-        /* Entity-specific meta links - maintains entity colors when referenced on other pages */
-        .song-meta-link-mechaber {
-            color: var(--color-mechaber-dark);
-            text-decoration: none;
-            transition: var(--transition-smooth);
-        }
-        .song-meta-link-mechaber:hover {
-            color: var(--color-mechaber);
-            text-decoration: underline;
-        }
-        .song-item.active .song-meta-link-mechaber {
-            color: var(--color-mechaber-light);
-        }
-        .song-item.active .song-meta-link-mechaber:hover {
-            color: var(--color-mechaber-pale);
-        }
-
-        .song-meta-link-chatzer {
-            color: var(--color-chatzer-dark);
-            text-decoration: none;
-            transition: var(--transition-smooth);
-        }
-        .song-meta-link-chatzer:hover {
-            color: var(--color-chatzer);
-            text-decoration: underline;
-        }
-        .song-item.active .song-meta-link-chatzer {
-            color: var(--color-chatzer-light);
-        }
-        .song-item.active .song-meta-link-chatzer:hover {
-            color: var(--color-chatzer-pale);
+        /* Song meta tags - smaller pill buttons for song list */
+        .song-meta-tag {
+            padding: 2px 8px !important;
+            font-size: 0.75em !important;
+            border-radius: 10px !important;
         }
 
         .song-play-btn {
@@ -10061,18 +10032,21 @@ async function fetchStatistics() {
         }
 
         // Create meta links for song items (handles multiple comma-separated values)
-        // entityType determines the color class (mechaber, chatzer, etc.)
+        // Uses pill button styling with category colors
         function createMetaLinks(value, page, filterKey, entityType = null) {
             if (!value) return '';
             const values = value.split(',').map(v => v.trim()).filter(Boolean);
-            // Use entity-specific class if provided, otherwise generic
-            const linkClass = entityType ? `song-meta-link-${entityType}` : 'song-meta-link';
+            const tagClass = filterKey === 'mechaber' ? 'mechaber-tag' :
+                             filterKey === 'chatzer' ? 'chatzer-tag' :
+                             filterKey === 'verter' ? 'verter-tag' :
+                             filterKey === 'zman' ? 'zman-tag' :
+                             filterKey === 'collection' ? 'collection-tag' : 'song-meta-link';
             return values.map(v =>
-                `<a href="#" class="${linkClass}"
+                `<span class="${tagClass} song-meta-tag"
                     onclick="navigateToWithFilter('${page}', '${filterKey}', '${escapeAttr(v)}'); event.stopPropagation();"
                     onmouseenter="showTooltip(event, '${escapeAttr(v)}', '${filterKey}')"
-                    onmouseleave="hideTooltip()">${v}</a>`
-            ).join(', ');
+                    onmouseleave="hideTooltip()">${v}</span>`
+            ).join(' ');
         }
 
         // Render song item
