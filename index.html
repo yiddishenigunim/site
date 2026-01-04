@@ -4039,10 +4039,11 @@
             padding: 12px;
             border-radius: 10px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
             margin-bottom: 8px;
             background: var(--color-nigun-pale);
             border: 1px solid transparent;
+            transform-origin: center;
         }
 
         .song-item .song-name,
@@ -4053,9 +4054,11 @@
         .song-item:hover {
             background: #4a7cc9 !important;
             border-color: #4a7cc9 !important;
-            transform: translateX(-5px) scale(1.02);
+            transform: scale(1.03) !important;
             color: white !important;
-            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.4);
+            box-shadow: 0 6px 20px rgba(74, 124, 201, 0.5) !important;
+            z-index: 10;
+            position: relative;
         }
 
         .song-item:hover .song-name {
