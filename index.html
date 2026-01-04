@@ -4649,6 +4649,127 @@
             opacity: 0.5;
         }
 
+        /* Skeleton Loader */
+        @keyframes skeleton-shimmer {
+            0% {
+                background-position: 200% 0;
+            }
+            100% {
+                background-position: -200% 0;
+            }
+        }
+
+        .skeleton {
+            background: linear-gradient(
+                90deg,
+                rgba(200, 200, 200, 0.2) 25%,
+                rgba(200, 200, 200, 0.4) 50%,
+                rgba(200, 200, 200, 0.2) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s ease-in-out infinite;
+            border-radius: 8px;
+        }
+
+        .skeleton-page {
+            padding: 20px;
+            min-height: calc(100vh - 200px);
+        }
+
+        .skeleton-title-bar {
+            height: 50px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: linear-gradient(
+                90deg,
+                rgba(180, 150, 180, 0.3) 25%,
+                rgba(180, 150, 180, 0.5) 50%,
+                rgba(180, 150, 180, 0.3) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s ease-in-out infinite;
+        }
+
+        .skeleton-subtitle {
+            height: 24px;
+            width: 200px;
+            margin: 0 auto 30px;
+        }
+
+        .skeleton-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            padding: 20px 0;
+        }
+
+        .skeleton-card {
+            height: 120px;
+            border-radius: 16px;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.5) 25%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0.5) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s ease-in-out infinite;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .skeleton-songs-layout {
+            display: flex;
+            gap: 20px;
+        }
+
+        .skeleton-songs-main {
+            flex: 1;
+        }
+
+        .skeleton-songs-sidebar {
+            width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .skeleton-search-box {
+            height: 45px;
+            border-radius: 25px;
+        }
+
+        .skeleton-filter {
+            height: 40px;
+            border-radius: 8px;
+        }
+
+        .skeleton-song-row {
+            height: 60px;
+            margin-bottom: 10px;
+            border-radius: 12px;
+            background: linear-gradient(
+                90deg,
+                rgba(255, 255, 255, 0.5) 25%,
+                rgba(255, 255, 255, 0.8) 50%,
+                rgba(255, 255, 255, 0.5) 75%
+            );
+            background-size: 200% 100%;
+            animation: skeleton-shimmer 1.5s ease-in-out infinite;
+        }
+
+        @media (max-width: 768px) {
+            .skeleton-songs-layout {
+                flex-direction: column;
+            }
+            .skeleton-songs-sidebar {
+                width: 100%;
+                order: -1;
+            }
+            .skeleton-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         .loading-songs-message {
             text-align: center;
             padding: 60px 20px;
@@ -6694,6 +6815,80 @@ async function fetchStatistics() {
         }
 
         // Navigation - with lazy loading
+        // Generate skeleton loader HTML for a page
+        function getSkeletonForPage(page) {
+            const pageThemes = {
+                'songs': 'page-theme-nigun',
+                'chatzeros': 'page-theme-chatzer',
+                'mechabrim': 'page-theme-mechaber',
+                'verter': 'page-theme-verter',
+                'zmanim': 'page-theme-zman',
+                'collections': 'page-theme-collection',
+                'resources': 'page-theme-resource',
+                'documents': 'page-theme-document',
+                'albums': 'page-theme-album',
+                'music': 'page-theme-music'
+            };
+
+            const themeClass = pageThemes[page] || 'page-theme-nigun';
+
+            // Songs page has a different layout with sidebar
+            if (page === 'songs') {
+                return `
+                    <div class="${themeClass} skeleton-page">
+                        <div class="page-title">
+                            <div class="skeleton-title-bar"></div>
+                            <div class="page-title-content">
+                                <div class="skeleton skeleton-subtitle"></div>
+                            </div>
+                        </div>
+                        <div class="skeleton-songs-layout">
+                            <div class="skeleton-songs-main">
+                                <div class="skeleton-song-row"></div>
+                                <div class="skeleton-song-row"></div>
+                                <div class="skeleton-song-row"></div>
+                                <div class="skeleton-song-row"></div>
+                                <div class="skeleton-song-row"></div>
+                                <div class="skeleton-song-row"></div>
+                                <div class="skeleton-song-row"></div>
+                                <div class="skeleton-song-row"></div>
+                            </div>
+                            <div class="skeleton-songs-sidebar">
+                                <div class="skeleton skeleton-search-box"></div>
+                                <div class="skeleton skeleton-filter"></div>
+                                <div class="skeleton skeleton-filter"></div>
+                                <div class="skeleton skeleton-filter"></div>
+                                <div class="skeleton skeleton-filter"></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Category pages (chatzeros, mechabrim, etc.) with grid
+            return `
+                <div class="${themeClass} skeleton-page">
+                    <div class="page-title">
+                        <div class="skeleton-title-bar"></div>
+                        <div class="page-title-content">
+                            <div class="skeleton skeleton-subtitle"></div>
+                        </div>
+                    </div>
+                    <div class="skeleton-grid">
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                        <div class="skeleton-card"></div>
+                    </div>
+                </div>
+            `;
+        }
+
         async function navigateTo(page) {
             hideAllDropdowns();
             const content = document.getElementById('mainContent');
@@ -6712,15 +6907,10 @@ async function fetchStatistics() {
 
             updateURL();
 
-            // Show loading state for pages that need data
+            // Show skeleton loader for pages that need data
             if (page !== 'home') {
                 if (content && !isDataLoadedForPage(page)) {
-                    content.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-state-icon">⏳</div>
-                            <h2>לאָודט...</h2>
-                        </div>
-                    `;
+                    content.innerHTML = getSkeletonForPage(page);
                 }
                 // Load required data for this page
                 await ensureDataForPage(page);
@@ -6909,56 +7099,7 @@ async function fetchStatistics() {
                             <div class="home-stat-label">קאלעקשאנס</div>
                         </div>
                     </div>
-                    
-                    <!-- Quick Links -->
-                    <div class="home-quick-links">
-                        <h2 class="home-section-title">בלעטער אין אוצר</h2>
-                        <div class="home-links-grid">
-                            <div class="home-link-card link-nigun" onclick="navigateTo('songs')">
-                                <div class="home-link-icon"></div>
-                                <div class="home-link-text">
-                                    <div class="home-link-title">אלע ניגונים</div>
-                                    <div class="home-link-desc">בלעטער דורך אלע ${totalSongs} ניגונים</div>
-                                </div>
-                            </div>
-                            <div class="home-link-card link-chatzer" onclick="navigateTo('chatzeros')">
-                                <div class="home-link-icon"></div>
-                                <div class="home-link-text">
-                                    <div class="home-link-title">חצרות</div>
-                                    <div class="home-link-desc">${totalChatzeros} חסידישע חצרות</div>
-                                </div>
-                            </div>
-                            <div class="home-link-card link-mechaber" onclick="navigateTo('mechabrim')">
-                                <div class="home-link-icon"></div>
-                                <div class="home-link-text">
-                                    <div class="home-link-title">מחברים</div>
-                                    <div class="home-link-desc">${totalMechabrim} מחברי ניגונים</div>
-                                </div>
-                            </div>
-                            <div class="home-link-card link-verter" onclick="navigateTo('verter')">
-                                <div class="home-link-icon"></div>
-                                <div class="home-link-text">
-                                    <div class="home-link-title">ווערטער</div>
-                                    <div class="home-link-desc">${totalVerter} ניגונים מיט ווערטער</div>
-                                </div>
-                            </div>
-                            <div class="home-link-card link-zman" onclick="navigateTo('zmanim')">
-                                <div class="home-link-icon"></div>
-                                <div class="home-link-text">
-                                    <div class="home-link-title">זמנים</div>
-                                    <div class="home-link-desc">${totalZmanim} זמנים, ${totalPiyutim} פיוטים</div>
-                                </div>
-                            </div>
-                            <div class="home-link-card link-collection" onclick="navigateTo('collections')">
-                                <div class="home-link-icon"></div>
-                                <div class="home-link-text">
-                                    <div class="home-link-title">קאלעקשאנס</div>
-                                    <div class="home-link-desc">${totalCollections} קאלעקשאנס</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
+
                     <!-- About Section -->
                     <div class="home-section" id="about">
                         <h2 class="home-section-title">אונזער ציל</h2>
@@ -7124,22 +7265,9 @@ async function fetchStatistics() {
 
         // Render all songs page
         function renderAllSongsPage(container) {
-            // Show loading if songs not yet loaded
+            // Show skeleton if songs not yet loaded
             if (allSongs.length === 0) {
-                container.innerHTML = `
-                    <div class="page-theme-nigun">
-                        <div class="page-title">
-                            <div class="page-title-bar">ניגונים</div>
-                            <div class="page-title-content">
-                                <div class="subtitle">לאדינג ניגונים...</div>
-                            </div>
-                        </div>
-                        <div class="loading-songs-message">
-                            <div class="loading-spinner"></div>
-                            <p>ניגונים ווערן געלאדן אין באקגראונד...</p>
-                        </div>
-                    </div>
-                `;
+                container.innerHTML = getSkeletonForPage('songs');
                 return;
             }
 
@@ -7719,17 +7847,12 @@ async function fetchStatistics() {
             const validPages = ['home', 'songs', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'nigun', 'search'];
 
             if (validPages.includes(page)) {
-                // Show loading state if data not loaded
+                // Show skeleton loader if data not loaded
                 const targetPage = page === 'zman' ? 'zmanim' : (page === 'nigun' ? 'songs' : page);
                 if (targetPage !== 'home' && !isDataLoadedForPage(targetPage)) {
                     const content = document.getElementById('mainContent');
                     if (content) {
-                        content.innerHTML = `
-                            <div class="empty-state">
-                                <div class="empty-state-icon">⏳</div>
-                                <h2>לאָודט...</h2>
-                            </div>
-                        `;
+                        content.innerHTML = getSkeletonForPage(targetPage);
                     }
                     // Load required data
                     await ensureDataForPage(targetPage);
