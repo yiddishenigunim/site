@@ -1831,7 +1831,7 @@
 
         .music-song-meta {
             font-size: 0.8em;
-            color: var(--text-muted);
+            color: var(--color-mechaber-dark);
             white-space: nowrap;
         }
 
@@ -4007,6 +4007,39 @@
             color: white;
         }
 
+        /* Entity-specific meta links - maintains entity colors when referenced on other pages */
+        .song-meta-link-mechaber {
+            color: var(--color-mechaber-dark);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+        .song-meta-link-mechaber:hover {
+            color: var(--color-mechaber);
+            text-decoration: underline;
+        }
+        .song-item.active .song-meta-link-mechaber {
+            color: var(--color-mechaber-light);
+        }
+        .song-item.active .song-meta-link-mechaber:hover {
+            color: var(--color-mechaber-pale);
+        }
+
+        .song-meta-link-chatzer {
+            color: var(--color-chatzer-dark);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+        .song-meta-link-chatzer:hover {
+            color: var(--color-chatzer);
+            text-decoration: underline;
+        }
+        .song-item.active .song-meta-link-chatzer {
+            color: var(--color-chatzer-light);
+        }
+        .song-item.active .song-meta-link-chatzer:hover {
+            color: var(--color-chatzer-pale);
+        }
+
         .song-play-btn {
             width: 35px;
             height: 35px;
@@ -4200,6 +4233,38 @@
 
         #playerCollection .player-meta-link:hover {
             color: var(--primary-deep);
+        }
+
+        /* Entity-specific player meta links */
+        .player-meta-link-mechaber {
+            color: var(--color-mechaber-dark);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+        .player-meta-link-mechaber:hover {
+            color: var(--color-mechaber);
+            text-decoration: underline;
+        }
+
+        .player-meta-link-chatzer {
+            color: var(--color-chatzer-dark);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+        .player-meta-link-chatzer:hover {
+            color: var(--color-chatzer);
+            text-decoration: underline;
+        }
+
+        .player-meta-link-collection {
+            color: var(--color-collection-dark);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+        .player-meta-link-collection:hover {
+            color: var(--color-collection);
+            text-decoration: underline;
         }
 
         .player-controls {
@@ -9879,11 +9944,14 @@ async function fetchStatistics() {
         }
 
         // Create meta links for song items (handles multiple comma-separated values)
-        function createMetaLinks(value, page, filterKey) {
+        // entityType determines the color class (mechaber, chatzer, etc.)
+        function createMetaLinks(value, page, filterKey, entityType = null) {
             if (!value) return '';
             const values = value.split(',').map(v => v.trim()).filter(Boolean);
-            return values.map(v => 
-                `<a href="#" class="song-meta-link" 
+            // Use entity-specific class if provided, otherwise generic
+            const linkClass = entityType ? `song-meta-link-${entityType}` : 'song-meta-link';
+            return values.map(v =>
+                `<a href="#" class="${linkClass}"
                     onclick="navigateToWithFilter('${page}', '${filterKey}', '${escapeAttr(v)}'); event.stopPropagation();"
                     onmouseenter="showTooltip(event, '${escapeAttr(v)}', '${filterKey}')"
                     onmouseleave="hideTooltip()">${v}</a>`
@@ -9895,13 +9963,13 @@ async function fetchStatistics() {
             const isActive = globalIdx === currentSongIndex;
             const hasAudio = song.audioUrl && song.audioUrl.startsWith('http');
             
-            // Create meta with links
+            // Create meta with links - using entity-specific colors
             let metaParts = [];
             if (song.mechaber) {
-                metaParts.push(createMetaLinks(song.mechaber, 'mechabrim', 'mechaber'));
+                metaParts.push(createMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
             }
             if (song.category) {
-                metaParts.push(createMetaLinks(song.category, 'chatzeros', 'chatzer'));
+                metaParts.push(createMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
             }
             
             // If no audio, clicking shows details instead of playing
@@ -10053,11 +10121,14 @@ async function fetchStatistics() {
         }
 
         // Create player meta links (handles multiple comma-separated values)
-        function createPlayerMetaLinks(value, page, filterKey) {
+        // entityType determines the color class (mechaber, chatzer, collection)
+        function createPlayerMetaLinks(value, page, filterKey, entityType = null) {
             if (!value) return '';
             const values = value.split(',').map(v => v.trim()).filter(Boolean);
-            return values.map(v => 
-                `<a href="#" class="player-meta-link" 
+            // Use entity-specific class if provided, otherwise generic
+            const linkClass = entityType ? `player-meta-link-${entityType}` : 'player-meta-link';
+            return values.map(v =>
+                `<a href="#" class="${linkClass}"
                     onclick="navigateToWithFilter('${page}', '${filterKey}', '${escapeAttr(v)}'); event.preventDefault();"
                     onmouseenter="showTooltip(event, '${escapeAttr(v)}', '${filterKey}')"
                     onmouseleave="hideTooltip()">${v}</a>`
@@ -10068,19 +10139,19 @@ async function fetchStatistics() {
         function updatePlayerUI(song) {
             document.getElementById('playerSongName').textContent = song.name;
             
-            // Create meta with links
+            // Create meta with links - using entity-specific colors
             let metaParts = [];
             if (song.mechaber) {
-                metaParts.push(createPlayerMetaLinks(song.mechaber, 'mechabrim', 'mechaber'));
+                metaParts.push(createPlayerMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
             }
             if (song.category) {
-                metaParts.push(createPlayerMetaLinks(song.category, 'chatzeros', 'chatzer'));
+                metaParts.push(createPlayerMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
             }
             document.getElementById('playerSongMeta').innerHTML = metaParts.join(' • ');
-            
+
             // Collection link
             if (song.collections) {
-                document.getElementById('playerCollection').innerHTML = createPlayerMetaLinks(song.collections, 'collections', 'collection');
+                document.getElementById('playerCollection').innerHTML = createPlayerMetaLinks(song.collections, 'collections', 'collection', 'collection');
             } else {
                 document.getElementById('playerCollection').textContent = '';
             }
@@ -10524,7 +10595,10 @@ async function fetchStatistics() {
                                 const globalIdx = allSongs.indexOf(song);
                                 const hasAudio = !!song.audioUrl;
                                 const escapedName = escapeAttr(song.name);
-                                const metaParts = [song.mechaber, song.category].filter(Boolean);
+                                // Build meta with entity-specific colored links
+                                const metaParts = [];
+                                if (song.mechaber) metaParts.push(createMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
+                                if (song.category) metaParts.push(createMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
                                 return `
                                     <div class="song-item ${!hasAudio ? 'no-audio' : ''}" onclick="${hasAudio ? `playSong(${globalIdx})` : `showSongDetails(${globalIdx})`}">
                                         <div class="song-number">${idx + 1}</div>
