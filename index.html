@@ -1775,8 +1775,8 @@
         }
 
         .collection-zman-tag {
-            background: var(--color-zman-pale);
-            color: var(--color-zman-dark);
+            background: var(--color-zman);
+            color: white;
             padding: 2px 8px;
             border-radius: 10px;
             font-size: 0.75em;
@@ -1785,8 +1785,8 @@
         }
 
         .collection-zman-tag:hover {
-            background: var(--color-zman);
-            color: white;
+            background: var(--color-zman-dark);
+            transform: scale(1.05);
         }
 
         .collection-zman-more {
@@ -2124,19 +2124,17 @@
 
         .card-zman-tag {
             display: inline-block;
-            background: var(--color-zman-pale);
-            color: var(--color-zman-dark);
+            background: var(--color-zman);
+            color: white;
             padding: 3px 10px;
             border-radius: 12px;
             font-size: 0.75em;
             cursor: pointer;
             transition: var(--transition-smooth);
-            border: 1px solid var(--color-zman-light);
         }
 
         .card-zman-tag:hover {
-            background: var(--color-zman);
-            color: white;
+            background: var(--color-zman-dark);
             transform: scale(1.05);
         }
 
@@ -2689,6 +2687,151 @@
 
         .chatzer-tag:hover {
             background: var(--color-chatzer-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone mechaber tag for use in cards */
+        .mechaber-tag {
+            display: inline-block;
+            background: var(--color-mechaber);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .mechaber-tag:hover {
+            background: var(--color-mechaber-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone verter tag for use in cards */
+        .verter-tag {
+            display: inline-block;
+            background: var(--color-verter);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .verter-tag:hover {
+            background: var(--color-verter-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone zman tag for use in cards */
+        .zman-tag {
+            display: inline-block;
+            background: var(--color-zman);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .zman-tag:hover {
+            background: var(--color-zman-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone collection tag for use in cards */
+        .collection-tag {
+            display: inline-block;
+            background: var(--color-collection);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .collection-tag:hover {
+            background: var(--color-collection-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone nigun tag for use in cards */
+        .nigun-tag-pill {
+            display: inline-block;
+            background: var(--color-nigun);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .nigun-tag-pill:hover {
+            background: var(--color-nigun-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone album tag for use in cards */
+        .album-tag {
+            display: inline-block;
+            background: var(--color-album);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .album-tag:hover {
+            background: var(--color-album-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone document tag for use in cards */
+        .document-tag {
+            display: inline-block;
+            background: var(--color-document);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .document-tag:hover {
+            background: var(--color-document-dark);
+            transform: scale(1.05);
+        }
+
+        /* Standalone resource tag for use in cards */
+        .resource-tag {
+            display: inline-block;
+            background: var(--color-resource);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .resource-tag:hover {
+            background: var(--color-resource-dark);
+            transform: scale(1.05);
+        }
+
+        /* Tags container for displaying multiple tags */
+        .tags-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
         }
 
         /* Category-specific text colors - for use anywhere on the site */
@@ -2931,94 +3074,85 @@
         }
 
         .nigun-tag-inline.tag-scale {
-            background: var(--color-nigun-pale);
-            color: var(--color-nigun-dark);
-            border: 1px solid var(--color-nigun-light);
+            background: var(--color-music);
+            color: white;
             cursor: default;
         }
 
         .nigun-tag-inline.tag-ritem {
-            background: var(--color-nigun-pale);
-            color: var(--color-nigun-dark);
-            border: 1px solid var(--color-nigun-light);
+            background: var(--color-music);
+            color: white;
             cursor: default;
         }
 
         .nigun-tag-inline.tag-zman {
-            background: var(--color-zman-pale);
-            color: var(--color-zman-dark);
-            border: 1px solid var(--color-zman-light);
-        }
-
-        .nigun-tag-inline.tag-zman:hover {
             background: var(--color-zman);
             color: white;
         }
 
-        .nigun-tag-inline.tag-piyut {
-            background: #e8f5e9;
-            color: #1b5e20;
-            border: 1px solid #81c784;
+        .nigun-tag-inline.tag-zman:hover {
+            background: var(--color-zman-dark);
+            transform: scale(1.05);
         }
 
-        .nigun-tag-inline.tag-piyut:hover {
+        .nigun-tag-inline.tag-piyut {
             background: #2e8b2e;
             color: white;
         }
 
-        .nigun-tag-inline.tag-collection {
-            background: var(--color-collection-pale);
-            color: var(--color-collection-dark);
-            border: 1px solid var(--color-collection-light);
+        .nigun-tag-inline.tag-piyut:hover {
+            background: #1b5e20;
+            transform: scale(1.05);
         }
 
-        .nigun-tag-inline.tag-collection:hover {
+        .nigun-tag-inline.tag-collection {
             background: var(--color-collection);
             color: white;
         }
 
-        .nigun-tag-inline.tag-album {
-            background: var(--color-album-pale);
-            color: var(--color-album-dark);
-            border: 1px solid var(--color-album-light);
+        .nigun-tag-inline.tag-collection:hover {
+            background: var(--color-collection-dark);
+            transform: scale(1.05);
         }
 
-        .nigun-tag-inline.tag-album:hover {
+        .nigun-tag-inline.tag-album {
             background: var(--color-album);
             color: white;
         }
 
-        .nigun-tag-inline.tag-document {
-            background: var(--color-document-pale);
-            color: var(--color-document-dark);
-            border: 1px solid var(--color-document-light);
+        .nigun-tag-inline.tag-album:hover {
+            background: var(--color-album-dark);
+            transform: scale(1.05);
         }
 
-        .nigun-tag-inline.tag-document:hover {
+        .nigun-tag-inline.tag-document {
             background: var(--color-document);
             color: white;
         }
 
-        .nigun-tag-inline.tag-resource {
-            background: var(--color-resource-pale);
-            color: var(--color-resource-dark);
-            border: 1px solid var(--color-resource-light);
+        .nigun-tag-inline.tag-document:hover {
+            background: var(--color-document-dark);
+            transform: scale(1.05);
         }
 
-        .nigun-tag-inline.tag-resource:hover {
+        .nigun-tag-inline.tag-resource {
             background: var(--color-resource);
             color: white;
         }
 
+        .nigun-tag-inline.tag-resource:hover {
+            background: var(--color-resource-dark);
+            transform: scale(1.05);
+        }
+
         .nigun-tag-inline.tag-verter {
-            background: var(--color-verter-pale);
-            color: var(--color-verter-dark);
-            border: 1px solid var(--color-verter-light);
+            background: var(--color-verter);
+            color: white;
         }
 
         .nigun-tag-inline.tag-verter:hover {
-            background: var(--color-verter);
-            color: white;
+            background: var(--color-verter-dark);
+            transform: scale(1.05);
         }
 
         .nigun-section h3 {
@@ -4031,19 +4165,48 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px;
+            padding: 12px 14px;
             border-radius: 10px;
             cursor: pointer;
-            transition: var(--transition-smooth);
             margin-bottom: 8px;
             background: var(--color-nigun-pale);
             border: 1px solid transparent;
+            box-shadow: 0 0 0 rgba(74, 124, 201, 0);
+            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease, margin 0.3s ease;
+        }
+
+        .song-item .song-name,
+        .song-item .song-number {
+            transition: color 0.3s ease, background 0.3s ease;
         }
 
         .song-item:hover {
-            background: white;
-            border-color: var(--color-nigun-light);
-            transform: translateX(-5px);
+            background: #4a7cc9;
+            border-color: #4a7cc9;
+            color: white;
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.4);
+            padding: 14px 16px;
+            margin-bottom: 6px;
+            margin-top: -2px;
+        }
+
+        .song-item:hover .song-name {
+            color: white !important;
+        }
+
+        .song-item:hover .song-number {
+            background: rgba(255,255,255,0.25) !important;
+            color: white !important;
+        }
+
+        .song-item:hover .song-meta-tag {
+            opacity: 0.9;
+        }
+
+        .song-item:hover .song-details-btn {
+            background: rgba(255,255,255,0.2) !important;
+            color: white !important;
+            border-color: rgba(255,255,255,0.3) !important;
         }
 
         .song-item.no-audio {
@@ -4054,8 +4217,18 @@
 
         .song-item.no-audio:hover {
             opacity: 1;
-            background: white;
-            border-color: var(--text-muted);
+            background: #4a7cc9;
+            border-color: #4a7cc9;
+            color: white;
+        }
+
+        .song-item.no-audio:hover .song-name {
+            color: white;
+        }
+
+        .song-item.no-audio:hover .song-number {
+            background: rgba(255,255,255,0.25);
+            color: white;
         }
 
         .song-item.no-audio .song-number {
@@ -4068,16 +4241,21 @@
         }
 
         .song-item.active {
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-light) 100%);
-            color: white;
+            background: #4a7cc9 !important;
+            color: white !important;
+            border-color: #4a7cc9 !important;
+        }
+
+        .song-item.active:hover {
+            background: #3d6bb5 !important;
         }
 
         .song-item.active .song-meta {
-            color: rgba(255,255,255,0.8);
+            color: rgba(255,255,255,0.9) !important;
         }
 
         .song-item.active .song-name {
-            color: white;
+            color: white !important;
         }
 
         .song-number {
@@ -4115,11 +4293,10 @@
         }
 
         .song-meta {
-            font-size: 0.85em;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            align-items: center;
         }
 
         .song-meta-link {
@@ -4141,37 +4318,11 @@
             color: white;
         }
 
-        /* Entity-specific meta links - maintains entity colors when referenced on other pages */
-        .song-meta-link-mechaber {
-            color: var(--color-mechaber-dark);
-            text-decoration: none;
-            transition: var(--transition-smooth);
-        }
-        .song-meta-link-mechaber:hover {
-            color: var(--color-mechaber);
-            text-decoration: underline;
-        }
-        .song-item.active .song-meta-link-mechaber {
-            color: var(--color-mechaber-light);
-        }
-        .song-item.active .song-meta-link-mechaber:hover {
-            color: var(--color-mechaber-pale);
-        }
-
-        .song-meta-link-chatzer {
-            color: var(--color-chatzer-dark);
-            text-decoration: none;
-            transition: var(--transition-smooth);
-        }
-        .song-meta-link-chatzer:hover {
-            color: var(--color-chatzer);
-            text-decoration: underline;
-        }
-        .song-item.active .song-meta-link-chatzer {
-            color: var(--color-chatzer-light);
-        }
-        .song-item.active .song-meta-link-chatzer:hover {
-            color: var(--color-chatzer-pale);
+        /* Song meta tags - smaller pill buttons for song list */
+        .song-meta-tag {
+            padding: 2px 8px !important;
+            font-size: 0.75em !important;
+            border-radius: 10px !important;
         }
 
         .song-play-btn {
@@ -8447,16 +8598,9 @@ async function fetchStatistics() {
                     ${mechabrimFromChatzer.length > 0 ? `
                         <div class="detail-mechabrim-section">
                             <h3>${mechabrimFromChatzer.length} מחברים</h3>
-                            <div class="mechabrim-grid">
+                            <div class="tags-container">
                                 ${mechabrimFromChatzer.map(mech => `
-                                    <div class="mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">
-                                        ${mech.image ? `
-                                            <img class="mechaber-card-image" src="${mech.image}" alt="${mech.name}">
-                                        ` : `
-                                            <div class="mechaber-card-icon"></div>
-                                        `}
-                                        <div class="mechaber-card-name">${mech.name}</div>
-                                    </div>
+                                    <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">${mech.name}</span>
                                 `).join('')}
                             </div>
                         </div>
@@ -8685,36 +8829,19 @@ async function fetchStatistics() {
                     ${song.mechaber ? `
                         <div class="nigun-mechaber-section">
                             <div class="nigun-mechaber-title">מחבר הניגון</div>
-                            <div class="nigun-mechaber-grid">
-                                <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mechaberName || '')}')">
-                                    ${mechaberInfo && mechaberInfo.image ? `
-                                        <img class="nigun-mechaber-image" src="${mechaberInfo.image}" alt="${mechaberName || ''}">
-                                    ` : `
-                                        <div class="nigun-mechaber-placeholder">👤</div>
-                                    `}
-                                    <div class="nigun-mechaber-name">${song.mechaber}</div>
-                                </div>
+                            <div class="tags-container">
+                                <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(mechaberName || '')}')">${song.mechaber}</span>
                             </div>
                         </div>
                     ` : ''}
-                    
+
                     ${song.personality ? `
                         <div class="nigun-personality-section">
                             <div class="nigun-personality-title">פערזענליכקייטן וואס האבן א שייכות מיט דעם ניגון</div>
-                            <div class="nigun-personality-grid">
-                                ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
-                                    const personInfo = mechabrimInfo[personName] || {};
-                                    return `
-                                        <div class="nigun-personality-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">
-                                            ${personInfo.image ? `
-                                                <img class="nigun-personality-image" src="${personInfo.image}" alt="${personName}">
-                                            ` : `
-                                                <div class="nigun-personality-placeholder">👤</div>
-                                            `}
-                                            <div class="nigun-personality-name">${personName}</div>
-                                        </div>
-                                    `;
-                                }).join('')}
+                            <div class="tags-container">
+                                ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => `
+                                    <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">${personName}</span>
+                                `).join('')}
                             </div>
                         </div>
                     ` : ''}
@@ -10124,18 +10251,21 @@ async function fetchStatistics() {
         }
 
         // Create meta links for song items (handles multiple comma-separated values)
-        // entityType determines the color class (mechaber, chatzer, etc.)
+        // Uses pill button styling with category colors
         function createMetaLinks(value, page, filterKey, entityType = null) {
             if (!value) return '';
             const values = value.split(',').map(v => v.trim()).filter(Boolean);
-            // Use entity-specific class if provided, otherwise generic
-            const linkClass = entityType ? `song-meta-link-${entityType}` : 'song-meta-link';
+            const tagClass = filterKey === 'mechaber' ? 'mechaber-tag' :
+                             filterKey === 'chatzer' ? 'chatzer-tag' :
+                             filterKey === 'verter' ? 'verter-tag' :
+                             filterKey === 'zman' ? 'zman-tag' :
+                             filterKey === 'collection' ? 'collection-tag' : 'song-meta-link';
             return values.map(v =>
-                `<a href="#" class="${linkClass}"
+                `<span class="${tagClass} song-meta-tag"
                     onclick="navigateToWithFilter('${page}', '${filterKey}', '${escapeAttr(v)}'); event.stopPropagation();"
                     onmouseenter="showTooltip(event, '${escapeAttr(v)}', '${filterKey}')"
-                    onmouseleave="hideTooltip()">${v}</a>`
-            ).join(', ');
+                    onmouseleave="hideTooltip()">${v}</span>`
+            ).join(' ');
         }
 
         // Render song item
