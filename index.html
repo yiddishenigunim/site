@@ -4556,6 +4556,45 @@
             box-shadow: 0 6px 25px rgba(123, 31, 162, 0.5);
         }
 
+        .equalizer-icon {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 18px;
+            margin-left: 10px;
+        }
+
+        .equalizer-icon .bar {
+            width: 4px;
+            background: white;
+            border-radius: 2px;
+            animation: equalize 0.8s ease-in-out infinite;
+        }
+
+        .equalizer-icon .bar:nth-child(1) {
+            height: 8px;
+            animation-delay: 0s;
+        }
+
+        .equalizer-icon .bar:nth-child(2) {
+            height: 16px;
+            animation-delay: 0.2s;
+        }
+
+        .equalizer-icon .bar:nth-child(3) {
+            height: 12px;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes equalize {
+            0%, 100% {
+                transform: scaleY(0.4);
+            }
+            50% {
+                transform: scaleY(1);
+            }
+        }
+
         .player-inner {
             max-width: 1400px;
             margin: 0 auto;
@@ -5957,6 +5996,11 @@
     <!-- Player Show Button (when minimized) -->
     <button class="player-show-btn" id="playerShowBtn" onclick="showPlayerBanner()">
         <span id="showBtnSongName">ווייז פלעיער</span>
+        <div class="equalizer-icon">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
     </button>
 
     <!-- Player -->
