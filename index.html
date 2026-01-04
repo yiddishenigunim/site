@@ -85,6 +85,16 @@
             
             /* ארכיוון - Teal (same as albums) */
             --color-archive: #00838f;
+
+            /* גרעידיענט טהעמע - Home/General - combining ניגונים, מחברים, חצרות */
+            --gradient-main: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-chatzer) 50%, var(--color-mechaber) 100%);
+            --gradient-main-reverse: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-chatzer) 50%, var(--color-nigun) 100%);
+            --gradient-main-vertical: linear-gradient(180deg, var(--color-nigun) 0%, var(--color-chatzer) 50%, var(--color-mechaber) 100%);
+            --gradient-main-soft: linear-gradient(135deg, var(--color-nigun-light) 0%, var(--color-chatzer-light) 50%, var(--color-mechaber-light) 100%);
+            --gradient-main-pale: linear-gradient(135deg, var(--color-nigun-pale) 0%, var(--color-chatzer-pale) 50%, var(--color-mechaber-pale) 100%);
+            --gradient-main-dark: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-chatzer-dark) 50%, var(--color-mechaber-dark) 100%);
+            /* Combined pale color for home page background */
+            --color-home-pale: color-mix(in srgb, var(--color-nigun-pale) 33%, color-mix(in srgb, var(--color-chatzer-pale) 50%, var(--color-mechaber-pale)));
         }
 
         * {
@@ -137,7 +147,7 @@
         .logo-icon {
             width: 38px;
             height: 38px;
-            background: var(--primary);
+            background: var(--gradient-main);
             border-radius: 8px;
             display: flex;
             align-items: center;
@@ -165,7 +175,7 @@
             height: 40px;
             border: none;
             border-radius: 50%;
-            background: var(--primary);
+            background: var(--gradient-main);
             color: white;
             font-size: 1.2em;
             cursor: pointer;
@@ -178,7 +188,7 @@
         }
 
         .global-search-btn:hover {
-            background: var(--primary-deep);
+            background: var(--gradient-main-dark);
             transform: scale(1.1);
         }
 
@@ -233,7 +243,10 @@
         .search-modal-header h3 {
             margin: 0;
             font-size: 1.2em;
-            color: var(--primary-deep);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .search-modal-close {
@@ -278,7 +291,7 @@
 
         .search-modal-btn {
             padding: 14px 28px;
-            background: var(--primary);
+            background: var(--gradient-main);
             color: white;
             border: none;
             border-radius: 10px;
@@ -289,7 +302,7 @@
         }
 
         .search-modal-btn:hover {
-            background: var(--primary-deep);
+            background: var(--gradient-main-dark);
             transform: translateY(-2px);
         }
 
@@ -417,7 +430,7 @@
         }
 
         .nav-dropdown-item[data-dest="home"]::before {
-            background: var(--primary);
+            background: var(--gradient-main);
         }
         .nav-dropdown-item[data-dest="songs"]::before {
             background: var(--color-nigun);
@@ -486,12 +499,12 @@
         }
 
         .home-hero {
-            background: linear-gradient(135deg, var(--primary-deep) 0%, var(--primary) 50%, var(--primary-light) 100%);
+            background: var(--gradient-main);
             border-radius: 25px;
             padding: 50px 30px;
             text-align: center;
             margin-bottom: 30px;
-            box-shadow: 0 10px 40px rgba(139, 69, 255, 0.3);
+            box-shadow: 0 10px 40px rgba(74, 124, 201, 0.25), 0 10px 40px rgba(156, 91, 181, 0.2), 0 10px 40px rgba(196, 53, 168, 0.15);
             position: relative;
             overflow: hidden;
         }
@@ -677,13 +690,13 @@
         }
 
         .home-search-input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(139, 69, 255, 0.1);
+            border-color: var(--color-chatzer);
+            box-shadow: 0 0 0 4px rgba(156, 91, 181, 0.15);
         }
 
         .home-search-btn {
             padding: 15px 30px;
-            background: var(--primary);
+            background: var(--gradient-main);
             color: white;
             border: none;
             border-radius: 15px;
@@ -694,7 +707,7 @@
         }
 
         .home-search-btn:hover {
-            background: var(--primary-deep);
+            background: var(--gradient-main-dark);
             transform: translateY(-2px);
         }
 
@@ -767,7 +780,10 @@
 
         .home-section-title {
             text-align: center;
-            color: var(--primary-deep);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 1.5em;
             margin-bottom: 20px;
         }
@@ -902,7 +918,7 @@
         .instruction-number {
             width: 30px;
             height: 30px;
-            background: var(--primary);
+            background: var(--gradient-main);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -1026,7 +1042,7 @@
             font-size: 1.8em;
             font-weight: 700;
             font-family: 'David Libre', serif;
-            background: var(--primary);
+            background: var(--gradient-main);
             color: white;
             text-align: center;
         }
@@ -2304,7 +2320,7 @@
 
         .search-results-btn {
             padding: 12px 24px;
-            background: var(--primary);
+            background: var(--gradient-main);
             color: white;
             border: none;
             border-radius: 8px;
@@ -2316,7 +2332,7 @@
         }
 
         .search-results-btn:hover {
-            background: var(--primary-deep);
+            background: var(--gradient-main-dark);
         }
 
         .search-section-header {
@@ -2532,7 +2548,7 @@
         }
 
         .card-count {
-            background: var(--primary);
+            background: var(--gradient-main);
             color: white;
             padding: 4px 12px;
             border-radius: 15px;
@@ -3488,7 +3504,7 @@
             padding: 8px 20px;
             font-size: 0.85em;
             font-weight: 600;
-            background: var(--primary);
+            background: var(--gradient-main);
             color: white;
         }
 
@@ -3735,7 +3751,7 @@
 
         .detail-type-badge {
             display: inline-block;
-            background: var(--primary);
+            background: var(--gradient-main);
             color: white;
             padding: 5px 15px;
             border-radius: 20px;
@@ -3757,7 +3773,7 @@
 
         .mechaber-tag-name {
             display: inline-block;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-light) 100%);
             color: white;
             padding: 6px 16px;
             border-radius: 20px;
@@ -3806,7 +3822,7 @@
         }
 
         .detail-zman-badge:hover {
-            background: var(--primary);
+            background: var(--gradient-main);
             color: white;
             transform: scale(1.05);
         }
@@ -4328,7 +4344,7 @@
         .song-play-btn {
             width: 35px;
             height: 35px;
-            background: var(--primary);
+            background: var(--gradient-main);
             border: none;
             border-radius: 50%;
             color: white;
@@ -4587,15 +4603,15 @@
         .player-btn.main {
             width: 55px;
             height: 55px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            background: var(--gradient-main);
             color: white;
             font-size: 1.4em;
-            box-shadow: 0 4px 15px rgba(123, 31, 162, 0.3);
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.25), 0 4px 15px rgba(156, 91, 181, 0.2);
         }
 
         .player-btn.main:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(123, 31, 162, 0.4);
+            box-shadow: 0 6px 20px rgba(74, 124, 201, 0.35), 0 6px 20px rgba(156, 91, 181, 0.3);
         }
 
         .player-progress {
@@ -4620,7 +4636,7 @@
 
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--primary) 0%, var(--accent-gold) 100%);
+            background: linear-gradient(90deg, var(--color-nigun) 0%, var(--color-chatzer) 50%, var(--color-mechaber) 100%);
             border-radius: 10px;
             width: 0%;
             transition: width 0.1s linear;
@@ -4706,7 +4722,7 @@
         }
 
         .modal-header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            background: var(--gradient-main);
             padding: 20px 25px;
             display: flex;
             justify-content: space-between;
