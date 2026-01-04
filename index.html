@@ -160,36 +160,9 @@
             gap: 5px;
         }
 
-        .global-search {
-            position: relative;
-            margin-left: 15px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .global-search input {
-            width: 200px;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 0.9em;
-            background: #f8f8f8;
-            direction: rtl;
-            font-family: inherit;
-            transition: var(--transition-smooth);
-        }
-
-        .global-search input:focus {
-            outline: none;
-            border-color: var(--primary);
-            background: white;
-            width: 280px;
-        }
-
         .global-search-btn {
-            width: 34px;
-            height: 34px;
+            width: 40px;
+            height: 40px;
             border: none;
             border-radius: 50%;
             background: var(--primary);
@@ -201,11 +174,123 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+            margin-left: 15px;
         }
 
         .global-search-btn:hover {
-            background: var(--primary-dark);
-            transform: scale(1.05);
+            background: var(--primary-deep);
+            transform: scale(1.1);
+        }
+
+        /* Search Modal */
+        .search-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: flex-start;
+            justify-content: center;
+            padding-top: 15vh;
+            z-index: 10000;
+            backdrop-filter: blur(4px);
+        }
+
+        .search-modal-overlay.active {
+            display: flex;
+        }
+
+        .search-modal {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .search-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .search-modal-header h3 {
+            margin: 0;
+            font-size: 1.2em;
+            color: var(--primary-deep);
+        }
+
+        .search-modal-close {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 50%;
+            font-size: 1.4em;
+            cursor: pointer;
+            color: #666;
+            transition: var(--transition-smooth);
+        }
+
+        .search-modal-close:hover {
+            background: #e0e0e0;
+            color: #333;
+        }
+
+        .search-modal-body {
+            padding: 24px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .search-modal-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-family: inherit;
+            direction: rtl;
+            transition: var(--transition-smooth);
+        }
+
+        .search-modal-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px var(--primary-pale);
+        }
+
+        .search-modal-btn {
+            padding: 14px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .search-modal-btn:hover {
+            background: var(--primary-deep);
+            transform: translateY(-2px);
         }
 
         .stream-btn {
@@ -2190,6 +2275,50 @@
             border-radius: 15px;
             box-shadow: var(--card-shadow);
             margin-bottom: 20px;
+        }
+
+        .search-results-searchbar {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .search-results-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: inherit;
+            direction: rtl;
+            transition: var(--transition-smooth);
+        }
+
+        .search-results-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-pale);
+        }
+
+        .search-results-btn {
+            padding: 12px 24px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            white-space: nowrap;
+        }
+
+        .search-results-btn:hover {
+            background: var(--primary-deep);
         }
 
         .search-section-header {
@@ -5557,10 +5686,7 @@
                 </div>
                 </nav>
                 
-                <div class="global-search">
-                    <input type="text" id="globalSearch" placeholder="זוך..." onkeydown="if(event.key==='Enter') executeGlobalSearch()">
-                    <button class="global-search-btn" onclick="executeGlobalSearch()">⌕</button>
-                </div>
+                <button class="global-search-btn" onclick="openSearchModal()" title="זוך">🔍</button>
                 <a href="https://stream.oitzerhanigunim.org/" target="_blank" class="stream-btn" title="סטרימינג">סטרימינג</a>
             </nav>
         </div>
@@ -5570,6 +5696,24 @@
     <main class="main-content" id="mainContent">
         <!-- Content will be rendered by JavaScript -->
     </main>
+
+    <!-- Search Modal -->
+    <div class="search-modal-overlay" id="searchModalOverlay" onclick="closeSearchModal()">
+        <div class="search-modal" onclick="event.stopPropagation()">
+            <div class="search-modal-header">
+                <h3>🔍 זוכט אין אוצר הניגונים</h3>
+                <button class="search-modal-close" onclick="closeSearchModal()">×</button>
+            </div>
+            <div class="search-modal-body">
+                <input type="text" 
+                       id="searchModalInput" 
+                       class="search-modal-input" 
+                       placeholder="זוכט א ניגון, מחבר, חצר..."
+                       onkeydown="if(event.key==='Enter') executeSearchFromModal()">
+                <button class="search-modal-btn" onclick="executeSearchFromModal()">זוכן</button>
+            </div>
+        </div>
+    </div>
 
     <!-- Player -->
     <div class="player-section">
@@ -6513,6 +6657,32 @@ async function fetchStatistics() {
                         await fetchAlbumsInfo();
                         loadedCategories.albums = true;
                     }
+                    break;
+                case 'search':
+                    // For search, we need ALL data loaded
+                    const searchPromises = [];
+                    if (!loadedCategories.chatzeros) {
+                        searchPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
+                    }
+                    if (!loadedCategories.mechabrim) {
+                        searchPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
+                    }
+                    if (!loadedCategories.verter) {
+                        searchPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
+                    }
+                    if (!loadedCategories.zmanim) {
+                        searchPromises.push(fetchZmanimInfo().then(() => loadedCategories.zmanim = true));
+                    }
+                    if (!loadedCategories.collections) {
+                        searchPromises.push(fetchCollectionsInfo().then(() => loadedCategories.collections = true));
+                    }
+                    if (!loadedCategories.albums) {
+                        searchPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
+                    }
+                    if (!loadedCategories.songs) {
+                        searchPromises.push(fetchSongsInBackground());
+                    }
+                    await Promise.all(searchPromises);
                     break;
             }
         }
@@ -7825,7 +7995,12 @@ async function fetchStatistics() {
         function clearSearch() {
             searchQuery = '';
             currentPage = 1;
+            // Clear the input box
+            const searchInput = document.getElementById('songsSearchInput');
+            if (searchInput) searchInput.value = '';
             applyFilters();
+            // Re-render to remove the X button
+            renderCurrentPage();
         }
         
         // Toggle audio only filter
@@ -10467,6 +10642,108 @@ async function fetchStatistics() {
             // Don't search on every keystroke - wait for Enter
         }
 
+        // Open search modal
+        function openSearchModal() {
+            const overlay = document.getElementById('searchModalOverlay');
+            overlay.classList.add('active');
+            // Focus on input
+            setTimeout(() => {
+                document.getElementById('searchModalInput').focus();
+            }, 100);
+        }
+
+        // Close search modal
+        function closeSearchModal() {
+            const overlay = document.getElementById('searchModalOverlay');
+            overlay.classList.remove('active');
+        }
+
+        // Execute search from modal
+        async function executeSearchFromModal() {
+            const input = document.getElementById('searchModalInput');
+            const term = input?.value?.trim();
+            
+            if (!term) return;
+
+            closeSearchModal();
+            
+            // Show loading state
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <div class="page-theme-nigun">
+                    <div class="page-title">
+                        <div class="page-title-bar">זוכט "${term}"...</div>
+                        <div class="page-title-content">
+                            <div class="subtitle">לאדינג רעזולטאטן...</div>
+                        </div>
+                    </div>
+                    <div class="loading-songs-message">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            `;
+            
+            // Load all data needed for search
+            await ensureDataForPage('search');
+            
+            searchQuery = term;
+            currentPage = 1;
+            currentPageView = 'search';
+            currentDetailView = null;
+            updateURL();
+            renderCurrentPage();
+        }
+
+        // Execute search from results page
+        async function executeSearchFromResults() {
+            const input = document.getElementById('searchResultsInput');
+            const term = input?.value?.trim();
+            
+            if (!term) return;
+
+            // Show loading state
+            const content = document.getElementById('mainContent');
+            content.innerHTML = `
+                <div class="page-theme-nigun">
+                    <div class="page-title">
+                        <div class="page-title-bar">זוכט "${term}"...</div>
+                        <div class="page-title-content">
+                            <div class="subtitle">לאדינג רעזולטאטן...</div>
+                        </div>
+                    </div>
+                    <div class="loading-songs-message">
+                        <div class="loading-spinner"></div>
+                    </div>
+                </div>
+            `;
+
+            // Load all data needed for search
+            await ensureDataForPage('search');
+
+            searchQuery = term;
+            currentPage = 1;
+            currentPageView = 'search';
+            currentDetailView = null;
+            updateURL();
+            renderCurrentPage();
+        }
+
+        // Search within songs only (from "see all" button)
+        function searchInSongs(term) {
+            // Set search query in songs page
+            searchQuery = term;
+            currentPage = 1;
+            currentPageView = 'songs';
+            currentDetailView = null;
+            
+            // Apply the search filter
+            applyFilters();
+            
+            updateURL();
+            renderCurrentPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
         function executeGlobalSearch() {
             const input = document.getElementById('globalSearch');
             const term = input?.value?.trim();
@@ -10520,26 +10797,26 @@ async function fetchStatistics() {
                 return searchableText.includes(term);
             });
 
-            // Search in chatzeros (name and all info)
-            const matchingChatzeros = Object.keys(categories.chatzeros || {}).filter(name => {
+            // Search in chatzeros (use chatzerosInfo directly)
+            const matchingChatzeros = Object.keys(chatzerosInfo || {}).filter(name => {
                 if (name.toLowerCase().includes(term)) return true;
                 return searchInInfo(chatzerosInfo?.[name], term);
             });
 
-            // Search in mechabrim (name and all info)
-            const matchingMechabrim = Object.keys(categories.mechabrim || {}).filter(name => {
+            // Search in mechabrim (use mechabrimInfo directly)
+            const matchingMechabrim = Object.keys(mechabrimInfo || {}).filter(name => {
                 if (name.toLowerCase().includes(term)) return true;
                 return searchInInfo(mechabrimInfo?.[name], term);
             });
 
-            // Search in collections (name and all info)
-            const matchingCollections = Object.keys(categories.collections || {}).filter(name => {
+            // Search in collections (use collectionsInfo directly)
+            const matchingCollections = Object.keys(collectionsInfo || {}).filter(name => {
                 if (name.toLowerCase().includes(term)) return true;
                 return searchInInfo(collectionsInfo?.[name], term);
             });
 
-            // Search in verter (name and all info)
-            const matchingVerter = Object.keys(categories.verter || {}).filter(name => {
+            // Search in verter (use verterInfo directly)
+            const matchingVerter = Object.keys(verterInfo || {}).filter(name => {
                 if (name.toLowerCase().includes(term)) return true;
                 return searchInInfo(verterInfo?.[name], term);
             });
@@ -10584,6 +10861,16 @@ async function fetchStatistics() {
                             <div class="subtitle">${totalResults} רעזולטאטן געפונען</div>
                         </div>
                     </div>
+                    
+                    <div class="search-results-searchbar">
+                        <input type="text" 
+                               id="searchResultsInput" 
+                               class="search-results-input" 
+                               placeholder="זוכט עפעס אנדערש..."
+                               value="${searchQuery}"
+                               onkeydown="if(event.key==='Enter') executeSearchFromResults()">
+                        <button class="search-results-btn" onclick="executeSearchFromResults()">🔍 זוכן</button>
+                    </div>
             `;
 
             // Nigunim section - use song-item style
@@ -10593,7 +10880,7 @@ async function fetchStatistics() {
                     <div class="search-section">
                         <div class="search-section-header">
                             <h3 style="color: var(--color-nigun);">🎵 ניגונים (${matchingSongs.length})</h3>
-                            ${matchingSongs.length > 10 ? `<button class="see-all-btn" onclick="navigateTo('songs');">זע אלע →</button>` : ''}
+                            ${matchingSongs.length > 10 ? `<button class="see-all-btn" onclick="searchInSongs('${searchQuery.replace(/'/g, "\\'")}')">זע אלע ${matchingSongs.length} →</button>` : ''}
                         </div>
                         <div class="search-songs-list">
                             ${displaySongs.map((song, idx) => {
