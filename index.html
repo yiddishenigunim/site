@@ -4466,6 +4466,14 @@
             box-shadow: 0 -5px 30px rgba(74, 18, 89, 0.15);
             z-index: 200;
             direction: ltr;
+            transform: translateY(100%);
+            opacity: 0;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+        }
+
+        .player-section.player-visible {
+            transform: translateY(0);
+            opacity: 1;
         }
 
         .player-inner {
@@ -6026,6 +6034,7 @@
         let currentPlaylistPosition = -1; // Position within playlist
         let currentRecordingIndex = 0; // Track which recording of current song is playing
         let isInRecordingsMode = false; // Are we navigating between recordings or songs?
+        let playerVisible = false; // Track if player banner is visible
         let currentPageView = 'home';
         let searchQuery = ''; // Search query for songs
         let audioOnlyFilter = true; // Show only songs with audio (default on)
@@ -9040,15 +9049,16 @@ async function fetchStatistics() {
             
             // Enable recordings mode if song has multiple recordings
             isInRecordingsMode = song.recordings.length > 1;
-            
+
             // Play the specific recording URL
             audioPlayer.src = recording.url;
             audioPlayer.play();
-            
+
+            showPlayer();
             // Update player UI with song info
             updatePlayerUI(song);
             updateActiveSongInList();
-            
+
             // Update active state in UI
             document.querySelectorAll('.nigun-recording-item').forEach((item, i) => {
                 item.classList.toggle('active', i === recordingIdx);
@@ -10310,6 +10320,14 @@ async function fetchStatistics() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
+        // Show the player banner with animation
+        function showPlayer() {
+            if (!playerVisible) {
+                playerVisible = true;
+                document.querySelector('.player-section').classList.add('player-visible');
+            }
+        }
+
         // Play song (sets playlist if not already set)
         function playSong(idx, playlist = null) {
             if (idx < 0 || idx >= allSongs.length) return;
@@ -10336,11 +10354,12 @@ async function fetchStatistics() {
             
             audioPlayer.src = song.audioUrl;
             audioPlayer.play();
-            
+
+            showPlayer();
             updatePlayerUI(song);
             updateActiveSongInList();
         }
-        
+
         // Play song from a specific playlist (detail pages)
         function playSongFromList(idx, playlistIndices) {
             currentPlaylist = playlistIndices;
@@ -10410,16 +10429,17 @@ async function fetchStatistics() {
         function playRecording(songIdx, recordingIdx) {
             const song = allSongs[songIdx];
             if (!song || !song.recordings || !song.recordings[recordingIdx]) return;
-            
+
             const recording = song.recordings[recordingIdx];
-            
+
             // Update current song index
             currentSongIndex = songIdx;
-            
+
             // Play the specific recording URL
             audioPlayer.src = recording.url;
             audioPlayer.play();
-            
+
+            showPlayer();
             // Update player UI with song info
             updatePlayerUI(song);
             updateActiveSongInList();
