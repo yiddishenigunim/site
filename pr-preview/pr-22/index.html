@@ -4046,9 +4046,23 @@
         }
 
         .song-item:hover {
-            background: white;
-            border-color: var(--color-nigun-light);
+            background: linear-gradient(135deg, #1a3a5a 0%, #2d5aa0 100%);
+            border-color: #1a3a5a;
             transform: translateX(-5px);
+            color: white;
+        }
+
+        .song-item:hover .song-name {
+            color: white;
+        }
+
+        .song-item:hover .song-number {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .song-item:hover .song-meta-tag {
+            opacity: 0.9;
         }
 
         .song-item.no-audio {
@@ -4059,8 +4073,18 @@
 
         .song-item.no-audio:hover {
             opacity: 1;
-            background: white;
-            border-color: var(--text-muted);
+            background: linear-gradient(135deg, #1a3a5a 0%, #2d5aa0 100%);
+            border-color: #1a3a5a;
+            color: white;
+        }
+
+        .song-item.no-audio:hover .song-name {
+            color: white;
+        }
+
+        .song-item.no-audio:hover .song-number {
+            background: rgba(255,255,255,0.2);
+            color: white;
         }
 
         .song-item.no-audio .song-number {
