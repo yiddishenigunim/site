@@ -763,101 +763,86 @@
             transform: translateY(-2px);
         }
 
-        /* Stats Grid - 2 Stack Layout */
+        /* Stats Grid - Compact 3-Column Layout */
         .home-stats-grid {
             display: flex;
-            gap: 20px;
-            margin-bottom: 60px;
+            gap: 12px;
+            margin-bottom: 50px;
         }
 
-        /* Hero ניגונים Card - Left Side, Full Height */
-        .home-stat-hero {
-            flex: 0 0 35%;
-            background: var(--gradient-main);
-            border-radius: 22px;
-            padding: 40px 30px;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            box-shadow: 0 10px 40px rgba(74, 124, 201, 0.2), 0 10px 40px rgba(156, 91, 181, 0.15);
+        /* Right Side - Main Stats (6 cards in 2x3 grid) */
+        .home-stats-main {
+            flex: 1;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        /* Left Side - Secondary Stats (3 cards stacked) */
+        .home-stats-secondary {
+            flex: 0 0 120px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            gap: 10px;
         }
 
-        .home-stat-hero:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 50px rgba(74, 124, 201, 0.25), 0 15px 50px rgba(156, 91, 181, 0.2);
-        }
-
-        .home-stat-hero .home-stat-number {
-            font-size: 4.5em;
-            font-weight: 700;
-            color: white;
-            font-family: 'Heebo', sans-serif;
-        }
-
-        .home-stat-hero .home-stat-label {
-            font-size: 1.8em;
-            color: white;
-            font-weight: 600;
-            margin-top: 10px;
-        }
-
-        .home-stat-hero .home-stat-subtitle {
-            font-size: 1em;
-            color: rgba(255,255,255,0.85);
-            margin-top: 15px;
-        }
-
-        /* Right Side - 2 Stacked Rows */
-        .home-stats-right {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .home-stats-row {
-            display: flex;
-            gap: 20px;
-            flex: 1;
-        }
-
-        /* Individual Stat Cards */
+        /* Compact Individual Stat Cards */
         .home-stat-card {
-            flex: 1;
             background: white;
-            border-radius: 18px;
-            padding: 20px 15px;
+            border-radius: 12px;
+            padding: 14px 10px;
             text-align: center;
             cursor: pointer;
-            transition: var(--transition-smooth);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            border: 1.5px solid transparent;
             display: flex;
             flex-direction: column;
             justify-content: center;
+            align-items: center;
         }
 
         .home-stat-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.08);
         }
 
         .home-stat-number {
-            font-size: 2em;
+            font-size: 1.6em;
             font-weight: 700;
-            margin-bottom: 5px;
+            line-height: 1.1;
             font-family: 'Heebo', sans-serif;
         }
 
         .home-stat-label {
-            font-size: 1.05em;
+            font-size: 0.85em;
             font-weight: 500;
+            margin-top: 2px;
+        }
+
+        /* Secondary cards - even more compact */
+        .home-stats-secondary .home-stat-card {
+            flex: 1;
+            padding: 10px 8px;
+        }
+
+        .home-stats-secondary .home-stat-number {
+            font-size: 1.3em;
+        }
+
+        .home-stats-secondary .home-stat-label {
+            font-size: 0.75em;
         }
 
         /* Beautiful Category Colors */
+        .home-stat-card.stat-nigun {
+            background: linear-gradient(145deg, var(--color-nigun-pale) 0%, white 100%);
+            border-color: var(--color-nigun-pale);
+        }
+        .home-stat-card.stat-nigun .home-stat-number { color: var(--color-nigun-dark); }
+        .home-stat-card.stat-nigun .home-stat-label { color: var(--color-nigun); }
+        .home-stat-card.stat-nigun:hover { border-color: var(--color-nigun); }
+
         .home-stat-card.stat-chatzer {
             background: linear-gradient(145deg, var(--color-chatzer-pale) 0%, white 100%);
             border-color: var(--color-chatzer-pale);
@@ -897,6 +882,30 @@
         .home-stat-card.stat-collection .home-stat-number { color: var(--color-collection-dark); }
         .home-stat-card.stat-collection .home-stat-label { color: var(--color-collection); }
         .home-stat-card.stat-collection:hover { border-color: var(--color-collection); }
+
+        .home-stat-card.stat-resource {
+            background: linear-gradient(145deg, var(--color-resource-pale) 0%, white 100%);
+            border-color: var(--color-resource-pale);
+        }
+        .home-stat-card.stat-resource .home-stat-number { color: var(--color-resource-dark); }
+        .home-stat-card.stat-resource .home-stat-label { color: var(--color-resource); }
+        .home-stat-card.stat-resource:hover { border-color: var(--color-resource); }
+
+        .home-stat-card.stat-document {
+            background: linear-gradient(145deg, var(--color-document-pale) 0%, white 100%);
+            border-color: var(--color-document-pale);
+        }
+        .home-stat-card.stat-document .home-stat-number { color: var(--color-document-dark); }
+        .home-stat-card.stat-document .home-stat-label { color: var(--color-document); }
+        .home-stat-card.stat-document:hover { border-color: var(--color-document); }
+
+        .home-stat-card.stat-album {
+            background: linear-gradient(145deg, var(--color-album-pale) 0%, white 100%);
+            border-color: var(--color-album-pale);
+        }
+        .home-stat-card.stat-album .home-stat-number { color: var(--color-album-dark); }
+        .home-stat-card.stat-album .home-stat-label { color: var(--color-album); }
+        .home-stat-card.stat-album:hover { border-color: var(--color-album); }
 
         .home-section-title {
             text-align: center;
@@ -1141,35 +1150,33 @@
             }
             
             .home-stats-grid {
-                flex-direction: column;
+                flex-direction: column-reverse;
+                gap: 10px;
             }
 
-            .home-stat-hero {
+            .home-stats-main {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .home-stats-secondary {
                 flex: none;
-                padding: 35px 20px;
-            }
-
-            .home-stat-hero .home-stat-number {
-                font-size: 3.5em;
-            }
-
-            .home-stat-hero .home-stat-label {
-                font-size: 1.5em;
-            }
-
-            .home-stats-row {
-                flex-wrap: wrap;
-                gap: 12px;
+                flex-direction: row;
             }
 
             .home-stat-card {
-                flex: 1 1 45%;
-                min-width: 120px;
-                padding: 18px 12px;
+                padding: 12px 8px;
             }
 
             .home-stat-number {
-                font-size: 1.7em;
+                font-size: 1.4em;
+            }
+
+            .home-stat-label {
+                font-size: 0.75em;
+            }
+
+            .home-stats-secondary .home-stat-number {
+                font-size: 1.2em;
             }
 
             .home-links-grid {
@@ -1192,8 +1199,12 @@
         }
 
         @media (max-width: 500px) {
-            .home-stat-card {
-                flex: 1 1 100%;
+            .home-stats-main {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .home-stats-secondary {
+                flex-direction: column;
             }
 
             .home-about-links {
@@ -7348,14 +7359,34 @@
         
         async function fetchResourcesInfo() {
             await fetchTableInfo(RESOURCES_TABLE_ID, resourcesInfo, 'Resources');
+            updateHomeSecondaryStats();
         }
-        
+
         async function fetchDocumentsInfo() {
             await fetchTableInfo(DOCUMENTS_TABLE_ID, documentsInfo, 'Documents');
+            updateHomeSecondaryStats();
         }
-        
+
         async function fetchAlbumsInfo() {
             await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
+            updateHomeSecondaryStats();
+        }
+
+        // Update secondary stats on home page when data is loaded
+        function updateHomeSecondaryStats() {
+            const resourceEl = document.getElementById('homeResourceCount');
+            const documentEl = document.getElementById('homeDocumentCount');
+            const albumEl = document.getElementById('homeAlbumCount');
+
+            if (resourceEl && Object.keys(resourcesInfo).length > 0) {
+                resourceEl.textContent = Object.keys(resourcesInfo).length;
+            }
+            if (documentEl && Object.keys(documentsInfo).length > 0) {
+                documentEl.textContent = Object.keys(documentsInfo).length;
+            }
+            if (albumEl && Object.keys(albumsInfo).length > 0) {
+                albumEl.textContent = Object.keys(albumsInfo).length;
+            }
         }
 
 // Fetch statistics from STATS table (only row 1) - with caching
@@ -8217,37 +8248,48 @@ async function fetchStatistics() {
                         </div>
                     </div>
 
-                    <!-- Statistics - 2 Stack Layout -->
+                    <!-- Statistics - Compact Grid Layout -->
                     <div class="home-stats-grid">
-                        <div class="home-stat-hero" onclick="navigateTo('songs')">
-                            <div class="home-stat-number">${totalSongs}</div>
-                            <div class="home-stat-label">ניגונים</div>
-                            <div class="home-stat-subtitle">די גאנצע זאמלונג</div>
-                        </div>
-                        <div class="home-stats-right">
-                            <div class="home-stats-row">
-                                <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
-                                    <div class="home-stat-number">${totalChatzeros}</div>
-                                    <div class="home-stat-label">חצרות</div>
-                                </div>
-                                <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
-                                    <div class="home-stat-number">${totalMechabrim}</div>
-                                    <div class="home-stat-label">מחברים</div>
-                                </div>
+                        <!-- Main Stats - 2x3 Grid -->
+                        <div class="home-stats-main">
+                            <div class="home-stat-card stat-nigun" onclick="navigateTo('songs')">
+                                <div class="home-stat-number">${totalSongs}</div>
+                                <div class="home-stat-label">ניגונים</div>
                             </div>
-                            <div class="home-stats-row">
-                                <div class="home-stat-card stat-verter" onclick="navigateTo('verter')">
-                                    <div class="home-stat-number">${totalVerter}</div>
-                                    <div class="home-stat-label">ווערטער</div>
-                                </div>
-                                <div class="home-stat-card stat-zman" onclick="navigateTo('zmanim')">
-                                    <div class="home-stat-number">${totalZmanim}</div>
-                                    <div class="home-stat-label">זמנים</div>
-                                </div>
-                                <div class="home-stat-card stat-collection" onclick="navigateTo('collections')">
-                                    <div class="home-stat-number">${totalCollections}</div>
-                                    <div class="home-stat-label">קאלעקשאנס</div>
-                                </div>
+                            <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
+                                <div class="home-stat-number">${totalChatzeros}</div>
+                                <div class="home-stat-label">חצרות</div>
+                            </div>
+                            <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
+                                <div class="home-stat-number">${totalMechabrim}</div>
+                                <div class="home-stat-label">מחברים</div>
+                            </div>
+                            <div class="home-stat-card stat-verter" onclick="navigateTo('verter')">
+                                <div class="home-stat-number">${totalVerter}</div>
+                                <div class="home-stat-label">ווערטער</div>
+                            </div>
+                            <div class="home-stat-card stat-zman" onclick="navigateTo('zmanim')">
+                                <div class="home-stat-number">${totalZmanim}</div>
+                                <div class="home-stat-label">זמנים</div>
+                            </div>
+                            <div class="home-stat-card stat-collection" onclick="navigateTo('collections')">
+                                <div class="home-stat-number">${totalCollections}</div>
+                                <div class="home-stat-label">קאלעקשאנס</div>
+                            </div>
+                        </div>
+                        <!-- Secondary Stats - Left Column -->
+                        <div class="home-stats-secondary">
+                            <div class="home-stat-card stat-resource" onclick="navigateTo('resources')">
+                                <div class="home-stat-number" id="homeResourceCount">--</div>
+                                <div class="home-stat-label">רעסורסן</div>
+                            </div>
+                            <div class="home-stat-card stat-document" onclick="navigateTo('documents')">
+                                <div class="home-stat-number" id="homeDocumentCount">--</div>
+                                <div class="home-stat-label">ארכיוון</div>
+                            </div>
+                            <div class="home-stat-card stat-album" onclick="navigateTo('albums')">
+                                <div class="home-stat-number" id="homeAlbumCount">--</div>
+                                <div class="home-stat-label">אלבומס</div>
                             </div>
                         </div>
                     </div>
@@ -8319,6 +8361,9 @@ async function fetchStatistics() {
                         }, i * 80 + 200);
                     }
                 });
+
+                // Update secondary stats if data already loaded
+                updateHomeSecondaryStats();
             });
         }
 
