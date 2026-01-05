@@ -18,3 +18,4 @@ jobs:
           source-dir: .
           preview-branch: gh-pages
           umbrella-dir: pr-preview
+          pages-base-path: site
