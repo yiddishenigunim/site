@@ -763,125 +763,83 @@
             transform: translateY(-2px);
         }
 
-        /* New Stats Grid Layout */
+        /* Apple-style Stats Grid */
         .home-stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            grid-template-rows: auto auto;
-            gap: 15px;
-            margin-bottom: 40px;
-            max-width: 700px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 50px;
+            max-width: 500px;
             margin-left: auto;
             margin-right: auto;
+            padding: 0 20px;
         }
 
         .home-stat-hero {
-            grid-row: span 2;
-            background: var(--gradient-main);
-            border-radius: 20px;
-            padding: 40px 25px;
+            background: linear-gradient(135deg, #4FC3F7 0%, #29B6F6 50%, #03A9F4 100%);
+            border-radius: 16px;
+            padding: 35px 25px;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
             cursor: pointer;
             transition: var(--transition-smooth);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
 
         .home-stat-hero:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            transform: scale(1.02);
+            filter: brightness(1.05);
         }
 
         .home-stat-hero .home-stat-number {
-            font-size: 3.5em;
+            font-size: 3em;
             font-weight: 700;
             color: white;
             font-family: 'Heebo', sans-serif;
         }
 
         .home-stat-hero .home-stat-label {
-            font-size: 1.5em;
+            font-size: 1.3em;
             color: white;
             font-weight: 600;
             margin-top: 5px;
         }
 
         .home-stat-hero .home-stat-subtitle {
-            font-size: 0.9em;
-            color: rgba(255,255,255,0.8);
-            margin-top: 10px;
+            font-size: 0.85em;
+            color: rgba(255,255,255,0.85);
+            margin-top: 8px;
         }
 
-        .home-stats-side {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+        .home-stats-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
         }
 
         .home-stat-card {
             background: white;
             border-radius: 16px;
-            padding: 20px 15px;
+            padding: 22px 15px;
             text-align: center;
-            box-shadow: var(--card-shadow);
             cursor: pointer;
             transition: var(--transition-smooth);
-            flex: 1;
         }
 
         .home-stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-        }
-
-        .home-stat-wide {
-            grid-column: 2 / 4;
+            transform: scale(1.02);
+            background: #f8f9fa;
         }
 
         .home-stat-number {
-            font-size: 1.8em;
+            font-size: 1.7em;
             font-weight: 700;
-            background: var(--gradient-main);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            margin-bottom: 5px;
+            color: #333;
+            margin-bottom: 4px;
         }
 
         .home-stat-label {
-            font-size: 0.95em;
-            color: var(--text-muted);
+            font-size: 0.9em;
+            color: #666;
         }
-
-        /* Category-colored stat cards on home page */
-        .home-stat-card.stat-nigun .home-stat-number { color: var(--color-nigun-dark); }
-        .home-stat-card.stat-nigun .home-stat-label { color: var(--color-nigun); }
-        .home-stat-card.stat-nigun:hover { border-color: var(--color-nigun); background: var(--color-nigun-pale); }
-
-        .home-stat-card.stat-chatzer .home-stat-number { color: var(--color-chatzer-dark); }
-        .home-stat-card.stat-chatzer .home-stat-label { color: var(--color-chatzer); }
-        .home-stat-card.stat-chatzer:hover { border-color: var(--color-chatzer); background: var(--color-chatzer-pale); }
-
-        .home-stat-card.stat-mechaber .home-stat-number { color: var(--color-mechaber-dark); }
-        .home-stat-card.stat-mechaber .home-stat-label { color: var(--color-mechaber); }
-        .home-stat-card.stat-mechaber:hover { border-color: var(--color-mechaber); background: var(--color-mechaber-pale); }
-
-        .home-stat-card.stat-verter .home-stat-number { color: var(--color-verter-dark); }
-        .home-stat-card.stat-verter .home-stat-label { color: var(--color-verter); }
-        .home-stat-card.stat-verter:hover { border-color: var(--color-verter); background: var(--color-verter-pale); }
-
-        .home-stat-card.stat-zman .home-stat-number { color: var(--color-zman-dark); }
-        .home-stat-card.stat-zman .home-stat-label { color: var(--color-zman); }
-        .home-stat-card.stat-zman:hover { border-color: var(--color-zman); background: var(--color-zman-pale); }
-
-        .home-stat-card.stat-collection .home-stat-number { color: var(--color-collection-dark); }
-        .home-stat-card.stat-collection .home-stat-label { color: var(--color-collection); }
-        .home-stat-card.stat-collection:hover { border-color: var(--color-collection); background: var(--color-collection-pale); }
-
-        /* Category-colored stat cards need border */
-        .home-stat-card[class*="stat-"] { border: 2px solid transparent; }
 
         .home-section-title {
             text-align: center;
@@ -1126,26 +1084,16 @@
             }
             
             .home-stats-grid {
-                grid-template-columns: 1fr 1fr;
                 max-width: 100%;
-            }
-
-            .home-stat-hero {
-                grid-column: span 2;
-                grid-row: span 1;
-                padding: 30px 20px;
+                padding: 0 15px;
             }
 
             .home-stat-hero .home-stat-number {
-                font-size: 2.8em;
+                font-size: 2.5em;
             }
 
-            .home-stats-side {
-                flex-direction: row;
-            }
-
-            .home-stat-wide {
-                grid-column: span 2;
+            .home-stats-row {
+                gap: 10px;
             }
 
             .home-links-grid {
@@ -8134,34 +8082,34 @@ async function fetchStatistics() {
                         </div>
                     </div>
 
-                    <!-- Statistics - New Layout -->
+                    <!-- Statistics - Apple Style -->
                     <div class="home-stats-grid">
                         <div class="home-stat-hero" onclick="navigateTo('songs')">
                             <div class="home-stat-number">${totalSongs}</div>
                             <div class="home-stat-label">ניגונים</div>
                             <div class="home-stat-subtitle">די גאנצע זאמלונג</div>
                         </div>
-                        <div class="home-stats-side">
-                            <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
+                        <div class="home-stats-row">
+                            <div class="home-stat-card" onclick="navigateTo('chatzeros')">
                                 <div class="home-stat-number">${totalChatzeros}</div>
                                 <div class="home-stat-label">חצרות</div>
                             </div>
-                            <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
+                            <div class="home-stat-card" onclick="navigateTo('mechabrim')">
                                 <div class="home-stat-number">${totalMechabrim}</div>
                                 <div class="home-stat-label">מחברים</div>
                             </div>
                         </div>
-                        <div class="home-stats-side">
-                            <div class="home-stat-card stat-verter" onclick="navigateTo('verter')">
+                        <div class="home-stats-row">
+                            <div class="home-stat-card" onclick="navigateTo('verter')">
                                 <div class="home-stat-number">${totalVerter}</div>
                                 <div class="home-stat-label">ווערטער</div>
                             </div>
-                            <div class="home-stat-card stat-zman" onclick="navigateTo('zmanim')">
+                            <div class="home-stat-card" onclick="navigateTo('zmanim')">
                                 <div class="home-stat-number">${totalZmanim}</div>
                                 <div class="home-stat-label">זמנים</div>
                             </div>
                         </div>
-                        <div class="home-stat-card stat-collection home-stat-wide" onclick="navigateTo('collections')">
+                        <div class="home-stat-card" onclick="navigateTo('collections')">
                             <div class="home-stat-number">${totalCollections}</div>
                             <div class="home-stat-label">קאלעקשאנס</div>
                         </div>
