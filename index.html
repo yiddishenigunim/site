@@ -780,10 +780,9 @@
 
         /* Nigunim Hero Card - perfect square */
         .home-stat-hero {
-            flex: 0 0 auto;
-            width: 130px;
-            height: 130px;
-            aspect-ratio: 1/1;
+            flex: 0 0 160px;
+            width: 160px;
+            height: 160px;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -792,11 +791,11 @@
         }
 
         .home-stat-hero .home-stat-number {
-            font-size: 2.8em;
+            font-size: 3.2em;
         }
 
         .home-stat-hero .home-stat-label {
-            font-size: 1.1em;
+            font-size: 1.2em;
         }
 
         /* Inner grid for other 5 cards (2 top, 3 bottom) */
@@ -804,17 +803,27 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 8px;
             justify-content: flex-end;
+            max-width: 450px;
         }
 
         .home-stats-row {
             display: flex;
-            gap: 10px;
+            gap: 8px;
         }
 
         .home-stats-row .home-stat-card {
             flex: 1;
+            padding: 12px 8px;
+        }
+
+        .home-stats-row .home-stat-number {
+            font-size: 1.4em;
+        }
+
+        .home-stats-row .home-stat-label {
+            font-size: 0.8em;
         }
 
         /* Left Side - Secondary Stats (3 cards stacked) */
