@@ -4895,17 +4895,18 @@
 
         .equalizer-icon {
             display: flex;
-            align-items: flex-end;
-            gap: 3px;
+            align-items: center;
+            gap: 2px;
             height: 18px;
             margin-left: 10px;
         }
 
         .equalizer-icon .bar {
-            width: 4px;
+            width: 3px;
             background: white;
-            border-radius: 2px;
-            animation: equalize 0.8s ease-in-out infinite;
+            border-radius: 3px;
+            animation: waveStream 0.8s ease-in-out infinite;
+            transform-origin: center;
         }
 
         .equalizer-icon .bar:nth-child(1) {
@@ -4914,22 +4915,13 @@
         }
 
         .equalizer-icon .bar:nth-child(2) {
-            height: 16px;
-            animation-delay: 0.2s;
+            height: 14px;
+            animation-delay: 0.1s;
         }
 
         .equalizer-icon .bar:nth-child(3) {
-            height: 12px;
-            animation-delay: 0.4s;
-        }
-
-        @keyframes equalize {
-            0%, 100% {
-                transform: scaleY(0.4);
-            }
-            50% {
-                transform: scaleY(1);
-            }
+            height: 10px;
+            animation-delay: 0.2s;
         }
 
         /* Paused state for equalizer */
