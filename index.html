@@ -763,23 +763,26 @@
             transform: translateY(-2px);
         }
 
-        /* Wide Stats Grid - Full Width like Hero */
+        /* Stats Grid - 2 Stack Layout */
         .home-stats-grid {
             display: flex;
-            flex-direction: column;
             gap: 20px;
             margin-bottom: 60px;
         }
 
-        /* Hero ניגונים Card - Big & Beautiful */
+        /* Hero ניגונים Card - Left Side, Full Height */
         .home-stat-hero {
+            flex: 0 0 35%;
             background: var(--gradient-main);
             border-radius: 22px;
-            padding: 50px 30px;
+            padding: 40px 30px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition-smooth);
             box-shadow: 0 10px 40px rgba(74, 124, 201, 0.2), 0 10px 40px rgba(156, 91, 181, 0.15);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .home-stat-hero:hover {
@@ -798,7 +801,7 @@
             font-size: 1.8em;
             color: white;
             font-weight: 600;
-            margin-top: 8px;
+            margin-top: 10px;
         }
 
         .home-stat-hero .home-stat-subtitle {
@@ -807,38 +810,45 @@
             margin-top: 15px;
         }
 
-        /* Stats Rows - 3 columns on desktop */
-        .home-stats-row {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        /* Right Side - 2 Stacked Rows */
+        .home-stats-right {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
             gap: 20px;
         }
 
-        .home-stats-row.two-cols {
-            grid-template-columns: repeat(2, 1fr);
+        .home-stats-row {
+            display: flex;
+            gap: 20px;
+            flex: 1;
         }
 
         /* Individual Stat Cards */
         .home-stat-card {
+            flex: 1;
             background: white;
             border-radius: 18px;
-            padding: 30px 20px;
+            padding: 20px 15px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition-smooth);
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             border: 2px solid transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
 
         .home-stat-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             box-shadow: 0 12px 35px rgba(0,0,0,0.1);
         }
 
         .home-stat-number {
-            font-size: 2.4em;
+            font-size: 2em;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
             font-family: 'Heebo', sans-serif;
         }
 
@@ -1130,33 +1140,36 @@
                 flex-direction: column;
             }
             
-            .home-stats-row {
-                grid-template-columns: 1fr 1fr;
-                gap: 12px;
-            }
-
-            .home-stats-row.two-cols {
-                grid-template-columns: 1fr 1fr;
+            .home-stats-grid {
+                flex-direction: column;
             }
 
             .home-stat-hero {
+                flex: none;
                 padding: 35px 20px;
             }
 
             .home-stat-hero .home-stat-number {
-                font-size: 3em;
+                font-size: 3.5em;
             }
 
             .home-stat-hero .home-stat-label {
-                font-size: 1.4em;
+                font-size: 1.5em;
+            }
+
+            .home-stats-row {
+                flex-wrap: wrap;
+                gap: 12px;
             }
 
             .home-stat-card {
-                padding: 22px 15px;
+                flex: 1 1 45%;
+                min-width: 120px;
+                padding: 18px 12px;
             }
 
             .home-stat-number {
-                font-size: 1.8em;
+                font-size: 1.7em;
             }
 
             .home-links-grid {
@@ -1179,12 +1192,8 @@
         }
 
         @media (max-width: 500px) {
-            .home-stats-row {
-                grid-template-columns: 1fr;
-            }
-
-            .home-stats-row.two-cols {
-                grid-template-columns: 1fr;
+            .home-stat-card {
+                flex: 1 1 100%;
             }
 
             .home-about-links {
@@ -8158,35 +8167,37 @@ async function fetchStatistics() {
                         </div>
                     </div>
 
-                    <!-- Statistics - Wide & Beautiful -->
+                    <!-- Statistics - 2 Stack Layout -->
                     <div class="home-stats-grid">
                         <div class="home-stat-hero" onclick="navigateTo('songs')">
                             <div class="home-stat-number">${totalSongs}</div>
                             <div class="home-stat-label">ניגונים</div>
                             <div class="home-stat-subtitle">די גאנצע זאמלונג</div>
                         </div>
-                        <div class="home-stats-row">
-                            <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
-                                <div class="home-stat-number">${totalChatzeros}</div>
-                                <div class="home-stat-label">חצרות</div>
+                        <div class="home-stats-right">
+                            <div class="home-stats-row">
+                                <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
+                                    <div class="home-stat-number">${totalChatzeros}</div>
+                                    <div class="home-stat-label">חצרות</div>
+                                </div>
+                                <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
+                                    <div class="home-stat-number">${totalMechabrim}</div>
+                                    <div class="home-stat-label">מחברים</div>
+                                </div>
                             </div>
-                            <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
-                                <div class="home-stat-number">${totalMechabrim}</div>
-                                <div class="home-stat-label">מחברים</div>
-                            </div>
-                            <div class="home-stat-card stat-verter" onclick="navigateTo('verter')">
-                                <div class="home-stat-number">${totalVerter}</div>
-                                <div class="home-stat-label">ווערטער</div>
-                            </div>
-                        </div>
-                        <div class="home-stats-row two-cols">
-                            <div class="home-stat-card stat-zman" onclick="navigateTo('zmanim')">
-                                <div class="home-stat-number">${totalZmanim}</div>
-                                <div class="home-stat-label">זמנים</div>
-                            </div>
-                            <div class="home-stat-card stat-collection" onclick="navigateTo('collections')">
-                                <div class="home-stat-number">${totalCollections}</div>
-                                <div class="home-stat-label">קאלעקשאנס</div>
+                            <div class="home-stats-row">
+                                <div class="home-stat-card stat-verter" onclick="navigateTo('verter')">
+                                    <div class="home-stat-number">${totalVerter}</div>
+                                    <div class="home-stat-label">ווערטער</div>
+                                </div>
+                                <div class="home-stat-card stat-zman" onclick="navigateTo('zmanim')">
+                                    <div class="home-stat-number">${totalZmanim}</div>
+                                    <div class="home-stat-label">זמנים</div>
+                                </div>
+                                <div class="home-stat-card stat-collection" onclick="navigateTo('collections')">
+                                    <div class="home-stat-number">${totalCollections}</div>
+                                    <div class="home-stat-label">קאלעקשאנס</div>
+                                </div>
                             </div>
                         </div>
                     </div>
