@@ -2569,13 +2569,20 @@
             flex: 1;
         }
 
-        /* Mechaber subtitle (second line on cards: גערופן, פלאץ, סופיקס) */
-        .card-mechaber-subtitle {
+        /* Mechaber formal name (טיטל + ערשטע נאמען + לעצטע נאמען - smaller, secondary) */
+        .card-mechaber-formal {
             display: block;
             font-size: 0.75em;
             font-weight: 400;
-            color: var(--color-mechaber);
-            margin-top: 2px;
+            color: var(--text-secondary);
+            margin-bottom: 3px;
+        }
+
+        /* Mechaber known name (גערופן + פלאץ + סופיקס - bigger, primary) */
+        .card-mechaber-known {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--color-mechaber-dark);
         }
 
         .card-count {
@@ -3586,13 +3593,20 @@
             color: var(--color-mechaber-dark);
         }
 
-        /* Mechaber subtitle (second line with גערופן, פלאץ, סופיקס) */
-        .mechaber-subtitle {
+        /* Mechaber formal name on profile (small, secondary) */
+        .mechaber-formal {
             display: block;
-            font-size: 0.65em;
+            font-size: 0.55em;
             font-weight: 400;
-            color: var(--color-mechaber);
-            margin-top: 4px;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
+        }
+
+        /* Mechaber known name on profile (big, primary) */
+        .mechaber-known {
+            font-size: 1em;
+            font-weight: 700;
+            color: var(--color-mechaber-dark);
         }
 
         .detail-page.theme-verter .detail-category-bar {
@@ -8670,28 +8684,29 @@ async function fetchStatistics() {
             let mechaberLifeDates = '';
             
             if (type === 'mechabrim') {
-                // Build full name for profile page in two lines:
-                // Line 1: טיטל + ערשטע נאמען + לעצטע נאמען
-                // Line 2: גערופן + פלאץ + סופיקס
-                const line1Parts = [info.title, info.firstName, info.lastName].filter(Boolean);
-                const line2Parts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                // Build name for profile page:
+                // Formal (small, on top): טיטל + ערשטע נאמען + לעצטע נאמען
+                // Known (big, main): גערופן + פלאץ + סופיקס
+                const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
 
-                const line1 = line1Parts.length > 0 ? line1Parts.join(' ') : '';
-                const line2 = line2Parts.length > 0 ? line2Parts.join(' ') : '';
+                const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
+                const knownName = knownParts.length > 0 ? knownParts.join(' ') : '';
 
-                if (line1 && line2) {
-                    mechaberFullName = `${line1}<br><span class="mechaber-subtitle">${line2}</span>`;
-                } else if (line1) {
-                    mechaberFullName = line1;
-                } else if (line2) {
-                    mechaberFullName = line2;
+                if (formalName && knownName) {
+                    // Formal name small on top, known name big below
+                    mechaberFullName = `<span class="mechaber-formal">${formalName}</span><span class="mechaber-known">${knownName}</span>`;
+                } else if (formalName) {
+                    mechaberFullName = formalName;
+                } else if (knownName) {
+                    mechaberFullName = knownName;
                 } else {
                     mechaberFullName = name;
                 }
 
                 // Tag name is from טעג נאמען column - show only if different from built full name
-                const fullNamePlain = [line1, line2].filter(Boolean).join(' ');
-                if (info.tagName && info.tagName !== fullNamePlain && info.tagName !== line1) {
+                const fullNamePlain = [formalName, knownName].filter(Boolean).join(' ');
+                if (info.tagName && info.tagName !== fullNamePlain && info.tagName !== formalName) {
                     mechaberTagName = info.tagName;
                 }
                 
@@ -9552,14 +9567,13 @@ async function fetchStatistics() {
                     <div class="card-header-text">
                         ${(() => {
                             if (categoryKey === 'mechabrim') {
-                                // Build name in two lines like profile page:
-                                // Line 1: טיטל + ערשטע נאמען + לעצטע נאמען
-                                // Line 2: גערופן + פלאץ + סופיקס
-                                const line1Parts = [info.title, info.firstName, info.lastName].filter(Boolean);
-                                const line2Parts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
-                                const line1 = line1Parts.length > 0 ? line1Parts.join(' ') : '';
-                                const line2 = line2Parts.length > 0 ? line2Parts.join(' ') : '';
-                                const displayName = line1 || line2 || key;
+                                // Build name in two lines:
+                                // Line 1 (small): טיטל + ערשטע נאמען + לעצטע נאמען (formal name)
+                                // Line 2 (big): גערופן + פלאץ + סופיקס (known name - what people call them)
+                                const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                                const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                                const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
+                                const knownName = knownParts.length > 0 ? knownParts.join(' ') : '';
 
                                 // Build full dates
                                 const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
@@ -9568,8 +9582,17 @@ async function fetchStatistics() {
                                 const deathDate = deathParts.join(' ');
                                 const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
 
+                                // If both exist: formal (small) on top, known (big) below
+                                // If only one exists: show it as the main title
+                                let titleHtml;
+                                if (formalName && knownName) {
+                                    titleHtml = `<span class="card-mechaber-formal">${formalName}</span><span class="card-mechaber-known">${knownName}</span>`;
+                                } else {
+                                    titleHtml = formalName || knownName || key;
+                                }
+
                                 return `
-                                    <div class="card-title">${displayName}${line1 && line2 ? `<span class="card-mechaber-subtitle">${line2}</span>` : ''}</div>
+                                    <div class="card-title">${titleHtml}</div>
                                     ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
                                 `;
                             } else {
