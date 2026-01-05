@@ -8833,9 +8833,15 @@ async function fetchStatistics() {
                     ${mechabrimFromChatzer.length > 0 ? `
                         <div class="detail-mechabrim-section">
                             <h3>${mechabrimFromChatzer.length} מחברים</h3>
-                            <div class="tags-container">
+                            <div class="nigun-mechaber-grid">
                                 ${mechabrimFromChatzer.map(mech => `
-                                    <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">${mech.name}</span>
+                                    <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">
+                                        ${mech.image
+                                            ? `<img class="nigun-mechaber-image" src="${mech.image}" alt="${mech.name}">`
+                                            : `<div class="nigun-mechaber-placeholder">👤</div>`
+                                        }
+                                        <div class="nigun-mechaber-name">${mech.name}</div>
+                                    </div>
                                 `).join('')}
                             </div>
                         </div>
@@ -9064,8 +9070,19 @@ async function fetchStatistics() {
                     ${song.mechaber ? `
                         <div class="nigun-mechaber-section">
                             <div class="nigun-mechaber-title">מחבר הניגון</div>
-                            <div class="tags-container">
-                                <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(mechaberName || '')}')">${song.mechaber}</span>
+                            <div class="nigun-mechaber-grid">
+                                ${song.mechaber.split(',').map(m => m.trim()).filter(Boolean).map(mName => {
+                                    const mInfo = mechabrimInfo[mName];
+                                    return `
+                                        <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mName)}')">
+                                            ${mInfo?.image
+                                                ? `<img class="nigun-mechaber-image" src="${mInfo.image}" alt="${mName}">`
+                                                : `<div class="nigun-mechaber-placeholder">👤</div>`
+                                            }
+                                            <div class="nigun-mechaber-name">${mName}</div>
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     ` : ''}
@@ -9073,10 +9090,19 @@ async function fetchStatistics() {
                     ${song.personality ? `
                         <div class="nigun-personality-section">
                             <div class="nigun-personality-title">פערזענליכקייטן וואס האבן א שייכות מיט דעם ניגון</div>
-                            <div class="tags-container">
-                                ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => `
-                                    <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">${personName}</span>
-                                `).join('')}
+                            <div class="nigun-mechaber-grid">
+                                ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
+                                    const pInfo = mechabrimInfo[personName];
+                                    return `
+                                        <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">
+                                            ${pInfo?.image
+                                                ? `<img class="nigun-mechaber-image" src="${pInfo.image}" alt="${personName}">`
+                                                : `<div class="nigun-mechaber-placeholder">👤</div>`
+                                            }
+                                            <div class="nigun-mechaber-name">${personName}</div>
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     ` : ''}
