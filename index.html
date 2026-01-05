@@ -6548,11 +6548,23 @@
                         // Process all columns for other data
                         Object.keys(values).forEach(colId => {
                             if (colId === nameColId || colId === imageColId) return;
-                            
+
                             const value = values[colId];
                             const colName = columnNames[colId] || '';
                             const colNameLower = colName.toLowerCase();
-                            
+
+                            // Extract text value for mechabrim column ID matching (works for any value type)
+                            const textVal = extractText(value);
+                            if (textVal) {
+                                // Direct column ID matching for mechabrim fields
+                                if (colId === 'c-iSyYvX1S79') info.title = textVal;
+                                if (colId === 'c-wgHtV5VfbM') info.firstName = textVal;
+                                if (colId === 'c-a1I4bjzuvt') info.lastName = textVal;
+                                if (colId === 'c-5hlKINjTSq') info.gerufen = textVal;
+                                if (colId === 'c-qF9asVJ_z1') info.platz = textVal;
+                                if (colId === 'c-2MdIjbFK44') info.suffix = textVal;
+                            }
+
                             // Skip lookup/relation columns (they have complex objects)
                             if (Array.isArray(value) && value.length > 0 && value[0]['@type'] === 'StructuredValue') {
                                 // Extract just the name from related records
@@ -6711,13 +6723,6 @@
                                 if (colNameLower === 'פלאץ' || colNameLower === 'place') {
                                     info.platz = textValue;
                                 }
-                                // Direct column ID matching for mechabrim (fallback if name doesn't match)
-                                if (colId === 'c-iSyYvX1S79') info.title = textValue;
-                                if (colId === 'c-wgHtV5VfbM') info.firstName = textValue;
-                                if (colId === 'c-a1I4bjzuvt') info.lastName = textValue;
-                                if (colId === 'c-5hlKINjTSq') info.gerufen = textValue;
-                                if (colId === 'c-qF9asVJ_z1') info.platz = textValue;
-                                if (colId === 'c-2MdIjbFK44') info.suffix = textValue;
                                 if (colNameLower === 'יום לידה') {
                                     info.birthDay = textValue;
                                 }
