@@ -2569,6 +2569,22 @@
             flex: 1;
         }
 
+        /* Mechaber formal name (טיטל + ערשטע נאמען + לעצטע נאמען - smaller, lighter) */
+        .card-mechaber-formal {
+            display: block;
+            font-size: 0.75em;
+            font-weight: 400;
+            color: var(--color-mechaber);
+            margin-bottom: 3px;
+        }
+
+        /* Mechaber known name (גערופן + פלאץ + סופיקס - bigger, darker) */
+        .card-mechaber-known {
+            font-size: 1.1em;
+            font-weight: 700;
+            color: var(--color-mechaber-dark);
+        }
+
         .card-count {
             background: var(--gradient-main);
             color: white;
@@ -3573,8 +3589,24 @@
         .detail-page.theme-mechaber .detail-category-bar {
             background: var(--color-mechaber);
         }
-        .detail-page.theme-mechaber .detail-title { 
-            color: var(--color-mechaber-dark); 
+        .detail-page.theme-mechaber .detail-title {
+            color: var(--color-mechaber-dark);
+        }
+
+        /* Mechaber formal name on profile (small, lighter) */
+        .mechaber-formal {
+            display: block;
+            font-size: 0.55em;
+            font-weight: 400;
+            color: var(--color-mechaber);
+            margin-bottom: 6px;
+        }
+
+        /* Mechaber known name on profile (big, darker) */
+        .mechaber-known {
+            font-size: 1em;
+            font-weight: 700;
+            color: var(--color-mechaber-dark);
         }
 
         .detail-page.theme-verter .detail-category-bar {
@@ -6240,7 +6272,7 @@
         // ========================================
         // CACHE MANAGER - Minimize API calls
         // ========================================
-        const CACHE_VERSION = 'v2'; // Increment when data structure changes
+        const CACHE_VERSION = 'v3'; // Increment when data structure changes
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
         const CacheManager = {
@@ -6530,11 +6562,23 @@
                         // Process all columns for other data
                         Object.keys(values).forEach(colId => {
                             if (colId === nameColId || colId === imageColId) return;
-                            
+
                             const value = values[colId];
                             const colName = columnNames[colId] || '';
                             const colNameLower = colName.toLowerCase();
-                            
+
+                            // Extract text value for mechabrim column ID matching (works for any value type)
+                            const textVal = extractText(value);
+                            if (textVal) {
+                                // Direct column ID matching for mechabrim fields
+                                if (colId === 'c-iSyYvX1S79') info.title = textVal;
+                                if (colId === 'c-wgHtV5VfbM') info.firstName = textVal;
+                                if (colId === 'c-a1I4bjzuvt') info.lastName = textVal;
+                                if (colId === 'c-5hlKINjTSq') info.gerufen = textVal;
+                                if (colId === 'c-qF9asVJ_z1') info.platz = textVal;
+                                if (colId === 'c-2MdIjbFK44') info.suffix = textVal;
+                            }
+
                             // Skip lookup/relation columns (they have complex objects)
                             if (Array.isArray(value) && value.length > 0 && value[0]['@type'] === 'StructuredValue') {
                                 // Extract just the name from related records
@@ -6686,6 +6730,12 @@
                                 }
                                 if (colNameLower === 'סופיקס' || colNameLower === 'suffix') {
                                     info.suffix = textValue;
+                                }
+                                if (colNameLower === 'גערופן' || colNameLower === 'called' || colNameLower === 'nickname') {
+                                    info.gerufen = textValue;
+                                }
+                                if (colNameLower === 'פלאץ' || colNameLower === 'place') {
+                                    info.platz = textValue;
                                 }
                                 if (colNameLower === 'יום לידה') {
                                     info.birthDay = textValue;
@@ -8634,14 +8684,25 @@ async function fetchStatistics() {
             let mechaberLifeDates = '';
             
             if (type === 'mechabrim') {
-                // Build full name from parts: טיטל + ערשטע נאמען + לעצטע נאמען + סופיקס
-                const nameParts = [info.title, info.firstName, info.lastName, info.suffix].filter(Boolean);
-                if (nameParts.length > 0) {
-                    mechaberFullName = nameParts.join(' ');
+                // Build name for profile page:
+                // If גערופן exists: formal name (small) + known name (big)
+                // If גערופן is empty: just show formal name with suffix
+                const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
+
+                if (info.gerufen) {
+                    // Has גערופן - show two lines: formal (small) + known (big)
+                    const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                    const knownName = knownParts.join(' ');
+                    mechaberFullName = `<span class="mechaber-formal">${formalName}</span><span class="mechaber-known">${knownName}</span>`;
+                } else {
+                    // No גערופן - show formal name with suffix in one line
+                    const fullNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
+                    mechaberFullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : name;
                 }
-                
-                // Tag name is from טעג נאמען column - show only if different from built full name
-                if (info.tagName && info.tagName !== mechaberFullName) {
+
+                // Tag name is from טעג נאמען column - show only if different
+                if (info.tagName && info.tagName !== mechaberFullName && info.tagName !== formalName) {
                     mechaberTagName = info.tagName;
                 }
                 
@@ -9502,9 +9563,11 @@ async function fetchStatistics() {
                     <div class="card-header-text">
                         ${(() => {
                             if (categoryKey === 'mechabrim') {
-                                // Build full name like tooltip does
-                                const nameParts = [info.title, info.firstName, info.lastName, info.suffix].filter(Boolean);
-                                const fullName = nameParts.length > 0 ? nameParts.join(' ') : key;
+                                // Build name display:
+                                // If גערופן exists: formal name (small) + known name (big)
+                                // If גערופן is empty: just show formal name with suffix
+                                const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                                const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
 
                                 // Build full dates
                                 const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
@@ -9513,8 +9576,21 @@ async function fetchStatistics() {
                                 const deathDate = deathParts.join(' ');
                                 const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
 
+                                let titleHtml;
+                                if (info.gerufen) {
+                                    // Has גערופן - show two lines: formal (small) + known (big)
+                                    const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                                    const knownName = knownParts.join(' ');
+                                    titleHtml = `<span class="card-mechaber-formal">${formalName}</span><span class="card-mechaber-known">${knownName}</span>`;
+                                } else {
+                                    // No גערופן - show formal name with suffix in one line (still use mechaber color)
+                                    const fullNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
+                                    const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : key;
+                                    titleHtml = `<span class="card-mechaber-known">${fullName}</span>`;
+                                }
+
                                 return `
-                                    <div class="card-title">${fullName}</div>
+                                    <div class="card-title">${titleHtml}</div>
                                     ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
                                 `;
                             } else {
