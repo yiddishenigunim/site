@@ -4493,6 +4493,109 @@
             opacity: 1;
         }
 
+        .player-section.player-minimized {
+            transform: translateY(100%);
+            opacity: 0;
+        }
+
+        .player-hide-btn {
+            position: absolute;
+            top: -12px;
+            right: 30px;
+            width: 36px;
+            height: 24px;
+            background: white;
+            border: none;
+            border-radius: 12px 12px 0 0;
+            box-shadow: 0 -3px 10px rgba(74, 18, 89, 0.15);
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 18px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+
+        .player-hide-btn:hover {
+            color: var(--primary);
+            background: var(--primary-pale);
+        }
+
+        .player-show-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            transform: translateY(100px);
+            opacity: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            padding: 12px 24px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(123, 31, 162, 0.4);
+            z-index: 199;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+            pointer-events: none;
+        }
+
+        .player-show-btn.visible {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .player-show-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 25px rgba(123, 31, 162, 0.5);
+        }
+
+        .equalizer-icon {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 18px;
+            margin-left: 10px;
+        }
+
+        .equalizer-icon .bar {
+            width: 4px;
+            background: white;
+            border-radius: 2px;
+            animation: equalize 0.8s ease-in-out infinite;
+        }
+
+        .equalizer-icon .bar:nth-child(1) {
+            height: 8px;
+            animation-delay: 0s;
+        }
+
+        .equalizer-icon .bar:nth-child(2) {
+            height: 16px;
+            animation-delay: 0.2s;
+        }
+
+        .equalizer-icon .bar:nth-child(3) {
+            height: 12px;
+            animation-delay: 0.4s;
+        }
+
+        @keyframes equalize {
+            0%, 100% {
+                transform: scaleY(0.4);
+            }
+            50% {
+                transform: scaleY(1);
+            }
+        }
+
         .player-inner {
             max-width: 1400px;
             margin: 0 auto;
@@ -4925,7 +5028,10 @@
             background: var(--color-verter);
         }
         .hover-tooltip.tooltip-verter .hover-tooltip-title {
-            color: var(--color-verter-dark);
+            color: var(--text-dark);
+            font-weight: 400;
+            font-size: 1em;
+            line-height: 1.5;
         }
 
         .hover-tooltip.tooltip-zman .hover-tooltip-type {
@@ -5891,8 +5997,19 @@
         </div>
     </div>
 
+    <!-- Player Show Button (when minimized) -->
+    <button class="player-show-btn" id="playerShowBtn" onclick="showPlayerBanner()">
+        <span id="showBtnSongName">ווייז פלעיער</span>
+        <div class="equalizer-icon">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </button>
+
     <!-- Player -->
     <div class="player-section">
+        <button class="player-hide-btn" onclick="hidePlayerBanner()" title="באהאלט פלעיער">−</button>
         <div class="player-inner">
             <div class="player-info">
                 <div class="player-song-name" id="playerSongName">קליק אויף א ניגון צו שפילן</div>
@@ -10204,6 +10321,10 @@ async function fetchStatistics() {
                     displayName = nameParts.join(' ');
                 }
             }
+            // For verter, show the full text if available
+            if (fieldType === 'verter' && extraInfo && extraInfo.fullText) {
+                displayName = extraInfo.fullText;
+            }
             titleEl.textContent = displayName;
             
             // Handle image
@@ -10337,12 +10458,34 @@ async function fetchStatistics() {
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // Show the player banner with animation
+        // Show the player banner with animation (when song first plays)
         function showPlayer() {
             if (!playerVisible) {
                 playerVisible = true;
-                document.querySelector('.player-section').classList.add('player-visible');
+                const playerSection = document.querySelector('.player-section');
+                playerSection.classList.add('player-visible');
+                playerSection.classList.remove('player-minimized');
+                document.getElementById('playerShowBtn').classList.remove('visible');
             }
+        }
+
+        // Hide the player banner (user clicked hide button)
+        function hidePlayerBanner() {
+            const playerSection = document.querySelector('.player-section');
+            playerSection.classList.add('player-minimized');
+
+            // Show the floating button with song name
+            const showBtn = document.getElementById('playerShowBtn');
+            const songName = document.getElementById('playerSongName').textContent;
+            document.getElementById('showBtnSongName').textContent = songName || 'ווייז פלעיער';
+            showBtn.classList.add('visible');
+        }
+
+        // Show the player banner (user clicked show button)
+        function showPlayerBanner() {
+            const playerSection = document.querySelector('.player-section');
+            playerSection.classList.remove('player-minimized');
+            document.getElementById('playerShowBtn').classList.remove('visible');
         }
 
         // Play song (sets playlist if not already set)
