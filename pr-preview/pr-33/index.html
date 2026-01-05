@@ -2569,6 +2569,15 @@
             flex: 1;
         }
 
+        /* Mechaber subtitle (second line on cards: גערופן, פלאץ, סופיקס) */
+        .card-mechaber-subtitle {
+            display: block;
+            font-size: 0.75em;
+            font-weight: 400;
+            color: var(--color-mechaber);
+            margin-top: 2px;
+        }
+
         .card-count {
             background: var(--gradient-main);
             color: white;
@@ -6702,6 +6711,13 @@
                                 if (colNameLower === 'פלאץ' || colNameLower === 'place') {
                                     info.platz = textValue;
                                 }
+                                // Direct column ID matching for mechabrim (fallback if name doesn't match)
+                                if (colId === 'c-iSyYvX1S79') info.title = textValue;
+                                if (colId === 'c-wgHtV5VfbM') info.firstName = textValue;
+                                if (colId === 'c-a1I4bjzuvt') info.lastName = textValue;
+                                if (colId === 'c-5hlKINjTSq') info.gerufen = textValue;
+                                if (colId === 'c-qF9asVJ_z1') info.platz = textValue;
+                                if (colId === 'c-2MdIjbFK44') info.suffix = textValue;
                                 if (colNameLower === 'יום לידה') {
                                     info.birthDay = textValue;
                                 }
@@ -9531,15 +9547,14 @@ async function fetchStatistics() {
                     <div class="card-header-text">
                         ${(() => {
                             if (categoryKey === 'mechabrim') {
-                                // Build short name: If גערופן has value use it, otherwise use first+last name
-                                // Short name: טיטל + (גערופן OR ערשטע+לעצטע נאמען) + פלאץ + סופיקס
-                                let shortNameParts;
-                                if (info.gerufen) {
-                                    shortNameParts = [info.title, info.gerufen, info.platz, info.suffix].filter(Boolean);
-                                } else {
-                                    shortNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
-                                }
-                                const shortName = shortNameParts.length > 0 ? shortNameParts.join(' ') : key;
+                                // Build name in two lines like profile page:
+                                // Line 1: טיטל + ערשטע נאמען + לעצטע נאמען
+                                // Line 2: גערופן + פלאץ + סופיקס
+                                const line1Parts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                                const line2Parts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                                const line1 = line1Parts.length > 0 ? line1Parts.join(' ') : '';
+                                const line2 = line2Parts.length > 0 ? line2Parts.join(' ') : '';
+                                const displayName = line1 || line2 || key;
 
                                 // Build full dates
                                 const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
@@ -9549,7 +9564,7 @@ async function fetchStatistics() {
                                 const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
 
                                 return `
-                                    <div class="card-title">${shortName}</div>
+                                    <div class="card-title">${displayName}${line1 && line2 ? `<span class="card-mechaber-subtitle">${line2}</span>` : ''}</div>
                                     ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
                                 `;
                             } else {
