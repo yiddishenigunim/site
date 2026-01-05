@@ -763,37 +763,90 @@
             transform: translateY(-2px);
         }
 
-        .home-stats {
+        /* New Stats Grid Layout */
+        .home-stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            grid-template-columns: 1fr 1fr 1fr;
+            grid-template-rows: auto auto;
             gap: 15px;
             margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .home-stat-hero {
+            grid-row: span 2;
+            background: var(--gradient-main);
+            border-radius: 20px;
+            padding: 40px 25px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .home-stat-hero:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+        }
+
+        .home-stat-hero .home-stat-number {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: white;
+            font-family: 'Heebo', sans-serif;
+        }
+
+        .home-stat-hero .home-stat-label {
+            font-size: 1.5em;
+            color: white;
+            font-weight: 600;
+            margin-top: 5px;
+        }
+
+        .home-stat-hero .home-stat-subtitle {
+            font-size: 0.9em;
+            color: rgba(255,255,255,0.8);
+            margin-top: 10px;
+        }
+
+        .home-stats-side {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
         }
 
         .home-stat-card {
             background: white;
-            border-radius: 20px;
-            padding: 25px 15px;
+            border-radius: 16px;
+            padding: 20px 15px;
             text-align: center;
             box-shadow: var(--card-shadow);
             cursor: pointer;
             transition: var(--transition-smooth);
+            flex: 1;
         }
 
         .home-stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.12);
         }
 
-        .home-stat-icon {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+        .home-stat-wide {
+            grid-column: 2 / 4;
         }
 
         .home-stat-number {
-            font-size: 2em;
+            font-size: 1.8em;
             font-weight: 700;
-            color: var(--primary);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 5px;
         }
 
@@ -1072,12 +1125,43 @@
                 flex-direction: column;
             }
             
-            .home-stats {
-                grid-template-columns: repeat(2, 1fr);
+            .home-stats-grid {
+                grid-template-columns: 1fr 1fr;
+                max-width: 100%;
             }
-            
+
+            .home-stat-hero {
+                grid-column: span 2;
+                grid-row: span 1;
+                padding: 30px 20px;
+            }
+
+            .home-stat-hero .home-stat-number {
+                font-size: 2.8em;
+            }
+
+            .home-stats-side {
+                flex-direction: row;
+            }
+
+            .home-stat-wide {
+                grid-column: span 2;
+            }
+
             .home-links-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .home-about-links {
+                grid-template-columns: 1fr;
+            }
+
+            .home-about-link {
+                border-left: none !important;
+            }
+
+            .home-about-link:last-child {
+                border-bottom: none;
             }
         }
 
@@ -5917,7 +6001,7 @@
         .home-about-section {
             margin-top: 50px;
             padding: 0 20px;
-            max-width: 600px;
+            max-width: 500px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -5927,8 +6011,8 @@
             justify-content: space-between;
             align-items: center;
             background: var(--gradient-main);
-            padding: 20px 30px;
-            border-radius: 16px 16px 0 0;
+            padding: 16px 25px;
+            border-radius: 14px 14px 0 0;
             cursor: pointer;
             transition: var(--transition-smooth);
         }
@@ -5938,14 +6022,14 @@
         }
 
         .home-about-title {
-            font-size: 1.3em;
+            font-size: 1.15em;
             font-weight: 600;
             color: white;
         }
 
         .home-about-arrow {
             color: white;
-            font-size: 1.3em;
+            font-size: 1.2em;
             transition: var(--transition-smooth);
         }
 
@@ -5955,26 +6039,48 @@
 
         .home-about-links {
             background: white;
-            border-radius: 0 0 16px 16px;
+            border-radius: 0 0 14px 14px;
             box-shadow: var(--card-shadow);
             overflow: hidden;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
         }
 
         .home-about-link {
-            padding: 14px 30px;
+            padding: 12px 20px;
             cursor: pointer;
             transition: var(--transition-smooth);
             border-bottom: 1px solid var(--color-chatzer-pale);
+            border-left: 1px solid var(--color-chatzer-pale);
             color: var(--text);
+            font-size: 0.95em;
         }
 
-        .home-about-link:last-child {
+        .home-about-link:nth-child(odd) {
+            border-left: none;
+        }
+
+        .home-about-link:nth-last-child(-n+2) {
             border-bottom: none;
         }
 
         .home-about-link:hover {
             background: var(--gradient-main-pale);
-            padding-right: 40px;
+        }
+
+        /* Terms Link */
+        .home-terms-link {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+            font-size: 0.85em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .home-terms-link:hover {
+            color: var(--color-chatzer);
         }
 
         /* Info Pages Layout */
@@ -8028,35 +8134,34 @@ async function fetchStatistics() {
                         </div>
                     </div>
 
-                    <!-- Statistics -->
-                    <div class="home-stats">
-                        <div class="home-stat-card stat-nigun" onclick="navigateTo('songs')">
-                            <div class="home-stat-icon"></div>
+                    <!-- Statistics - New Layout -->
+                    <div class="home-stats-grid">
+                        <div class="home-stat-hero" onclick="navigateTo('songs')">
                             <div class="home-stat-number">${totalSongs}</div>
                             <div class="home-stat-label">ניגונים</div>
+                            <div class="home-stat-subtitle">די גאנצע זאמלונג</div>
                         </div>
-                        <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
-                            <div class="home-stat-icon"></div>
-                            <div class="home-stat-number">${totalChatzeros}</div>
-                            <div class="home-stat-label">חצרות</div>
+                        <div class="home-stats-side">
+                            <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
+                                <div class="home-stat-number">${totalChatzeros}</div>
+                                <div class="home-stat-label">חצרות</div>
+                            </div>
+                            <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
+                                <div class="home-stat-number">${totalMechabrim}</div>
+                                <div class="home-stat-label">מחברים</div>
+                            </div>
                         </div>
-                        <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
-                            <div class="home-stat-icon"></div>
-                            <div class="home-stat-number">${totalMechabrim}</div>
-                            <div class="home-stat-label">מחברים</div>
+                        <div class="home-stats-side">
+                            <div class="home-stat-card stat-verter" onclick="navigateTo('verter')">
+                                <div class="home-stat-number">${totalVerter}</div>
+                                <div class="home-stat-label">ווערטער</div>
+                            </div>
+                            <div class="home-stat-card stat-zman" onclick="navigateTo('zmanim')">
+                                <div class="home-stat-number">${totalZmanim}</div>
+                                <div class="home-stat-label">זמנים</div>
+                            </div>
                         </div>
-                        <div class="home-stat-card stat-verter" onclick="navigateTo('verter')">
-                            <div class="home-stat-icon"></div>
-                            <div class="home-stat-number">${totalVerter}</div>
-                            <div class="home-stat-label">ווערטער</div>
-                        </div>
-                        <div class="home-stat-card stat-zman" onclick="navigateTo('zmanim')">
-                            <div class="home-stat-icon"></div>
-                            <div class="home-stat-number">${totalZmanim}</div>
-                            <div class="home-stat-label">זמנים</div>
-                        </div>
-                        <div class="home-stat-card stat-collection" onclick="navigateTo('collections')">
-                            <div class="home-stat-icon"></div>
+                        <div class="home-stat-card stat-collection home-stat-wide" onclick="navigateTo('collections')">
                             <div class="home-stat-number">${totalCollections}</div>
                             <div class="home-stat-label">קאלעקשאנס</div>
                         </div>
@@ -8074,8 +8179,12 @@ async function fetchStatistics() {
                             <div class="home-about-link" onclick="navigateTo('stats')">סטאטיסטיקס</div>
                             <div class="home-about-link" onclick="navigateTo('credits')">קרעדיטס</div>
                             <div class="home-about-link" onclick="navigateTo('thanks')">התודה והברכה</div>
-                            <div class="home-about-link" onclick="navigateTo('terms')">Terms of Use</div>
                         </div>
+                    </div>
+
+                    <!-- Terms Link -->
+                    <div class="home-terms-link" onclick="navigateTo('terms')">
+                        Terms of Use
                     </div>
                 </div>
             `;
