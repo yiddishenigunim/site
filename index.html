@@ -8685,28 +8685,24 @@ async function fetchStatistics() {
             
             if (type === 'mechabrim') {
                 // Build name for profile page:
-                // Formal (small, on top): טיטל + ערשטע נאמען + לעצטע נאמען
-                // Known (big, main): גערופן + פלאץ + סופיקס
+                // If גערופן exists: formal name (small) + known name (big)
+                // If גערופן is empty: just show formal name with suffix
                 const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
-                const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
-
                 const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
-                const knownName = knownParts.length > 0 ? knownParts.join(' ') : '';
 
-                if (formalName && knownName) {
-                    // Formal name small on top, known name big below
+                if (info.gerufen) {
+                    // Has גערופן - show two lines: formal (small) + known (big)
+                    const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                    const knownName = knownParts.join(' ');
                     mechaberFullName = `<span class="mechaber-formal">${formalName}</span><span class="mechaber-known">${knownName}</span>`;
-                } else if (formalName) {
-                    mechaberFullName = formalName;
-                } else if (knownName) {
-                    mechaberFullName = knownName;
                 } else {
-                    mechaberFullName = name;
+                    // No גערופן - show formal name with suffix in one line
+                    const fullNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
+                    mechaberFullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : name;
                 }
 
-                // Tag name is from טעג נאמען column - show only if different from built full name
-                const fullNamePlain = [formalName, knownName].filter(Boolean).join(' ');
-                if (info.tagName && info.tagName !== fullNamePlain && info.tagName !== formalName) {
+                // Tag name is from טעג נאמען column - show only if different
+                if (info.tagName && info.tagName !== mechaberFullName && info.tagName !== formalName) {
                     mechaberTagName = info.tagName;
                 }
                 
@@ -9567,13 +9563,11 @@ async function fetchStatistics() {
                     <div class="card-header-text">
                         ${(() => {
                             if (categoryKey === 'mechabrim') {
-                                // Build name in two lines:
-                                // Line 1 (small): טיטל + ערשטע נאמען + לעצטע נאמען (formal name)
-                                // Line 2 (big): גערופן + פלאץ + סופיקס (known name - what people call them)
+                                // Build name display:
+                                // If גערופן exists: formal name (small) + known name (big)
+                                // If גערופן is empty: just show formal name with suffix
                                 const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
-                                const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
                                 const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
-                                const knownName = knownParts.length > 0 ? knownParts.join(' ') : '';
 
                                 // Build full dates
                                 const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
@@ -9582,13 +9576,16 @@ async function fetchStatistics() {
                                 const deathDate = deathParts.join(' ');
                                 const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
 
-                                // If both exist: formal (small) on top, known (big) below
-                                // If only one exists: show it as the main title
                                 let titleHtml;
-                                if (formalName && knownName) {
+                                if (info.gerufen) {
+                                    // Has גערופן - show two lines: formal (small) + known (big)
+                                    const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                                    const knownName = knownParts.join(' ');
                                     titleHtml = `<span class="card-mechaber-formal">${formalName}</span><span class="card-mechaber-known">${knownName}</span>`;
                                 } else {
-                                    titleHtml = formalName || knownName || key;
+                                    // No גערופן - show formal name with suffix in one line
+                                    const fullNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
+                                    titleHtml = fullNameParts.length > 0 ? fullNameParts.join(' ') : key;
                                 }
 
                                 return `
