@@ -4597,6 +4597,126 @@
             border-color: rgba(255,255,255,0.3);
         }
 
+        /* New Play Button Styling */
+        .song-play-btn-new {
+            width: 38px;
+            height: 38px;
+            background: var(--color-nigun);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.3);
+        }
+
+        .song-play-btn-new:hover {
+            background: var(--color-nigun-dark);
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.5);
+        }
+
+        .song-play-btn-new .play-icon,
+        .song-play-btn-new .pause-icon {
+            position: absolute;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .song-play-btn-new .play-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .song-play-btn-new .pause-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .song-play-btn-new.playing .play-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .song-play-btn-new.playing .pause-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .song-item:hover .song-play-btn-new {
+            background: white !important;
+            color: var(--color-nigun) !important;
+        }
+
+        .song-item.active .song-play-btn-new {
+            background: rgba(255,255,255,0.25);
+            color: white;
+        }
+
+        .song-item.active .song-play-btn-new:hover {
+            background: white !important;
+            color: var(--color-nigun) !important;
+        }
+
+        /* Wave Animation for Playing Song */
+        /* Center-mirrored wave animation (streaming style) */
+        .song-wave-animation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            height: 20px;
+            margin-right: 8px;
+        }
+
+        .wave-bar {
+            width: 3px;
+            background: white;
+            border-radius: 3px;
+            animation: waveStream 0.8s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        .wave-bar:nth-child(1) {
+            height: 8px;
+            animation-delay: 0s;
+        }
+
+        .wave-bar:nth-child(2) {
+            height: 14px;
+            animation-delay: 0.1s;
+        }
+
+        .wave-bar:nth-child(3) {
+            height: 10px;
+            animation-delay: 0.2s;
+        }
+
+        .wave-bar:nth-child(4) {
+            height: 16px;
+            animation-delay: 0.3s;
+        }
+
+        @keyframes waveStream {
+            0%, 100% {
+                transform: scaleY(0.3);
+            }
+            50% {
+                transform: scaleY(1);
+            }
+        }
+
+        /* Paused state - wave bars stay still */
+        .song-item.active.paused .wave-bar {
+            animation-play-state: paused;
+        }
+
         /* All Songs Page */
         .songs-card {
             background: white;
@@ -4775,17 +4895,18 @@
 
         .equalizer-icon {
             display: flex;
-            align-items: flex-end;
-            gap: 3px;
+            align-items: center;
+            gap: 2px;
             height: 18px;
             margin-left: 10px;
         }
 
         .equalizer-icon .bar {
-            width: 4px;
+            width: 3px;
             background: white;
-            border-radius: 2px;
-            animation: equalize 0.8s ease-in-out infinite;
+            border-radius: 3px;
+            animation: waveStream 0.8s ease-in-out infinite;
+            transform-origin: center;
         }
 
         .equalizer-icon .bar:nth-child(1) {
@@ -4794,22 +4915,18 @@
         }
 
         .equalizer-icon .bar:nth-child(2) {
-            height: 16px;
-            animation-delay: 0.2s;
+            height: 14px;
+            animation-delay: 0.1s;
         }
 
         .equalizer-icon .bar:nth-child(3) {
-            height: 12px;
-            animation-delay: 0.4s;
+            height: 10px;
+            animation-delay: 0.2s;
         }
 
-        @keyframes equalize {
-            0%, 100% {
-                transform: scaleY(0.4);
-            }
-            50% {
-                transform: scaleY(1);
-            }
+        /* Paused state for equalizer */
+        .equalizer-icon.paused .bar {
+            animation-play-state: paused;
         }
 
         .player-inner {
@@ -4927,11 +5044,43 @@
             color: white;
             font-size: 1.4em;
             box-shadow: 0 4px 15px rgba(74, 124, 201, 0.25), 0 4px 15px rgba(156, 91, 181, 0.2);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .player-btn.main:hover {
             transform: scale(1.05);
             box-shadow: 0 6px 20px rgba(74, 124, 201, 0.35), 0 6px 20px rgba(156, 91, 181, 0.3);
+        }
+
+        /* Animated play/pause icons in player */
+        .player-play-icon,
+        .player-pause-icon {
+            position: absolute;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .player-play-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .player-pause-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .player-btn.main.playing .player-play-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .player-btn.main.playing .player-pause-icon {
+            opacity: 1;
+            transform: scale(1);
         }
 
         .player-progress {
@@ -6591,7 +6740,10 @@
             </div>
             <div class="player-controls">
                 <button class="player-btn" onclick="playPrevious()" title="פריערדיגע">⏮</button>
-                <button class="player-btn main" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
+                <button class="player-btn main" id="playPauseBtn" onclick="togglePlayPause()">
+                    <span class="player-play-icon">▶</span>
+                    <span class="player-pause-icon">⏸</span>
+                </button>
                 <button class="player-btn" onclick="playNext()" title="קומענדיגע">⏭</button>
             </div>
             <div class="player-progress">
@@ -11251,7 +11403,7 @@ async function fetchStatistics() {
         function renderSongItem(song, globalIdx, displayNum, playlistIndices = null) {
             const isActive = globalIdx === currentSongIndex;
             const hasAudio = song.audioUrl && song.audioUrl.startsWith('http');
-            
+
             // Create meta with links - using entity-specific colors
             let metaParts = [];
             if (song.mechaber) {
@@ -11260,14 +11412,25 @@ async function fetchStatistics() {
             if (song.category) {
                 metaParts.push(createMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
             }
-            
-            // If no audio, clicking shows details instead of playing
-            const clickAction = hasAudio 
-                ? (playlistIndices 
-                    ? `playSongFromList(${globalIdx}, [${playlistIndices.join(',')}])`
-                    : `playSong(${globalIdx})`)
-                : `showSongDetails(${globalIdx})`;
-            
+
+            // Clicking on song always opens details
+            const clickAction = `showSongDetails(${globalIdx})`;
+
+            // Play button action
+            const playAction = playlistIndices
+                ? `playSongFromList(${globalIdx}, [${playlistIndices.join(',')}])`
+                : `playSong(${globalIdx})`;
+
+            // Wave animation for currently playing song
+            const waveAnimation = isActive ? `
+                <div class="song-wave-animation">
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                </div>
+            ` : '';
+
             return `
                 <div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
                     <div class="song-number">${displayNum}</div>
@@ -11275,7 +11438,11 @@ async function fetchStatistics() {
                         <div class="song-name">${song.name}</div>
                         <div class="song-meta">${metaParts.join(' • ')}</div>
                     </div>
-                    <button class="song-details-btn" onclick="event.stopPropagation(); showSongDetails(${globalIdx});">דעטאלן</button>
+                    ${waveAnimation}
+                    ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
+                        <span class="play-icon">▶</span>
+                        <span class="pause-icon">⏸</span>
+                    </button>` : ''}
                 </div>
             `;
         }
@@ -11322,11 +11489,17 @@ async function fetchStatistics() {
         // Play song (sets playlist if not already set)
         function playSong(idx, playlist = null) {
             if (idx < 0 || idx >= allSongs.length) return;
-            
+
+            // If clicking the same song, toggle play/pause
+            if (idx === currentSongIndex && audioPlayer.src) {
+                togglePlayPause();
+                return;
+            }
+
             // Reset recordings mode when playing from song list
             isInRecordingsMode = false;
             currentRecordingIndex = 0;
-            
+
             // If a playlist is provided, use it
             if (playlist && Array.isArray(playlist)) {
                 currentPlaylist = playlist;
@@ -11339,10 +11512,10 @@ async function fetchStatistics() {
                 // Song is in current playlist, just update position
                 currentPlaylistPosition = currentPlaylist.indexOf(idx);
             }
-            
+
             currentSongIndex = idx;
             const song = allSongs[idx];
-            
+
             audioPlayer.src = song.audioUrl;
             audioPlayer.play();
 
@@ -11353,6 +11526,11 @@ async function fetchStatistics() {
 
         // Play song from a specific playlist (detail pages)
         function playSongFromList(idx, playlistIndices) {
+            // If clicking the same song, toggle play/pause
+            if (idx === currentSongIndex && audioPlayer.src) {
+                togglePlayPause();
+                return;
+            }
             currentPlaylist = playlistIndices;
             currentPlaylistPosition = playlistIndices.indexOf(idx);
             playSong(idx, playlistIndices);
@@ -11478,20 +11656,68 @@ async function fetchStatistics() {
             }
             
             document.getElementById('playerGezungen').textContent = song.gezungen ? `געזונגען: ${song.gezungen}` : '';
-            document.getElementById('playPauseBtn').textContent = '⏸';
+
+            // Update player play button
+            document.getElementById('playPauseBtn').classList.add('playing');
+            // Remove paused state from equalizer
+            const equalizerIcon = document.querySelector('.equalizer-icon');
+            if (equalizerIcon) {
+                equalizerIcon.classList.remove('paused');
+            }
         }
 
         // Update active song highlight
         function updateActiveSongInList() {
+            // Remove active state and wave animation from all song items
             document.querySelectorAll('.song-item').forEach(item => {
                 item.classList.remove('active');
+                item.classList.remove('paused');
+                const existingWave = item.querySelector('.song-wave-animation');
+                if (existingWave) {
+                    existingWave.remove();
+                }
             });
-            
+
+            // Reset all play buttons
+            document.querySelectorAll('.song-play-btn-new').forEach(btn => {
+                btn.classList.remove('playing');
+            });
+
             // Find and mark the currently playing song
             if (currentSongIndex >= 0) {
                 const activeItem = document.querySelector(`.song-item[data-song-idx="${currentSongIndex}"]`);
                 if (activeItem) {
                     activeItem.classList.add('active');
+
+                    // Add wave animation if not already present
+                    if (!activeItem.querySelector('.song-wave-animation')) {
+                        const waveDiv = document.createElement('div');
+                        waveDiv.className = 'song-wave-animation';
+                        waveDiv.innerHTML = `
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                        `;
+                        // Insert before the play button
+                        const playBtn = activeItem.querySelector('.song-play-btn-new');
+                        if (playBtn) {
+                            activeItem.insertBefore(waveDiv, playBtn);
+                        } else {
+                            activeItem.appendChild(waveDiv);
+                        }
+                    }
+
+                    // Update play button state
+                    const activeBtn = activeItem.querySelector('.song-play-btn-new');
+                    if (activeBtn && !audioPlayer.paused) {
+                        activeBtn.classList.add('playing');
+                    }
+
+                    // Update paused state
+                    if (audioPlayer.paused) {
+                        activeItem.classList.add('paused');
+                    }
                 }
             }
         }
@@ -11500,11 +11726,10 @@ async function fetchStatistics() {
         function togglePlayPause() {
             if (audioPlayer.paused) {
                 audioPlayer.play();
-                document.getElementById('playPauseBtn').textContent = '⏸';
             } else {
                 audioPlayer.pause();
-                document.getElementById('playPauseBtn').textContent = '▶';
             }
+            // UI updates handled by play/pause event listeners
         }
 
         // Play previous
@@ -11597,12 +11822,57 @@ async function fetchStatistics() {
         });
 
         audioPlayer.addEventListener('pause', () => {
-            document.getElementById('playPauseBtn').textContent = '▶';
+            updatePlayState(false);
         });
 
         audioPlayer.addEventListener('play', () => {
-            document.getElementById('playPauseBtn').textContent = '⏸';
+            updatePlayState(true);
         });
+
+        // Update play/pause state for both player and song list
+        function updatePlayState(isPlaying) {
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const equalizerIcon = document.querySelector('.equalizer-icon');
+
+            // Update player button
+            if (isPlaying) {
+                playPauseBtn.classList.add('playing');
+            } else {
+                playPauseBtn.classList.remove('playing');
+            }
+
+            // Update equalizer icon in player-show-btn (pause when audio paused)
+            if (equalizerIcon) {
+                if (isPlaying) {
+                    equalizerIcon.classList.remove('paused');
+                } else {
+                    equalizerIcon.classList.add('paused');
+                }
+            }
+
+            // Update song list play buttons
+            document.querySelectorAll('.song-play-btn-new').forEach(btn => {
+                btn.classList.remove('playing');
+            });
+
+            // Update song items paused state
+            document.querySelectorAll('.song-item').forEach(item => {
+                item.classList.remove('paused');
+            });
+
+            // Find the active song's button and update it
+            if (currentSongIndex >= 0) {
+                const activeBtn = document.querySelector(`.song-play-btn-new[data-song-idx="${currentSongIndex}"]`);
+                const activeItem = document.querySelector(`.song-item[data-song-idx="${currentSongIndex}"]`);
+
+                if (activeBtn && isPlaying) {
+                    activeBtn.classList.add('playing');
+                }
+                if (activeItem && !isPlaying) {
+                    activeItem.classList.add('paused');
+                }
+            }
+        }
 
         // Create clickable link for a field value
         function createFieldLink(value, fieldType) {
