@@ -9,13 +9,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Deploy PR preview
-        uses: rossjrw/pr-preview-action@v1
-        with:
-          source-dir: .
-          preview-branch: gh-pages
-          umbrella-dir: pr-preview
-          pages-base-path: site
+      - name: Build site
+        run: |
+          mkdir -p pr-preview/pr-${{ github.event.number }}
+          cp -r . pr-preview/pr-${{ github.event.number }}
+
+      - name: Commit preview
+        if: github.event.action != 'closed'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add pr-preview
+          git commit -m "PR preview for #${{ github.event.number }}"
+          git push
+
+      - name: Remove preview on close
+        if: github.event.action == 'closed'
+        run: |
+          rm -rf pr-preview/pr-${{ github.event.number }}
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add pr-preview
+          git commit -m "Remove PR preview for #${{ github.event.number }}"
+          git push
