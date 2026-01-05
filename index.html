@@ -9583,9 +9583,10 @@ async function fetchStatistics() {
                                     const knownName = knownParts.join(' ');
                                     titleHtml = `<span class="card-mechaber-formal">${formalName}</span><span class="card-mechaber-known">${knownName}</span>`;
                                 } else {
-                                    // No גערופן - show formal name with suffix in one line
+                                    // No גערופן - show formal name with suffix in one line (still use mechaber color)
                                     const fullNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
-                                    titleHtml = fullNameParts.length > 0 ? fullNameParts.join(' ') : key;
+                                    const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : key;
+                                    titleHtml = `<span class="card-mechaber-known">${fullName}</span>`;
                                 }
 
                                 return `
