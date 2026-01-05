@@ -767,6 +767,7 @@
             display: flex;
             gap: 12px;
             margin-bottom: 50px;
+            align-items: flex-end;
         }
 
         /* Main Stats Container (flex) */
@@ -774,16 +775,20 @@
             flex: 1;
             display: flex;
             gap: 10px;
+            align-items: flex-end;
         }
 
-        /* Nigunim Hero Card - tall, standalone */
+        /* Nigunim Hero Card - perfect square */
         .home-stat-hero {
-            flex: 0 0 130px;
+            flex: 0 0 auto;
+            width: 130px;
+            height: 130px;
+            aspect-ratio: 1/1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 20px 15px;
+            padding: 15px;
         }
 
         .home-stat-hero .home-stat-number {
@@ -800,6 +805,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            justify-content: flex-end;
         }
 
         .home-stats-row {
