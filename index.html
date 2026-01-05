@@ -5881,6 +5881,304 @@
             color: var(--text-muted);
             margin-top: 5px;
         }
+
+        /* Home Info Links */
+        .home-info-links {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 40px;
+            padding: 0 20px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .home-info-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 18px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--primary-pale);
+        }
+
+        .home-info-link:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
+            border-color: var(--primary-light);
+        }
+
+        .home-info-link-title {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .home-info-link-arrow {
+            color: var(--primary);
+            font-size: 1.2em;
+            transition: var(--transition-smooth);
+        }
+
+        .home-info-link:hover .home-info-link-arrow {
+            transform: translateX(-5px);
+        }
+
+        /* Info Pages Layout */
+        .info-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px 20px;
+        }
+
+        .info-page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .info-page-title {
+            font-size: 2.2em;
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .info-page-subtitle {
+            color: var(--text-muted);
+            font-size: 1.1em;
+        }
+
+        .info-page-content {
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: var(--card-shadow);
+            line-height: 1.8;
+        }
+
+        .info-page-content p {
+            margin-bottom: 20px;
+        }
+
+        .info-page-content ul {
+            margin: 20px 0;
+            padding-right: 25px;
+        }
+
+        .info-page-content li {
+            margin-bottom: 10px;
+        }
+
+        /* Info Pages Sub-Navigation */
+        .info-nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary-pale) 0%, rgba(255,255,255,0.8) 100%);
+            border-radius: 16px;
+            border: 1px solid var(--primary-pale);
+        }
+
+        .info-nav-item {
+            padding: 10px 18px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 0.95em;
+            transition: var(--transition-smooth);
+            background: white;
+            color: var(--text);
+            border: 1px solid var(--primary-pale);
+            text-decoration: none;
+        }
+
+        .info-nav-item:hover {
+            background: var(--primary-light);
+            color: white;
+            border-color: var(--primary-light);
+            transform: translateY(-2px);
+        }
+
+        .info-nav-item.active {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .info-nav-divider {
+            width: 1px;
+            background: var(--primary-pale);
+            margin: 0 5px;
+        }
+
+        /* Stats Page Grid */
+        .stats-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .stats-page-card {
+            background: linear-gradient(135deg, var(--primary-pale) 0%, white 100%);
+            padding: 30px;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid var(--primary-pale);
+        }
+
+        .stats-page-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+        }
+
+        .stats-page-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--primary);
+            font-family: 'Heebo', sans-serif;
+        }
+
+        .stats-page-label {
+            font-size: 1.1em;
+            color: var(--text);
+            margin-top: 8px;
+        }
+
+        /* Instructions Page */
+        .instructions-page-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .instruction-page-item {
+            background: linear-gradient(135deg, var(--primary-pale) 0%, white 100%);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--primary-pale);
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .instruction-page-number {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3em;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .instruction-page-text {
+            flex: 1;
+        }
+
+        .instruction-page-text strong {
+            display: block;
+            font-size: 1.15em;
+            color: var(--primary);
+            margin-bottom: 8px;
+        }
+
+        /* Credits Page */
+        .credits-page-list {
+            display: grid;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .credit-page-item {
+            background: linear-gradient(135deg, var(--primary-pale) 0%, white 100%);
+            padding: 25px;
+            border-radius: 16px;
+            border: 1px solid var(--primary-pale);
+        }
+
+        .credit-page-item strong {
+            color: var(--primary);
+            font-size: 1.1em;
+        }
+
+        /* Thanks Page */
+        .thanks-page-list {
+            list-style: none;
+            padding: 0;
+            margin: 25px 0;
+        }
+
+        .thanks-page-list li {
+            padding: 15px 20px;
+            background: linear-gradient(135deg, var(--primary-pale) 0%, white 100%);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-right: 4px solid var(--primary);
+        }
+
+        .blessing-text {
+            background: linear-gradient(135deg, var(--gold-light) 0%, var(--gold-pale) 100%);
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            font-size: 1.15em;
+            color: var(--gold);
+            margin-top: 30px;
+            border: 1px solid var(--gold-light);
+        }
+
+        /* Terms Page */
+        .terms-page-content ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .terms-page-content li {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-right: 3px solid var(--text-muted);
+        }
+
+        @media (max-width: 768px) {
+            .info-nav {
+                gap: 6px;
+                padding: 12px;
+            }
+
+            .info-nav-item {
+                padding: 8px 14px;
+                font-size: 0.85em;
+            }
+
+            .info-nav-divider {
+                display: none;
+            }
+
+            .info-page-content {
+                padding: 25px;
+            }
+
+            .info-page-title {
+                font-size: 1.8em;
+            }
+        }
     </style>
 </head>
 <body>
@@ -5912,20 +6210,24 @@
                             <div class="nav-dropdown-item" data-dest="home" onclick="event.stopPropagation(); navigateTo('home')">
                                 <span>הויפט בלאט</span>
                             </div>
-                            <div class="nav-dropdown-item" data-dest="info" onclick="event.stopPropagation(); scrollToSection('about')">
+                            <div class="nav-dropdown-item" data-dest="about" onclick="event.stopPropagation(); navigateTo('about')">
                                 <span>אונזער ציל</span>
                             </div>
-                            <div class="nav-dropdown-item" data-dest="info" onclick="event.stopPropagation(); scrollToSection('instructions')">
+                            <div class="nav-dropdown-item" data-dest="instructions" onclick="event.stopPropagation(); navigateTo('instructions')">
                                 <span>אנווייזונגען</span>
                             </div>
-                            <div class="nav-dropdown-item" data-dest="info" onclick="event.stopPropagation(); scrollToSection('credits')">
+                            <div class="nav-dropdown-item" data-dest="stats" onclick="event.stopPropagation(); navigateTo('stats')">
+                                <span>סטאטיסטיקס</span>
+                            </div>
+                            <div class="nav-dropdown-divider"></div>
+                            <div class="nav-dropdown-item" data-dest="credits" onclick="event.stopPropagation(); navigateTo('credits')">
                                 <span>קרעדיטס</span>
                             </div>
-                            <div class="nav-dropdown-item" data-dest="info" onclick="event.stopPropagation(); scrollToSection('thanks')">
+                            <div class="nav-dropdown-item" data-dest="thanks" onclick="event.stopPropagation(); navigateTo('thanks')">
                                 <span>התודה והברכה</span>
                             </div>
                             <div class="nav-dropdown-divider"></div>
-                            <div class="nav-dropdown-item" data-dest="info" onclick="event.stopPropagation(); scrollToSection('terms')">
+                            <div class="nav-dropdown-item" data-dest="terms" onclick="event.stopPropagation(); navigateTo('terms')">
                                 <span>Terms of Use</span>
                             </div>
                         </div>
@@ -7594,6 +7896,24 @@ async function fetchStatistics() {
                 case 'albums':
                     renderAlbumsPage(content);
                     break;
+                case 'about':
+                    renderAboutPage(content);
+                    break;
+                case 'instructions':
+                    renderInstructionsPage(content);
+                    break;
+                case 'stats':
+                    renderStatsPage(content);
+                    break;
+                case 'credits':
+                    renderCreditsPage(content);
+                    break;
+                case 'thanks':
+                    renderThanksPage(content);
+                    break;
+                case 'terms':
+                    renderTermsPage(content);
+                    break;
             }
         }
 
@@ -7665,93 +7985,23 @@ async function fetchStatistics() {
                         </div>
                     </div>
 
-                    <!-- About Section -->
-                    <div class="home-section" id="about">
-                        <h2 class="home-section-title">אונזער ציל</h2>
-                        <div class="home-section-content">
-                            <p>אוצר הניגונים איז א פראיעקט וואס זאמלט און באוואַרנט חסידישע ניגונים פון אלע חצרות און דורות. אונזער ציל איז צו מאכן די ניגונים צוטריטלעך פאר אלעמען, און צו פאַרזיכערן אז די ניגונים זאלן ווייטער געזונגען ווערן לדור ודור.</p>
-                            <p>מיר גלייבן אז א ניגון איז מער ווי נאר מוזיק - עס איז א וועג צו דערהויבנקייט, א בריק צווישן דעם גשמיות'דיגן און רוחניות'דיגן, און א ירושה פון אונזערע הייליגע אבות.</p>
+                    <!-- Quick Info Links -->
+                    <div class="home-info-links">
+                        <div class="home-info-link" onclick="navigateTo('about')">
+                            <span class="home-info-link-title">אונזער ציל</span>
+                            <span class="home-info-link-arrow">←</span>
                         </div>
-                    </div>
-                    
-                    <!-- Instructions Section -->
-                    <div class="home-section" id="instructions">
-                        <h2 class="home-section-title">אנווייזונגען</h2>
-                        <div class="home-section-content">
-                            <div class="instructions-grid">
-                                <div class="instruction-item">
-                                    <div class="instruction-number">1</div>
-                                    <div class="instruction-text">
-                                        <strong>זוכן</strong> - נוץ די זוך באקס צו געפינען א ניגון לויט נאמען, מחבר, אדער חצר
-                                    </div>
-                                </div>
-                                <div class="instruction-item">
-                                    <div class="instruction-number">2</div>
-                                    <div class="instruction-text">
-                                        <strong>בלעטערן</strong> - גיי דורך די קאטעגאריעס: חצרות, מחברים, זמנים, קאלעקשאנס
-                                    </div>
-                                </div>
-                                <div class="instruction-item">
-                                    <div class="instruction-number">3</div>
-                                    <div class="instruction-text">
-                                        <strong>שפילן</strong> - קליק אויף א ניגון צו הערן, נוץ די פלעיער אונטן
-                                    </div>
-                                </div>
-                                <div class="instruction-item">
-                                    <div class="instruction-number">4</div>
-                                    <div class="instruction-text">
-                                        <strong>דעטאלן</strong> - קליק אויף "דעטאלן" צו זען מער אינפארמאציע וועגן דעם ניגון
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="home-info-link" onclick="navigateTo('instructions')">
+                            <span class="home-info-link-title">אנווייזונגען</span>
+                            <span class="home-info-link-arrow">←</span>
                         </div>
-                    </div>
-
-                    <!-- Credits Section -->
-                    <div class="home-section" id="credits">
-                        <h2 class="home-section-title">קרעדיטס</h2>
-                        <div class="home-section-content">
-                            <p>דער פראיעקט איז געבויט געווארן דורך פרייוויליגע וואס האבן א ליבשאפט צו חסידישע ניגונים.</p>
-                            <div class="credits-list">
-                                <div class="credit-item">
-                                    <strong>דאטאבאנק:</strong> געזאמלט און ארגאניזירט מיט גרויס מי
-                                </div>
-                                <div class="credit-item">
-                                    <strong>טעכנאלאגיע:</strong> געבויט מיט מאדערנע וועב טעכנאלאגיעס
-                                </div>
-                                <div class="credit-item">
-                                    <strong>אוידיא:</strong> רעקארדירונגען פון פארשידענע מקורות
-                                </div>
-                            </div>
+                        <div class="home-info-link" onclick="navigateTo('credits')">
+                            <span class="home-info-link-title">קרעדיטס</span>
+                            <span class="home-info-link-arrow">←</span>
                         </div>
-                    </div>
-                    
-                    <!-- Thanks Section -->
-                    <div class="home-section" id="thanks">
-                        <h2 class="home-section-title">התודה והברכה</h2>
-                        <div class="home-section-content">
-                            <p>א גרויסן יישר כח צו אלע וואס האבן ביישטייערט צו דעם פראיעקט:</p>
-                            <ul class="thanks-list">
-                                <li>די וואס האבן געטיילט ניגונים און רעקארדירונגען</li>
-                                <li>די וואס האבן געהאלפן מיט אינפארמאציע וועגן די ניגונים</li>
-                                <li>די וואס האבן געגעבן פידבעק און פארשלאגן</li>
-                                <li>אלע וואס נוצן און פארשפרייטן דעם אוצר</li>
-                            </ul>
-                            <p class="blessing">יהי רצון שנזכה להמשיך לשמוע ולשיר ניגונים עד ביאת גואל צדק במהרה בימינו אמן.</p>
-                        </div>
-                    </div>
-                    
-                    <!-- Terms Section -->
-                    <div class="home-section" id="terms">
-                        <h2 class="home-section-title">Terms of Use</h2>
-                        <div class="home-section-content terms-content">
-                            <p>די ניגונים און רעקארדירונגען אויף דער וועבזייטל זענען געמאכט צוטריטלעך פאר פערזענלעכע און בילדונגס צוועקן.</p>
-                            <ul>
-                                <li>מען טאר נישט נוצן די רעקארדירונגען פאר קאמערציעלע צוועקן אן ערלויבעניש</li>
-                                <li>מען זאל רעספעקטירן די רעכט פון די מחברים און פארפירער</li>
-                                <li>ביי פארשפרייטן זאל מען דערמאנען דעם מקור</li>
-                            </ul>
-                            <p>פאר פראגעס אדער באמערקונגען, קען מען זיך ווענדן דורך די קאנטאקט אינפארמאציע.</p>
+                        <div class="home-info-link" onclick="navigateTo('thanks')">
+                            <span class="home-info-link-title">התודה והברכה</span>
+                            <span class="home-info-link-arrow">←</span>
                         </div>
                     </div>
                 </div>
@@ -7803,6 +8053,231 @@ async function fetchStatistics() {
                     }
                 });
             });
+        }
+
+        // Helper function to generate info pages sub-navigation
+        function getInfoNavHTML(activePage) {
+            const pages = [
+                { id: 'about', label: 'אונזער ציל' },
+                { id: 'instructions', label: 'אנווייזונגען' },
+                { id: 'stats', label: 'סטאטיסטיקס' },
+                { id: 'credits', label: 'קרעדיטס' },
+                { id: 'thanks', label: 'התודה והברכה' },
+                { id: 'terms', label: 'Terms of Use' }
+            ];
+
+            return `
+                <nav class="info-nav">
+                    ${pages.map((page, index) => `
+                        <div class="info-nav-item ${activePage === page.id ? 'active' : ''}"
+                             onclick="navigateTo('${page.id}')">
+                            ${page.label}
+                        </div>
+                        ${index === 2 ? '<div class="info-nav-divider"></div>' : ''}
+                    `).join('')}
+                </nav>
+            `;
+        }
+
+        // Render About Page (אונזער ציל)
+        function renderAboutPage(container) {
+            container.innerHTML = `
+                <div class="info-page">
+                    ${getInfoNavHTML('about')}
+
+                    <div class="info-page-header">
+                        <h1 class="info-page-title">אונזער ציל</h1>
+                        <p class="info-page-subtitle">וועגן דעם פראיעקט און אונזער מיסיע</p>
+                    </div>
+
+                    <div class="info-page-content">
+                        <p>אוצר הניגונים איז א פראיעקט וואס זאמלט און באוואַרנט חסידישע ניגונים פון אלע חצרות און דורות. אונזער ציל איז צו מאכן די ניגונים צוטריטלעך פאר אלעמען, און צו פאַרזיכערן אז די ניגונים זאלן ווייטער געזונגען ווערן לדור ודור.</p>
+                        <p>מיר גלייבן אז א ניגון איז מער ווי נאר מוזיק - עס איז א וועג צו דערהויבנקייט, א בריק צווישן דעם גשמיות'דיגן און רוחניות'דיגן, און א ירושה פון אונזערע הייליגע אבות.</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Instructions Page (אנווייזונגען)
+        function renderInstructionsPage(container) {
+            container.innerHTML = `
+                <div class="info-page">
+                    ${getInfoNavHTML('instructions')}
+
+                    <div class="info-page-header">
+                        <h1 class="info-page-title">אנווייזונגען</h1>
+                        <p class="info-page-subtitle">ווי אזוי צו נוצן דעם אוצר הניגונים</p>
+                    </div>
+
+                    <div class="info-page-content">
+                        <div class="instructions-page-grid">
+                            <div class="instruction-page-item">
+                                <div class="instruction-page-number">1</div>
+                                <div class="instruction-page-text">
+                                    <strong>זוכן</strong>
+                                    נוץ די זוך באקס צו געפינען א ניגון לויט נאמען, מחבר, אדער חצר
+                                </div>
+                            </div>
+                            <div class="instruction-page-item">
+                                <div class="instruction-page-number">2</div>
+                                <div class="instruction-page-text">
+                                    <strong>בלעטערן</strong>
+                                    גיי דורך די קאטעגאריעס: חצרות, מחברים, זמנים, קאלעקשאנס
+                                </div>
+                            </div>
+                            <div class="instruction-page-item">
+                                <div class="instruction-page-number">3</div>
+                                <div class="instruction-page-text">
+                                    <strong>שפילן</strong>
+                                    קליק אויף א ניגון צו הערן, נוץ די פלעיער אונטן
+                                </div>
+                            </div>
+                            <div class="instruction-page-item">
+                                <div class="instruction-page-number">4</div>
+                                <div class="instruction-page-text">
+                                    <strong>דעטאלן</strong>
+                                    קליק אויף "דעטאלן" צו זען מער אינפארמאציע וועגן דעם ניגון
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Stats Page (סטאטיסטיקס)
+        function renderStatsPage(container) {
+            const totalSongs = cachedStats.niggunim || 0;
+            const totalChatzeros = cachedStats.chatzeros || 0;
+            const totalMechabrim = cachedStats.mechabrim || 0;
+            const totalVerter = cachedStats.verter || 0;
+            const totalZmanim = cachedStats.zmanim || 0;
+            const totalCollections = cachedStats.collections || 0;
+
+            container.innerHTML = `
+                <div class="info-page">
+                    ${getInfoNavHTML('stats')}
+
+                    <div class="info-page-header">
+                        <h1 class="info-page-title">סטאטיסטיקס</h1>
+                        <p class="info-page-subtitle">די צאלן פון אונזער זאמלונג</p>
+                    </div>
+
+                    <div class="info-page-content">
+                        <div class="stats-page-grid">
+                            <div class="stats-page-card" onclick="navigateTo('songs')">
+                                <div class="stats-page-number">${totalSongs}</div>
+                                <div class="stats-page-label">ניגונים</div>
+                            </div>
+                            <div class="stats-page-card" onclick="navigateTo('chatzeros')">
+                                <div class="stats-page-number">${totalChatzeros}</div>
+                                <div class="stats-page-label">חצרות</div>
+                            </div>
+                            <div class="stats-page-card" onclick="navigateTo('mechabrim')">
+                                <div class="stats-page-number">${totalMechabrim}</div>
+                                <div class="stats-page-label">מחברים</div>
+                            </div>
+                            <div class="stats-page-card" onclick="navigateTo('verter')">
+                                <div class="stats-page-number">${totalVerter}</div>
+                                <div class="stats-page-label">ווערטער</div>
+                            </div>
+                            <div class="stats-page-card" onclick="navigateTo('zmanim')">
+                                <div class="stats-page-number">${totalZmanim}</div>
+                                <div class="stats-page-label">זמנים</div>
+                            </div>
+                            <div class="stats-page-card" onclick="navigateTo('collections')">
+                                <div class="stats-page-number">${totalCollections}</div>
+                                <div class="stats-page-label">קאלעקשאנס</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Credits Page (קרעדיטס)
+        function renderCreditsPage(container) {
+            container.innerHTML = `
+                <div class="info-page">
+                    ${getInfoNavHTML('credits')}
+
+                    <div class="info-page-header">
+                        <h1 class="info-page-title">קרעדיטס</h1>
+                        <p class="info-page-subtitle">די מענטשן הינטער דעם פראיעקט</p>
+                    </div>
+
+                    <div class="info-page-content">
+                        <p>דער פראיעקט איז געבויט געווארן דורך פרייוויליגע וואס האבן א ליבשאפט צו חסידישע ניגונים.</p>
+
+                        <div class="credits-page-list">
+                            <div class="credit-page-item">
+                                <strong>דאטאבאנק:</strong> געזאמלט און ארגאניזירט מיט גרויס מי
+                            </div>
+                            <div class="credit-page-item">
+                                <strong>טעכנאלאגיע:</strong> געבויט מיט מאדערנע וועב טעכנאלאגיעס
+                            </div>
+                            <div class="credit-page-item">
+                                <strong>אוידיא:</strong> רעקארדירונגען פון פארשידענע מקורות
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Thanks Page (התודה והברכה)
+        function renderThanksPage(container) {
+            container.innerHTML = `
+                <div class="info-page">
+                    ${getInfoNavHTML('thanks')}
+
+                    <div class="info-page-header">
+                        <h1 class="info-page-title">התודה והברכה</h1>
+                        <p class="info-page-subtitle">א יישר כח צו אלע וואס האבן ביישטייערט</p>
+                    </div>
+
+                    <div class="info-page-content">
+                        <p>א גרויסן יישר כח צו אלע וואס האבן ביישטייערט צו דעם פראיעקט:</p>
+
+                        <ul class="thanks-page-list">
+                            <li>די וואס האבן געטיילט ניגונים און רעקארדירונגען</li>
+                            <li>די וואס האבן געהאלפן מיט אינפארמאציע וועגן די ניגונים</li>
+                            <li>די וואס האבן געגעבן פידבעק און פארשלאגן</li>
+                            <li>אלע וואס נוצן און פארשפרייטן דעם אוצר</li>
+                        </ul>
+
+                        <div class="blessing-text">
+                            יהי רצון שנזכה להמשיך לשמוע ולשיר ניגונים עד ביאת גואל צדק במהרה בימינו אמן.
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Render Terms Page (Terms of Use)
+        function renderTermsPage(container) {
+            container.innerHTML = `
+                <div class="info-page">
+                    ${getInfoNavHTML('terms')}
+
+                    <div class="info-page-header">
+                        <h1 class="info-page-title">Terms of Use</h1>
+                        <p class="info-page-subtitle">באדינגונגען פאר נוצן די וועבזייטל</p>
+                    </div>
+
+                    <div class="info-page-content terms-page-content">
+                        <p>די ניגונים און רעקארדירונגען אויף דער וועבזייטל זענען געמאכט צוטריטלעך פאר פערזענלעכע און בילדונגס צוועקן.</p>
+
+                        <ul>
+                            <li>מען טאר נישט נוצן די רעקארדירונגען פאר קאמערציעלע צוועקן אן ערלויבעניש</li>
+                            <li>מען זאל רעספעקטירן די רעכט פון די מחברים און פארפירער</li>
+                            <li>ביי פארשפרייטן זאל מען דערמאנען דעם מקור</li>
+                        </ul>
+
+                        <p>פאר פראגעס אדער באמערקונגען, קען מען זיך ווענדן דורך די קאנטאקט אינפארמאציע.</p>
+                    </div>
+                </div>
+            `;
         }
 
         // Handle home search
