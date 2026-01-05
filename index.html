@@ -3573,8 +3573,17 @@
         .detail-page.theme-mechaber .detail-category-bar {
             background: var(--color-mechaber);
         }
-        .detail-page.theme-mechaber .detail-title { 
-            color: var(--color-mechaber-dark); 
+        .detail-page.theme-mechaber .detail-title {
+            color: var(--color-mechaber-dark);
+        }
+
+        /* Mechaber subtitle (second line with גערופן, פלאץ, סופיקס) */
+        .mechaber-subtitle {
+            display: block;
+            font-size: 0.65em;
+            font-weight: 400;
+            color: var(--color-mechaber);
+            margin-top: 4px;
         }
 
         .detail-page.theme-verter .detail-category-bar {
@@ -6687,6 +6696,12 @@
                                 if (colNameLower === 'סופיקס' || colNameLower === 'suffix') {
                                     info.suffix = textValue;
                                 }
+                                if (colNameLower === 'גערופן' || colNameLower === 'called' || colNameLower === 'nickname') {
+                                    info.gerufen = textValue;
+                                }
+                                if (colNameLower === 'פלאץ' || colNameLower === 'place') {
+                                    info.platz = textValue;
+                                }
                                 if (colNameLower === 'יום לידה') {
                                     info.birthDay = textValue;
                                 }
@@ -8634,14 +8649,28 @@ async function fetchStatistics() {
             let mechaberLifeDates = '';
             
             if (type === 'mechabrim') {
-                // Build full name from parts: טיטל + ערשטע נאמען + לעצטע נאמען + סופיקס
-                const nameParts = [info.title, info.firstName, info.lastName, info.suffix].filter(Boolean);
-                if (nameParts.length > 0) {
-                    mechaberFullName = nameParts.join(' ');
+                // Build full name for profile page in two lines:
+                // Line 1: טיטל + ערשטע נאמען + לעצטע נאמען
+                // Line 2: גערופן + פלאץ + סופיקס
+                const line1Parts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                const line2Parts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+
+                const line1 = line1Parts.length > 0 ? line1Parts.join(' ') : '';
+                const line2 = line2Parts.length > 0 ? line2Parts.join(' ') : '';
+
+                if (line1 && line2) {
+                    mechaberFullName = `${line1}<br><span class="mechaber-subtitle">${line2}</span>`;
+                } else if (line1) {
+                    mechaberFullName = line1;
+                } else if (line2) {
+                    mechaberFullName = line2;
+                } else {
+                    mechaberFullName = name;
                 }
-                
+
                 // Tag name is from טעג נאמען column - show only if different from built full name
-                if (info.tagName && info.tagName !== mechaberFullName) {
+                const fullNamePlain = [line1, line2].filter(Boolean).join(' ');
+                if (info.tagName && info.tagName !== fullNamePlain && info.tagName !== line1) {
                     mechaberTagName = info.tagName;
                 }
                 
@@ -9502,9 +9531,15 @@ async function fetchStatistics() {
                     <div class="card-header-text">
                         ${(() => {
                             if (categoryKey === 'mechabrim') {
-                                // Build full name like tooltip does
-                                const nameParts = [info.title, info.firstName, info.lastName, info.suffix].filter(Boolean);
-                                const fullName = nameParts.length > 0 ? nameParts.join(' ') : key;
+                                // Build short name: If גערופן has value use it, otherwise use first+last name
+                                // Short name: טיטל + (גערופן OR ערשטע+לעצטע נאמען) + פלאץ + סופיקס
+                                let shortNameParts;
+                                if (info.gerufen) {
+                                    shortNameParts = [info.title, info.gerufen, info.platz, info.suffix].filter(Boolean);
+                                } else {
+                                    shortNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
+                                }
+                                const shortName = shortNameParts.length > 0 ? shortNameParts.join(' ') : key;
 
                                 // Build full dates
                                 const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
@@ -9514,7 +9549,7 @@ async function fetchStatistics() {
                                 const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
 
                                 return `
-                                    <div class="card-title">${fullName}</div>
+                                    <div class="card-title">${shortName}</div>
                                     ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
                                 `;
                             } else {
