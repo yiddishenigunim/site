@@ -5047,11 +5047,103 @@
             color: white;
             font-size: 1.4em;
             box-shadow: 0 4px 15px rgba(74, 124, 201, 0.25), 0 4px 15px rgba(156, 91, 181, 0.2);
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .player-btn.main:hover {
             transform: scale(1.05);
             box-shadow: 0 6px 20px rgba(74, 124, 201, 0.35), 0 6px 20px rgba(156, 91, 181, 0.3);
+        }
+
+        /* Animated play/pause icons in player */
+        .player-play-icon,
+        .player-pause-icon {
+            position: absolute;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .player-play-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .player-pause-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .player-btn.main.playing .player-play-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .player-btn.main.playing .player-pause-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Player Wave Animation */
+        .player-wave-animation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 30px;
+            margin-left: 10px;
+            opacity: 0;
+            transform: translateX(-10px);
+            transition: opacity 0.3s ease, transform 0.3s ease;
+        }
+
+        .player-wave-animation.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .player-wave-bar {
+            width: 4px;
+            background: var(--color-nigun);
+            border-radius: 2px;
+            animation: playerWaveAnimate 1s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+
+        .player-wave-bar:nth-child(1) {
+            height: 12px;
+            animation-delay: 0s;
+        }
+
+        .player-wave-bar:nth-child(2) {
+            height: 20px;
+            animation-delay: 0.15s;
+        }
+
+        .player-wave-bar:nth-child(3) {
+            height: 16px;
+            animation-delay: 0.3s;
+        }
+
+        .player-wave-bar:nth-child(4) {
+            height: 10px;
+            animation-delay: 0.45s;
+        }
+
+        @keyframes playerWaveAnimate {
+            0%, 100% {
+                transform: scaleY(0.4);
+            }
+            50% {
+                transform: scaleY(1);
+            }
+        }
+
+        /* Paused state - wave bars stay still */
+        .player-wave-animation.paused .player-wave-bar {
+            animation-play-state: paused;
         }
 
         .player-progress {
@@ -6711,7 +6803,16 @@
             </div>
             <div class="player-controls">
                 <button class="player-btn" onclick="playPrevious()" title="פריערדיגע">⏮</button>
-                <button class="player-btn main" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
+                <div class="player-wave-animation" id="playerWaveAnimation">
+                    <span class="player-wave-bar"></span>
+                    <span class="player-wave-bar"></span>
+                    <span class="player-wave-bar"></span>
+                    <span class="player-wave-bar"></span>
+                </div>
+                <button class="player-btn main" id="playPauseBtn" onclick="togglePlayPause()">
+                    <span class="player-play-icon">▶</span>
+                    <span class="player-pause-icon">⏸</span>
+                </button>
                 <button class="player-btn" onclick="playNext()" title="קומענדיגע">⏭</button>
             </div>
             <div class="player-progress">
@@ -11624,7 +11725,14 @@ async function fetchStatistics() {
             }
             
             document.getElementById('playerGezungen').textContent = song.gezungen ? `געזונגען: ${song.gezungen}` : '';
-            document.getElementById('playPauseBtn').textContent = '⏸';
+
+            // Update player play button and wave animation
+            document.getElementById('playPauseBtn').classList.add('playing');
+            const playerWave = document.getElementById('playerWaveAnimation');
+            if (playerWave) {
+                playerWave.classList.add('visible');
+                playerWave.classList.remove('paused');
+            }
         }
 
         // Update active song highlight
@@ -11687,11 +11795,10 @@ async function fetchStatistics() {
         function togglePlayPause() {
             if (audioPlayer.paused) {
                 audioPlayer.play();
-                document.getElementById('playPauseBtn').textContent = '⏸';
             } else {
                 audioPlayer.pause();
-                document.getElementById('playPauseBtn').textContent = '▶';
             }
+            // UI updates handled by play/pause event listeners
         }
 
         // Play previous
@@ -11784,23 +11891,41 @@ async function fetchStatistics() {
         });
 
         audioPlayer.addEventListener('pause', () => {
-            document.getElementById('playPauseBtn').textContent = '▶';
-            updateSongListPlayState(false);
+            updatePlayState(false);
         });
 
         audioPlayer.addEventListener('play', () => {
-            document.getElementById('playPauseBtn').textContent = '⏸';
-            updateSongListPlayState(true);
+            updatePlayState(true);
         });
 
-        // Update play button and wave animation state in song list
-        function updateSongListPlayState(isPlaying) {
-            // Update all play buttons to show play icon
+        // Update play/pause state for both player and song list
+        function updatePlayState(isPlaying) {
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const playerWave = document.getElementById('playerWaveAnimation');
+
+            // Update player button
+            if (isPlaying) {
+                playPauseBtn.classList.add('playing');
+            } else {
+                playPauseBtn.classList.remove('playing');
+            }
+
+            // Update player wave animation
+            if (playerWave) {
+                if (isPlaying) {
+                    playerWave.classList.add('visible');
+                    playerWave.classList.remove('paused');
+                } else {
+                    playerWave.classList.add('paused');
+                }
+            }
+
+            // Update song list play buttons
             document.querySelectorAll('.song-play-btn-new').forEach(btn => {
                 btn.classList.remove('playing');
             });
 
-            // Update all song items paused state
+            // Update song items paused state
             document.querySelectorAll('.song-item').forEach(item => {
                 item.classList.remove('paused');
             });
