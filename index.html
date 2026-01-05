@@ -5913,54 +5913,68 @@
             margin-top: 5px;
         }
 
-        /* Home Info Links */
-        .home-info-links {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 40px;
+        /* Home About Us Section */
+        .home-about-section {
+            margin-top: 50px;
             padding: 0 20px;
-            max-width: 800px;
+            max-width: 600px;
             margin-left: auto;
             margin-right: auto;
         }
 
-        .home-info-link {
+        .home-about-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: white;
-            padding: 18px 25px;
-            border-radius: 12px;
+            background: var(--gradient-main);
+            padding: 20px 30px;
+            border-radius: 16px 16px 0 0;
             cursor: pointer;
             transition: var(--transition-smooth);
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--color-chatzer-pale);
         }
 
-        .home-info-link:hover {
+        .home-about-header:hover {
+            filter: brightness(1.1);
+        }
+
+        .home-about-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: white;
+        }
+
+        .home-about-arrow {
+            color: white;
+            font-size: 1.3em;
+            transition: var(--transition-smooth);
+        }
+
+        .home-about-header:hover .home-about-arrow {
             transform: translateX(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            border-color: var(--color-chatzer);
-            background: var(--gradient-main-pale);
         }
 
-        .home-info-link-title {
-            font-weight: 500;
+        .home-about-links {
+            background: white;
+            border-radius: 0 0 16px 16px;
+            box-shadow: var(--card-shadow);
+            overflow: hidden;
+        }
+
+        .home-about-link {
+            padding: 14px 30px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border-bottom: 1px solid var(--color-chatzer-pale);
             color: var(--text);
         }
 
-        .home-info-link-arrow {
-            background: var(--gradient-main);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-size: 1.2em;
-            transition: var(--transition-smooth);
+        .home-about-link:last-child {
+            border-bottom: none;
         }
 
-        .home-info-link:hover .home-info-link-arrow {
-            transform: translateX(-5px);
+        .home-about-link:hover {
+            background: var(--gradient-main-pale);
+            padding-right: 40px;
         }
 
         /* Info Pages Layout */
@@ -8048,23 +8062,19 @@ async function fetchStatistics() {
                         </div>
                     </div>
 
-                    <!-- Quick Info Links -->
-                    <div class="home-info-links">
-                        <div class="home-info-link" onclick="navigateTo('about')">
-                            <span class="home-info-link-title">אונזער ציל</span>
-                            <span class="home-info-link-arrow">←</span>
+                    <!-- About Us Section -->
+                    <div class="home-about-section">
+                        <div class="home-about-header" onclick="navigateTo('about')">
+                            <span class="home-about-title">איבער אונז</span>
+                            <span class="home-about-arrow">←</span>
                         </div>
-                        <div class="home-info-link" onclick="navigateTo('instructions')">
-                            <span class="home-info-link-title">אנווייזונגען</span>
-                            <span class="home-info-link-arrow">←</span>
-                        </div>
-                        <div class="home-info-link" onclick="navigateTo('credits')">
-                            <span class="home-info-link-title">קרעדיטס</span>
-                            <span class="home-info-link-arrow">←</span>
-                        </div>
-                        <div class="home-info-link" onclick="navigateTo('thanks')">
-                            <span class="home-info-link-title">התודה והברכה</span>
-                            <span class="home-info-link-arrow">←</span>
+                        <div class="home-about-links">
+                            <div class="home-about-link" onclick="navigateTo('about')">אונזער ציל</div>
+                            <div class="home-about-link" onclick="navigateTo('instructions')">אנווייזונגען</div>
+                            <div class="home-about-link" onclick="navigateTo('stats')">סטאטיסטיקס</div>
+                            <div class="home-about-link" onclick="navigateTo('credits')">קרעדיטס</div>
+                            <div class="home-about-link" onclick="navigateTo('thanks')">התודה והברכה</div>
+                            <div class="home-about-link" onclick="navigateTo('terms')">Terms of Use</div>
                         </div>
                     </div>
                 </div>
