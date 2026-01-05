@@ -4597,6 +4597,126 @@
             border-color: rgba(255,255,255,0.3);
         }
 
+        /* New Play Button Styling */
+        .song-play-btn-new {
+            width: 38px;
+            height: 38px;
+            background: var(--color-nigun);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 0.9em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.3);
+        }
+
+        .song-play-btn-new:hover {
+            background: var(--color-nigun-dark);
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.5);
+        }
+
+        .song-play-btn-new .play-icon,
+        .song-play-btn-new .pause-icon {
+            position: absolute;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .song-play-btn-new .play-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .song-play-btn-new .pause-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .song-play-btn-new.playing .play-icon {
+            opacity: 0;
+            transform: scale(0.5);
+        }
+
+        .song-play-btn-new.playing .pause-icon {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .song-item:hover .song-play-btn-new {
+            background: white !important;
+            color: var(--color-nigun) !important;
+        }
+
+        .song-item.active .song-play-btn-new {
+            background: rgba(255,255,255,0.25);
+            color: white;
+        }
+
+        .song-item.active .song-play-btn-new:hover {
+            background: white !important;
+            color: var(--color-nigun) !important;
+        }
+
+        /* Wave Animation for Playing Song */
+        .song-wave-animation {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3px;
+            height: 24px;
+            margin-right: 8px;
+        }
+
+        .wave-bar {
+            width: 4px;
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            animation: waveAnimate 1s ease-in-out infinite;
+            transform-origin: bottom;
+        }
+
+        .wave-bar:nth-child(1) {
+            animation-delay: 0s;
+            height: 60%;
+        }
+
+        .wave-bar:nth-child(2) {
+            animation-delay: 0.15s;
+            height: 100%;
+        }
+
+        .wave-bar:nth-child(3) {
+            animation-delay: 0.3s;
+            height: 80%;
+        }
+
+        .wave-bar:nth-child(4) {
+            animation-delay: 0.45s;
+            height: 50%;
+        }
+
+        @keyframes waveAnimate {
+            0%, 100% {
+                transform: scaleY(0.4);
+            }
+            50% {
+                transform: scaleY(1);
+            }
+        }
+
+        /* Paused state - wave bars stay still */
+        .song-item.active.paused .wave-bar {
+            animation-play-state: paused;
+        }
+
         /* All Songs Page */
         .songs-card {
             background: white;
@@ -11251,7 +11371,7 @@ async function fetchStatistics() {
         function renderSongItem(song, globalIdx, displayNum, playlistIndices = null) {
             const isActive = globalIdx === currentSongIndex;
             const hasAudio = song.audioUrl && song.audioUrl.startsWith('http');
-            
+
             // Create meta with links - using entity-specific colors
             let metaParts = [];
             if (song.mechaber) {
@@ -11260,14 +11380,25 @@ async function fetchStatistics() {
             if (song.category) {
                 metaParts.push(createMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
             }
-            
-            // If no audio, clicking shows details instead of playing
-            const clickAction = hasAudio 
-                ? (playlistIndices 
-                    ? `playSongFromList(${globalIdx}, [${playlistIndices.join(',')}])`
-                    : `playSong(${globalIdx})`)
-                : `showSongDetails(${globalIdx})`;
-            
+
+            // Clicking on song always opens details
+            const clickAction = `showSongDetails(${globalIdx})`;
+
+            // Play button action
+            const playAction = playlistIndices
+                ? `playSongFromList(${globalIdx}, [${playlistIndices.join(',')}])`
+                : `playSong(${globalIdx})`;
+
+            // Wave animation for currently playing song
+            const waveAnimation = isActive ? `
+                <div class="song-wave-animation">
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                </div>
+            ` : '';
+
             return `
                 <div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
                     <div class="song-number">${displayNum}</div>
@@ -11275,7 +11406,11 @@ async function fetchStatistics() {
                         <div class="song-name">${song.name}</div>
                         <div class="song-meta">${metaParts.join(' • ')}</div>
                     </div>
-                    <button class="song-details-btn" onclick="event.stopPropagation(); showSongDetails(${globalIdx});">דעטאלן</button>
+                    ${waveAnimation}
+                    ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
+                        <span class="play-icon">▶</span>
+                        <span class="pause-icon">⏸</span>
+                    </button>` : ''}
                 </div>
             `;
         }
@@ -11322,11 +11457,17 @@ async function fetchStatistics() {
         // Play song (sets playlist if not already set)
         function playSong(idx, playlist = null) {
             if (idx < 0 || idx >= allSongs.length) return;
-            
+
+            // If clicking the same song, toggle play/pause
+            if (idx === currentSongIndex && audioPlayer.src) {
+                togglePlayPause();
+                return;
+            }
+
             // Reset recordings mode when playing from song list
             isInRecordingsMode = false;
             currentRecordingIndex = 0;
-            
+
             // If a playlist is provided, use it
             if (playlist && Array.isArray(playlist)) {
                 currentPlaylist = playlist;
@@ -11339,10 +11480,10 @@ async function fetchStatistics() {
                 // Song is in current playlist, just update position
                 currentPlaylistPosition = currentPlaylist.indexOf(idx);
             }
-            
+
             currentSongIndex = idx;
             const song = allSongs[idx];
-            
+
             audioPlayer.src = song.audioUrl;
             audioPlayer.play();
 
@@ -11353,6 +11494,11 @@ async function fetchStatistics() {
 
         // Play song from a specific playlist (detail pages)
         function playSongFromList(idx, playlistIndices) {
+            // If clicking the same song, toggle play/pause
+            if (idx === currentSongIndex && audioPlayer.src) {
+                togglePlayPause();
+                return;
+            }
             currentPlaylist = playlistIndices;
             currentPlaylistPosition = playlistIndices.indexOf(idx);
             playSong(idx, playlistIndices);
@@ -11483,15 +11629,56 @@ async function fetchStatistics() {
 
         // Update active song highlight
         function updateActiveSongInList() {
+            // Remove active state and wave animation from all song items
             document.querySelectorAll('.song-item').forEach(item => {
                 item.classList.remove('active');
+                item.classList.remove('paused');
+                const existingWave = item.querySelector('.song-wave-animation');
+                if (existingWave) {
+                    existingWave.remove();
+                }
             });
-            
+
+            // Reset all play buttons
+            document.querySelectorAll('.song-play-btn-new').forEach(btn => {
+                btn.classList.remove('playing');
+            });
+
             // Find and mark the currently playing song
             if (currentSongIndex >= 0) {
                 const activeItem = document.querySelector(`.song-item[data-song-idx="${currentSongIndex}"]`);
                 if (activeItem) {
                     activeItem.classList.add('active');
+
+                    // Add wave animation if not already present
+                    if (!activeItem.querySelector('.song-wave-animation')) {
+                        const waveDiv = document.createElement('div');
+                        waveDiv.className = 'song-wave-animation';
+                        waveDiv.innerHTML = `
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                            <span class="wave-bar"></span>
+                        `;
+                        // Insert before the play button
+                        const playBtn = activeItem.querySelector('.song-play-btn-new');
+                        if (playBtn) {
+                            activeItem.insertBefore(waveDiv, playBtn);
+                        } else {
+                            activeItem.appendChild(waveDiv);
+                        }
+                    }
+
+                    // Update play button state
+                    const activeBtn = activeItem.querySelector('.song-play-btn-new');
+                    if (activeBtn && !audioPlayer.paused) {
+                        activeBtn.classList.add('playing');
+                    }
+
+                    // Update paused state
+                    if (audioPlayer.paused) {
+                        activeItem.classList.add('paused');
+                    }
                 }
             }
         }
@@ -11598,11 +11785,39 @@ async function fetchStatistics() {
 
         audioPlayer.addEventListener('pause', () => {
             document.getElementById('playPauseBtn').textContent = '▶';
+            updateSongListPlayState(false);
         });
 
         audioPlayer.addEventListener('play', () => {
             document.getElementById('playPauseBtn').textContent = '⏸';
+            updateSongListPlayState(true);
         });
+
+        // Update play button and wave animation state in song list
+        function updateSongListPlayState(isPlaying) {
+            // Update all play buttons to show play icon
+            document.querySelectorAll('.song-play-btn-new').forEach(btn => {
+                btn.classList.remove('playing');
+            });
+
+            // Update all song items paused state
+            document.querySelectorAll('.song-item').forEach(item => {
+                item.classList.remove('paused');
+            });
+
+            // Find the active song's button and update it
+            if (currentSongIndex >= 0) {
+                const activeBtn = document.querySelector(`.song-play-btn-new[data-song-idx="${currentSongIndex}"]`);
+                const activeItem = document.querySelector(`.song-item[data-song-idx="${currentSongIndex}"]`);
+
+                if (activeBtn && isPlaying) {
+                    activeBtn.classList.add('playing');
+                }
+                if (activeItem && !isPlaying) {
+                    activeItem.classList.add('paused');
+                }
+            }
+        }
 
         // Create clickable link for a field value
         function createFieldLink(value, fieldType) {
