@@ -4665,47 +4665,47 @@
         }
 
         /* Wave Animation for Playing Song */
+        /* Center-mirrored wave animation (streaming style) */
         .song-wave-animation {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 3px;
-            height: 24px;
+            gap: 2px;
+            height: 20px;
             margin-right: 8px;
         }
 
         .wave-bar {
-            width: 4px;
-            height: 100%;
+            width: 3px;
             background: white;
-            border-radius: 2px;
-            animation: waveAnimate 1s ease-in-out infinite;
-            transform-origin: bottom;
+            border-radius: 3px;
+            animation: waveStream 0.8s ease-in-out infinite;
+            transform-origin: center;
         }
 
         .wave-bar:nth-child(1) {
+            height: 8px;
             animation-delay: 0s;
-            height: 60%;
         }
 
         .wave-bar:nth-child(2) {
-            animation-delay: 0.15s;
-            height: 100%;
+            height: 14px;
+            animation-delay: 0.1s;
         }
 
         .wave-bar:nth-child(3) {
-            animation-delay: 0.3s;
-            height: 80%;
+            height: 10px;
+            animation-delay: 0.2s;
         }
 
         .wave-bar:nth-child(4) {
-            animation-delay: 0.45s;
-            height: 50%;
+            height: 16px;
+            animation-delay: 0.3s;
         }
 
-        @keyframes waveAnimate {
+        @keyframes waveStream {
             0%, 100% {
-                transform: scaleY(0.4);
+                transform: scaleY(0.3);
             }
             50% {
                 transform: scaleY(1);
@@ -4932,6 +4932,11 @@
             }
         }
 
+        /* Paused state for equalizer */
+        .equalizer-icon.paused .bar {
+            animation-play-state: paused;
+        }
+
         .player-inner {
             max-width: 1400px;
             margin: 0 auto;
@@ -5084,66 +5089,6 @@
         .player-btn.main.playing .player-pause-icon {
             opacity: 1;
             transform: scale(1);
-        }
-
-        /* Player Wave Animation */
-        .player-wave-animation {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 3px;
-            height: 30px;
-            margin-left: 10px;
-            opacity: 0;
-            transform: translateX(-10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
-
-        .player-wave-animation.visible {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        .player-wave-bar {
-            width: 4px;
-            background: var(--color-nigun);
-            border-radius: 2px;
-            animation: playerWaveAnimate 1s ease-in-out infinite;
-            transform-origin: bottom;
-        }
-
-        .player-wave-bar:nth-child(1) {
-            height: 12px;
-            animation-delay: 0s;
-        }
-
-        .player-wave-bar:nth-child(2) {
-            height: 20px;
-            animation-delay: 0.15s;
-        }
-
-        .player-wave-bar:nth-child(3) {
-            height: 16px;
-            animation-delay: 0.3s;
-        }
-
-        .player-wave-bar:nth-child(4) {
-            height: 10px;
-            animation-delay: 0.45s;
-        }
-
-        @keyframes playerWaveAnimate {
-            0%, 100% {
-                transform: scaleY(0.4);
-            }
-            50% {
-                transform: scaleY(1);
-            }
-        }
-
-        /* Paused state - wave bars stay still */
-        .player-wave-animation.paused .player-wave-bar {
-            animation-play-state: paused;
         }
 
         .player-progress {
@@ -6803,12 +6748,6 @@
             </div>
             <div class="player-controls">
                 <button class="player-btn" onclick="playPrevious()" title="פריערדיגע">⏮</button>
-                <div class="player-wave-animation" id="playerWaveAnimation">
-                    <span class="player-wave-bar"></span>
-                    <span class="player-wave-bar"></span>
-                    <span class="player-wave-bar"></span>
-                    <span class="player-wave-bar"></span>
-                </div>
                 <button class="player-btn main" id="playPauseBtn" onclick="togglePlayPause()">
                     <span class="player-play-icon">▶</span>
                     <span class="player-pause-icon">⏸</span>
@@ -11726,12 +11665,12 @@ async function fetchStatistics() {
             
             document.getElementById('playerGezungen').textContent = song.gezungen ? `געזונגען: ${song.gezungen}` : '';
 
-            // Update player play button and wave animation
+            // Update player play button
             document.getElementById('playPauseBtn').classList.add('playing');
-            const playerWave = document.getElementById('playerWaveAnimation');
-            if (playerWave) {
-                playerWave.classList.add('visible');
-                playerWave.classList.remove('paused');
+            // Remove paused state from equalizer
+            const equalizerIcon = document.querySelector('.equalizer-icon');
+            if (equalizerIcon) {
+                equalizerIcon.classList.remove('paused');
             }
         }
 
@@ -11901,7 +11840,7 @@ async function fetchStatistics() {
         // Update play/pause state for both player and song list
         function updatePlayState(isPlaying) {
             const playPauseBtn = document.getElementById('playPauseBtn');
-            const playerWave = document.getElementById('playerWaveAnimation');
+            const equalizerIcon = document.querySelector('.equalizer-icon');
 
             // Update player button
             if (isPlaying) {
@@ -11910,13 +11849,12 @@ async function fetchStatistics() {
                 playPauseBtn.classList.remove('playing');
             }
 
-            // Update player wave animation
-            if (playerWave) {
+            // Update equalizer icon in player-show-btn (pause when audio paused)
+            if (equalizerIcon) {
                 if (isPlaying) {
-                    playerWave.classList.add('visible');
-                    playerWave.classList.remove('paused');
+                    equalizerIcon.classList.remove('paused');
                 } else {
-                    playerWave.classList.add('paused');
+                    equalizerIcon.classList.add('paused');
                 }
             }
 
