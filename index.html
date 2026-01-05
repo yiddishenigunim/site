@@ -3157,6 +3157,12 @@
             justify-content: center;
             font-size: 2em;
             margin-bottom: 10px;
+            color: var(--color-mechaber);
+        }
+
+        .nigun-mechaber-placeholder svg {
+            width: 50px;
+            height: 50px;
         }
 
         .nigun-mechaber-name {
@@ -9525,9 +9531,15 @@ async function fetchStatistics() {
                     ${mechabrimFromChatzer.length > 0 ? `
                         <div class="detail-mechabrim-section">
                             <h3>${mechabrimFromChatzer.length} מחברים</h3>
-                            <div class="tags-container">
+                            <div class="nigun-mechaber-grid">
                                 ${mechabrimFromChatzer.map(mech => `
-                                    <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">${mech.name}</span>
+                                    <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">
+                                        ${mech.image
+                                            ? `<img class="nigun-mechaber-image" src="${mech.image}" alt="${mech.name}">`
+                                            : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 100 100" fill="currentColor"><ellipse cx="50" cy="35" rx="15" ry="14"/><path d="M26 32h48v6c0 2-1 4-4 4H30c-3 0-4-2-4-4v-6z"/><rect x="30" y="28" width="40" height="6" rx="1"/><path d="M32 95c0-22 8-38 18-38s18 16 18 38H32z"/></svg></div>`
+                                        }
+                                        <div class="nigun-mechaber-name">${mech.name}</div>
+                                    </div>
                                 `).join('')}
                             </div>
                         </div>
@@ -9756,8 +9768,19 @@ async function fetchStatistics() {
                     ${song.mechaber ? `
                         <div class="nigun-mechaber-section">
                             <div class="nigun-mechaber-title">מחבר הניגון</div>
-                            <div class="tags-container">
-                                <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(mechaberName || '')}')">${song.mechaber}</span>
+                            <div class="nigun-mechaber-grid">
+                                ${song.mechaber.split(',').map(m => m.trim()).filter(Boolean).map(mName => {
+                                    const mInfo = mechabrimInfo[mName];
+                                    return `
+                                        <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mName)}')">
+                                            ${mInfo?.image
+                                                ? `<img class="nigun-mechaber-image" src="${mInfo.image}" alt="${mName}">`
+                                                : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 100 100" fill="currentColor"><ellipse cx="50" cy="35" rx="15" ry="14"/><path d="M26 32h48v6c0 2-1 4-4 4H30c-3 0-4-2-4-4v-6z"/><rect x="30" y="28" width="40" height="6" rx="1"/><path d="M32 95c0-22 8-38 18-38s18 16 18 38H32z"/></svg></div>`
+                                            }
+                                            <div class="nigun-mechaber-name">${mName}</div>
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     ` : ''}
@@ -9765,10 +9788,19 @@ async function fetchStatistics() {
                     ${song.personality ? `
                         <div class="nigun-personality-section">
                             <div class="nigun-personality-title">פערזענליכקייטן וואס האבן א שייכות מיט דעם ניגון</div>
-                            <div class="tags-container">
-                                ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => `
-                                    <span class="mechaber-tag" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">${personName}</span>
-                                `).join('')}
+                            <div class="nigun-mechaber-grid">
+                                ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
+                                    const pInfo = mechabrimInfo[personName];
+                                    return `
+                                        <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">
+                                            ${pInfo?.image
+                                                ? `<img class="nigun-mechaber-image" src="${pInfo.image}" alt="${personName}">`
+                                                : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 100 100" fill="currentColor"><ellipse cx="50" cy="35" rx="15" ry="14"/><path d="M26 32h48v6c0 2-1 4-4 4H30c-3 0-4-2-4-4v-6z"/><rect x="30" y="28" width="40" height="6" rx="1"/><path d="M32 95c0-22 8-38 18-38s18 16 18 38H32z"/></svg></div>`
+                                            }
+                                            <div class="nigun-mechaber-name">${personName}</div>
+                                        </div>
+                                    `;
+                                }).join('')}
                             </div>
                         </div>
                     ` : ''}
