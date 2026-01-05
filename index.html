@@ -161,16 +161,27 @@
             fill: white;
         }
 
-        .logo h1 {
-            font-size: 1.5em;
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            line-height: 1.1;
+        }
+
+        .logo-text span {
             font-weight: 700;
             font-family: 'Heebo', sans-serif;
-            margin: 0;
             background: var(--gradient-main);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            letter-spacing: -0.5px;
+        }
+
+        .logo-text .logo-word-1 {
+            font-size: 0.95em;
+        }
+
+        .logo-text .logo-word-2 {
+            font-size: 1.1em;
         }
 
         .header-nav {
@@ -5882,7 +5893,10 @@
                         <path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/>
                     </svg>
                 </div>
-                <h1>אוצר הניגונים</h1>
+                <div class="logo-text">
+                    <span class="logo-word-1">אוצר</span>
+                    <span class="logo-word-2">הניגונים</span>
+                </div>
             </div>
             
             <nav class="header-nav">
