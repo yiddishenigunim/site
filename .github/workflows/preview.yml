@@ -1,7 +1,10 @@
 name: PR Preview
 
+permissions:
+  contents: write
+
 on:
-  pull_request:
+  pull_request_target:
     types: [opened, synchronize, reopened, closed]
 
 jobs:
@@ -10,11 +13,18 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main
 
-      - name: Build site
+      - name: Create preview
+        if: github.event.action != 'closed'
         run: |
           mkdir -p pr-preview/pr-${{ github.event.number }}
-          cp -r . pr-preview/pr-${{ github.event.number }}
+          rsync -av \
+            --exclude=.git \
+            --exclude=.github \
+            --exclude=pr-preview \
+            ./ pr-preview/pr-${{ github.event.number }}/
 
       - name: Commit preview
         if: github.event.action != 'closed'
@@ -22,15 +32,13 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add pr-preview
-          git commit -m "PR preview for #${{ github.event.number }}"
+          git commit -m "Add PR preview #${{ github.event.number }}" || echo "No changes"
           git push
 
       - name: Remove preview on close
         if: github.event.action == 'closed'
         run: |
           rm -rf pr-preview/pr-${{ github.event.number }}
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
           git add pr-preview
-          git commit -m "Remove PR preview for #${{ github.event.number }}"
+          git commit -m "Remove PR preview #${{ github.event.number }}" || echo "No changes"
           git push
