@@ -8889,7 +8889,7 @@ async function fetchStatistics() {
                             </div>
                             <div class="dropdown-options" id="dropdown-options-${key}">
                                 ${options.map(opt => {
-                                    const escapedOpt = opt.replace(/'/g, "\\'");
+                                    const escapedOpt = opt.replace(/'/g, "\\'").replace(/"/g, '\\"');
                                     return `
                                     <label class="sidebar-filter-option" data-value="${opt.toLowerCase()}" onclick="event.stopPropagation()">
                                         <input type="checkbox" 
