@@ -642,6 +642,37 @@
             animation: pageSlideOutDown 0.2s ease-in forwards;
         }
 
+        /* Info page fade animation - no directional movement */
+        @keyframes infoPageFadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes infoPageFadeOut {
+            from {
+                opacity: 1;
+                transform: scale(1);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.98);
+            }
+        }
+
+        .page-enter-info {
+            animation: infoPageFadeIn 0.3s ease-out forwards;
+        }
+
+        .page-exit-info {
+            animation: infoPageFadeOut 0.15s ease-in forwards;
+        }
+
         /* Count-up number animation */
         @keyframes numberPop {
             0% {
@@ -5904,13 +5935,14 @@
             cursor: pointer;
             transition: var(--transition-smooth);
             box-shadow: var(--card-shadow);
-            border: 1px solid var(--primary-pale);
+            border: 1px solid var(--color-chatzer-pale);
         }
 
         .home-info-link:hover {
             transform: translateX(-5px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.15);
-            border-color: var(--primary-light);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--color-chatzer);
+            background: var(--gradient-main-pale);
         }
 
         .home-info-link-title {
@@ -5919,7 +5951,10 @@
         }
 
         .home-info-link-arrow {
-            color: var(--primary);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 1.2em;
             transition: var(--transition-smooth);
         }
@@ -5942,7 +5977,10 @@
 
         .info-page-title {
             font-size: 2.2em;
-            color: var(--primary);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 10px;
             font-weight: 600;
         }
@@ -5981,9 +6019,9 @@
             flex-wrap: wrap;
             margin-bottom: 30px;
             padding: 15px;
-            background: linear-gradient(135deg, var(--primary-pale) 0%, rgba(255,255,255,0.8) 100%);
+            background: var(--gradient-main-pale);
             border-radius: 16px;
-            border: 1px solid var(--primary-pale);
+            border: 1px solid var(--color-chatzer-pale);
         }
 
         .info-nav-item {
@@ -5994,27 +6032,27 @@
             transition: var(--transition-smooth);
             background: white;
             color: var(--text);
-            border: 1px solid var(--primary-pale);
+            border: 1px solid var(--color-chatzer-pale);
             text-decoration: none;
         }
 
         .info-nav-item:hover {
-            background: var(--primary-light);
+            background: var(--gradient-main);
             color: white;
-            border-color: var(--primary-light);
+            border-color: var(--color-chatzer);
             transform: translateY(-2px);
         }
 
         .info-nav-item.active {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            background: var(--gradient-main);
             color: white;
-            border-color: var(--primary);
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+            border-color: var(--color-chatzer);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
 
         .info-nav-divider {
             width: 1px;
-            background: var(--primary-pale);
+            background: var(--color-chatzer-light);
             margin: 0 5px;
         }
 
@@ -6027,24 +6065,28 @@
         }
 
         .stats-page-card {
-            background: linear-gradient(135deg, var(--primary-pale) 0%, white 100%);
+            background: var(--gradient-main-pale);
             padding: 30px;
             border-radius: 16px;
             text-align: center;
             cursor: pointer;
             transition: var(--transition-smooth);
-            border: 1px solid var(--primary-pale);
+            border: 1px solid var(--color-chatzer-pale);
         }
 
         .stats-page-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.15);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: var(--gradient-main-soft);
         }
 
         .stats-page-number {
             font-size: 2.5em;
             font-weight: 700;
-            color: var(--primary);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-family: 'Heebo', sans-serif;
         }
 
@@ -6063,10 +6105,10 @@
         }
 
         .instruction-page-item {
-            background: linear-gradient(135deg, var(--primary-pale) 0%, white 100%);
+            background: var(--gradient-main-pale);
             padding: 25px;
             border-radius: 16px;
-            border: 1px solid var(--primary-pale);
+            border: 1px solid var(--color-chatzer-pale);
             display: flex;
             gap: 20px;
             align-items: flex-start;
@@ -6075,7 +6117,7 @@
         .instruction-page-number {
             width: 45px;
             height: 45px;
-            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            background: var(--gradient-main);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -6093,7 +6135,10 @@
         .instruction-page-text strong {
             display: block;
             font-size: 1.15em;
-            color: var(--primary);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 8px;
         }
 
@@ -6105,14 +6150,17 @@
         }
 
         .credit-page-item {
-            background: linear-gradient(135deg, var(--primary-pale) 0%, white 100%);
+            background: var(--gradient-main-pale);
             padding: 25px;
             border-radius: 16px;
-            border: 1px solid var(--primary-pale);
+            border: 1px solid var(--color-chatzer-pale);
         }
 
         .credit-page-item strong {
-            color: var(--primary);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             font-size: 1.1em;
         }
 
@@ -6125,10 +6173,11 @@
 
         .thanks-page-list li {
             padding: 15px 20px;
-            background: linear-gradient(135deg, var(--primary-pale) 0%, white 100%);
+            background: var(--gradient-main-pale);
             border-radius: 12px;
             margin-bottom: 12px;
-            border-right: 4px solid var(--primary);
+            border-right: 4px solid;
+            border-image: var(--gradient-main-vertical) 1;
         }
 
         .blessing-text {
@@ -6150,10 +6199,11 @@
 
         .terms-page-content li {
             padding: 15px 20px;
-            background: #f8f9fa;
+            background: var(--gradient-main-pale);
             border-radius: 10px;
             margin-bottom: 10px;
-            border-right: 3px solid var(--text-muted);
+            border-right: 3px solid;
+            border-image: var(--gradient-main-vertical) 1;
         }
 
         @media (max-width: 768px) {
@@ -7756,16 +7806,22 @@ async function fetchStatistics() {
             `;
         }
 
+        // Info pages list for special transitions
+        const infoPages = ['about', 'instructions', 'stats', 'credits', 'thanks', 'terms'];
+
         async function navigateTo(page) {
             hideAllDropdowns();
             const content = document.getElementById('mainContent');
             const isHomePage = page === 'home';
+            const isInfoPage = infoPages.includes(page);
+            const wasInfoPage = infoPages.includes(currentPageView);
 
-            // Add exit animation
+            // Add exit animation - use special animation for info pages
             if (content && content.children.length > 0) {
-                content.classList.add('page-exit');
-                await new Promise(r => setTimeout(r, 200));
-                content.classList.remove('page-exit');
+                const exitClass = wasInfoPage && isInfoPage ? 'page-exit-info' : 'page-exit';
+                content.classList.add(exitClass);
+                await new Promise(r => setTimeout(r, wasInfoPage && isInfoPage ? 150 : 200));
+                content.classList.remove(exitClass);
             }
 
             currentPageView = page;
@@ -7775,7 +7831,7 @@ async function fetchStatistics() {
             updateURL();
 
             // Show skeleton loader for pages that need data
-            if (page !== 'home') {
+            if (page !== 'home' && !isInfoPage) {
                 if (content && !isDataLoadedForPage(page)) {
                     content.innerHTML = getSkeletonForPage(page);
                 }
@@ -7785,9 +7841,16 @@ async function fetchStatistics() {
 
             renderCurrentPage();
 
-            // Add enter animation - home page uses bottom-up, others use left-to-right
+            // Add enter animation - home page uses bottom-up, info pages use fade, others use left-to-right
             if (content) {
-                const enterClass = isHomePage ? 'page-enter-up' : 'page-enter';
+                let enterClass;
+                if (isInfoPage) {
+                    enterClass = 'page-enter-info';
+                } else if (isHomePage) {
+                    enterClass = 'page-enter-up';
+                } else {
+                    enterClass = 'page-enter';
+                }
                 content.classList.add(enterClass);
                 setTimeout(() => content.classList.remove(enterClass), 350);
             }
