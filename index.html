@@ -9811,9 +9811,11 @@ async function fetchStatistics() {
 
         // Render detail page for a specific item
         function renderDetailPage() {
+            console.log('renderDetailPage called, currentDetailView:', currentDetailView);
             const { type, name } = currentDetailView;
             const container = document.getElementById('mainContent');
-            
+            console.log('Type:', type, 'Name:', name);
+
             // Handle zman detail page separately
             if (type === 'zman') {
                 renderZmanDetailPage(container, name);
@@ -12451,12 +12453,15 @@ async function fetchStatistics() {
 
         // Show song details
         function showSongDetails(idx) {
+            console.log('showSongDetails called with idx:', idx);
             const song = allSongs[idx];
+            console.log('Song found:', song ? song.name : 'NOT FOUND');
             if (!song) return;
-            
+
             // Navigate to nigun detail page
             currentDetailView = { type: 'nigun', name: song.name, id: song.rowId, customId: song.customId };
             currentPageView = 'songs';
+            console.log('Calling renderDetailPage...');
             updateURL();
             renderDetailPage();
             window.scrollTo({ top: 0, behavior: 'smooth' });
