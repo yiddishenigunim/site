@@ -10458,18 +10458,18 @@ async function fetchStatistics() {
                                     const metaParts = [];
                                     if (rec.personalities) {
                                         rec.personalities.split(',').map(p => p.trim()).filter(Boolean).forEach(p => {
-                                            metaParts.push(\`<span class="mechaber-tag song-meta-tag">\${p}</span>\`);
+                                            metaParts.push('<span class="mechaber-tag song-meta-tag">' + p + '</span>');
                                         });
                                     }
                                     if (rec.album) {
                                         rec.album.split(',').map(a => a.trim()).filter(Boolean).forEach(a => {
-                                            metaParts.push(\`<span class="album-tag song-meta-tag">\${a}</span>\`);
+                                            metaParts.push('<span class="album-tag song-meta-tag">' + a + '</span>');
                                         });
                                     }
                                     const metaHtml = metaParts.length > 0 ? metaParts.join(' ') : '';
 
                                     // Determine display name: details, or personalities, or album, or "רעקארדינג X"
-                                    let displayName = rec.details || rec.personalities || rec.album || \`רעקארדינג \${i + 1}\`;
+                                    const displayName = rec.details || rec.personalities || rec.album || ('רעקארדינג ' + (i + 1));
                                     const isDefaultName = !rec.details && !rec.personalities && !rec.album;
 
                                     return \`
@@ -10477,7 +10477,7 @@ async function fetchStatistics() {
                                         <div class="nigun-recording-number">\${i + 1}</div>
                                         <div class="nigun-recording-info">
                                             <div class="nigun-recording-name \${isDefaultName ? 'default-name' : ''}">\${displayName}</div>
-                                            \${metaHtml ? \`<div class="nigun-recording-meta">\${metaHtml}</div>\` : ''}
+                                            \${metaHtml ? '<div class="nigun-recording-meta">' + metaHtml + '</div>' : ''}
                                         </div>
                                         <button class="nigun-recording-play-btn">▶</button>
                                     </div>
