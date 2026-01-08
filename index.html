@@ -3501,8 +3501,8 @@
             color: rgba(255,255,255,0.9) !important;
         }
 
-        .nigun-recording-item:hover .nigun-recording-meta-link {
-            color: rgba(255,255,255,0.8) !important;
+        .nigun-recording-item:hover .nigun-recording-meta .song-meta-tag {
+            opacity: 0.9;
         }
 
         .nigun-recording-item:hover .nigun-recording-number {
@@ -3528,8 +3528,8 @@
             color: rgba(255,255,255,0.9) !important;
         }
 
-        .nigun-recording-item.active .nigun-recording-meta-link {
-            color: rgba(255,255,255,0.8) !important;
+        .nigun-recording-item.active .nigun-recording-meta .song-meta-tag {
+            opacity: 0.9;
         }
 
         .nigun-recording-item.active .nigun-recording-number {
@@ -3566,32 +3566,23 @@
             color: var(--color-nigun-dark);
         }
 
+        .nigun-recording-name.default-name {
+            color: var(--color-nigun-light);
+        }
+
         .nigun-recording-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 4px;
             align-items: center;
             font-size: 0.85em;
-            color: var(--text-muted);
         }
 
-        .nigun-recording-meta-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: var(--transition-smooth);
-        }
-
-        .nigun-recording-meta-link:hover {
-            color: var(--primary);
-            text-decoration: underline;
-        }
-
-        .nigun-recording-meta-link.personality {
-            color: var(--color-mechaber-dark);
-        }
-
-        .nigun-recording-meta-link.album {
-            color: var(--color-chatzer-dark);
+        /* Override tag styles within recording meta to be smaller */
+        .nigun-recording-meta .song-meta-tag {
+            padding: 2px 8px !important;
+            font-size: 0.75em !important;
+            border-radius: 10px !important;
         }
 
         .nigun-recording-play-btn {
@@ -3651,7 +3642,9 @@
             display: flex;
             align-items: center;
             gap: 2px;
-            margin-left: 15px;
+            position: absolute;
+            right: 20px;
+            bottom: 12px;
             cursor: default;
         }
 
@@ -10461,21 +10454,29 @@ async function fetchStatistics() {
                             <h3>רעקארדינגס (${song.recordings.length})</h3>
                             <div class="nigun-recordings-list">
                                 ${song.recordings.map((rec, i) => {
-                                    // Build meta parts
+                                    // Build meta parts with colored tags like songs page
                                     const metaParts = [];
                                     if (rec.personalities) {
-                                        metaParts.push(\`<span class="nigun-recording-meta-link personality">\${rec.personalities}</span>\`);
+                                        rec.personalities.split(',').map(p => p.trim()).filter(Boolean).forEach(p => {
+                                            metaParts.push(\`<span class="mechaber-tag song-meta-tag">\${p}</span>\`);
+                                        });
                                     }
                                     if (rec.album) {
-                                        metaParts.push(\`<span class="nigun-recording-meta-link album">\${rec.album}</span>\`);
+                                        rec.album.split(',').map(a => a.trim()).filter(Boolean).forEach(a => {
+                                            metaParts.push(\`<span class="album-tag song-meta-tag">\${a}</span>\`);
+                                        });
                                     }
-                                    const metaHtml = metaParts.length > 0 ? metaParts.join(' • ') : '';
+                                    const metaHtml = metaParts.length > 0 ? metaParts.join(' ') : '';
+
+                                    // Determine display name: details, or personalities, or album, or "רעקארדינג X"
+                                    let displayName = rec.details || rec.personalities || rec.album || \`רעקארדינג \${i + 1}\`;
+                                    const isDefaultName = !rec.details && !rec.personalities && !rec.album;
 
                                     return \`
                                     <div class="nigun-recording-item \${i === 0 ? 'active' : ''}" onclick="playNigunRecording(\${songIdx}, \${i}, this)" data-recording-idx="\${i}" data-rating="\${rec.rating || 0}">
                                         <div class="nigun-recording-number">\${i + 1}</div>
                                         <div class="nigun-recording-info">
-                                            <div class="nigun-recording-name">\${rec.displayName || 'רעקארדינג ' + (i + 1)}</div>
+                                            <div class="nigun-recording-name \${isDefaultName ? 'default-name' : ''}">\${displayName}</div>
                                             \${metaHtml ? \`<div class="nigun-recording-meta">\${metaHtml}</div>\` : ''}
                                         </div>
                                         <button class="nigun-recording-play-btn">▶</button>
