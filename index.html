@@ -3461,7 +3461,7 @@
             transform: translateY(-2px);
         }
 
-        /* Nigun recordings */
+        /* Nigun recordings - Song card style */
         .nigun-recordings-section {
             margin-bottom: 20px;
         }
@@ -3469,71 +3469,207 @@
         .nigun-recordings-list {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
         }
 
         .nigun-recording-item {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 15px 20px;
-            background: var(--primary-pale);
-            border-radius: 12px;
+            gap: 12px;
+            padding: 12px 14px;
+            border-radius: 10px;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            background: var(--color-nigun-pale);
+            border: 1px solid transparent;
+            box-shadow: 0 0 0 rgba(74, 124, 201, 0);
+            transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
         }
 
         .nigun-recording-item:hover {
-            background: var(--primary-light);
-            transform: translateX(-5px);
+            background: #4a7cc9;
+            border-color: #4a7cc9;
+            color: white;
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.4);
+            padding: 14px 16px;
+        }
+
+        .nigun-recording-item:hover .nigun-recording-name {
+            color: white !important;
+        }
+
+        .nigun-recording-item:hover .nigun-recording-meta {
+            color: rgba(255,255,255,0.9) !important;
+        }
+
+        .nigun-recording-item:hover .nigun-recording-meta-link {
+            color: rgba(255,255,255,0.8) !important;
+        }
+
+        .nigun-recording-item:hover .nigun-recording-number {
+            background: rgba(255,255,255,0.25) !important;
+            color: white !important;
         }
 
         .nigun-recording-item.active {
-            background: var(--primary);
+            background: #4a7cc9 !important;
+            color: white !important;
+            border-color: #4a7cc9 !important;
         }
 
-        .nigun-recording-item.active .nigun-recording-name,
-        .nigun-recording-item.active .nigun-recording-filename {
+        .nigun-recording-item.active:hover {
+            background: #3d6bb5 !important;
+        }
+
+        .nigun-recording-item.active .nigun-recording-name {
+            color: white !important;
+        }
+
+        .nigun-recording-item.active .nigun-recording-meta {
+            color: rgba(255,255,255,0.9) !important;
+        }
+
+        .nigun-recording-item.active .nigun-recording-meta-link {
+            color: rgba(255,255,255,0.8) !important;
+        }
+
+        .nigun-recording-item.active .nigun-recording-number {
+            background: rgba(255,255,255,0.2);
             color: white;
         }
 
-        .nigun-recording-item.active .nigun-recording-play-btn {
+        .nigun-recording-number {
+            width: 30px;
+            height: 30px;
             background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 0.85em;
+            color: var(--color-nigun);
+            flex-shrink: 0;
+        }
+
+        .nigun-recording-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .nigun-recording-name {
+            font-weight: 600;
+            font-size: 1em;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--color-nigun-dark);
+        }
+
+        .nigun-recording-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            align-items: center;
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        .nigun-recording-meta-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .nigun-recording-meta-link:hover {
             color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .nigun-recording-meta-link.personality {
+            color: var(--color-mechaber-dark);
+        }
+
+        .nigun-recording-meta-link.album {
+            color: var(--color-chatzer-dark);
         }
 
         .nigun-recording-play-btn {
-            width: 45px;
-            height: 45px;
-            background: var(--primary);
+            width: 38px;
+            height: 38px;
+            background: var(--color-nigun);
             color: white;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.1em;
+            font-size: 0.9em;
             flex-shrink: 0;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.3);
             transition: var(--transition-smooth);
         }
 
-        .nigun-recording-item:hover .nigun-recording-play-btn {
+        .nigun-recording-play-btn:hover {
+            background: var(--color-nigun-dark);
             transform: scale(1.1);
         }
 
-        .nigun-recording-info {
-            flex: 1;
+        .nigun-recording-item.active .nigun-recording-play-btn {
+            background: white;
+            color: var(--color-nigun);
         }
 
-        .nigun-recording-name {
-            font-weight: 600;
-            color: var(--text-dark);
-            font-size: 1em;
-            margin-bottom: 4px;
+        /* Wave animation for playing recording */
+        .nigun-recording-wave {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            height: 20px;
+            margin-left: 8px;
         }
 
-        .nigun-recording-filename {
-            font-size: 0.85em;
-            color: var(--text-secondary);
+        .nigun-recording-wave .wave-bar {
+            width: 3px;
+            background: white;
+            border-radius: 3px;
+            animation: waveStream 0.8s ease-in-out infinite;
+        }
+
+        .nigun-recording-wave .wave-bar:nth-child(1) { height: 6px; animation-delay: 0s; }
+        .nigun-recording-wave .wave-bar:nth-child(2) { height: 12px; animation-delay: 0.1s; }
+        .nigun-recording-wave .wave-bar:nth-child(3) { height: 8px; animation-delay: 0.2s; }
+        .nigun-recording-wave .wave-bar:nth-child(4) { height: 14px; animation-delay: 0.15s; }
+
+        .nigun-recording-item.paused .nigun-recording-wave .wave-bar {
+            animation-play-state: paused;
+        }
+
+        /* Star rating for player */
+        .player-rating {
+            display: flex;
+            align-items: center;
+            gap: 2px;
+            margin-left: 15px;
+            cursor: default;
+        }
+
+        .player-rating-star {
+            font-size: 1.1em;
+            color: #ddd;
+            transition: color 0.2s ease;
+        }
+
+        .player-rating-star.filled {
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-chatzer) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .player-rating:hover .player-rating-star.filled {
+            filter: brightness(1.1);
         }
 
         /* Images section */
@@ -3626,6 +3762,231 @@
             padding: 5px 12px;
             border-radius: 15px;
             font-size: 0.85em;
+        }
+
+        /* Other Media section (6th attachment) */
+        .nigun-other-media-section {
+            margin-bottom: 20px;
+        }
+
+        .nigun-other-media-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .nigun-other-media-text {
+            line-height: 1.7;
+            white-space: pre-wrap;
+            color: var(--text-dark);
+            background: var(--bg-light);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .nigun-other-media-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        /* Video items */
+        .nigun-video-item {
+            background: var(--bg-light);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+
+        .nigun-video-item:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .nigun-video-item video {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .nigun-video-play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.3);
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .nigun-video-item:hover .nigun-video-play-overlay {
+            opacity: 0;
+        }
+
+        .nigun-video-play-icon {
+            width: 50px;
+            height: 50px;
+            background: rgba(255,255,255,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: var(--primary);
+        }
+
+        .nigun-video-name {
+            padding: 10px;
+            font-size: 0.8em;
+            color: var(--text-muted);
+            background: white;
+            text-align: center;
+        }
+
+        /* PDF preview box */
+        .nigun-pdf-preview {
+            background: var(--bg-light);
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nigun-pdf-preview:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+        }
+
+        .nigun-pdf-preview-box {
+            height: 120px;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e0e0e0 100%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--color-document);
+        }
+
+        .nigun-pdf-preview-icon {
+            font-size: 3em;
+            margin-bottom: 5px;
+        }
+
+        .nigun-pdf-preview-label {
+            font-size: 0.8em;
+            font-weight: 600;
+        }
+
+        .nigun-pdf-preview-name {
+            padding: 10px;
+            font-size: 0.8em;
+            color: var(--text-muted);
+            background: white;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* File download items */
+        .nigun-files-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .nigun-file-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 15px;
+            background: var(--bg-light);
+            border-radius: 10px;
+            text-decoration: none;
+            color: var(--text-dark);
+            transition: var(--transition-smooth);
+            border: 1px solid var(--border-color);
+        }
+
+        .nigun-file-item:hover {
+            background: var(--primary-pale);
+            border-color: var(--primary-light);
+        }
+
+        .nigun-file-icon {
+            font-size: 1.3em;
+        }
+
+        .nigun-file-name {
+            flex: 1;
+            font-size: 0.9em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nigun-file-download {
+            background: var(--primary);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+        }
+
+        /* Video modal/fullscreen */
+        .video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .video-modal.active {
+            display: flex;
+        }
+
+        .video-modal video {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .video-modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .video-modal-close:hover {
+            background: rgba(255,255,255,0.3);
         }
 
         /* Image modal */
@@ -6758,6 +7119,13 @@
                 <div class="player-extra-line" id="playerCollection"></div>
                 <div class="player-extra-line" id="playerGezungen"></div>
             </div>
+            <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט" style="display: none;">
+                <span class="player-rating-star">★</span>
+                <span class="player-rating-star">★</span>
+                <span class="player-rating-star">★</span>
+                <span class="player-rating-star">★</span>
+                <span class="player-rating-star">★</span>
+            </div>
         </div>
         <audio id="audioPlayer"></audio>
     </div>
@@ -7823,108 +8191,108 @@ async function fetchStatistics() {
                         const ext = filename.toLowerCase().split('.').pop();
                         return ext === 'pdf';
                     };
-                    
-                    // Extract main audio from File column (c-XmTlDf3xfw)
-                    let mainAudioUrl = null;
-                    const fileAttachment = values['c-XmTlDf3xfw'];
-                    if (Array.isArray(fileAttachment) && fileAttachment.length > 0 && fileAttachment[0].url) {
-                        if (isAudioFile(fileAttachment[0].name)) {
-                            mainAudioUrl = fileAttachment[0].url;
-                        }
-                    }
-                    
-                    // Extract additional recordings, images, and PDFs
+
+                    const isVideoFile = (filename) => {
+                        if (!filename) return false;
+                        const ext = filename.toLowerCase().split('.').pop();
+                        return ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'].includes(ext);
+                    };
+
+                    // Recording slots configuration (5 recording slots)
+                    const recordingSlots = [
+                        { file: 'c-XmTlDf3xfw', personalities: 'c-s8sYskJc4M', details: 'c-SuWz2qu9B1', rating: 'c-v5V7PENdFy', album: 'c-FuDbL2XiAj' },
+                        { file: 'c-oqB3imNNfk', personalities: 'c-jRuAfCbs28', details: 'c-_TOU9FXYYn', rating: 'c-YQ-aWW59ej', album: 'c-H0XAyaKkPl' },
+                        { file: 'c-oGF6C78GZl', personalities: 'c-4trFKY_CK8', details: 'c-dr-m1GnYty', rating: 'c-gmz2rln2dD', album: 'c-HKBBDews5N' },
+                        { file: 'c-pf9zW3wypK', personalities: 'c-x0WLb4j4wV', details: 'c-pbtldr4CXD', rating: 'c-_GlQy78PAc', album: 'c-imgRABw0tH' },
+                        { file: 'c-aqbocjDGuL', personalities: 'c-ilrb-DW4dV', details: 'c-2T9FWsVE9h', rating: 'c-yuKHpnbHfM', album: 'c-5FSrRNb-Uw' }
+                    ];
+
+                    // Extract recordings with full metadata
                     const recordings = [];
-                    const images = [];
-                    const pdfs = [];
-                    
-                    // Process File attachment (c-XmTlDf3xfw) - main attachment
-                    if (Array.isArray(fileAttachment) && fileAttachment.length > 0 && fileAttachment[0].url) {
-                        const file = fileAttachment[0];
-                        if (isAudioFile(file.name)) {
+                    let recordingCounter = 1;
+
+                    recordingSlots.forEach((slot, slotIndex) => {
+                        const fileAttachment = values[slot.file];
+                        if (!Array.isArray(fileAttachment) || fileAttachment.length === 0) return;
+
+                        const personalities = extractText(values[slot.personalities]) || '';
+                        const details = extractText(values[slot.details]) || '';
+                        const ratingVal = extractText(values[slot.rating]) || '';
+                        const album = extractText(values[slot.album]) || '';
+
+                        // Parse rating (1-5 stars)
+                        let rating = 0;
+                        if (ratingVal) {
+                            const parsed = parseInt(ratingVal, 10);
+                            if (!isNaN(parsed) && parsed >= 1 && parsed <= 5) {
+                                rating = parsed;
+                            }
+                        }
+
+                        // Process all files in this attachment field (can have multiple)
+                        fileAttachment.forEach((file, fileIdx) => {
+                            if (!file.url || !isAudioFile(file.name)) return;
+
+                            const suffix = fileAttachment.length > 1 ? ` (${fileIdx + 1})` : '';
                             recordings.push({
                                 url: file.url,
-                                name: file.name || 'רעקארדינג',
-                                details: ''
+                                name: file.name || `רעקארדינג ${recordingCounter}`,
+                                details: details,
+                                personalities: personalities,
+                                album: album,
+                                rating: rating,
+                                displayName: details || personalities || album || `רעקארדינג ${recordingCounter}${suffix}`,
+                                slotIndex: slotIndex,
+                                fileIndex: fileIdx
                             });
-                        } else if (isImageFile(file.name)) {
-                            images.push({ url: file.url, name: file.name, details: '' });
-                        } else if (isPdfFile(file.name)) {
-                            pdfs.push({ url: file.url, name: file.name, details: '' });
-                        }
-                    }
-                    
-                    // Process attachment 2 (c-oqB3imNNfk with c-_TOU9FXYYn details)
-                    const attachment2 = values['c-oqB3imNNfk'];
-                    if (Array.isArray(attachment2) && attachment2.length > 0 && attachment2[0].url) {
-                        const file = attachment2[0];
-                        const details2 = extractText(values['c-_TOU9FXYYn']) || '';
-                        if (isAudioFile(file.name)) {
-                            recordings.push({
-                                url: file.url,
-                                name: file.name || 'רעקארדינג 2',
-                                details: details2
-                            });
-                        } else if (isImageFile(file.name)) {
-                            images.push({ url: file.url, name: file.name, details: details2 });
-                        } else if (isPdfFile(file.name)) {
-                            pdfs.push({ url: file.url, name: file.name, details: details2 });
-                        }
-                    }
-                    
-                    // Process attachment 3 (c-oGF6C78GZl with c-dr-m1GnYty details)
-                    const attachment3 = values['c-oGF6C78GZl'];
-                    if (Array.isArray(attachment3) && attachment3.length > 0 && attachment3[0].url) {
-                        const file = attachment3[0];
-                        const details3 = extractText(values['c-dr-m1GnYty']) || '';
-                        if (isAudioFile(file.name)) {
-                            recordings.push({
-                                url: file.url,
-                                name: file.name || 'רעקארדינג 3',
-                                details: details3
-                            });
-                        } else if (isImageFile(file.name)) {
-                            images.push({ url: file.url, name: file.name, details: details3 });
-                        } else if (isPdfFile(file.name)) {
-                            pdfs.push({ url: file.url, name: file.name, details: details3 });
-                        }
-                    }
-                    
-                    // Process attachment 4 (c-pf9zW3wypK with c-pbtldr4CXD details)
-                    const attachment4 = values['c-pf9zW3wypK'];
-                    if (Array.isArray(attachment4) && attachment4.length > 0 && attachment4[0].url) {
-                        const file = attachment4[0];
-                        const details4 = extractText(values['c-pbtldr4CXD']) || '';
-                        if (isAudioFile(file.name)) {
-                            recordings.push({
-                                url: file.url,
-                                name: file.name || 'רעקארדינג 4',
-                                details: details4
-                            });
-                        } else if (isImageFile(file.name)) {
-                            images.push({ url: file.url, name: file.name, details: details4 });
-                        } else if (isPdfFile(file.name)) {
-                            pdfs.push({ url: file.url, name: file.name, details: details4 });
-                        }
-                    }
-                    
-                    // Process attachment 6 (c-_q44nnca44 with c-l9TdqiWUNg details)
+                            recordingCounter++;
+                        });
+                    });
+
+                    // Sort recordings by rating (highest first), then those without rating
+                    recordings.sort((a, b) => {
+                        if (a.rating && b.rating) return b.rating - a.rating;
+                        if (a.rating && !b.rating) return -1;
+                        if (!a.rating && b.rating) return 1;
+                        return 0;
+                    });
+
+                    // Get main audio URL (first recording)
+                    let mainAudioUrl = recordings.length > 0 ? recordings[0].url : null;
+
+                    // 6th attachment slot - for other media (images, videos, PDFs, additional audio)
+                    const otherMedia = {
+                        text: extractText(values['c-l9TdqiWUNg']) || '',
+                        audio: [],
+                        files: [],
+                        images: [],
+                        videos: [],
+                        pdfs: []
+                    };
+
                     const attachment6 = values['c-_q44nnca44'];
-                    if (Array.isArray(attachment6) && attachment6.length > 0 && attachment6[0].url) {
-                        const file = attachment6[0];
-                        const details6 = extractText(values['c-l9TdqiWUNg']) || '';
-                        if (isAudioFile(file.name)) {
-                            recordings.push({
-                                url: file.url,
-                                name: file.name || 'רעקארדינג 6',
-                                details: details6
-                            });
-                        } else if (isImageFile(file.name)) {
-                            images.push({ url: file.url, name: file.name, details: details6 });
-                        } else if (isPdfFile(file.name)) {
-                            pdfs.push({ url: file.url, name: file.name, details: details6 });
-                        }
+                    if (Array.isArray(attachment6)) {
+                        attachment6.forEach((file, idx) => {
+                            if (!file.url) return;
+                            const fileName = file.name || `קובץ ${idx + 1}`;
+
+                            if (isAudioFile(fileName)) {
+                                otherMedia.audio.push({ url: file.url, name: fileName });
+                            } else if (isImageFile(fileName)) {
+                                otherMedia.images.push({ url: file.url, name: fileName });
+                            } else if (isVideoFile(fileName)) {
+                                otherMedia.videos.push({ url: file.url, name: fileName });
+                            } else if (isPdfFile(fileName)) {
+                                otherMedia.pdfs.push({ url: file.url, name: fileName });
+                            } else {
+                                otherMedia.files.push({ url: file.url, name: fileName });
+                            }
+                        });
                     }
+
+                    // Legacy arrays for backward compatibility
+                    const images = otherMedia.images;
+                    const pdfs = otherMedia.pdfs;
 
                     // Find personality field (פערזענליכקייט) - column c-mxsPhpZeVM
                     const songName = extractText(values['c-6qqDF7NYmv']) || '';
@@ -7965,7 +8333,8 @@ async function fetchStatistics() {
                         audioUrl: mainAudioUrl,
                         recordings: recordings,
                         images: images,
-                        pdfs: pdfs
+                        pdfs: pdfs,
+                        otherMedia: otherMedia
                     };
                 });
 
@@ -10091,45 +10460,95 @@ async function fetchStatistics() {
                         <div class="nigun-section nigun-recordings-section">
                             <h3>רעקארדינגס (${song.recordings.length})</h3>
                             <div class="nigun-recordings-list">
-                                ${song.recordings.map((rec, i) => `
-                                    <div class="nigun-recording-item ${i === 0 ? 'active' : ''}" onclick="playNigunRecording(${songIdx}, ${i}, this)" data-recording-idx="${i}">
-                                        <div class="nigun-recording-play-btn">▶</div>
+                                ${song.recordings.map((rec, i) => {
+                                    // Build meta parts
+                                    const metaParts = [];
+                                    if (rec.personalities) {
+                                        metaParts.push(\`<span class="nigun-recording-meta-link personality">\${rec.personalities}</span>\`);
+                                    }
+                                    if (rec.album) {
+                                        metaParts.push(\`<span class="nigun-recording-meta-link album">\${rec.album}</span>\`);
+                                    }
+                                    const metaHtml = metaParts.length > 0 ? metaParts.join(' • ') : '';
+
+                                    return \`
+                                    <div class="nigun-recording-item \${i === 0 ? 'active' : ''}" onclick="playNigunRecording(\${songIdx}, \${i}, this)" data-recording-idx="\${i}" data-rating="\${rec.rating || 0}">
+                                        <div class="nigun-recording-number">\${i + 1}</div>
                                         <div class="nigun-recording-info">
-                                            <div class="nigun-recording-name">${rec.details || 'רעקארדינג ' + (i + 1)}</div>
-                                            <div class="nigun-recording-filename">${rec.name}</div>
+                                            <div class="nigun-recording-name">\${rec.displayName || 'רעקארדינג ' + (i + 1)}</div>
+                                            \${metaHtml ? \`<div class="nigun-recording-meta">\${metaHtml}</div>\` : ''}
                                         </div>
+                                        <button class="nigun-recording-play-btn">▶</button>
                                     </div>
-                                `).join('')}
+                                \`;}).join('')}
                             </div>
                         </div>
                     ` : ''}
-                    
-                    ${song.images && song.images.length > 0 ? `
-                        <div class="nigun-section nigun-images-section">
-                            <h3>בילדער (${song.images.length})</h3>
-                            <div class="nigun-images-grid">
-                                ${song.images.map((img, i) => `
-                                    <div class="nigun-image-item" onclick="openImageModal('${img.url}')">
-                                        <img src="${img.url}" alt="${img.name}" loading="lazy">
-                                        <div class="nigun-image-name">${img.name}</div>
-                                        ${img.details ? `<div class="nigun-image-details">${img.details}</div>` : ''}
+
+                    ${(song.otherMedia && (song.otherMedia.text || song.otherMedia.audio.length > 0 || song.otherMedia.images.length > 0 || song.otherMedia.videos.length > 0 || song.otherMedia.pdfs.length > 0 || song.otherMedia.files.length > 0)) ? `
+                        <div class="nigun-section nigun-other-media-section">
+                            <h3>צוגאבן</h3>
+                            <div class="nigun-other-media-content">
+                                ${song.otherMedia.text ? `
+                                    <div class="nigun-other-media-text">${song.otherMedia.text}</div>
+                                ` : ''}
+
+                                ${song.otherMedia.audio.length > 0 ? `
+                                    <div class="nigun-recordings-list">
+                                        ${song.otherMedia.audio.map((aud, i) => `
+                                            <div class="nigun-recording-item" onclick="playOtherMediaAudio('${aud.url}', this)">
+                                                <div class="nigun-recording-number">♫</div>
+                                                <div class="nigun-recording-info">
+                                                    <div class="nigun-recording-name">${aud.name}</div>
+                                                </div>
+                                                <button class="nigun-recording-play-btn">▶</button>
+                                            </div>
+                                        `).join('')}
                                     </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-                    
-                    ${song.pdfs && song.pdfs.length > 0 ? `
-                        <div class="nigun-section nigun-pdfs-section">
-                            <h3>PDF דאקומענטן (${song.pdfs.length})</h3>
-                            <div class="nigun-pdfs-list">
-                                ${song.pdfs.map((pdf, i) => `
-                                    <a href="${pdf.url}" target="_blank" class="nigun-pdf-item">
-                                        <div class="nigun-pdf-icon">📄</div>
-                                        <div class="nigun-pdf-name">${pdf.name}</div>
-                                        <div class="nigun-pdf-action">עפן</div>
-                                    </a>
-                                `).join('')}
+                                ` : ''}
+
+                                ${song.otherMedia.files.length > 0 ? `
+                                    <div class="nigun-files-list">
+                                        ${song.otherMedia.files.map((file, i) => `
+                                            <a href="${file.url}" target="_blank" class="nigun-file-item">
+                                                <div class="nigun-file-icon">📎</div>
+                                                <div class="nigun-file-name">${file.name}</div>
+                                                <div class="nigun-file-download">הורדה</div>
+                                            </a>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
+
+                                ${(song.otherMedia.images.length > 0 || song.otherMedia.videos.length > 0 || song.otherMedia.pdfs.length > 0) ? `
+                                    <div class="nigun-other-media-grid">
+                                        ${song.otherMedia.images.map((img, i) => `
+                                            <div class="nigun-image-item" onclick="openImageModal('${img.url}')">
+                                                <img src="${img.url}" alt="${img.name}" loading="lazy">
+                                                <div class="nigun-image-name">${img.name}</div>
+                                            </div>
+                                        `).join('')}
+
+                                        ${song.otherMedia.videos.map((vid, i) => `
+                                            <div class="nigun-video-item" onclick="openVideoModal('${vid.url}')">
+                                                <video src="${vid.url}" preload="metadata"></video>
+                                                <div class="nigun-video-play-overlay">
+                                                    <div class="nigun-video-play-icon">▶</div>
+                                                </div>
+                                                <div class="nigun-video-name">${vid.name}</div>
+                                            </div>
+                                        `).join('')}
+
+                                        ${song.otherMedia.pdfs.map((pdf, i) => `
+                                            <div class="nigun-pdf-preview" onclick="window.open('${pdf.url}', '_blank')">
+                                                <div class="nigun-pdf-preview-box">
+                                                    <div class="nigun-pdf-preview-icon">📄</div>
+                                                    <div class="nigun-pdf-preview-label">PDF</div>
+                                                </div>
+                                                <div class="nigun-pdf-preview-name">${pdf.name}</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                ` : ''}
                             </div>
                         </div>
                     ` : ''}
@@ -10141,13 +10560,13 @@ async function fetchStatistics() {
         function playNigunRecording(songIdx, recordingIdx, element) {
             const song = allSongs[songIdx];
             if (!song || !song.recordings || !song.recordings[recordingIdx]) return;
-            
+
             const recording = song.recordings[recordingIdx];
-            
+
             // Update current song and recording index
             currentSongIndex = songIdx;
             currentRecordingIndex = recordingIdx;
-            
+
             // Enable recordings mode if song has multiple recordings
             isInRecordingsMode = song.recordings.length > 1;
 
@@ -10159,6 +10578,9 @@ async function fetchStatistics() {
             // Update player UI with song info
             updatePlayerUI(song);
             updateActiveSongInList();
+
+            // Update rating display in player
+            updatePlayerRating(recording.rating);
 
             // Update active state in UI
             document.querySelectorAll('.nigun-recording-item').forEach((item, i) => {
@@ -11636,7 +12058,7 @@ async function fetchStatistics() {
         // Update player UI
         function updatePlayerUI(song) {
             document.getElementById('playerSongName').textContent = song.name;
-            
+
             // Create meta with links - using entity-specific colors
             let metaParts = [];
             if (song.mechaber) {
@@ -11653,8 +12075,16 @@ async function fetchStatistics() {
             } else {
                 document.getElementById('playerCollection').textContent = '';
             }
-            
+
             document.getElementById('playerGezungen').textContent = song.gezungen ? `געזונגען: ${song.gezungen}` : '';
+
+            // Update rating from current recording (if in recordings mode) or first recording
+            const currentRec = song.recordings && song.recordings[currentRecordingIndex];
+            if (currentRec && currentRec.rating) {
+                updatePlayerRating(currentRec.rating);
+            } else {
+                updatePlayerRating(0);
+            }
 
             // Update player play button
             document.getElementById('playPauseBtn').classList.add('playing');
@@ -12552,6 +12982,83 @@ async function fetchStatistics() {
         function closeImageModal() {
             const modal = document.getElementById('imageModal');
             if (modal) modal.classList.remove('active');
+        }
+
+        // Video modal functions
+        function openVideoModal(videoUrl) {
+            let modal = document.getElementById('videoModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'videoModal';
+                modal.className = 'video-modal';
+                modal.innerHTML = `
+                    <button class="video-modal-close" onclick="closeVideoModal()">×</button>
+                    <video src="" id="videoModalVideo" controls autoplay></video>
+                `;
+                modal.onclick = function(e) {
+                    if (e.target === modal) closeVideoModal();
+                };
+                document.body.appendChild(modal);
+            }
+            document.getElementById('videoModalVideo').src = videoUrl;
+            modal.classList.add('active');
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            if (modal) {
+                const video = document.getElementById('videoModalVideo');
+                if (video) {
+                    video.pause();
+                    video.src = '';
+                }
+                modal.classList.remove('active');
+            }
+        }
+
+        // Play audio from other media section (6th attachment)
+        function playOtherMediaAudio(audioUrl, element) {
+            audioPlayer.src = audioUrl;
+            audioPlayer.play();
+            showPlayer();
+
+            // Update player UI with generic info
+            document.getElementById('playerSongName').textContent = 'אודיאו';
+            document.getElementById('playerSongMeta').innerHTML = '';
+            document.getElementById('playerCollection').textContent = '';
+            document.getElementById('playerGezungen').textContent = '';
+
+            // Hide rating for other media audio
+            const playerRating = document.getElementById('playerRating');
+            if (playerRating) playerRating.style.display = 'none';
+
+            // Update active state
+            document.querySelectorAll('.nigun-recording-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            if (element) {
+                element.classList.add('active');
+            }
+        }
+
+        // Update player rating display
+        function updatePlayerRating(rating) {
+            const playerRating = document.getElementById('playerRating');
+            if (!playerRating) return;
+
+            if (rating && rating > 0) {
+                playerRating.style.display = 'flex';
+                const stars = playerRating.querySelectorAll('.player-rating-star');
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.classList.add('filled');
+                    } else {
+                        star.classList.remove('filled');
+                    }
+                });
+            } else {
+                playerRating.style.display = 'none';
+            }
         }
 
  // Animate cards on page load with staggered delays
