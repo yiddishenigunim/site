@@ -10464,23 +10464,23 @@ async function fetchStatistics() {
                                     // Build meta parts
                                     const metaParts = [];
                                     if (rec.personalities) {
-                                        metaParts.push(\`<span class="nigun-recording-meta-link personality">\${rec.personalities}</span>\`);
+                                        metaParts.push(`<span class="nigun-recording-meta-link personality">${rec.personalities}</span>`);
                                     }
                                     if (rec.album) {
-                                        metaParts.push(\`<span class="nigun-recording-meta-link album">\${rec.album}</span>\`);
+                                        metaParts.push(`<span class="nigun-recording-meta-link album">${rec.album}</span>`);
                                     }
                                     const metaHtml = metaParts.length > 0 ? metaParts.join(' • ') : '';
 
-                                    return \`
-                                    <div class="nigun-recording-item \${i === 0 ? 'active' : ''}" onclick="playNigunRecording(\${songIdx}, \${i}, this)" data-recording-idx="\${i}" data-rating="\${rec.rating || 0}">
-                                        <div class="nigun-recording-number">\${i + 1}</div>
+                                    return `
+                                    <div class="nigun-recording-item ${i === 0 ? 'active' : ''}" onclick="playNigunRecording(${songIdx}, ${i}, this)" data-recording-idx="${i}" data-rating="${rec.rating || 0}">
+                                        <div class="nigun-recording-number">${i + 1}</div>
                                         <div class="nigun-recording-info">
-                                            <div class="nigun-recording-name">\${rec.displayName || 'רעקארדינג ' + (i + 1)}</div>
-                                            \${metaHtml ? \`<div class="nigun-recording-meta">\${metaHtml}</div>\` : ''}
+                                            <div class="nigun-recording-name">${rec.displayName || 'רעקארדינג ' + (i + 1)}</div>
+                                            ${metaHtml ? `<div class="nigun-recording-meta">${metaHtml}</div>` : ''}
                                         </div>
                                         <button class="nigun-recording-play-btn">▶</button>
                                     </div>
-                                \`;}).join('')}
+                                `;}).join('')}
                             </div>
                         </div>
                     ` : ''}
