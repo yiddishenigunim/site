@@ -10455,33 +10455,28 @@ async function fetchStatistics() {
                             <div class="nigun-recordings-list">
                                 ${song.recordings.map((rec, i) => {
                                     // Build meta parts with colored tags like songs page
-                                    const metaParts = [];
+                                    let metaHtml = '';
                                     if (rec.personalities) {
-                                        rec.personalities.split(',').map(p => p.trim()).filter(Boolean).forEach(p => {
-                                            metaParts.push('<span class="mechaber-tag song-meta-tag">' + p + '</span>');
-                                        });
+                                        metaHtml += rec.personalities.split(',').map(p => '<span class="mechaber-tag song-meta-tag">' + p.trim() + '</span>').join(' ');
                                     }
                                     if (rec.album) {
-                                        rec.album.split(',').map(a => a.trim()).filter(Boolean).forEach(a => {
-                                            metaParts.push('<span class="album-tag song-meta-tag">' + a + '</span>');
-                                        });
+                                        if (metaHtml) metaHtml += ' ';
+                                        metaHtml += rec.album.split(',').map(a => '<span class="album-tag song-meta-tag">' + a.trim() + '</span>').join(' ');
                                     }
-                                    const metaHtml = metaParts.length > 0 ? metaParts.join(' ') : '';
 
                                     // Determine display name: details, or personalities, or album, or "רעקארדינג X"
                                     const displayName = rec.details || rec.personalities || rec.album || ('רעקארדינג ' + (i + 1));
-                                    const isDefaultName = !rec.details && !rec.personalities && !rec.album;
+                                    const nameClass = (!rec.details && !rec.personalities && !rec.album) ? 'nigun-recording-name default-name' : 'nigun-recording-name';
 
-                                    return \`
-                                    <div class="nigun-recording-item \${i === 0 ? 'active' : ''}" onclick="playNigunRecording(\${songIdx}, \${i}, this)" data-recording-idx="\${i}" data-rating="\${rec.rating || 0}">
-                                        <div class="nigun-recording-number">\${i + 1}</div>
-                                        <div class="nigun-recording-info">
-                                            <div class="nigun-recording-name \${isDefaultName ? 'default-name' : ''}">\${displayName}</div>
-                                            \${metaHtml ? '<div class="nigun-recording-meta">' + metaHtml + '</div>' : ''}
-                                        </div>
-                                        <button class="nigun-recording-play-btn">▶</button>
-                                    </div>
-                                \`;}).join('')}
+                                    return '<div class="nigun-recording-item ' + (i === 0 ? 'active' : '') + '" onclick="playNigunRecording(' + songIdx + ', ' + i + ', this)" data-recording-idx="' + i + '" data-rating="' + (rec.rating || 0) + '">' +
+                                        '<div class="nigun-recording-number">' + (i + 1) + '</div>' +
+                                        '<div class="nigun-recording-info">' +
+                                            '<div class="' + nameClass + '">' + displayName + '</div>' +
+                                            (metaHtml ? '<div class="nigun-recording-meta">' + metaHtml + '</div>' : '') +
+                                        '</div>' +
+                                        '<button class="nigun-recording-play-btn">▶</button>' +
+                                    '</div>';
+                                }).join('')}
                             </div>
                         </div>
                     ` : ''}
