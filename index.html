@@ -8208,13 +8208,20 @@ async function fetchStatistics() {
                         const fileAttachment = values[slot.file];
                         if (!Array.isArray(fileAttachment) || fileAttachment.length === 0) return;
 
-                        // Debug: log what we're getting from each slot
-                        console.log('Slot ' + (slotIndex + 1) + ':', fileAttachment.length, 'files', fileAttachment.map(f => f.name));
-
                         const personalities = extractText(values[slot.personalities]) || '';
                         const details = extractText(values[slot.details]) || '';
                         const ratingVal = extractText(values[slot.rating]) || '';
                         const album = extractText(values[slot.album]) || '';
+
+                        // Debug: log what we're getting from each slot
+                        console.log('Slot ' + (slotIndex + 1) + ':', {
+                            files: fileAttachment.length,
+                            fileNames: fileAttachment.map(f => f.name),
+                            ratingRaw: values[slot.rating],
+                            ratingExtracted: ratingVal,
+                            personalities: personalities,
+                            album: album
+                        });
 
                         // Parse rating (1-5 stars) - handle different formats
                         let rating = 0;
