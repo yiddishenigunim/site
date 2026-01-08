@@ -10250,12 +10250,30 @@ async function fetchStatistics() {
                 songIdx = allSongs.findIndex(s => s.customId === nigunName);
             }
             const song = allSongs[songIdx];
-            
+
             if (!song) {
                 container.innerHTML = '<p>ניגון נישט געפונען</p>';
                 return;
             }
-            
+
+            // Debug: log song recordings data
+            console.log('=== NIGUN DEBUG ===');
+            console.log('Song:', song.name);
+            console.log('Recordings count:', song.recordings ? song.recordings.length : 0);
+            if (song.recordings) {
+                song.recordings.forEach((rec, i) => {
+                    console.log('Recording ' + (i+1) + ':', {
+                        url: rec.url ? 'YES' : 'NO',
+                        name: rec.name,
+                        rating: rec.rating,
+                        personalities: rec.personalities,
+                        album: rec.album,
+                        details: rec.details
+                    });
+                });
+            }
+            console.log('===================');
+
             // Parse chatzeros
             const chatzeros = song.category ? song.category.split(',').map(c => c.trim()).filter(Boolean) : [];
             
