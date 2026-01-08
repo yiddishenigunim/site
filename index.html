@@ -3642,10 +3642,10 @@
             display: flex;
             align-items: center;
             gap: 2px;
-            position: absolute;
-            right: 20px;
-            bottom: 12px;
+            margin-right: auto;
+            padding-left: 15px;
             cursor: default;
+            flex-shrink: 0;
         }
 
         .player-rating-star {
@@ -8206,6 +8206,10 @@ async function fetchStatistics() {
 
                     recordingSlots.forEach((slot, slotIndex) => {
                         const fileAttachment = values[slot.file];
+                        // Debug: log what we're getting from each slot
+                        if (fileAttachment) {
+                            console.log(`Slot ${slotIndex + 1}:`, fileAttachment.length, 'files', fileAttachment.map(f => f.name));
+                        }
                         if (!Array.isArray(fileAttachment) || fileAttachment.length === 0) return;
 
                         const personalities = extractText(values[slot.personalities]) || '';
@@ -8213,12 +8217,19 @@ async function fetchStatistics() {
                         const ratingVal = extractText(values[slot.rating]) || '';
                         const album = extractText(values[slot.album]) || '';
 
-                        // Parse rating (1-5 stars)
+                        // Parse rating (1-5 stars) - handle different formats
                         let rating = 0;
                         if (ratingVal) {
+                            // Try parsing as number first
                             const parsed = parseInt(ratingVal, 10);
                             if (!isNaN(parsed) && parsed >= 1 && parsed <= 5) {
                                 rating = parsed;
+                            } else {
+                                // Count stars if it's star characters
+                                const starCount = (ratingVal.match(/⭐|★|✯|✡|☆/g) || []).length;
+                                if (starCount >= 1 && starCount <= 5) {
+                                    rating = starCount;
+                                }
                             }
                         }
 
