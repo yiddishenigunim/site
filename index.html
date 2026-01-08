@@ -8206,11 +8206,10 @@ async function fetchStatistics() {
 
                     recordingSlots.forEach((slot, slotIndex) => {
                         const fileAttachment = values[slot.file];
-                        // Debug: log what we're getting from each slot
-                        if (fileAttachment) {
-                            console.log(`Slot ${slotIndex + 1}:`, fileAttachment.length, 'files', fileAttachment.map(f => f.name));
-                        }
                         if (!Array.isArray(fileAttachment) || fileAttachment.length === 0) return;
+
+                        // Debug: log what we're getting from each slot
+                        console.log('Slot ' + (slotIndex + 1) + ':', fileAttachment.length, 'files', fileAttachment.map(f => f.name));
 
                         const personalities = extractText(values[slot.personalities]) || '';
                         const details = extractText(values[slot.details]) || '';
