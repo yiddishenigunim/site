@@ -8211,6 +8211,15 @@ async function fetchStatistics() {
 
                     recordingSlots.forEach((slot, slotIndex) => {
                         const fileAttachment = values[slot.file];
+
+                        // Debug: log what we're getting from ALL slots (even empty ones)
+                        console.log('Slot ' + (slotIndex + 1) + ' RAW:', {
+                            fileColumnId: slot.file,
+                            fileData: fileAttachment,
+                            ratingColumnId: slot.rating,
+                            ratingData: values[slot.rating]
+                        });
+
                         if (!Array.isArray(fileAttachment) || fileAttachment.length === 0) return;
 
                         const personalities = extractText(values[slot.personalities]) || '';
