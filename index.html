@@ -6879,19 +6879,117 @@
         }
 
         /* Thanks Page */
-        .thanks-page-list {
-            list-style: none;
-            padding: 0;
-            margin: 25px 0;
+        .contributor-boxes {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-top: 30px;
         }
 
-        .thanks-page-list li {
-            padding: 15px 20px;
-            background: var(--gradient-main-pale);
-            border-radius: 12px;
+        .contributor-box {
+            background: var(--gradient-main-soft);
+            border-radius: 20px;
+            padding: 30px;
+            border: 2px solid transparent;
+            background-clip: padding-box;
+            position: relative;
+        }
+
+        .contributor-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            padding: 2px;
+            border-radius: 20px;
+            background: var(--gradient-main);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+        }
+
+        .contributor-box.featured {
+            background: linear-gradient(135deg, var(--color-nigun-pale) 0%, var(--color-chatzer-pale) 30%, var(--color-mechaber-pale) 60%, var(--gold-pale) 100%);
+        }
+
+        .contributor-box.featured::before {
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-chatzer) 30%, var(--color-mechaber) 60%, var(--gold) 100%);
+        }
+
+        .contributor-name {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-align: center;
+        }
+
+        .featured .contributor-name {
+            font-size: 1.6em;
+            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--gold) 50%, var(--color-mechaber-dark) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .contributor-content {
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        .contributor-content p {
             margin-bottom: 12px;
-            border-right: 4px solid;
-            border-image: var(--gradient-main-vertical) 1;
+        }
+
+        .contributor-highlight {
+            font-size: 1.1em;
+            font-style: italic;
+            text-align: center;
+            padding: 15px;
+            background: rgba(255,255,255,0.5);
+            border-radius: 12px;
+            margin: 15px 0;
+        }
+
+        .contributor-contact {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .contributor-contact a {
+            display: inline-block;
+            padding: 10px 25px;
+            background: var(--gradient-main);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .contributor-contact a:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .contributor-row {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .contributor-row {
+                grid-template-columns: 1fr;
+            }
+
+            .contributor-box {
+                padding: 20px;
+            }
         }
 
         .blessing-text {
@@ -9198,18 +9296,50 @@ async function fetchStatistics() {
 
                     <div class="info-page-header">
                         <h1 class="info-page-title">התודה והברכה</h1>
-                        <p class="info-page-subtitle">א יישר כח צו אלע וואס האבן ביישטייערט</p>
+                        <p class="info-page-subtitle">א ספעציעלן דאנק צו אלע וואס האבן ביישטייערט פון זייערע אוצרות</p>
                     </div>
 
                     <div class="info-page-content">
-                        <p>א גרויסן יישר כח צו אלע וואס האבן ביישטייערט צו דעם פראיעקט:</p>
+                        <div class="contributor-boxes">
+                            <!-- Featured Large Box -->
+                            <div class="contributor-box featured">
+                                <div class="contributor-name">ר' פנחס אליהו שטיינווארצל הי"ו</div>
+                                <div class="contributor-content">
+                                    <p><strong>א דאנק פאר</strong> אונז שענקען אן אוצר בלום פון <strong>1250 'אלטע חסידישע ניגונים'</strong> - באגלייט מיט דעטאלירטע אינפארמאציע איבער זיי, וואס ער האט געזאמלט און צוזאמגעקליבן במשך יארן לאנג.</p>
 
-                        <ul class="thanks-page-list">
-                            <li>די וואס האבן געטיילט ניגונים און רעקארדירונגען</li>
-                            <li>די וואס האבן געהאלפן מיט אינפארמאציע וועגן די ניגונים</li>
-                            <li>די וואס האבן געגעבן פידבעק און פארשלאגן</li>
-                            <li>אלע וואס נוצן און פארשפרייטן דעם אוצר</li>
-                        </ul>
+                                    <div class="contributor-highlight">
+                                        און ער האט דאס אוועקגעשאנקען לזכות את הרבים, אז די וועלט זאל קענען הנאה פון די שיינקייט פון די פארצייטישע כח הנגינה
+                                    </div>
+
+                                    <p>ר' פיניע שטיינווארצעל ני"ו איז באקאנט מיט זיין שטארקע זיסע שטימע אלס בעל תפילה, בעל מנגן, און געוואלדיגע ידען איבער פארצייטישע ניגונים.</p>
+
+                                    <p>פיל האבן שוין נהנה געוועהן פון זיינע הערליכע קומזיצן - ווי זיין זינגן און שפילן אזוי שיין צוזאם געפלאכטן נעמט איבער דאס הארץ און נשמה אויף אן אויסערגעווענליכע שטייגער.</p>
+
+                                    <div class="contributor-contact">
+                                        <p><strong>פאר א שמחה, קומזיץ, אדער שבת התוועדות מיט א חסידישן טעם</strong></p>
+                                        <a href="mailto:pinye7533@gmail.com">פארבינדט אייך מיט ר' פיניע ✉</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Row of smaller boxes (placeholder for future contributors) -->
+                            <!--
+                            <div class="contributor-row">
+                                <div class="contributor-box">
+                                    <div class="contributor-name">Name</div>
+                                    <div class="contributor-content">
+                                        <p>Description...</p>
+                                    </div>
+                                </div>
+                                <div class="contributor-box">
+                                    <div class="contributor-name">Name</div>
+                                    <div class="contributor-content">
+                                        <p>Description...</p>
+                                    </div>
+                                </div>
+                            </div>
+                            -->
+                        </div>
 
                         <div class="blessing-text">
                             יהי רצון שנזכה להמשיך לשמוע ולשיר ניגונים עד ביאת גואל צדק במהרה בימינו אמן.
