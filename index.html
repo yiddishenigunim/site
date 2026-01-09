@@ -7226,6 +7226,12 @@
             songs: false
         };
 
+        // Helper to escape quotes for HTML attributes (converts " to &quot;)
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/"/g, '&quot;');
+        }
+
         // Global event delegation for handling clicks with special characters
         // This replaces the old escapeAttr/decodeAttr approach that had issues with quotes
         document.addEventListener('click', (e) => {
@@ -10064,8 +10070,8 @@ async function fetchStatistics() {
                                                   data-action="filter"
                                                   data-page="chatzeros"
                                                   data-filter-key="chatzer"
-                                                  data-value="${chatzer}"
-                                                  data-tooltip-value="${chatzer}"
+                                                  data-value="${escapeHtml(chatzer)}"
+                                                  data-tooltip-value="${escapeHtml(chatzer)}"
                                                   data-tooltip-type="chatzer"
                                                   style="cursor:pointer;">${chatzer}</span>
                                         `).join('')}
@@ -10088,7 +10094,7 @@ async function fetchStatistics() {
                                         ${info.zmanim.map(zman => `
                                             <span class="detail-zman-badge"
                                                   data-action="zman-detail"
-                                                  data-name="${zman}"
+                                                  data-name="${escapeHtml(zman)}"
                                                   style="cursor:pointer;">${zman}</span>
                                         `).join('')}
                                     </div>
@@ -10109,7 +10115,7 @@ async function fetchStatistics() {
                             <h3>${mechabrimFromChatzer.length} מחברים</h3>
                             <div class="nigun-mechaber-grid">
                                 ${mechabrimFromChatzer.map(mech => `
-                                    <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${mech.name}">
+                                    <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mech.name)}">
                                         ${mech.image
                                             ? `<img class="nigun-mechaber-image" src="${mech.image}" alt="${mech.name}">`
                                             : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
@@ -10253,7 +10259,7 @@ async function fetchStatistics() {
                 const collectionsCount = zmanData.collections?.length || 0;
                 
                 html += `
-                    <div class="category-card" data-action="zman-detail" data-name="${zmanName}">
+                    <div class="category-card" data-action="zman-detail" data-name="${escapeHtml(zmanName)}">
                         <div class="card-header">
                             <div class="card-icon"></div>
                             <div class="card-header-text">
@@ -10330,7 +10336,7 @@ async function fetchStatistics() {
                                 ${chatzeros.length > 0 ? `
                                     <div class="nigun-chatzer-tags">
                                         ${chatzeros.map(chatzer => `
-                                            <span class="nigun-tag chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${chatzer}">
+                                            <span class="nigun-tag chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">
                                                 ${chatzer}
                                             </span>
                                         `).join('')}
@@ -10347,7 +10353,7 @@ async function fetchStatistics() {
                                 ${song.mechaber.split(',').map(m => m.trim()).filter(Boolean).map(mName => {
                                     const mInfo = mechabrimInfo[mName];
                                     return `
-                                        <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${mName}">
+                                        <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mName)}">
                                             ${mInfo?.image
                                                 ? `<img class="nigun-mechaber-image" src="${mInfo.image}" alt="${mName}">`
                                                 : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
@@ -10367,7 +10373,7 @@ async function fetchStatistics() {
                                 ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
                                     const pInfo = mechabrimInfo[personName];
                                     return `
-                                        <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${personName}">
+                                        <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(personName)}">
                                             ${pInfo?.image
                                                 ? `<img class="nigun-mechaber-image" src="${pInfo.image}" alt="${personName}">`
                                                 : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
@@ -10395,8 +10401,8 @@ async function fetchStatistics() {
                                         <span class="nigun-tag-inline tag-verter"
                                               data-action="detail"
                                               data-category="verter"
-                                              data-name="${v}"
-                                              data-tooltip-value="${v}"
+                                              data-name="${escapeHtml(v)}"
+                                              data-tooltip-value="${escapeHtml(v)}"
                                               data-tooltip-type="verter">${v}</span>
                                     `).join('')}
                                 </span>
@@ -10427,8 +10433,8 @@ async function fetchStatistics() {
                                               data-action="filter"
                                               data-page="songs"
                                               data-filter-key="zman"
-                                              data-value="${m}"
-                                              data-tooltip-value="${m}"
+                                              data-value="${escapeHtml(m)}"
+                                              data-tooltip-value="${escapeHtml(m)}"
                                               data-tooltip-type="zman">${m}</span>
                                     `).join('')}
                                 </span>
@@ -10443,8 +10449,8 @@ async function fetchStatistics() {
                                               data-action="filter"
                                               data-page="songs"
                                               data-filter-key="zman"
-                                              data-value="${p}"
-                                              data-tooltip-value="${p}"
+                                              data-value="${escapeHtml(p)}"
+                                              data-tooltip-value="${escapeHtml(p)}"
                                               data-tooltip-type="zman">${p}</span>
                                     `).join('')}
                                 </span>
@@ -10458,8 +10464,8 @@ async function fetchStatistics() {
                                         <span class="nigun-tag-inline tag-collection"
                                               data-action="detail"
                                               data-category="collections"
-                                              data-name="${col}"
-                                              data-tooltip-value="${col}"
+                                              data-name="${escapeHtml(col)}"
+                                              data-tooltip-value="${escapeHtml(col)}"
                                               data-tooltip-type="collection">${col}</span>
                                     `).join('')}
                                 </span>
@@ -10473,7 +10479,7 @@ async function fetchStatistics() {
                                         <span class="nigun-tag-inline tag-album"
                                               data-action="detail"
                                               data-category="albums"
-                                              data-name="${a}"
+                                              data-name="${escapeHtml(a)}"
                                               style="cursor:pointer;">${a}</span>
                                     `).join('')}
                                 </span>
@@ -10487,7 +10493,7 @@ async function fetchStatistics() {
                                         <span class="nigun-tag-inline tag-document"
                                               data-action="detail"
                                               data-category="documents"
-                                              data-name="${d}"
+                                              data-name="${escapeHtml(d)}"
                                               style="cursor:pointer;">${d}</span>
                                     `).join('')}
                                 </span>
@@ -10501,7 +10507,7 @@ async function fetchStatistics() {
                                         <span class="nigun-tag-inline tag-resource"
                                               data-action="detail"
                                               data-category="resources"
-                                              data-name="${r}"
+                                              data-name="${escapeHtml(r)}"
                                               style="cursor:pointer;">${r}</span>
                                     `).join('')}
                                 </span>
@@ -10700,7 +10706,7 @@ async function fetchStatistics() {
                             ${collections.sort((a, b) => a.localeCompare(b, 'he')).map(colName => {
                                 const songCount = categories.collections[colName]?.length || 0;
                                 return `
-                                    <div class="zman-item-card" data-action="detail" data-category="collections" data-name="${colName}">
+                                    <div class="zman-item-card" data-action="detail" data-category="collections" data-name="${escapeHtml(colName)}">
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${colName}</div>
@@ -10723,7 +10729,7 @@ async function fetchStatistics() {
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
                                 const songCount = categories.zmanim[piyutName]?.length || 0;
                                 return `
-                                    <div class="zman-item-card" data-action="detail" data-category="zmanim" data-name="${piyutName}">
+                                    <div class="zman-item-card" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${piyutName}</div>
@@ -10766,7 +10772,7 @@ async function fetchStatistics() {
                             
                             return `
                             <div class="collection-card">
-                                <div class="collection-card-header" data-action="detail" data-category="collections" data-name="${key}">
+                                <div class="collection-card-header" data-action="detail" data-category="collections" data-name="${escapeHtml(key)}">
                                     <div class="collection-icon">♫</div>
                                     <div class="collection-info">
                                         <div class="collection-title">${key}</div>
@@ -10775,14 +10781,14 @@ async function fetchStatistics() {
                                             <div class="collection-zmanim" onclick="event.stopPropagation();">
                                                 ${zmanim.slice(0, 3).map(zman => `<span class="collection-zman-tag"
                                                     data-action="zman-detail"
-                                                    data-name="${zman}"
-                                                    data-tooltip-value="${zman}"
+                                                    data-name="${escapeHtml(zman)}"
+                                                    data-tooltip-value="${escapeHtml(zman)}"
                                                     data-tooltip-type="zman">${zman}</span>`).join('')}
                                                 ${zmanim.length > 3 ? `<span class="collection-zman-more">+${zmanim.length - 3}</span>` : ''}
                                             </div>
                                         ` : ''}
                                     </div>
-                                    <button class="collection-play-btn" data-action="play-collection" data-name="${key}">
+                                    <button class="collection-play-btn" data-action="play-collection" data-name="${escapeHtml(key)}">
                                         ▶
                                     </button>
                                 </div>
@@ -10839,7 +10845,7 @@ async function fetchStatistics() {
                                     <div class="ritem-group-header">
                                         <h3>${ritem}</h3>
                                         <span class="ritem-count">${totalInRitem} ניגונים</span>
-                                        <button class="ritem-play-btn" data-action="play-music" data-category-type="ritem" data-name="${ritem}">▶ שפיל אלע</button>
+                                        <button class="ritem-play-btn" data-action="play-music" data-category-type="ritem" data-name="${escapeHtml(ritem)}">▶ שפיל אלע</button>
                                     </div>
                                     <div class="ritem-scales">
                                         ${scalesInRitem.map(scale => {
@@ -10864,7 +10870,7 @@ async function fetchStatistics() {
                                                             `;
                                                         }).join('')}
                                                         ${songsInScale.length > 10 ? `
-                                                            <div class="scale-more" data-action="scale-more" data-ritem="${ritem}" data-scale="${scale}">
+                                                            <div class="scale-more" data-action="scale-more" data-ritem="${escapeHtml(ritem)}" data-scale="${escapeHtml(scale)}">
                                                                 + נאך ${songsInScale.length - 10} ניגונים...
                                                             </div>
                                                         ` : ''}
@@ -10921,7 +10927,7 @@ async function fetchStatistics() {
             }
 
             return `
-            <div class="category-card ${hasImage ? 'has-image' : ''}" data-action="detail" data-category="${categoryKey}" data-name="${key}">
+            <div class="category-card ${hasImage ? 'has-image' : ''}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
                 <div class="card-header">
                     ${hasImage ? `
                         <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -10973,8 +10979,8 @@ async function fetchStatistics() {
                                           data-action="filter"
                                           data-page="chatzeros"
                                           data-filter-key="chatzer"
-                                          data-value="${chatzer}"
-                                          data-tooltip-value="${chatzer}"
+                                          data-value="${escapeHtml(chatzer)}"
+                                          data-tooltip-value="${escapeHtml(chatzer)}"
                                           data-tooltip-type="chatzer">${chatzer}</span>
                                 `).join('')}
                             </div>
@@ -11122,7 +11128,7 @@ async function fetchStatistics() {
                             }
                             
                             return `
-                            <div class="category-card ${hasImage ? 'has-image' : ''}" data-action="detail" data-category="${categoryKey}" data-name="${key}">
+                            <div class="category-card ${hasImage ? 'has-image' : ''}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
                                 <div class="card-header">
                                     ${hasImage ? `
                                         <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -11159,8 +11165,8 @@ async function fetchStatistics() {
                                                           data-action="filter"
                                                           data-page="chatzeros"
                                                           data-filter-key="chatzer"
-                                                          data-value="${chatzer}"
-                                                          data-tooltip-value="${chatzer}"
+                                                          data-value="${escapeHtml(chatzer)}"
+                                                          data-tooltip-value="${escapeHtml(chatzer)}"
                                                           data-tooltip-type="chatzer">${chatzer}</span>
                                                 `).join('')}
                                             </div>
@@ -11237,12 +11243,12 @@ async function fetchStatistics() {
                     
                     html += `
                         <div class="resource-card">
-                            <div class="resource-card-header clickable-header" data-action="detail" data-category="resources" data-name="${key}">
+                            <div class="resource-card-header clickable-header" data-action="detail" data-category="resources" data-name="${escapeHtml(key)}">
                                 <div class="resource-sort-label">${groupName}</div>
                             </div>
                             <div class="resource-card-body">
-                                <div class="resource-title clickable-title" data-action="detail" data-category="resources" data-name="${key}">${key}</div>
-                                ${info.chatzer ? `<div class="resource-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}" data-tooltip-value="${info.chatzer}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
+                                <div class="resource-title clickable-title" data-action="detail" data-category="resources" data-name="${escapeHtml(key)}">${key}</div>
+                                ${info.chatzer ? `<div class="resource-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}" data-tooltip-value="${escapeHtml(info.chatzer)}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
                                 ${info.description ? `<div class="resource-details">${info.description}</div>` : ''}
                                 ${info.notes ? `<div class="resource-notes">${info.notes}</div>` : ''}
                             </div>
@@ -11318,7 +11324,7 @@ async function fetchStatistics() {
                     
                     html += `
                         <div class="document-card">
-                            <div class="document-card-header clickable-header" data-action="detail" data-category="documents" data-name="${key}">
+                            <div class="document-card-header clickable-header" data-action="detail" data-category="documents" data-name="${escapeHtml(key)}">
                                 <div class="document-sort-label">${groupName}</div>
                             </div>
                             ${hasFile ? `
@@ -11330,9 +11336,9 @@ async function fetchStatistics() {
                                 </div>
                             ` : ''}
                             <div class="document-card-body">
-                                <div class="document-title clickable-title" data-action="detail" data-category="documents" data-name="${key}">${key}</div>
+                                <div class="document-title clickable-title" data-action="detail" data-category="documents" data-name="${escapeHtml(key)}">${key}</div>
                                 ${info.serie ? `<div class="document-serie">${info.serie.replace(/\`\`\`/g, '')}</div>` : ''}
-                                ${info.chatzer ? `<div class="document-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}" data-tooltip-value="${info.chatzer}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
+                                ${info.chatzer ? `<div class="document-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}" data-tooltip-value="${escapeHtml(info.chatzer)}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
                                 ${info.description ? `<div class="document-details">${info.description.replace(/\`\`\`/g, '').replace(/!\[.*?\]\(.*?\)/g, '')}</div>` : ''}
                                 ${info.notes ? `<div class="document-notes">${info.notes}</div>` : ''}
                             </div>
@@ -11426,18 +11432,18 @@ async function fetchStatistics() {
                     
                     html += `
                         <div class="album-card ${hasImage ? 'has-cover' : ''}">
-                            <div class="album-card-header clickable-header" data-action="detail" data-category="albums" data-name="${key}">
+                            <div class="album-card-header clickable-header" data-action="detail" data-category="albums" data-name="${escapeHtml(key)}">
                                 <div class="album-producer-label">${groupName}</div>
                             </div>
                             ${hasImage ? `
-                                <img class="album-cover clickable-cover" src="${coverUrl}" alt="${key}" data-action="detail" data-category="albums" data-name="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <div class="album-cover-placeholder clickable-cover" style="display:none;" data-action="detail" data-category="albums" data-name="${key}">♪</div>
+                                <img class="album-cover clickable-cover" src="${coverUrl}" alt="${key}" data-action="detail" data-category="albums" data-name="${escapeHtml(key)}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="album-cover-placeholder clickable-cover" style="display:none;" data-action="detail" data-category="albums" data-name="${escapeHtml(key)}">♪</div>
                             ` : `
-                                <div class="album-cover-placeholder clickable-cover" data-action="detail" data-category="albums" data-name="${key}">♪</div>
+                                <div class="album-cover-placeholder clickable-cover" data-action="detail" data-category="albums" data-name="${escapeHtml(key)}">♪</div>
                             `}
                             <div class="album-info">
-                                <div class="album-title clickable-title" data-action="detail" data-category="albums" data-name="${key}">${key}</div>
-                                ${info.chatzer ? `<div class="album-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}" data-tooltip-value="${info.chatzer}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
+                                <div class="album-title clickable-title" data-action="detail" data-category="albums" data-name="${escapeHtml(key)}">${key}</div>
+                                ${info.chatzer ? `<div class="album-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}" data-tooltip-value="${escapeHtml(info.chatzer)}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
                                 ${serie ? `<div class="album-serie">${serie}</div>` : ''}
                                 ${info.year ? `<div class="album-year">שנת ${info.year}</div>` : ''}
                                 ${notes ? `<div class="album-notes">${notes}</div>` : ''}
@@ -11496,7 +11502,7 @@ async function fetchStatistics() {
                             <div class="detail-header-text">
                                 <h1 class="detail-title" style="color: var(--color-album-dark);">${albumName}</h1>
                                 ${producer ? `<div class="detail-subtitle">${producer}</div>` : ''}
-                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}">${info.chatzer}</span></div>` : ''}
+                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
                                 ${info.year ? `<div class="detail-year">שנת ${info.year}</div>` : ''}
                             </div>
                         </div>
@@ -11576,7 +11582,7 @@ async function fetchStatistics() {
                                 <h1 class="detail-title" style="color: var(--color-document-dark);">${docName}</h1>
                                 ${sortType ? `<div class="detail-type-badge" style="background: var(--color-document-pale); color: var(--color-document-dark);">${sortType}</div>` : ''}
                                 ${info.serie ? `<div class="detail-subtitle">${info.serie.replace(/\`\`\`/g, '')}</div>` : ''}
-                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}">${info.chatzer}</span></div>` : ''}
+                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
                             </div>
                         </div>
                     </div>
@@ -11663,7 +11669,7 @@ async function fetchStatistics() {
                             <div class="detail-header-text">
                                 <h1 class="detail-title" style="color: var(--color-resource-dark);">${resourceName}</h1>
                                 ${sortType ? `<div class="detail-type-badge" style="background: var(--color-resource-pale); color: var(--color-resource-dark);">${sortType}</div>` : ''}
-                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}">${info.chatzer}</span></div>` : ''}
+                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
                             </div>
                         </div>
                     </div>
@@ -11892,8 +11898,8 @@ async function fetchStatistics() {
                     data-action="filter"
                     data-page="${page}"
                     data-filter-key="${filterKey}"
-                    data-value="${v}"
-                    data-tooltip-value="${v}"
+                    data-value="${escapeHtml(v)}"
+                    data-tooltip-value="${escapeHtml(v)}"
                     data-tooltip-type="${filterKey}">${v}</span>`
             ).join(' ');
         }
@@ -12128,8 +12134,8 @@ async function fetchStatistics() {
                     data-action="filter"
                     data-page="${page}"
                     data-filter-key="${filterKey}"
-                    data-value="${v}"
-                    data-tooltip-value="${v}"
+                    data-value="${escapeHtml(v)}"
+                    data-tooltip-value="${escapeHtml(v)}"
                     data-tooltip-type="${filterKey}">${v}</a>`
             ).join(', ');
         }
@@ -12438,9 +12444,9 @@ async function fetchStatistics() {
                     data-action="filter"
                     data-page="${page}"
                     data-filter-key="${filterKey}"
-                    data-value="${v}"
+                    data-value="${escapeHtml(v)}"
                     data-close-modal="true"
-                    data-tooltip-value="${v}"
+                    data-tooltip-value="${escapeHtml(v)}"
                     data-tooltip-type="${filterKey}">${v}</a>`;
             }).join(' ');
         }
@@ -12838,7 +12844,7 @@ async function fetchStatistics() {
                             ${matchingAlbums.map(name => {
                                 const albumData = albumsInfo[name];
                                 return `
-                                <div class="search-result-card result-album" data-action="detail" data-category="albums" data-name="${name}" style="border-right-color: var(--color-album);">
+                                <div class="search-result-card result-album" data-action="detail" data-category="albums" data-name="${escapeHtml(name)}" style="border-right-color: var(--color-album);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${albumData?.songs?.length || 0} ניגונים</div>
                                 </div>
@@ -12857,7 +12863,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingChatzeros.map(name => `
-                                <div class="search-result-card result-chatzer" data-action="detail" data-category="chatzeros" data-name="${name}" style="border-right-color: var(--color-chatzer);">
+                                <div class="search-result-card result-chatzer" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(name)}" style="border-right-color: var(--color-chatzer);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.chatzeros[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12876,7 +12882,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingMechabrim.map(name => `
-                                <div class="search-result-card result-mechaber" data-action="detail" data-category="mechabrim" data-name="${name}" style="border-right-color: var(--color-mechaber);">
+                                <div class="search-result-card result-mechaber" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(name)}" style="border-right-color: var(--color-mechaber);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.mechabrim[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12895,7 +12901,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingCollections.map(name => `
-                                <div class="search-result-card result-collection" data-action="detail" data-category="collections" data-name="${name}" style="border-right-color: var(--color-collection);">
+                                <div class="search-result-card result-collection" data-action="detail" data-category="collections" data-name="${escapeHtml(name)}" style="border-right-color: var(--color-collection);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.collections[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12914,7 +12920,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingVerter.map(name => `
-                                <div class="search-result-card result-verter" data-action="detail" data-category="verter" data-name="${name}" style="border-right-color: var(--color-verter);">
+                                <div class="search-result-card result-verter" data-action="detail" data-category="verter" data-name="${escapeHtml(name)}" style="border-right-color: var(--color-verter);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.verter[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12933,7 +12939,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingZmanim.map(name => `
-                                <div class="search-result-card result-zman" data-action="zman-detail" data-name="${name}" style="border-right-color: var(--color-zman);">
+                                <div class="search-result-card result-zman" data-action="zman-detail" data-name="${escapeHtml(name)}" style="border-right-color: var(--color-zman);">
                                     <div class="result-name">${name}</div>
                                 </div>
                             `).join('')}
@@ -12951,7 +12957,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingGezungen.map(name => `
-                                <div class="search-result-card" data-action="filter" data-page="songs" data-filter-key="gezungen" data-value="${name}" style="border-right-color: #2e8b2e;">
+                                <div class="search-result-card" data-action="filter" data-page="songs" data-filter-key="gezungen" data-value="${escapeHtml(name)}" style="border-right-color: #2e8b2e;">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.gezungen[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12970,7 +12976,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingRitem.map(name => `
-                                <div class="search-result-card result-music" data-action="filter" data-page="songs" data-filter-key="ritem" data-value="${name}" style="border-right-color: var(--color-music);">
+                                <div class="search-result-card result-music" data-action="filter" data-page="songs" data-filter-key="ritem" data-value="${escapeHtml(name)}" style="border-right-color: var(--color-music);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.ritem[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12989,7 +12995,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingScale.map(name => `
-                                <div class="search-result-card result-nigun" data-action="filter" data-page="songs" data-filter-key="scale" data-value="${name}" style="border-right-color: var(--color-nigun);">
+                                <div class="search-result-card result-nigun" data-action="filter" data-page="songs" data-filter-key="scale" data-value="${escapeHtml(name)}" style="border-right-color: var(--color-nigun);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.scale[name]?.length || 0} ניגונים</div>
                                 </div>
