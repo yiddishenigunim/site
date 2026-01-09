@@ -9906,7 +9906,7 @@ async function fetchStatistics() {
         // URL Routing
         function updateURL() {
             let hash = '';
-            
+
             if (currentDetailView) {
                 // Detail page URL: #/mechabrim/123
                 // Prefer customId (simple number), then rowId, then name
@@ -9915,11 +9915,14 @@ async function fetchStatistics() {
             } else if (currentPageView === 'search' && searchQuery) {
                 // Search page URL: #/search/קדיש
                 hash = `#/search/${encodeURIComponent(searchQuery)}`;
+            } else if (currentPageView === 'songs' && currentPage > 1) {
+                // Songs page with pagination: #/songs/page/2
+                hash = `#/songs/page/${currentPage}`;
             } else {
                 // Category page URL: #/mechabrim or #/home
                 hash = `#/${currentPageView}`;
             }
-            
+
             // Update URL without triggering hashchange
             if (window.location.hash !== hash) {
                 history.pushState(null, '', hash);
@@ -10002,6 +10005,19 @@ async function fetchStatistics() {
                     // Update search input
                     const searchInput = document.getElementById('globalSearch');
                     if (searchInput) searchInput.value = idOrName;
+
+                    renderCurrentPage();
+                } else if (page === 'songs' && idOrName === 'page' && parts[2]) {
+                    // Songs page with pagination: #/songs/page/2
+                    const pageNum = parseInt(parts[2]) || 1;
+                    currentPageView = 'songs';
+                    currentDetailView = null;
+                    currentPage = pageNum;
+
+                    // Update nav buttons
+                    document.querySelectorAll('.nav-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.page === 'songs');
+                    });
 
                     renderCurrentPage();
                 } else if (idOrName) {
@@ -12244,6 +12260,8 @@ async function fetchStatistics() {
             if (page < 1 || page > totalPages) return;
             currentPage = page;
             updateSongsListForPage();
+            // Update URL for browser history
+            updateURL();
             // Scroll to top of songs grid
             const grid = document.getElementById('songsGrid');
             if (grid) {
@@ -12586,6 +12604,25 @@ async function fetchStatistics() {
 
             // Find and mark the currently playing song
             if (currentSongIndex >= 0) {
+                // Check if we're on the songs page and need to navigate to the correct pagination page
+                if (currentPageView === 'songs' && !currentDetailView) {
+                    const song = allSongs[currentSongIndex];
+                    const indexInFiltered = filteredSongs.indexOf(song);
+
+                    if (indexInFiltered >= 0) {
+                        // Calculate which page this song is on
+                        const songPage = Math.floor(indexInFiltered / songsPerPage) + 1;
+
+                        // If song is on a different page, navigate to that page
+                        if (songPage !== currentPage) {
+                            currentPage = songPage;
+                            updateSongsListForPage();
+                            // Update URL to include page
+                            updateURL();
+                        }
+                    }
+                }
+
                 const activeItem = document.querySelector(`.song-item[data-song-idx="${currentSongIndex}"]`);
                 if (activeItem) {
                     activeItem.classList.add('active');
