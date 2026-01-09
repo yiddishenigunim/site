@@ -6906,18 +6906,76 @@
         }
 
         /* Terms Page */
-        .terms-page-content ul {
-            list-style: none;
-            padding: 0;
+        .terms-page-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+            direction: ltr;
         }
 
-        .terms-page-content li {
-            padding: 15px 20px;
-            background: var(--gradient-main-pale);
-            border-radius: 10px;
+        .terms-last-updated {
+            color: var(--text-muted);
+            font-size: 0.95em;
+            margin-bottom: 30px;
+        }
+
+        .terms-intro {
+            font-size: 1.05em;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .terms-section {
+            margin-bottom: 45px;
+        }
+
+        .terms-section-header {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--primary-deep);
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .terms-section p {
+            line-height: 1.9;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .terms-section ul {
+            list-style: disc;
+            padding-right: 0;
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+
+        .terms-section li {
+            line-height: 1.8;
             margin-bottom: 10px;
-            border-right: 3px solid;
-            border-image: var(--gradient-main-vertical) 1;
+            color: var(--text-dark);
+        }
+
+        .terms-section ol {
+            padding-right: 0;
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+
+        .terms-section ol li {
+            margin-bottom: 8px;
+        }
+
+        .terms-divider {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 35px 0;
+        }
+
+        .terms-email {
+            color: var(--primary);
+            font-weight: 500;
         }
 
         @media (max-width: 768px) {
@@ -9231,15 +9289,138 @@ async function fetchStatistics() {
                     </div>
 
                     <div class="info-page-content terms-page-content">
-                        <p>די ניגונים און רעקארדירונגען אויף דער וועבזייטל זענען געמאכט צוטריטלעך פאר פערזענלעכע און בילדונגס צוועקן.</p>
+                        <p class="terms-last-updated">Last Updated: 12/1/2025</p>
 
-                        <ul>
-                            <li>מען טאר נישט נוצן די רעקארדירונגען פאר קאמערציעלע צוועקן אן ערלויבעניש</li>
-                            <li>מען זאל רעספעקטירן די רעכט פון די מחברים און פארפירער</li>
-                            <li>ביי פארשפרייטן זאל מען דערמאנען דעם מקור</li>
-                        </ul>
+                        <p class="terms-intro">Welcome to OITZERHANIGUNIM.ORG. By accessing or using this website, you agree to the following Terms of Use. Please read them carefully. If you do not agree with any part of these Terms, you may not use the site.</p>
 
-                        <p>פאר פראגעס אדער באמערקונגען, קען מען זיך ווענדן דורך די קאנטאקט אינפארמאציע.</p>
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">1. Overview</h2>
+                            <p>OITZERHANIGUNIM.ORG provides a song database where users may view information and optionally upload audio recordings. All audio content is uploaded directly by users.</p>
+                            <p>OITZERHANIGUNIM.ORG does not host, create, or verify the content uploaded by users.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">2. Eligibility</h2>
+                            <p>To upload files or submit content, you must log in through an approved authentication method (such as Google Login).</p>
+                            <p>You are responsible for maintaining the security of your login account.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">3. User Responsibilities</h2>
+                            <p>By using this site, you agree that you will:</p>
+                            <ul>
+                                <li>Provide accurate information</li>
+                                <li>Use the site only for lawful purposes</li>
+                                <li>Not harm, interfere with, or attempt to bypass any site security</li>
+                                <li>Not upload harmful, malicious, or corrupted files</li>
+                                <li>Follow all applicable copyright and intellectual-property laws</li>
+                            </ul>
+                            <p>Any misuse of the site may result in suspension or blocking of access.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">4. User-Uploaded Content</h2>
+                            <p>When you upload audio files or other materials, you agree that:</p>
+                            <ol>
+                                <li>You are the owner of the recording or have full permission to upload it</li>
+                                <li>The content does not violate anyone's copyright or rights</li>
+                                <li>You grant OITZERHANIGUNIM.ORG permission to display and store the uploaded file within the platform</li>
+                                <li>You accept full responsibility for any issues or claims arising from your upload</li>
+                                <li>You will not upload illegal, harmful, infringing, or abusive material</li>
+                            </ol>
+                            <p>OITZERHANIGUNIM.ORG is not responsible for user-uploaded content and does not guarantee legality, accuracy, or rights of any material provided by users.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">5. Content Removal</h2>
+                            <p>We reserve the right to:</p>
+                            <ul>
+                                <li>Remove or disable access to any content</li>
+                                <li>Block or suspend users who violate these Terms</li>
+                                <li>Remove content upon receiving a proper complaint</li>
+                            </ul>
+                            <p>These actions may be taken with or without notice.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">6. Copyright Complaints & Takedown Policy</h2>
+                            <p>If you believe your copyrighted material has been uploaded without permission, please contact us at:</p>
+                            <p><span class="terms-email">yiddishenigunim@gmail.com</span></p>
+                            <p>Include:</p>
+                            <ul>
+                                <li>The URL or link to the infringing content</li>
+                                <li>A description of your work</li>
+                                <li>Your contact information</li>
+                                <li>A statement confirming that you believe the use is unauthorized</li>
+                            </ul>
+                            <p>We will remove the content promptly.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">7. Site Availability & Updates</h2>
+                            <p>The site is provided on an "as-is" and "as-available" basis.</p>
+                            <p>We may update, modify, or discontinue any part of the site at any time.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">8. No Warranty</h2>
+                            <p>We do not guarantee:</p>
+                            <ul>
+                                <li>The accuracy or completeness of the content</li>
+                                <li>That the site will always be available or error-free</li>
+                                <li>That user uploads are legally permitted</li>
+                            </ul>
+                            <p>All use is at your own risk.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">9. Limitation of Liability</h2>
+                            <p>To the fullest extent permitted by law:</p>
+                            <p>OITZERHANIGUNIM.ORG is not liable for any damages, losses, claims, or issues arising from:</p>
+                            <ul>
+                                <li>User-uploaded content</li>
+                                <li>Copyright disputes</li>
+                                <li>Technical problems or downtime</li>
+                                <li>Data loss</li>
+                                <li>Misuse of the site by others</li>
+                            </ul>
+                            <p>You agree to hold OITZERHANIGUNIM.ORG, its administrators, and affiliates harmless from any such claims.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">10. Changes to These Terms</h2>
+                            <p>We may update or revise these Terms from time to time.</p>
+                            <p>The updated version will take effect when posted on the site.</p>
+                            <p>Your continued use of the site means you accept the revised Terms.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">11. Contact</h2>
+                            <p>For questions or concerns, please contact:</p>
+                            <p><span class="terms-email">yiddishenigunim@gmail.com</span></p>
+                        </div>
                     </div>
                 </div>
             `;
