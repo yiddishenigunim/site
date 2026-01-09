@@ -898,6 +898,20 @@
         .home-stat-card.stat-collection .home-stat-label { color: var(--color-collection); }
         .home-stat-card.stat-collection:hover { border-color: var(--color-collection); }
 
+        /* Statistics Link */
+        .home-stats-link {
+            text-align: left;
+            margin-top: -40px;
+            margin-bottom: 50px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.95em;
+            transition: var(--transition-smooth);
+        }
+        .home-stats-link:hover {
+            color: var(--primary);
+        }
+
         .home-section-title {
             text-align: center;
             background: var(--gradient-main);
@@ -1177,7 +1191,7 @@
             }
 
             .home-about-links {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .home-about-link {
@@ -1186,7 +1200,7 @@
                 border-bottom: 1px solid var(--color-chatzer-pale);
             }
 
-            .home-about-link:nth-child(3n+1) {
+            .home-about-link:nth-child(2n+1) {
                 border-left: none;
             }
         }
@@ -2717,6 +2731,32 @@
             display: none;
         }
 
+        /* Show card icon for mechabrim as circular placeholder */
+        .page-theme-mechaber .card-icon {
+            display: flex;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--color-mechaber-pale);
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .page-theme-mechaber .card-icon .mechaber-icon {
+            width: 37px;
+            height: 55px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+        }
+
+        /* Hide icon when image loads successfully (inline style override) */
+        .page-theme-mechaber .card-icon[style*="display:none"],
+        .page-theme-mechaber .card-icon[style*="display: none"] {
+            display: none !important;
+        }
+
         .card-title {
             font-size: 1.2em;
             font-weight: 700;
@@ -3154,14 +3194,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2em;
             margin-bottom: 10px;
-            color: var(--color-mechaber);
         }
 
-        .nigun-mechaber-placeholder svg {
-            width: 50px;
-            height: 50px;
+        .nigun-mechaber-placeholder .mechaber-icon {
+            width: 37px;
+            height: 55px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
         }
 
         .nigun-mechaber-name {
@@ -4319,6 +4360,28 @@
         .mechaber-detail .detail-image,
         .detail-page[data-type="mechabrim"] .detail-image {
             border-radius: 50%;
+        }
+
+        /* Placeholder for mechabrim without images */
+        .detail-image-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--color-mechaber-pale);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid var(--color-mechaber-pale);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+
+        .detail-image-placeholder .mechaber-icon {
+            width: 55px;
+            height: 82px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
         }
 
         .detail-icon {
@@ -6626,7 +6689,7 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             overflow: hidden;
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(4, 1fr);
         }
 
         .home-about-link {
@@ -6715,17 +6778,17 @@
         .info-nav {
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 16px;
             flex-wrap: wrap;
             margin-bottom: 30px;
-            padding: 15px;
+            padding: 18px 25px;
             background: var(--gradient-main-pale);
             border-radius: 16px;
             border: 1px solid var(--color-chatzer-pale);
         }
 
         .info-nav-item {
-            padding: 10px 18px;
+            padding: 12px 30px;
             border-radius: 25px;
             cursor: pointer;
             font-size: 0.95em;
@@ -6892,18 +6955,76 @@
         }
 
         /* Terms Page */
-        .terms-page-content ul {
-            list-style: none;
-            padding: 0;
+        .terms-page-content {
+            max-width: 800px;
+            margin: 0 auto;
+            text-align: left;
+            direction: ltr;
         }
 
-        .terms-page-content li {
-            padding: 15px 20px;
-            background: var(--gradient-main-pale);
-            border-radius: 10px;
+        .terms-last-updated {
+            color: var(--text-muted);
+            font-size: 0.95em;
+            margin-bottom: 30px;
+        }
+
+        .terms-intro {
+            font-size: 1.05em;
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .terms-section {
+            margin-bottom: 45px;
+        }
+
+        .terms-section-header {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--primary-deep);
+            margin-bottom: 8px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .terms-section p {
+            line-height: 1.9;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .terms-section ul {
+            list-style: disc;
+            padding-right: 0;
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+
+        .terms-section li {
+            line-height: 1.8;
             margin-bottom: 10px;
-            border-right: 3px solid;
-            border-image: var(--gradient-main-vertical) 1;
+            color: var(--text-dark);
+        }
+
+        .terms-section ol {
+            padding-right: 0;
+            padding-left: 25px;
+            margin: 15px 0;
+        }
+
+        .terms-section ol li {
+            margin-bottom: 8px;
+        }
+
+        .terms-divider {
+            border: none;
+            border-top: 1px solid #e0e0e0;
+            margin: 35px 0;
+        }
+
+        .terms-email {
+            color: var(--primary);
+            font-weight: 500;
         }
 
         @media (max-width: 768px) {
@@ -6929,6 +7050,140 @@
                 font-size: 1.8em;
             }
         }
+
+        /* Goals Page - Brick Layout Design */
+        .goals-intro {
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 1.15em;
+            color: var(--text);
+        }
+
+        .goals-bricks {
+            margin-bottom: 40px;
+        }
+
+        .goals-brick-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .goal-brick {
+            flex: 1;
+            position: relative;
+            background: var(--gradient-main-pale);
+            border-radius: 14px;
+            padding: 22px 25px;
+            transition: var(--transition-smooth);
+            border: 1px solid var(--color-chatzer-pale);
+            overflow: hidden;
+        }
+
+        .goal-brick::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-main);
+            border-radius: 0 14px 14px 0;
+        }
+
+        .goal-brick:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: var(--gradient-main-soft);
+        }
+
+        .goal-brick-text {
+            font-size: 1em;
+            line-height: 1.7;
+            color: var(--text-dark);
+        }
+
+        /* Warning Box */
+        .goals-warning {
+            background: var(--gradient-main-pale);
+            border: 2px solid var(--color-chatzer-light);
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        .goals-warning-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .goals-warning-text {
+            font-size: 1.05em;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Contact Box */
+        .goals-contact {
+            background: var(--gradient-main-pale);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--color-chatzer-pale);
+        }
+
+        .goals-contact-title {
+            font-size: 1.25em;
+            font-weight: 600;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .goals-contact-text {
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .goals-contact-email {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--gradient-main);
+            color: white;
+            border-radius: 30px;
+            font-size: 1.05em;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            direction: ltr;
+        }
+
+        .goals-contact-email:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .goals-brick-row {
+                flex-direction: column;
+            }
+
+            .goal-brick {
+                padding: 18px 20px;
+            }
+
+            .goals-warning,
+            .goals-contact {
+                padding: 20px;
+            }
+        }
     </style>
 </head>
 <body>
@@ -6949,41 +7204,6 @@
             
             <nav class="header-nav">
                 <div class="main-nav">
-                <!-- היים -->
-                <div class="nav-dropdown">
-                    <button class="nav-dropdown-btn nav-home" onclick="navigateTo('home')">
-                        היים
-                        <span class="nav-arrow">▼</span>
-                    </button>
-                    <div class="nav-dropdown-content">
-                        <div class="dropdown-inner">
-                            <div class="nav-dropdown-item" data-dest="home" onclick="event.stopPropagation(); navigateTo('home')">
-                                <span>הויפט בלאט</span>
-                            </div>
-                            <div class="nav-dropdown-item" data-dest="about" onclick="event.stopPropagation(); navigateTo('about')">
-                                <span>אונזער ציל</span>
-                            </div>
-                            <div class="nav-dropdown-item" data-dest="instructions" onclick="event.stopPropagation(); navigateTo('instructions')">
-                                <span>אנווייזונגען</span>
-                            </div>
-                            <div class="nav-dropdown-item" data-dest="stats" onclick="event.stopPropagation(); navigateTo('stats')">
-                                <span>סטאטיסטיקס</span>
-                            </div>
-                            <div class="nav-dropdown-divider"></div>
-                            <div class="nav-dropdown-item" data-dest="credits" onclick="event.stopPropagation(); navigateTo('credits')">
-                                <span>קרעדיטס</span>
-                            </div>
-                            <div class="nav-dropdown-item" data-dest="thanks" onclick="event.stopPropagation(); navigateTo('thanks')">
-                                <span>התודה והברכה</span>
-                            </div>
-                            <div class="nav-dropdown-divider"></div>
-                            <div class="nav-dropdown-item" data-dest="terms" onclick="event.stopPropagation(); navigateTo('terms')">
-                                <span>Terms of Use</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- ניגונים -->
                 <div class="nav-dropdown">
                     <button class="nav-dropdown-btn nav-nigunim" onclick="navigateTo('songs')">
@@ -8665,7 +8885,7 @@ async function fetchStatistics() {
                     renderCategoryPage(content, 'chatzeros', 'חצרות', '', 'אלע חסידישע חצרות און זייערע ניגונים');
                     break;
                 case 'mechabrim':
-                    renderCategoryPage(content, 'mechabrim', 'מחברים', '', 'די מחברים פון די ניגונים');
+                    renderCategoryPage(content, 'mechabrim', 'מחברים', '<div class="mechaber-icon"></div>', 'די מחברים פון די ניגונים');
                     break;
                 case 'verter':
                     renderCategoryPage(content, 'verter', 'ווערטער', '', 'ניגונים לויט די ווערטער');
@@ -8752,13 +8972,13 @@ async function fetchStatistics() {
                         </div>
                         <div class="home-stats-right">
                             <div class="home-stats-row">
-                                <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
-                                    <div class="home-stat-number">${totalChatzeros}</div>
-                                    <div class="home-stat-label">חצרות</div>
-                                </div>
                                 <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
                                     <div class="home-stat-number">${totalMechabrim}</div>
                                     <div class="home-stat-label">מחברים</div>
+                                </div>
+                                <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
+                                    <div class="home-stat-number">${totalChatzeros}</div>
+                                    <div class="home-stat-label">חצרות</div>
                                 </div>
                             </div>
                             <div class="home-stats-row">
@@ -8778,6 +8998,11 @@ async function fetchStatistics() {
                         </div>
                     </div>
 
+                    <!-- Statistics Link -->
+                    <div class="home-stats-link" onclick="navigateTo('stats')">
+                        סטאטיסטיקס ←
+                    </div>
+
                     <!-- About Us Section -->
                     <div class="home-about-section">
                         <div class="home-about-header" onclick="navigateTo('about')">
@@ -8787,7 +9012,6 @@ async function fetchStatistics() {
                         <div class="home-about-links">
                             <div class="home-about-link" onclick="navigateTo('about')">אונזער ציל</div>
                             <div class="home-about-link" onclick="navigateTo('instructions')">אנווייזונגען</div>
-                            <div class="home-about-link" onclick="navigateTo('stats')">סטאטיסטיקס</div>
                             <div class="home-about-link" onclick="navigateTo('credits')">קרעדיטס</div>
                             <div class="home-about-link" onclick="navigateTo('thanks')">התודה והברכה</div>
                         </div>
@@ -8853,10 +9077,8 @@ async function fetchStatistics() {
             const pages = [
                 { id: 'about', label: 'אונזער ציל' },
                 { id: 'instructions', label: 'אנווייזונגען' },
-                { id: 'stats', label: 'סטאטיסטיקס' },
                 { id: 'credits', label: 'קרעדיטס' },
-                { id: 'thanks', label: 'התודה והברכה' },
-                { id: 'terms', label: 'Terms of Use' }
+                { id: 'thanks', label: 'התודה והברכה' }
             ];
 
             return `
@@ -8866,7 +9088,6 @@ async function fetchStatistics() {
                              onclick="navigateTo('${page.id}')">
                             ${page.label}
                         </div>
-                        ${index === 2 ? '<div class="info-nav-divider"></div>' : ''}
                     `).join('')}
                 </nav>
             `;
@@ -8880,12 +9101,70 @@ async function fetchStatistics() {
 
                     <div class="info-page-header">
                         <h1 class="info-page-title">אונזער ציל</h1>
-                        <p class="info-page-subtitle">וועגן דעם פראיעקט און אונזער מיסיע</p>
+                        <p class="info-page-subtitle">די מעגליכקייטן און בענעפיטן פונעם דאטאבעיס</p>
                     </div>
 
                     <div class="info-page-content">
-                        <p>אוצר הניגונים איז א פראיעקט וואס זאמלט און באוואַרנט חסידישע ניגונים פון אלע חצרות און דורות. אונזער ציל איז צו מאכן די ניגונים צוטריטלעך פאר אלעמען, און צו פאַרזיכערן אז די ניגונים זאלן ווייטער געזונגען ווערן לדור ודור.</p>
-                        <p>מיר גלייבן אז א ניגון איז מער ווי נאר מוזיק - עס איז א וועג צו דערהויבנקייט, א בריק צווישן דעם גשמיות'דיגן און רוחניות'דיגן, און א ירושה פון אונזערע הייליגע אבות.</p>
+                        <div class="goals-bricks">
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">אלע חסידישע ניגונים וואס ווערן געזינגען בחצרות הקודש צאמגענומען אויף איין פלאץ</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">היסטארישע רעקארדירונגען פון ניגונים מיט די ארגינעלע קנייטשן</div>
+                                </div>
+                            </div>
+
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">דעטאלירטע דאקומענטאציע פון מקורות פון אלטע ניגונים</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">א פארגעשריטענעם סעירטש קנעפל צו טרעפן סיי וועלכן ניגון</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">א רשימה מיט גוטע סימנים אויף אלע ניגונים וואס פארמאגן נישט קיין ווערטער</div>
+                                </div>
+                            </div>
+
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">געשריבענע נאטן אויף אלע ניגונים וואס פארמאגן נישט קיין ווערטער</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">קאלעקשנס פון ניגונים וואס זענען פאסיג צו ווערן געזינגען ביי סיי וועלכן מאורע</div>
+                                </div>
+                            </div>
+
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">חסידישע ניגונים ערשטמאליג אויסגעשטעלט לויט די ריטעם, דזשאנער, און סקעיל</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">העכסט פראפעסינאלע רעקארדירונגען פון אלע חסידישע ניגונים</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען אויף זמירות ביי סעודות שבת ויו״ט</div>
+                                </div>
+                            </div>
+
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען אויף פיוטים ביים דאווענען</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="goals-warning">
+                            <div class="goals-warning-title">אכטונג!</div>
+                            <div class="goals-warning-text">דער דאטאבעיס איז געמאכט אויסדרוקלעך נאר פאר חסידישע ניגונים וואס ווערן געזינגען בחצרות הקודש</div>
+                        </div>
+
+                        <div class="goals-contact">
+                            <div class="goals-contact-title">הערות והארות</div>
+                            <div class="goals-contact-text">פאר סיי וועלכע הערות אדער זיך צו פארבינדן מיט מערכת אידישע ניגונים</div>
+                            <a href="mailto:yiddishenigunim@gmail.com" class="goals-contact-email">yiddishenigunim@gmail.com</a>
+                        </div>
                     </div>
                 </div>
             `;
@@ -8907,29 +9186,29 @@ async function fetchStatistics() {
                             <div class="instruction-page-item">
                                 <div class="instruction-page-number">1</div>
                                 <div class="instruction-page-text">
-                                    <strong>זוכן</strong>
-                                    נוץ די זוך באקס צו געפינען א ניגון לויט נאמען, מחבר, אדער חצר
+                                    <strong>...</strong>
+                                    ...
                                 </div>
                             </div>
                             <div class="instruction-page-item">
                                 <div class="instruction-page-number">2</div>
                                 <div class="instruction-page-text">
-                                    <strong>בלעטערן</strong>
-                                    גיי דורך די קאטעגאריעס: חצרות, מחברים, זמנים, קאלעקשאנס
+                                    <strong>...</strong>
+                                    ...
                                 </div>
                             </div>
                             <div class="instruction-page-item">
                                 <div class="instruction-page-number">3</div>
                                 <div class="instruction-page-text">
-                                    <strong>שפילן</strong>
-                                    קליק אויף א ניגון צו הערן, נוץ די פלעיער אונטן
+                                    <strong>...</strong>
+                                    ...
                                 </div>
                             </div>
                             <div class="instruction-page-item">
                                 <div class="instruction-page-number">4</div>
                                 <div class="instruction-page-text">
-                                    <strong>דעטאלן</strong>
-                                    קליק אויף "דעטאלן" צו זען מער אינפארמאציע וועגן דעם ניגון
+                                    <strong>...</strong>
+                                    ...
                                 </div>
                             </div>
                         </div>
@@ -9059,15 +9338,138 @@ async function fetchStatistics() {
                     </div>
 
                     <div class="info-page-content terms-page-content">
-                        <p>די ניגונים און רעקארדירונגען אויף דער וועבזייטל זענען געמאכט צוטריטלעך פאר פערזענלעכע און בילדונגס צוועקן.</p>
+                        <p class="terms-last-updated">Last Updated: 12/1/2025</p>
 
-                        <ul>
-                            <li>מען טאר נישט נוצן די רעקארדירונגען פאר קאמערציעלע צוועקן אן ערלויבעניש</li>
-                            <li>מען זאל רעספעקטירן די רעכט פון די מחברים און פארפירער</li>
-                            <li>ביי פארשפרייטן זאל מען דערמאנען דעם מקור</li>
-                        </ul>
+                        <p class="terms-intro">Welcome to OITZERHANIGUNIM.ORG. By accessing or using this website, you agree to the following Terms of Use. Please read them carefully. If you do not agree with any part of these Terms, you may not use the site.</p>
 
-                        <p>פאר פראגעס אדער באמערקונגען, קען מען זיך ווענדן דורך די קאנטאקט אינפארמאציע.</p>
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">1. Overview</h2>
+                            <p>OITZERHANIGUNIM.ORG provides a song database where users may view information and optionally upload audio recordings. All audio content is uploaded directly by users.</p>
+                            <p>OITZERHANIGUNIM.ORG does not host, create, or verify the content uploaded by users.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">2. Eligibility</h2>
+                            <p>To upload files or submit content, you must log in through an approved authentication method (such as Google Login).</p>
+                            <p>You are responsible for maintaining the security of your login account.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">3. User Responsibilities</h2>
+                            <p>By using this site, you agree that you will:</p>
+                            <ul>
+                                <li>Provide accurate information</li>
+                                <li>Use the site only for lawful purposes</li>
+                                <li>Not harm, interfere with, or attempt to bypass any site security</li>
+                                <li>Not upload harmful, malicious, or corrupted files</li>
+                                <li>Follow all applicable copyright and intellectual-property laws</li>
+                            </ul>
+                            <p>Any misuse of the site may result in suspension or blocking of access.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">4. User-Uploaded Content</h2>
+                            <p>When you upload audio files or other materials, you agree that:</p>
+                            <ol>
+                                <li>You are the owner of the recording or have full permission to upload it</li>
+                                <li>The content does not violate anyone's copyright or rights</li>
+                                <li>You grant OITZERHANIGUNIM.ORG permission to display and store the uploaded file within the platform</li>
+                                <li>You accept full responsibility for any issues or claims arising from your upload</li>
+                                <li>You will not upload illegal, harmful, infringing, or abusive material</li>
+                            </ol>
+                            <p>OITZERHANIGUNIM.ORG is not responsible for user-uploaded content and does not guarantee legality, accuracy, or rights of any material provided by users.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">5. Content Removal</h2>
+                            <p>We reserve the right to:</p>
+                            <ul>
+                                <li>Remove or disable access to any content</li>
+                                <li>Block or suspend users who violate these Terms</li>
+                                <li>Remove content upon receiving a proper complaint</li>
+                            </ul>
+                            <p>These actions may be taken with or without notice.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">6. Copyright Complaints & Takedown Policy</h2>
+                            <p>If you believe your copyrighted material has been uploaded without permission, please contact us at:</p>
+                            <p><span class="terms-email">yiddishenigunim@gmail.com</span></p>
+                            <p>Include:</p>
+                            <ul>
+                                <li>The URL or link to the infringing content</li>
+                                <li>A description of your work</li>
+                                <li>Your contact information</li>
+                                <li>A statement confirming that you believe the use is unauthorized</li>
+                            </ul>
+                            <p>We will remove the content promptly.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">7. Site Availability & Updates</h2>
+                            <p>The site is provided on an "as-is" and "as-available" basis.</p>
+                            <p>We may update, modify, or discontinue any part of the site at any time.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">8. No Warranty</h2>
+                            <p>We do not guarantee:</p>
+                            <ul>
+                                <li>The accuracy or completeness of the content</li>
+                                <li>That the site will always be available or error-free</li>
+                                <li>That user uploads are legally permitted</li>
+                            </ul>
+                            <p>All use is at your own risk.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">9. Limitation of Liability</h2>
+                            <p>To the fullest extent permitted by law:</p>
+                            <p>OITZERHANIGUNIM.ORG is not liable for any damages, losses, claims, or issues arising from:</p>
+                            <ul>
+                                <li>User-uploaded content</li>
+                                <li>Copyright disputes</li>
+                                <li>Technical problems or downtime</li>
+                                <li>Data loss</li>
+                                <li>Misuse of the site by others</li>
+                            </ul>
+                            <p>You agree to hold OITZERHANIGUNIM.ORG, its administrators, and affiliates harmless from any such claims.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">10. Changes to These Terms</h2>
+                            <p>We may update or revise these Terms from time to time.</p>
+                            <p>The updated version will take effect when posted on the site.</p>
+                            <p>Your continued use of the site means you accept the revised Terms.</p>
+                        </div>
+
+                        <hr class="terms-divider">
+
+                        <div class="terms-section">
+                            <h2 class="terms-section-header">11. Contact</h2>
+                            <p>For questions or concerns, please contact:</p>
+                            <p><span class="terms-email">yiddishenigunim@gmail.com</span></p>
+                        </div>
                     </div>
                 </div>
             `;
@@ -9994,10 +10396,12 @@ async function fetchStatistics() {
                     
                     <div class="detail-header">
                         <div class="detail-category-bar">${typeName}</div>
-                        <div class="detail-header-content ${info.image ? '' : 'no-image'}">
+                        <div class="detail-header-content ${(info.image || type === 'mechabrim') ? '' : 'no-image'}">
                             ${info.image ? `
                                 <img class="detail-image" src="${info.image}" alt="${name}">
-                            ` : ''}
+                            ` : (type === 'mechabrim' ? `
+                                <div class="detail-image-placeholder"><div class="mechaber-icon"></div></div>
+                            ` : '')}
                             <div class="detail-header-text">
                                 <h1 class="detail-title">${type === 'mechabrim' ? mechaberFullName : name}</h1>
                                 ${mechaberLifeDates ? `
@@ -10056,7 +10460,7 @@ async function fetchStatistics() {
                                     <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">
                                         ${mech.image
                                             ? `<img class="nigun-mechaber-image" src="${mech.image}" alt="${mech.name}">`
-                                            : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
+                                            : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                                         }
                                         <div class="nigun-mechaber-name">${mech.name}</div>
                                     </div>
@@ -10295,7 +10699,7 @@ async function fetchStatistics() {
                                         <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mName)}')">
                                             ${mInfo?.image
                                                 ? `<img class="nigun-mechaber-image" src="${mInfo.image}" alt="${mName}">`
-                                                : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
+                                                : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                                             }
                                             <div class="nigun-mechaber-name">${mName}</div>
                                         </div>
@@ -10315,7 +10719,7 @@ async function fetchStatistics() {
                                         <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">
                                             ${pInfo?.image
                                                 ? `<img class="nigun-mechaber-image" src="${pInfo.image}" alt="${personName}">`
-                                                : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
+                                                : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                                             }
                                             <div class="nigun-mechaber-name">${personName}</div>
                                         </div>
