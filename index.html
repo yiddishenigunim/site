@@ -2731,6 +2731,32 @@
             display: none;
         }
 
+        /* Show card icon for mechabrim as circular placeholder */
+        .page-theme-mechaber .card-icon {
+            display: flex;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--color-mechaber-pale);
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .page-theme-mechaber .card-icon .mechaber-icon {
+            width: 37px;
+            height: 55px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+        }
+
+        /* Hide icon when image loads successfully (inline style override) */
+        .page-theme-mechaber .card-icon[style*="display:none"],
+        .page-theme-mechaber .card-icon[style*="display: none"] {
+            display: none !important;
+        }
+
         .card-title {
             font-size: 1.2em;
             font-weight: 700;
@@ -3168,14 +3194,15 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2em;
             margin-bottom: 10px;
-            color: var(--color-mechaber);
         }
 
-        .nigun-mechaber-placeholder svg {
-            width: 50px;
-            height: 50px;
+        .nigun-mechaber-placeholder .mechaber-icon {
+            width: 37px;
+            height: 55px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
         }
 
         .nigun-mechaber-name {
@@ -4333,6 +4360,28 @@
         .mechaber-detail .detail-image,
         .detail-page[data-type="mechabrim"] .detail-image {
             border-radius: 50%;
+        }
+
+        /* Placeholder for mechabrim without images */
+        .detail-image-placeholder {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--color-mechaber-pale);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 4px solid var(--color-mechaber-pale);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+
+        .detail-image-placeholder .mechaber-icon {
+            width: 55px;
+            height: 82px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
         }
 
         .detail-icon {
@@ -8778,7 +8827,7 @@ async function fetchStatistics() {
                     renderCategoryPage(content, 'chatzeros', 'חצרות', '', 'אלע חסידישע חצרות און זייערע ניגונים');
                     break;
                 case 'mechabrim':
-                    renderCategoryPage(content, 'mechabrim', 'מחברים', '', 'די מחברים פון די ניגונים');
+                    renderCategoryPage(content, 'mechabrim', 'מחברים', '<div class="mechaber-icon"></div>', 'די מחברים פון די ניגונים');
                     break;
                 case 'verter':
                     renderCategoryPage(content, 'verter', 'ווערטער', '', 'ניגונים לויט די ווערטער');
@@ -10166,10 +10215,12 @@ async function fetchStatistics() {
                     
                     <div class="detail-header">
                         <div class="detail-category-bar">${typeName}</div>
-                        <div class="detail-header-content ${info.image ? '' : 'no-image'}">
+                        <div class="detail-header-content ${(info.image || type === 'mechabrim') ? '' : 'no-image'}">
                             ${info.image ? `
                                 <img class="detail-image" src="${info.image}" alt="${name}">
-                            ` : ''}
+                            ` : (type === 'mechabrim' ? `
+                                <div class="detail-image-placeholder"><div class="mechaber-icon"></div></div>
+                            ` : '')}
                             <div class="detail-header-text">
                                 <h1 class="detail-title">${type === 'mechabrim' ? mechaberFullName : name}</h1>
                                 ${mechaberLifeDates ? `
@@ -10228,7 +10279,7 @@ async function fetchStatistics() {
                                     <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">
                                         ${mech.image
                                             ? `<img class="nigun-mechaber-image" src="${mech.image}" alt="${mech.name}">`
-                                            : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
+                                            : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                                         }
                                         <div class="nigun-mechaber-name">${mech.name}</div>
                                     </div>
@@ -10467,7 +10518,7 @@ async function fetchStatistics() {
                                         <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mName)}')">
                                             ${mInfo?.image
                                                 ? `<img class="nigun-mechaber-image" src="${mInfo.image}" alt="${mName}">`
-                                                : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
+                                                : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                                             }
                                             <div class="nigun-mechaber-name">${mName}</div>
                                         </div>
@@ -10487,7 +10538,7 @@ async function fetchStatistics() {
                                         <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">
                                             ${pInfo?.image
                                                 ? `<img class="nigun-mechaber-image" src="${pInfo.image}" alt="${personName}">`
-                                                : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
+                                                : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                                             }
                                             <div class="nigun-mechaber-name">${personName}</div>
                                         </div>
