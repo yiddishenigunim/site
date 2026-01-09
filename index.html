@@ -1191,7 +1191,7 @@
             }
 
             .home-about-links {
-                grid-template-columns: repeat(3, 1fr);
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .home-about-link {
@@ -1200,7 +1200,7 @@
                 border-bottom: 1px solid var(--color-chatzer-pale);
             }
 
-            .home-about-link:nth-child(3n+1) {
+            .home-about-link:nth-child(2n+1) {
                 border-left: none;
             }
         }
@@ -6640,7 +6640,7 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
             overflow: hidden;
             display: grid;
-            grid-template-columns: repeat(5, 1fr);
+            grid-template-columns: repeat(4, 1fr);
         }
 
         .home-about-link {
@@ -8731,13 +8731,13 @@ async function fetchStatistics() {
                         </div>
                         <div class="home-stats-right">
                             <div class="home-stats-row">
-                                <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
-                                    <div class="home-stat-number">${totalChatzeros}</div>
-                                    <div class="home-stat-label">חצרות</div>
-                                </div>
                                 <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
                                     <div class="home-stat-number">${totalMechabrim}</div>
                                     <div class="home-stat-label">מחברים</div>
+                                </div>
+                                <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
+                                    <div class="home-stat-number">${totalChatzeros}</div>
+                                    <div class="home-stat-label">חצרות</div>
                                 </div>
                             </div>
                             <div class="home-stats-row">
