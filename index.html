@@ -6729,17 +6729,17 @@
         .info-nav {
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 16px;
             flex-wrap: wrap;
             margin-bottom: 30px;
-            padding: 15px;
+            padding: 18px 25px;
             background: var(--gradient-main-pale);
             border-radius: 16px;
             border: 1px solid var(--color-chatzer-pale);
         }
 
         .info-nav-item {
-            padding: 10px 18px;
+            padding: 12px 30px;
             border-radius: 25px;
             cursor: pointer;
             font-size: 0.95em;
@@ -6941,6 +6941,140 @@
 
             .info-page-title {
                 font-size: 1.8em;
+            }
+        }
+
+        /* Goals Page - Brick Layout Design */
+        .goals-intro {
+            text-align: center;
+            margin-bottom: 35px;
+            font-size: 1.15em;
+            color: var(--text);
+        }
+
+        .goals-bricks {
+            margin-bottom: 40px;
+        }
+
+        .goals-brick-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .goal-brick {
+            flex: 1;
+            position: relative;
+            background: var(--gradient-main-pale);
+            border-radius: 14px;
+            padding: 22px 25px;
+            transition: var(--transition-smooth);
+            border: 1px solid var(--color-chatzer-pale);
+            overflow: hidden;
+        }
+
+        .goal-brick::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--gradient-main);
+            border-radius: 0 14px 14px 0;
+        }
+
+        .goal-brick:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: var(--gradient-main-soft);
+        }
+
+        .goal-brick-text {
+            font-size: 1em;
+            line-height: 1.7;
+            color: var(--text-dark);
+        }
+
+        /* Warning Box */
+        .goals-warning {
+            background: var(--gradient-main-pale);
+            border: 2px solid var(--color-chatzer-light);
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 35px;
+            text-align: center;
+        }
+
+        .goals-warning-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .goals-warning-text {
+            font-size: 1.05em;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        /* Contact Box */
+        .goals-contact {
+            background: var(--gradient-main-pale);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            border: 1px solid var(--color-chatzer-pale);
+        }
+
+        .goals-contact-title {
+            font-size: 1.25em;
+            font-weight: 600;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .goals-contact-text {
+            color: var(--text-muted);
+            margin-bottom: 15px;
+        }
+
+        .goals-contact-email {
+            display: inline-block;
+            padding: 12px 28px;
+            background: var(--gradient-main);
+            color: white;
+            border-radius: 30px;
+            font-size: 1.05em;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+            direction: ltr;
+        }
+
+        .goals-contact-email:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .goals-brick-row {
+                flex-direction: column;
+            }
+
+            .goal-brick {
+                padding: 18px 20px;
+            }
+
+            .goals-warning,
+            .goals-contact {
+                padding: 20px;
             }
         }
     </style>
@@ -8860,12 +8994,70 @@ async function fetchStatistics() {
 
                     <div class="info-page-header">
                         <h1 class="info-page-title">אונזער ציל</h1>
-                        <p class="info-page-subtitle">וועגן דעם פראיעקט און אונזער מיסיע</p>
+                        <p class="info-page-subtitle">די מעגליכקייטן און בענעפיטן פונעם דאטאבעיס</p>
                     </div>
 
                     <div class="info-page-content">
-                        <p>אוצר הניגונים איז א פראיעקט וואס זאמלט און באוואַרנט חסידישע ניגונים פון אלע חצרות און דורות. אונזער ציל איז צו מאכן די ניגונים צוטריטלעך פאר אלעמען, און צו פאַרזיכערן אז די ניגונים זאלן ווייטער געזונגען ווערן לדור ודור.</p>
-                        <p>מיר גלייבן אז א ניגון איז מער ווי נאר מוזיק - עס איז א וועג צו דערהויבנקייט, א בריק צווישן דעם גשמיות'דיגן און רוחניות'דיגן, און א ירושה פון אונזערע הייליגע אבות.</p>
+                        <div class="goals-bricks">
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">אלע חסידישע ניגונים וואס ווערן געזינגען בחצרות הקודש צאמגענומען אויף איין פלאץ</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">היסטארישע רעקארדירונגען פון ניגונים מיט די ארגינעלע קנייטשן</div>
+                                </div>
+                            </div>
+
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">דעטאלירטע דאקומענטאציע פון מקורות פון אלטע ניגונים</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">א פארגעשריטענעם סעירטש קנעפל צו טרעפן סיי וועלכן ניגון</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">א רשימה מיט גוטע סימנים אויף אלע ניגונים וואס פארמאגן נישט קיין ווערטער</div>
+                                </div>
+                            </div>
+
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">געשריבענע נאטן אויף אלע ניגונים וואס פארמאגן נישט קיין ווערטער</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">קאלעקשנס פון ניגונים וואס זענען פאסיג צו ווערן געזינגען ביי סיי וועלכן מאורע</div>
+                                </div>
+                            </div>
+
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">חסידישע ניגונים ערשטמאליג אויסגעשטעלט לויט די ריטעם, דזשאנער, און סקעיל</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">העכסט פראפעסינאלע רעקארדירונגען פון אלע חסידישע ניגונים</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען אויף זמירות ביי סעודות שבת ויו״ט</div>
+                                </div>
+                            </div>
+
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען אויף פיוטים ביים דאווענען</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="goals-warning">
+                            <div class="goals-warning-title">אכטונג!</div>
+                            <div class="goals-warning-text">דער דאטאבעיס איז געמאכט אויסדרוקלעך נאר פאר חסידישע ניגונים וואס ווערן געזינגען בחצרות הקודש</div>
+                        </div>
+
+                        <div class="goals-contact">
+                            <div class="goals-contact-title">הערות והארות</div>
+                            <div class="goals-contact-text">פאר סיי וועלכע הערות אדער זיך צו פארבינדן מיט מערכת אידישע ניגונים</div>
+                            <a href="mailto:yiddishenigunim@gmail.com" class="goals-contact-email">yiddishenigunim@gmail.com</a>
+                        </div>
                     </div>
                 </div>
             `;
@@ -8887,29 +9079,29 @@ async function fetchStatistics() {
                             <div class="instruction-page-item">
                                 <div class="instruction-page-number">1</div>
                                 <div class="instruction-page-text">
-                                    <strong>זוכן</strong>
-                                    נוץ די זוך באקס צו געפינען א ניגון לויט נאמען, מחבר, אדער חצר
+                                    <strong>...</strong>
+                                    ...
                                 </div>
                             </div>
                             <div class="instruction-page-item">
                                 <div class="instruction-page-number">2</div>
                                 <div class="instruction-page-text">
-                                    <strong>בלעטערן</strong>
-                                    גיי דורך די קאטעגאריעס: חצרות, מחברים, זמנים, קאלעקשאנס
+                                    <strong>...</strong>
+                                    ...
                                 </div>
                             </div>
                             <div class="instruction-page-item">
                                 <div class="instruction-page-number">3</div>
                                 <div class="instruction-page-text">
-                                    <strong>שפילן</strong>
-                                    קליק אויף א ניגון צו הערן, נוץ די פלעיער אונטן
+                                    <strong>...</strong>
+                                    ...
                                 </div>
                             </div>
                             <div class="instruction-page-item">
                                 <div class="instruction-page-number">4</div>
                                 <div class="instruction-page-text">
-                                    <strong>דעטאלן</strong>
-                                    קליק אויף "דעטאלן" צו זען מער אינפארמאציע וועגן דעם ניגון
+                                    <strong>...</strong>
+                                    ...
                                 </div>
                             </div>
                         </div>
