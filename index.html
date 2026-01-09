@@ -8902,15 +8902,15 @@ async function fetchStatistics() {
         });
 
         // Render current page
-        function renderCurrentPage() {
+        function renderCurrentPage(preserveSongsPage = false) {
             // Check if we're in a detail view
             if (currentDetailView) {
                 renderDetailPage();
                 return;
             }
-            
+
             const content = document.getElementById('mainContent');
-            
+
             switch(currentPageView) {
                 case 'home':
                     renderHomePage(content);
@@ -8919,7 +8919,7 @@ async function fetchStatistics() {
                     renderSearchResultsPage(content);
                     break;
                 case 'songs':
-                    renderAllSongsPage(content);
+                    renderAllSongsPage(content, preserveSongsPage);
                     break;
                 case 'chatzeros':
                     renderCategoryPage(content, 'chatzeros', 'חצרות', '', 'אלע חסידישע חצרות און זייערע ניגונים');
@@ -9416,15 +9416,22 @@ async function fetchStatistics() {
         }
 
         // Render all songs page
-        function renderAllSongsPage(container) {
+        function renderAllSongsPage(container, preservePage = false) {
             // Show skeleton if songs not yet loaded
             if (allSongs.length === 0) {
                 container.innerHTML = getSkeletonForPage('songs');
                 return;
             }
 
-            // Reset page to 1 when rendering fresh
-            currentPage = 1;
+            // Reset page to 1 only if not preserving (e.g., from URL navigation)
+            if (!preservePage) {
+                currentPage = 1;
+            }
+
+            // Validate current page is within bounds
+            const totalPages = Math.ceil(filteredSongs.length / songsPerPage);
+            if (currentPage > totalPages) currentPage = totalPages || 1;
+            if (currentPage < 1) currentPage = 1;
 
             container.innerHTML = `
                 <div class="page-theme-nigun">
@@ -10019,7 +10026,7 @@ async function fetchStatistics() {
                         btn.classList.toggle('active', btn.dataset.page === 'songs');
                     });
 
-                    renderCurrentPage();
+                    renderCurrentPage(true); // Preserve page number from URL
                 } else if (idOrName) {
                     // Find item by ID or name
                     const item = findItemByIdOrName(page, idOrName);
