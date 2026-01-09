@@ -6949,41 +6949,6 @@
             
             <nav class="header-nav">
                 <div class="main-nav">
-                <!-- היים -->
-                <div class="nav-dropdown">
-                    <button class="nav-dropdown-btn nav-home" onclick="navigateTo('home')">
-                        היים
-                        <span class="nav-arrow">▼</span>
-                    </button>
-                    <div class="nav-dropdown-content">
-                        <div class="dropdown-inner">
-                            <div class="nav-dropdown-item" data-dest="home" onclick="event.stopPropagation(); navigateTo('home')">
-                                <span>הויפט בלאט</span>
-                            </div>
-                            <div class="nav-dropdown-item" data-dest="about" onclick="event.stopPropagation(); navigateTo('about')">
-                                <span>אונזער ציל</span>
-                            </div>
-                            <div class="nav-dropdown-item" data-dest="instructions" onclick="event.stopPropagation(); navigateTo('instructions')">
-                                <span>אנווייזונגען</span>
-                            </div>
-                            <div class="nav-dropdown-item" data-dest="stats" onclick="event.stopPropagation(); navigateTo('stats')">
-                                <span>סטאטיסטיקס</span>
-                            </div>
-                            <div class="nav-dropdown-divider"></div>
-                            <div class="nav-dropdown-item" data-dest="credits" onclick="event.stopPropagation(); navigateTo('credits')">
-                                <span>קרעדיטס</span>
-                            </div>
-                            <div class="nav-dropdown-item" data-dest="thanks" onclick="event.stopPropagation(); navigateTo('thanks')">
-                                <span>התודה והברכה</span>
-                            </div>
-                            <div class="nav-dropdown-divider"></div>
-                            <div class="nav-dropdown-item" data-dest="terms" onclick="event.stopPropagation(); navigateTo('terms')">
-                                <span>Terms of Use</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- ניגונים -->
                 <div class="nav-dropdown">
                     <button class="nav-dropdown-btn nav-nigunim" onclick="navigateTo('songs')">
@@ -8787,7 +8752,6 @@ async function fetchStatistics() {
                         <div class="home-about-links">
                             <div class="home-about-link" onclick="navigateTo('about')">אונזער ציל</div>
                             <div class="home-about-link" onclick="navigateTo('instructions')">אנווייזונגען</div>
-                            <div class="home-about-link" onclick="navigateTo('stats')">סטאטיסטיקס</div>
                             <div class="home-about-link" onclick="navigateTo('credits')">קרעדיטס</div>
                             <div class="home-about-link" onclick="navigateTo('thanks')">התודה והברכה</div>
                         </div>
@@ -8853,10 +8817,8 @@ async function fetchStatistics() {
             const pages = [
                 { id: 'about', label: 'אונזער ציל' },
                 { id: 'instructions', label: 'אנווייזונגען' },
-                { id: 'stats', label: 'סטאטיסטיקס' },
                 { id: 'credits', label: 'קרעדיטס' },
-                { id: 'thanks', label: 'התודה והברכה' },
-                { id: 'terms', label: 'Terms of Use' }
+                { id: 'thanks', label: 'התודה והברכה' }
             ];
 
             return `
@@ -8866,7 +8828,6 @@ async function fetchStatistics() {
                              onclick="navigateTo('${page.id}')">
                             ${page.label}
                         </div>
-                        ${index === 2 ? '<div class="info-nav-divider"></div>' : ''}
                     `).join('')}
                 </nav>
             `;
