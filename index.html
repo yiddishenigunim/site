@@ -6944,7 +6944,7 @@
             }
         }
 
-        /* Goals Page - Castle Blocks Design */
+        /* Goals Page - Brick Layout Design */
         .goals-intro {
             text-align: center;
             margin-bottom: 35px;
@@ -6952,83 +6952,45 @@
             color: var(--text);
         }
 
-        .goals-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 20px;
+        .goals-bricks {
             margin-bottom: 40px;
         }
 
-        .goal-castle-block {
+        .goals-brick-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .goal-brick {
+            flex: 1;
             position: relative;
-            background: white;
-            border-radius: 16px;
-            padding: 25px 25px 25px 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            background: var(--gradient-main-pale);
+            border-radius: 14px;
+            padding: 22px 25px;
             transition: var(--transition-smooth);
-            border: 1px solid transparent;
+            border: 1px solid var(--color-chatzer-pale);
             overflow: hidden;
         }
 
-        .goal-castle-block::before {
+        .goal-brick::before {
             content: '';
             position: absolute;
             top: 0;
             right: 0;
-            width: 6px;
+            width: 5px;
             height: 100%;
-            border-radius: 0 16px 16px 0;
+            background: var(--gradient-main);
+            border-radius: 0 14px 14px 0;
         }
 
-        .goal-castle-block:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.12);
+        .goal-brick:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: var(--gradient-main-soft);
         }
 
-        /* Castle block color variations */
-        .goal-castle-block.color-1 { border-color: var(--color-nigun-pale); }
-        .goal-castle-block.color-1::before { background: var(--color-nigun); }
-        .goal-castle-block.color-1:hover { border-color: var(--color-nigun-light); }
-
-        .goal-castle-block.color-2 { border-color: var(--color-chatzer-pale); }
-        .goal-castle-block.color-2::before { background: var(--color-chatzer); }
-        .goal-castle-block.color-2:hover { border-color: var(--color-chatzer-light); }
-
-        .goal-castle-block.color-3 { border-color: var(--color-mechaber-pale); }
-        .goal-castle-block.color-3::before { background: var(--color-mechaber); }
-        .goal-castle-block.color-3:hover { border-color: var(--color-mechaber-light); }
-
-        .goal-castle-block.color-4 { border-color: var(--color-zman-pale); }
-        .goal-castle-block.color-4::before { background: var(--color-zman); }
-        .goal-castle-block.color-4:hover { border-color: var(--color-zman-light); }
-
-        .goal-castle-block.color-5 { border-color: var(--color-collection-pale); }
-        .goal-castle-block.color-5::before { background: var(--color-collection); }
-        .goal-castle-block.color-5:hover { border-color: var(--color-collection-light); }
-
-        .goal-castle-block.color-6 { border-color: var(--color-music-pale); }
-        .goal-castle-block.color-6::before { background: var(--color-music); }
-        .goal-castle-block.color-6:hover { border-color: var(--color-music-light); }
-
-        .goal-block-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-
-        .goal-castle-block.color-1 .goal-block-icon { background: var(--color-nigun-pale); color: var(--color-nigun); }
-        .goal-castle-block.color-2 .goal-block-icon { background: var(--color-chatzer-pale); color: var(--color-chatzer); }
-        .goal-castle-block.color-3 .goal-block-icon { background: var(--color-mechaber-pale); color: var(--color-mechaber); }
-        .goal-castle-block.color-4 .goal-block-icon { background: var(--color-zman-pale); color: var(--color-zman); }
-        .goal-castle-block.color-5 .goal-block-icon { background: var(--color-collection-pale); color: var(--color-collection); }
-        .goal-castle-block.color-6 .goal-block-icon { background: var(--color-music-pale); color: var(--color-music); }
-
-        .goal-block-text {
+        .goal-brick-text {
             font-size: 1em;
             line-height: 1.7;
             color: var(--text-dark);
@@ -7036,8 +6998,8 @@
 
         /* Warning Box */
         .goals-warning {
-            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
-            border: 2px solid var(--color-zman-light);
+            background: var(--gradient-main-pale);
+            border: 2px solid var(--color-chatzer-light);
             border-radius: 16px;
             padding: 25px 30px;
             margin-bottom: 35px;
@@ -7047,17 +7009,16 @@
         .goals-warning-title {
             font-size: 1.3em;
             font-weight: 700;
-            color: var(--color-zman-dark);
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
             margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
 
         .goals-warning-text {
             font-size: 1.05em;
-            color: var(--color-zman-dark);
+            color: var(--text-dark);
             line-height: 1.6;
         }
 
@@ -7103,12 +7064,12 @@
         }
 
         @media (max-width: 768px) {
-            .goals-grid {
-                grid-template-columns: 1fr;
+            .goals-brick-row {
+                flex-direction: column;
             }
 
-            .goal-castle-block {
-                padding: 20px 20px 20px 25px;
+            .goal-brick {
+                padding: 18px 20px;
             }
 
             .goals-warning,
@@ -9039,65 +9000,58 @@ async function fetchStatistics() {
                     <div class="info-page-content">
                         <p class="goals-intro">פאלגענד זענען א טייל פון די מעגליכקייטן און בענעפיטן פונעם דאטאבעיס:</p>
 
-                        <div class="goals-grid">
-                            <div class="goal-castle-block color-1">
-                                <div class="goal-block-icon">&#9835;</div>
-                                <div class="goal-block-text">אלע חסידישע ניגונים וואס ווערן געזינגען בחצרות הקודש צאמגענומען אויף איין פלאץ</div>
+                        <div class="goals-bricks">
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">אלע חסידישע ניגונים וואס ווערן געזינגען בחצרות הקודש צאמגענומען אויף איין פלאץ</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">היסטארישע רעקארדירונגען פון ניגונים מיט די ארגינעלע קנייטשן</div>
+                                </div>
                             </div>
 
-                            <div class="goal-castle-block color-2">
-                                <div class="goal-block-icon">&#128251;</div>
-                                <div class="goal-block-text">היסטארישע רעקארדירונגען פון ניגונים מיט די ארגינעלע קנייטשן</div>
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">דעטאלירטע דאקומענטאציע פון מקורות פון אלטע ניגונים</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">א פארגעשריטענעם סעירטש קנעפל צו טרעפן סיי וועלכן ניגון</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">א רשימה מיט גוטע סימנים אויף אלע ניגונים וואס פארמאגן נישט קיין ווערטער</div>
+                                </div>
                             </div>
 
-                            <div class="goal-castle-block color-3">
-                                <div class="goal-block-icon">&#128214;</div>
-                                <div class="goal-block-text">דעטאלירטע דאקומענטאציע פון מקורות פון אלטע ניגונים</div>
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">געשריבענע נאטן אויף אלע ניגונים וואס פארמאגן נישט קיין ווערטער</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">קאלעקשנס פון ניגונים וואס זענען פאסיג צו ווערן געזינגען ביי סיי וועלכן מאורע</div>
+                                </div>
                             </div>
 
-                            <div class="goal-castle-block color-4">
-                                <div class="goal-block-icon">&#128269;</div>
-                                <div class="goal-block-text">א פארגעשריטענעם סעירטש קנעפל צו טרעפן סיי וועלכן ניגון</div>
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">חסידישע ניגונים ערשטמאליג אויסגעשטעלט לויט די ריטעם, דזשאנער, און סקעיל</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">העכסט פראפעסינאלע רעקארדירונגען פון אלע חסידישע ניגונים</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען אויף זמירות ביי סעודות שבת ויו״ט</div>
+                                </div>
                             </div>
 
-                            <div class="goal-castle-block color-5">
-                                <div class="goal-block-icon">&#128221;</div>
-                                <div class="goal-block-text">א רשימה מיט גוטע סימנים אויף אלע ניגונים וואס פארמאגן נישט קיין ווערטער</div>
-                            </div>
-
-                            <div class="goal-castle-block color-6">
-                                <div class="goal-block-icon">&#127932;</div>
-                                <div class="goal-block-text">געשריבענע נאטן אויף אלע ניגונים וואס פארמאגן נישט קיין ווערטער</div>
-                            </div>
-
-                            <div class="goal-castle-block color-1">
-                                <div class="goal-block-icon">&#128197;</div>
-                                <div class="goal-block-text">קאלעקשנס פון ניגונים וואס זענען פאסיג צו ווערן געזינגען ביי סיי וועלכן מאורע</div>
-                            </div>
-
-                            <div class="goal-castle-block color-2">
-                                <div class="goal-block-icon">&#127926;</div>
-                                <div class="goal-block-text">חסידישע ניגונים ערשטמאליג אויסגעשטעלט לויט די ריטעם, דזשאנער, און סקעיל</div>
-                            </div>
-
-                            <div class="goal-castle-block color-3">
-                                <div class="goal-block-icon">&#127908;</div>
-                                <div class="goal-block-text">העכסט פראפעסינאלע רעקארדירונגען פון אלע חסידישע ניגונים</div>
-                            </div>
-
-                            <div class="goal-castle-block color-4">
-                                <div class="goal-block-icon">&#127830;</div>
-                                <div class="goal-block-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען אויף זמירות ביי סעודות שבת ויו״ט</div>
-                            </div>
-
-                            <div class="goal-castle-block color-5">
-                                <div class="goal-block-icon">&#128591;</div>
-                                <div class="goal-block-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען אויף פיוטים ביים דאווענען</div>
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען אויף פיוטים ביים דאווענען</div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="goals-warning">
-                            <div class="goals-warning-title">&#9888; אכטונג!</div>
+                            <div class="goals-warning-title">אכטונג!</div>
                             <div class="goals-warning-text">דער דאטאבעיס איז געמאכט אויסדרוקלעך נאר פאר חסידישע ניגונים וואס ווערן געזינגען בחצרות הקודש</div>
                         </div>
 
