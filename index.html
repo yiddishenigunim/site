@@ -5182,6 +5182,150 @@
             color: var(--color-nigun-dark);
         }
 
+        /* Enhanced Pagination */
+        .pagination-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid var(--color-nigun-light);
+        }
+
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .pagination-btn {
+            min-width: 38px;
+            height: 38px;
+            padding: 0 10px;
+            border: 2px solid var(--color-nigun-light);
+            background: white;
+            border-radius: 10px;
+            font-size: 0.95em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            font-family: inherit;
+            color: var(--color-nigun-dark);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pagination-btn:hover:not(:disabled):not(.active) {
+            border-color: var(--color-nigun);
+            background: var(--color-nigun-pale);
+            transform: translateY(-2px);
+            box-shadow: 0 3px 8px rgba(74, 124, 201, 0.2);
+        }
+
+        .pagination-btn:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .pagination-btn.active {
+            background: var(--color-nigun);
+            border-color: var(--color-nigun);
+            color: white;
+            box-shadow: 0 3px 10px rgba(74, 124, 201, 0.3);
+        }
+
+        .pagination-btn.nav-btn {
+            font-size: 1.1em;
+            padding: 0 12px;
+        }
+
+        .pagination-ellipsis {
+            padding: 0 8px;
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .pagination-jump {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 16px;
+            background: var(--color-nigun-pale);
+            border-radius: 12px;
+        }
+
+        .pagination-jump-label {
+            font-size: 0.9em;
+            color: var(--color-nigun-dark);
+            font-weight: 500;
+        }
+
+        .pagination-jump-input {
+            width: 55px;
+            height: 34px;
+            border: 2px solid var(--color-nigun-light);
+            border-radius: 8px;
+            text-align: center;
+            font-size: 0.95em;
+            font-weight: 600;
+            font-family: inherit;
+            color: var(--color-nigun-dark);
+            transition: border-color 0.2s ease;
+        }
+
+        .pagination-jump-input:focus {
+            outline: none;
+            border-color: var(--color-nigun);
+        }
+
+        .pagination-jump-btn {
+            padding: 6px 14px;
+            background: var(--color-nigun);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 0.85em;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+            transition: all 0.2s ease;
+        }
+
+        .pagination-jump-btn:hover {
+            background: var(--color-nigun-dark);
+            transform: translateY(-1px);
+        }
+
+        .pagination-summary {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        @media (max-width: 600px) {
+            .pagination-controls {
+                gap: 4px;
+            }
+            .pagination-btn {
+                min-width: 34px;
+                height: 34px;
+                font-size: 0.85em;
+            }
+            .pagination-jump {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 8px;
+                padding: 8px 12px;
+            }
+            .pagination-jump-input {
+                width: 50px;
+                height: 30px;
+            }
+        }
+
         /* Fixed Player */
         .player-section {
             position: fixed;
@@ -7361,7 +7505,7 @@
         let allSongs = [];
         let filteredSongs = [];
         let currentPage = 1;
-        const songsPerPage = 50; // 50 items per batch for infinite scroll
+        const songsPerPage = 25; // 25 items per page for pagination
         let currentSongIndex = -1;
 
         // Lazy loading state for songs page
@@ -7378,6 +7522,9 @@
         let currentPageView = 'home';
         let searchQuery = ''; // Search query for songs
         let audioOnlyFilter = true; // Show only songs with audio (default on)
+
+        // Detail page pagination state
+        let detailPageStates = {}; // Stores { listId: { page: 1, songs: [], perPage: 25 } }
 
         // Category data
         let categories = {
@@ -9276,12 +9423,8 @@ async function fetchStatistics() {
                 return;
             }
 
-            // Reset lazy loading state
-            songsLazyState = {
-                currentIndex: 0,
-                batchSize: 50,
-                isLoading: false
-            };
+            // Reset page to 1 when rendering fresh
+            currentPage = 1;
 
             container.innerHTML = `
                 <div class="page-theme-nigun">
@@ -9297,7 +9440,7 @@ async function fetchStatistics() {
                             <div class="songs-card">
                                 <div class="all-songs-grid" id="songsGrid">
                                 </div>
-                                <div id="songsLoadMoreIndicator" style="text-align: center; padding: 20px; color: var(--text-muted);"></div>
+                                <div id="songsPagination"></div>
                             </div>
                         </div>
 
@@ -9336,18 +9479,8 @@ async function fetchStatistics() {
                 </div>
             `;
 
-            // Load first batch of songs
-            loadMoreSongs();
-
-            // Setup infinite scroll observer
-            const observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    loadMoreSongs();
-                }
-            }, { rootMargin: '200px' });
-
-            const indicator = document.getElementById('songsLoadMoreIndicator');
-            if (indicator) observer.observe(indicator);
+            // Render first page of songs with pagination
+            updateSongsListForPage();
 
             renderActiveFilterTags();
         }
@@ -9619,19 +9752,11 @@ async function fetchStatistics() {
             const grid = document.getElementById('songsGrid');
             if (!grid) return;
 
-            // Reset lazy loading state and re-render with new filtered songs
-            songsLazyState = {
-                currentIndex: 0,
-                batchSize: 50,
-                isLoading: false
-            };
+            // Reset to first page when filters change
+            currentPage = 1;
 
-            // Clear grid and load first batch
-            grid.innerHTML = '';
-            loadMoreSongs();
-
-            // Update subtitle with count
-            updateSongsCount();
+            // Render first page with pagination
+            updateSongsListForPage();
         }
 
         // Update songs count display
@@ -10244,19 +10369,14 @@ async function fetchStatistics() {
                         </div>
                     ` : ''}
                     
+                    ${songs.length > 0 ? `
                     <div class="detail-songs-section">
                         <h3>${songs.length} ניגונים ${type === 'mechabrim' ? 'וואס ער האט מחבר געווען' : ''}</h3>
-                        <div class="detail-songs-list">
-                            ${(() => {
-                                const playlistIndices = songs.map(song => allSongs.indexOf(song));
-                                return songs.map((song, i) => {
-                                    const globalIdx = allSongs.indexOf(song);
-                                    return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                                }).join('');
-                            })()}
-                        </div>
+                        <div class="detail-songs-list" id="detailSongsList"></div>
+                        <div id="detailSongsPagination"></div>
                     </div>
-                    
+                    ` : ''}
+
                     ${(() => {
                         // For mechabrim, show songs where they have a שייכות (personality)
                         if (type === 'mechabrim') {
@@ -10265,18 +10385,13 @@ async function fetchStatistics() {
                                 const personalities = song.personality.split(',').map(p => p.trim());
                                 return personalities.includes(name);
                             });
-                            
+
                             if (relatedSongs.length > 0) {
-                                const playlistIndices = relatedSongs.map(song => allSongs.indexOf(song));
                                 return `
                                     <div class="detail-songs-section detail-related-songs">
                                         <h3>${relatedSongs.length} ניגונים וואס ער האט א שייכות</h3>
-                                        <div class="detail-songs-list">
-                                            ${relatedSongs.map((song, i) => {
-                                                const globalIdx = allSongs.indexOf(song);
-                                                return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                                            }).join('')}
-                                        </div>
+                                        <div class="detail-songs-list" id="detailRelatedSongsList"></div>
+                                        <div id="detailRelatedSongsPagination"></div>
                                     </div>
                                 `;
                             }
@@ -10285,6 +10400,27 @@ async function fetchStatistics() {
                     })()}
                 </div>
             `;
+
+            // Reset pagination state for this detail page
+            delete detailPageStates['detailSongs'];
+            delete detailPageStates['detailRelatedSongs'];
+
+            // Populate song lists with pagination
+            if (songs.length > 0) {
+                renderPaginatedDetailList('detailSongs', songs, 'detailSongsList', 'detailSongsPagination');
+            }
+
+            // For mechabrim, populate related songs
+            if (type === 'mechabrim') {
+                const relatedSongs = allSongs.filter(song => {
+                    if (!song.personality) return false;
+                    const personalities = song.personality.split(',').map(p => p.trim());
+                    return personalities.includes(name);
+                });
+                if (relatedSongs.length > 0) {
+                    renderPaginatedDetailList('detailRelatedSongs', relatedSongs, 'detailRelatedSongsList', 'detailRelatedSongsPagination');
+                }
+            }
         }
         
         // Format description text (handle markdown-like formatting)
@@ -11707,20 +11843,19 @@ async function fetchStatistics() {
                         <div class="detail-section">
                             <h3>פארבונדענע ניגונים (${relatedNigunim.length})</h3>
                             <div class="songs-card">
-                                <div class="all-songs-grid">
-                                    ${(() => {
-                                        const playlistIndices = relatedNigunim.map(song => allSongs.indexOf(song));
-                                        return relatedNigunim.map((song, idx) => {
-                                            const globalIdx = allSongs.indexOf(song);
-                                            return renderSongItem(song, globalIdx, idx + 1, playlistIndices);
-                                        }).join('');
-                                    })()}
-                                </div>
+                                <div class="all-songs-grid" id="documentRelatedSongsList"></div>
+                                <div id="documentRelatedSongsPagination"></div>
                             </div>
                         </div>
                     ` : ''}
                 </div>
             `;
+
+            // Populate related nigunim with pagination
+            if (relatedNigunim.length > 0) {
+                delete detailPageStates['documentRelatedSongs'];
+                renderPaginatedDetailList('documentRelatedSongs', relatedNigunim, 'documentRelatedSongsList', 'documentRelatedSongsPagination');
+            }
         }
 
         // Render resource detail page
@@ -11788,20 +11923,19 @@ async function fetchStatistics() {
                         <div class="detail-section">
                             <h3>פארבונדענע ניגונים (${relatedNigunim.length})</h3>
                             <div class="songs-card">
-                                <div class="all-songs-grid">
-                                    ${(() => {
-                                        const playlistIndices = relatedNigunim.map(song => allSongs.indexOf(song));
-                                        return relatedNigunim.map((song, idx) => {
-                                            const globalIdx = allSongs.indexOf(song);
-                                            return renderSongItem(song, globalIdx, idx + 1, playlistIndices);
-                                        }).join('');
-                                    })()}
-                                </div>
+                                <div class="all-songs-grid" id="resourceRelatedSongsList"></div>
+                                <div id="resourceRelatedSongsPagination"></div>
                             </div>
                         </div>
                     ` : ''}
                 </div>
             `;
+
+            // Populate related nigunim with pagination
+            if (relatedNigunim.length > 0) {
+                delete detailPageStates['resourceRelatedSongs'];
+                renderPaginatedDetailList('resourceRelatedSongs', relatedNigunim, 'resourceRelatedSongsList', 'resourceRelatedSongsPagination');
+            }
         }
 
         // Toggle category card - no longer needed but keep for compatibility
@@ -12040,13 +12174,179 @@ async function fetchStatistics() {
             `;
         }
 
-        // Go to page
-        function goToPage(page) {
+        // Render pagination controls
+        function renderPagination(totalItems, currentPage, itemsPerPage, goToPageFn) {
+            const totalPages = Math.ceil(totalItems / itemsPerPage);
+            if (totalPages <= 1) return '';
+
+            const startItem = (currentPage - 1) * itemsPerPage + 1;
+            const endItem = Math.min(currentPage * itemsPerPage, totalItems);
+
+            // Generate page buttons with smart ellipsis
+            let pageButtons = '';
+            const maxVisible = 5;
+            let startPage = Math.max(1, currentPage - 2);
+            let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+
+            if (endPage - startPage < maxVisible - 1) {
+                startPage = Math.max(1, endPage - maxVisible + 1);
+            }
+
+            // First page + ellipsis
+            if (startPage > 1) {
+                pageButtons += `<button class="pagination-btn" onclick="${goToPageFn}(1)">1</button>`;
+                if (startPage > 2) {
+                    pageButtons += '<span class="pagination-ellipsis">...</span>';
+                }
+            }
+
+            // Page numbers
+            for (let i = startPage; i <= endPage; i++) {
+                pageButtons += `<button class="pagination-btn ${i === currentPage ? 'active' : ''}" onclick="${goToPageFn}(${i})">${i}</button>`;
+            }
+
+            // Ellipsis + last page
+            if (endPage < totalPages) {
+                if (endPage < totalPages - 1) {
+                    pageButtons += '<span class="pagination-ellipsis">...</span>';
+                }
+                pageButtons += `<button class="pagination-btn" onclick="${goToPageFn}(${totalPages})">${totalPages}</button>`;
+            }
+
+            const inputId = 'pageJumpInput_' + Math.random().toString(36).substr(2, 9);
+
+            return `
+                <div class="pagination-container">
+                    <div class="pagination-controls">
+                        <button class="pagination-btn nav-btn" onclick="${goToPageFn}(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>→</button>
+                        ${pageButtons}
+                        <button class="pagination-btn nav-btn" onclick="${goToPageFn}(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>←</button>
+                    </div>
+                    <div class="pagination-jump">
+                        <span class="pagination-jump-label">שפרינג צו בלאט:</span>
+                        <input type="number"
+                               id="${inputId}"
+                               class="pagination-jump-input"
+                               min="1"
+                               max="${totalPages}"
+                               value="${currentPage}"
+                               onkeydown="if(event.key==='Enter'){${goToPageFn}(parseInt(this.value)||1)}">
+                        <button class="pagination-jump-btn" onclick="${goToPageFn}(parseInt(document.getElementById('${inputId}').value)||1)">גיי</button>
+                    </div>
+                    <div class="pagination-summary">ווייזט ${startItem}-${endItem} פון ${totalItems}</div>
+                </div>
+            `;
+        }
+
+        // Go to page (for main songs list)
+        function goToSongsPage(page) {
             const totalPages = Math.ceil(filteredSongs.length / songsPerPage);
             if (page < 1 || page > totalPages) return;
             currentPage = page;
-            renderCurrentPage();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            updateSongsListForPage();
+            // Scroll to top of songs grid
+            const grid = document.getElementById('songsGrid');
+            if (grid) {
+                grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        // Update songs list for current page
+        function updateSongsListForPage() {
+            const grid = document.getElementById('songsGrid');
+            const paginationContainer = document.getElementById('songsPagination');
+            if (!grid) return;
+
+            const startIdx = (currentPage - 1) * songsPerPage;
+            const endIdx = Math.min(startIdx + songsPerPage, filteredSongs.length);
+            const pageSongs = filteredSongs.slice(startIdx, endIdx);
+            const playlistIndices = filteredSongs.map(song => allSongs.indexOf(song));
+
+            grid.innerHTML = pageSongs.map((song, idx) => {
+                const globalIdx = allSongs.indexOf(song);
+                const displayNum = startIdx + idx + 1;
+                return renderSongItem(song, globalIdx, displayNum, playlistIndices);
+            }).join('');
+
+            // Apply staggered animation
+            requestAnimationFrame(() => {
+                const items = grid.querySelectorAll('.song-item');
+                items.forEach((item, i) => {
+                    item.style.animationDelay = `${i * 0.02}s`;
+                    item.classList.add('card-stagger');
+                });
+            });
+
+            // Update pagination
+            if (paginationContainer) {
+                paginationContainer.innerHTML = renderPagination(filteredSongs.length, currentPage, songsPerPage, 'goToSongsPage');
+            }
+
+            // Update count
+            updateSongsCount();
+        }
+
+        // Render a paginated song list for detail pages
+        function renderPaginatedDetailList(listId, songs, containerId, paginationId) {
+            const perPage = 25;
+
+            // Initialize state if not exists
+            if (!detailPageStates[listId]) {
+                detailPageStates[listId] = { page: 1, songs: songs, perPage: perPage };
+            } else {
+                detailPageStates[listId].songs = songs;
+            }
+
+            const state = detailPageStates[listId];
+            const totalPages = Math.ceil(songs.length / perPage);
+            const startIdx = (state.page - 1) * perPage;
+            const endIdx = Math.min(startIdx + perPage, songs.length);
+            const pageSongs = songs.slice(startIdx, endIdx);
+            const playlistIndices = songs.map(song => allSongs.indexOf(song));
+
+            const container = document.getElementById(containerId);
+            const paginationContainer = document.getElementById(paginationId);
+
+            if (container) {
+                container.innerHTML = pageSongs.map((song, idx) => {
+                    const globalIdx = allSongs.indexOf(song);
+                    const displayNum = startIdx + idx + 1;
+                    return renderSongItem(song, globalIdx, displayNum, playlistIndices);
+                }).join('');
+
+                // Apply staggered animation
+                requestAnimationFrame(() => {
+                    const items = container.querySelectorAll('.song-item');
+                    items.forEach((item, i) => {
+                        item.style.animationDelay = `${i * 0.02}s`;
+                        item.classList.add('card-stagger');
+                    });
+                });
+            }
+
+            if (paginationContainer && songs.length > perPage) {
+                paginationContainer.innerHTML = renderPagination(songs.length, state.page, perPage, `goToDetailPage.bind(null,'${listId}','${containerId}','${paginationId}')`);
+            } else if (paginationContainer) {
+                paginationContainer.innerHTML = '';
+            }
+        }
+
+        // Go to page for detail lists
+        function goToDetailPage(listId, containerId, paginationId, page) {
+            const state = detailPageStates[listId];
+            if (!state) return;
+
+            const totalPages = Math.ceil(state.songs.length / state.perPage);
+            if (page < 1 || page > totalPages) return;
+
+            state.page = page;
+            renderPaginatedDetailList(listId, state.songs, containerId, paginationId);
+
+            // Scroll to container
+            const container = document.getElementById(containerId);
+            if (container) {
+                container.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
         }
 
         // Show the player banner with animation (when song first plays)
