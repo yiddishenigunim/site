@@ -7375,6 +7375,10 @@
         // Clear old caches on load
         CacheManager.clearOldCaches();
 
+        // TEMPORARY: Force clear all caches for debugging
+        console.log('🔄 FORCING CACHE CLEAR FOR DEBUG');
+        CacheManager.clearAll();
+
         // Helper functions for cache (aliases for CacheManager)
         function getCachedData(key) {
             return CacheManager.get(key);
