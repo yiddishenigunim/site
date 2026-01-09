@@ -7226,23 +7226,76 @@
             songs: false
         };
 
-        // Helper to escape strings for use in onclick attributes
-        // Uses base64 encoding to safely handle ALL special characters including quotes
-        function escapeAttr(str) {
-            if (!str) return '';
-            // Use base64 to avoid any issues with quotes or special chars
-            return btoa(encodeURIComponent(String(str)));
-        }
-        
-        // Helper to decode the escaped attribute
-        function decodeAttr(encoded) {
-            if (!encoded) return '';
-            try {
-                return decodeURIComponent(atob(encoded));
-            } catch(e) {
-                return encoded;
+        // Global event delegation for handling clicks with special characters
+        // This replaces the old escapeAttr/decodeAttr approach that had issues with quotes
+        document.addEventListener('click', (e) => {
+            // Handle navigate to detail
+            const detailEl = e.target.closest('[data-action="detail"]');
+            if (detailEl) {
+                e.stopPropagation();
+                navigateToDetail(detailEl.dataset.category, detailEl.dataset.name);
+                return;
             }
-        }
+
+            // Handle navigate with filter
+            const filterEl = e.target.closest('[data-action="filter"]');
+            if (filterEl) {
+                e.stopPropagation();
+                e.preventDefault();
+                navigateToWithFilter(filterEl.dataset.page, filterEl.dataset.filterKey, filterEl.dataset.value);
+                if (filterEl.dataset.closeModal === 'true') {
+                    closeModal();
+                }
+                return;
+            }
+
+            // Handle navigate to zman detail
+            const zmanEl = e.target.closest('[data-action="zman-detail"]');
+            if (zmanEl) {
+                e.stopPropagation();
+                navigateToZmanDetail(zmanEl.dataset.name);
+                return;
+            }
+
+            // Handle play collection
+            const playColEl = e.target.closest('[data-action="play-collection"]');
+            if (playColEl) {
+                e.stopPropagation();
+                playCollectionFromStart(playColEl.dataset.name);
+                return;
+            }
+
+            // Handle play music category
+            const playMusicEl = e.target.closest('[data-action="play-music"]');
+            if (playMusicEl) {
+                e.stopPropagation();
+                playMusicCategory(playMusicEl.dataset.categoryType, playMusicEl.dataset.name);
+                return;
+            }
+
+            // Handle show all scale songs
+            const scaleMoreEl = e.target.closest('[data-action="scale-more"]');
+            if (scaleMoreEl) {
+                e.stopPropagation();
+                showAllScaleSongs(scaleMoreEl.dataset.ritem, scaleMoreEl.dataset.scale);
+                return;
+            }
+        });
+
+        // Global event delegation for tooltips
+        document.addEventListener('mouseenter', (e) => {
+            const tooltipEl = e.target.closest('[data-tooltip-value]');
+            if (tooltipEl) {
+                showTooltip(e, tooltipEl.dataset.tooltipValue, tooltipEl.dataset.tooltipType);
+            }
+        }, true);
+
+        document.addEventListener('mouseleave', (e) => {
+            const tooltipEl = e.target.closest('[data-tooltip-value]');
+            if (tooltipEl) {
+                hideTooltip();
+            }
+        }, true);
 
         // State
         let allSongs = [];
@@ -9757,7 +9810,6 @@ async function fetchStatistics() {
 
         // Navigate to detail page
         function navigateToDetail(categoryKey, name, id = null) {
-            const decodedName = decodeAttr(name);
             // If no ID provided, try to get it from info object
             if (!id) {
                 let infoObj = {};
@@ -9771,9 +9823,9 @@ async function fetchStatistics() {
                     case 'documents': infoObj = documentsInfo; break;
                     case 'resources': infoObj = resourcesInfo; break;
                 }
-                id = infoObj[decodedName]?.rowId;
+                id = infoObj[name]?.rowId;
             }
-            currentDetailView = { type: categoryKey, name: decodedName, id: id };
+            currentDetailView = { type: categoryKey, name: name, id: id };
             updateURL();
             renderDetailPage();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -10008,10 +10060,13 @@ async function fetchStatistics() {
                                 ${chatzeros.length > 0 ? `
                                     <div class="detail-badges">
                                         ${chatzeros.map(chatzer => `
-                                            <span class="detail-chatzer-badge" 
-                                                  onclick="navigateToWithFilter('chatzeros', 'chatzer', '${escapeAttr(chatzer)}')" 
-                                                  onmouseenter="showTooltip(event, '${escapeAttr(chatzer)}', 'chatzer')"
-                                                  onmouseleave="hideTooltip()"
+                                            <span class="detail-chatzer-badge"
+                                                  data-action="filter"
+                                                  data-page="chatzeros"
+                                                  data-filter-key="chatzer"
+                                                  data-value="${chatzer}"
+                                                  data-tooltip-value="${chatzer}"
+                                                  data-tooltip-type="chatzer"
                                                   style="cursor:pointer;">${chatzer}</span>
                                         `).join('')}
                                     </div>
@@ -10031,8 +10086,9 @@ async function fetchStatistics() {
                                 ${(type === 'collections' && info.zmanim && info.zmanim.length > 0) ? `
                                     <div class="detail-zmanim-badges">
                                         ${info.zmanim.map(zman => `
-                                            <span class="detail-zman-badge" 
-                                                  onclick="navigateToZmanDetail('${escapeAttr(zman)}')"
+                                            <span class="detail-zman-badge"
+                                                  data-action="zman-detail"
+                                                  data-name="${zman}"
                                                   style="cursor:pointer;">${zman}</span>
                                         `).join('')}
                                     </div>
@@ -10053,7 +10109,7 @@ async function fetchStatistics() {
                             <h3>${mechabrimFromChatzer.length} מחברים</h3>
                             <div class="nigun-mechaber-grid">
                                 ${mechabrimFromChatzer.map(mech => `
-                                    <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mech.name)}')">
+                                    <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${mech.name}">
                                         ${mech.image
                                             ? `<img class="nigun-mechaber-image" src="${mech.image}" alt="${mech.name}">`
                                             : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
@@ -10197,7 +10253,7 @@ async function fetchStatistics() {
                 const collectionsCount = zmanData.collections?.length || 0;
                 
                 html += `
-                    <div class="category-card" onclick="navigateToZmanDetail('${escapeAttr(zmanName)}')">
+                    <div class="category-card" data-action="zman-detail" data-name="${zmanName}">
                         <div class="card-header">
                             <div class="card-icon"></div>
                             <div class="card-header-text">
@@ -10218,8 +10274,7 @@ async function fetchStatistics() {
         }
         
         // Navigate to zman detail page
-        function navigateToZmanDetail(encodedName) {
-            const name = decodeAttr(encodedName);
+        function navigateToZmanDetail(name) {
             const infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
             const id = infoObj[name]?.rowId;
             currentDetailView = { type: 'zman', name: name, id: id };
@@ -10275,7 +10330,7 @@ async function fetchStatistics() {
                                 ${chatzeros.length > 0 ? `
                                     <div class="nigun-chatzer-tags">
                                         ${chatzeros.map(chatzer => `
-                                            <span class="nigun-tag chatzer-tag" onclick="navigateToDetail('chatzeros', '${escapeAttr(chatzer)}')">
+                                            <span class="nigun-tag chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${chatzer}">
                                                 ${chatzer}
                                             </span>
                                         `).join('')}
@@ -10292,7 +10347,7 @@ async function fetchStatistics() {
                                 ${song.mechaber.split(',').map(m => m.trim()).filter(Boolean).map(mName => {
                                     const mInfo = mechabrimInfo[mName];
                                     return `
-                                        <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(mName)}')">
+                                        <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${mName}">
                                             ${mInfo?.image
                                                 ? `<img class="nigun-mechaber-image" src="${mInfo.image}" alt="${mName}">`
                                                 : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
@@ -10312,7 +10367,7 @@ async function fetchStatistics() {
                                 ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
                                     const pInfo = mechabrimInfo[personName];
                                     return `
-                                        <div class="nigun-mechaber-card" onclick="navigateToDetail('mechabrim', '${escapeAttr(personName)}')">
+                                        <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${personName}">
                                             ${pInfo?.image
                                                 ? `<img class="nigun-mechaber-image" src="${pInfo.image}" alt="${personName}">`
                                                 : `<div class="nigun-mechaber-placeholder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a5 5 0 1 1 -5 5l.005 -.217a5 5 0 0 1 4.995 -4.783z"/><path d="M14 14a5 5 0 0 1 5 5v1a2 2 0 0 1 -2 2h-10a2 2 0 0 1 -2 -2v-1a5 5 0 0 1 5 -5h4z"/></svg></div>`
@@ -10338,9 +10393,11 @@ async function fetchStatistics() {
                                 <span class="nigun-detail-value nigun-tags-row">
                                     ${song.verter.split(',').map(v => v.trim()).filter(Boolean).map(v => `
                                         <span class="nigun-tag-inline tag-verter"
-                                              onclick="navigateToDetail('verter', '${escapeAttr(v)}')"
-                                              onmouseenter="showTooltip(event, '${escapeAttr(v)}', 'verter')"
-                                              onmouseleave="hideTooltip()">${v}</span>
+                                              data-action="detail"
+                                              data-category="verter"
+                                              data-name="${v}"
+                                              data-tooltip-value="${v}"
+                                              data-tooltip-type="verter">${v}</span>
                                     `).join('')}
                                 </span>
                             </div>
@@ -10367,9 +10424,12 @@ async function fetchStatistics() {
                                 <span class="nigun-detail-value nigun-tags-row">
                                     ${song.maure.split(',').map(m => m.trim()).filter(Boolean).map(m => `
                                         <span class="nigun-tag-inline tag-piyut"
-                                              onclick="navigateToWithFilter('songs', 'zman', '${escapeAttr(m)}')"
-                                              onmouseenter="showTooltip(event, '${escapeAttr(m)}', 'zman')"
-                                              onmouseleave="hideTooltip()">${m}</span>
+                                              data-action="filter"
+                                              data-page="songs"
+                                              data-filter-key="zman"
+                                              data-value="${m}"
+                                              data-tooltip-value="${m}"
+                                              data-tooltip-type="zman">${m}</span>
                                     `).join('')}
                                 </span>
                             </div>
@@ -10379,10 +10439,13 @@ async function fetchStatistics() {
                                 <span class="nigun-detail-label">איז פאסיג צו זינגען אויף:    </span>
                                 <span class="nigun-detail-value nigun-tags-row">
                                     ${song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
-                                        <span class="nigun-tag-inline tag-piyut" 
-                                              onclick="navigateToWithFilter('songs', 'zman', '${escapeAttr(p)}')"
-                                              onmouseenter="showTooltip(event, '${escapeAttr(p)}', 'zman')"
-                                              onmouseleave="hideTooltip()">${p}</span>
+                                        <span class="nigun-tag-inline tag-piyut"
+                                              data-action="filter"
+                                              data-page="songs"
+                                              data-filter-key="zman"
+                                              data-value="${p}"
+                                              data-tooltip-value="${p}"
+                                              data-tooltip-type="zman">${p}</span>
                                     `).join('')}
                                 </span>
                             </div>
@@ -10393,9 +10456,11 @@ async function fetchStatistics() {
                                 <span class="nigun-detail-value nigun-tags-row">
                                     ${song.collections.split(',').map(col => col.trim()).filter(Boolean).map(col => `
                                         <span class="nigun-tag-inline tag-collection"
-                                              onclick="navigateToDetail('collections', '${escapeAttr(col)}')"
-                                              onmouseenter="showTooltip(event, '${escapeAttr(col)}', 'collection')"
-                                              onmouseleave="hideTooltip()">${col}</span>
+                                              data-action="detail"
+                                              data-category="collections"
+                                              data-name="${col}"
+                                              data-tooltip-value="${col}"
+                                              data-tooltip-type="collection">${col}</span>
                                     `).join('')}
                                 </span>
                             </div>
@@ -10406,7 +10471,9 @@ async function fetchStatistics() {
                                 <span class="nigun-detail-value nigun-tags-row">
                                     ${song.albums.split(',').map(a => a.trim()).filter(Boolean).map(a => `
                                         <span class="nigun-tag-inline tag-album"
-                                              onclick="navigateToDetail('albums', '${escapeAttr(a)}')"
+                                              data-action="detail"
+                                              data-category="albums"
+                                              data-name="${a}"
                                               style="cursor:pointer;">${a}</span>
                                     `).join('')}
                                 </span>
@@ -10418,7 +10485,9 @@ async function fetchStatistics() {
                                 <span class="nigun-detail-value nigun-tags-row">
                                     ${song.documents.split(',').map(d => d.trim()).filter(Boolean).map(d => `
                                         <span class="nigun-tag-inline tag-document"
-                                              onclick="navigateToDetail('documents', '${escapeAttr(d)}')"
+                                              data-action="detail"
+                                              data-category="documents"
+                                              data-name="${d}"
                                               style="cursor:pointer;">${d}</span>
                                     `).join('')}
                                 </span>
@@ -10430,7 +10499,9 @@ async function fetchStatistics() {
                                 <span class="nigun-detail-value nigun-tags-row">
                                     ${song.resources.split(',').map(r => r.trim()).filter(Boolean).map(r => `
                                         <span class="nigun-tag-inline tag-resource"
-                                              onclick="navigateToDetail('resources', '${escapeAttr(r)}')"
+                                              data-action="detail"
+                                              data-category="resources"
+                                              data-name="${r}"
                                               style="cursor:pointer;">${r}</span>
                                     `).join('')}
                                 </span>
@@ -10629,7 +10700,7 @@ async function fetchStatistics() {
                             ${collections.sort((a, b) => a.localeCompare(b, 'he')).map(colName => {
                                 const songCount = categories.collections[colName]?.length || 0;
                                 return `
-                                    <div class="zman-item-card" onclick="navigateToDetail('collections', '${escapeAttr(colName)}')">
+                                    <div class="zman-item-card" data-action="detail" data-category="collections" data-name="${colName}">
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${colName}</div>
@@ -10652,7 +10723,7 @@ async function fetchStatistics() {
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
                                 const songCount = categories.zmanim[piyutName]?.length || 0;
                                 return `
-                                    <div class="zman-item-card" onclick="navigateToDetail('zmanim', '${escapeAttr(piyutName)}')">
+                                    <div class="zman-item-card" data-action="detail" data-category="zmanim" data-name="${piyutName}">
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${piyutName}</div>
@@ -10695,22 +10766,23 @@ async function fetchStatistics() {
                             
                             return `
                             <div class="collection-card">
-                                <div class="collection-card-header" onclick="navigateToDetail('collections', '${escapeAttr(key)}')">
+                                <div class="collection-card-header" data-action="detail" data-category="collections" data-name="${key}">
                                     <div class="collection-icon">♫</div>
                                     <div class="collection-info">
                                         <div class="collection-title">${key}</div>
                                         <div class="collection-meta">${songCount} ניגונים</div>
                                         ${zmanim.length > 0 ? `
                                             <div class="collection-zmanim" onclick="event.stopPropagation();">
-                                                ${zmanim.slice(0, 3).map(zman => `<span class="collection-zman-tag" 
-                                                    onclick="event.stopPropagation(); navigateToZmanDetail('${escapeAttr(zman)}')"
-                                                    onmouseenter="showTooltip(event, '${escapeAttr(zman)}', 'zman')"
-                                                    onmouseleave="hideTooltip()">${zman}</span>`).join('')}
+                                                ${zmanim.slice(0, 3).map(zman => `<span class="collection-zman-tag"
+                                                    data-action="zman-detail"
+                                                    data-name="${zman}"
+                                                    data-tooltip-value="${zman}"
+                                                    data-tooltip-type="zman">${zman}</span>`).join('')}
                                                 ${zmanim.length > 3 ? `<span class="collection-zman-more">+${zmanim.length - 3}</span>` : ''}
                                             </div>
                                         ` : ''}
                                     </div>
-                                    <button class="collection-play-btn" onclick="event.stopPropagation(); playCollectionFromStart('${escapeAttr(key)}')">
+                                    <button class="collection-play-btn" data-action="play-collection" data-name="${key}">
                                         ▶
                                     </button>
                                 </div>
@@ -10763,17 +10835,17 @@ async function fetchStatistics() {
                             const totalInRitem = ritemData[ritem].length;
                             
                             return `
-                                <div class="ritem-group" data-ritem="${escapeAttr(ritem)}">
+                                <div class="ritem-group" data-ritem="${ritem}">
                                     <div class="ritem-group-header">
                                         <h3>${ritem}</h3>
                                         <span class="ritem-count">${totalInRitem} ניגונים</span>
-                                        <button class="ritem-play-btn" onclick="event.stopPropagation(); playMusicCategory('ritem', '${escapeAttr(ritem)}')">▶ שפיל אלע</button>
+                                        <button class="ritem-play-btn" data-action="play-music" data-category-type="ritem" data-name="${ritem}">▶ שפיל אלע</button>
                                     </div>
                                     <div class="ritem-scales">
                                         ${scalesInRitem.map(scale => {
                                             const songsInScale = ritemGroups[ritem][scale] || [];
                                             return `
-                                                <div class="scale-group" data-scale="${escapeAttr(scale)}">
+                                                <div class="scale-group" data-scale="${scale}">
                                                     <div class="scale-group-header">
                                                         <span class="scale-name">${scale}</span>
                                                         <span class="scale-song-count">${songsInScale.length}</span>
@@ -10792,7 +10864,7 @@ async function fetchStatistics() {
                                                             `;
                                                         }).join('')}
                                                         ${songsInScale.length > 10 ? `
-                                                            <div class="scale-more" onclick="showAllScaleSongs('${escapeAttr(ritem)}', '${escapeAttr(scale)}')">
+                                                            <div class="scale-more" data-action="scale-more" data-ritem="${ritem}" data-scale="${scale}">
                                                                 + נאך ${songsInScale.length - 10} ניגונים...
                                                             </div>
                                                         ` : ''}
@@ -10812,8 +10884,8 @@ async function fetchStatistics() {
         // Show all songs for a scale in a ritem
         function showAllScaleSongs(ritem, scale) {
             // Navigate to songs page with both filters
-            activeFilters.ritem = [decodeAttr(ritem)];
-            activeFilters.scale = [decodeAttr(scale)];
+            activeFilters.ritem = [ritem];
+            activeFilters.scale = [scale];
             applyFilters();
             navigateTo('songs');
         }
@@ -10849,7 +10921,7 @@ async function fetchStatistics() {
             }
 
             return `
-            <div class="category-card ${hasImage ? 'has-image' : ''}" onclick="navigateToDetail('${categoryKey}', '${escapeAttr(key)}')">
+            <div class="category-card ${hasImage ? 'has-image' : ''}" data-action="detail" data-category="${categoryKey}" data-name="${key}">
                 <div class="card-header">
                     ${hasImage ? `
                         <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -10898,9 +10970,12 @@ async function fetchStatistics() {
                             <div class="card-tags" onclick="event.stopPropagation();">
                                 ${chatzeros.map(chatzer => `
                                     <span class="card-chatzer-tag"
-                                          onclick="event.stopPropagation(); navigateToWithFilter('chatzeros', 'chatzer', '${escapeAttr(chatzer)}')"
-                                          onmouseenter="showTooltip(event, '${escapeAttr(chatzer)}', 'chatzer')"
-                                          onmouseleave="hideTooltip()">${chatzer}</span>
+                                          data-action="filter"
+                                          data-page="chatzeros"
+                                          data-filter-key="chatzer"
+                                          data-value="${chatzer}"
+                                          data-tooltip-value="${chatzer}"
+                                          data-tooltip-type="chatzer">${chatzer}</span>
                                 `).join('')}
                             </div>
                         ` : ''}
@@ -11047,7 +11122,7 @@ async function fetchStatistics() {
                             }
                             
                             return `
-                            <div class="category-card ${hasImage ? 'has-image' : ''}" onclick="navigateToDetail('${categoryKey}', '${escapeAttr(key)}')">
+                            <div class="category-card ${hasImage ? 'has-image' : ''}" data-action="detail" data-category="${categoryKey}" data-name="${key}">
                                 <div class="card-header">
                                     ${hasImage ? `
                                         <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -11080,10 +11155,13 @@ async function fetchStatistics() {
                                         ${chatzeros.length > 0 ? `
                                             <div class="card-tags" onclick="event.stopPropagation();">
                                                 ${chatzeros.map(chatzer => `
-                                                    <span class="card-chatzer-tag" 
-                                                          onclick="event.stopPropagation(); navigateToWithFilter('chatzeros', 'chatzer', '${escapeAttr(chatzer)}')"
-                                                          onmouseenter="showTooltip(event, '${escapeAttr(chatzer)}', 'chatzer')"
-                                                          onmouseleave="hideTooltip()">${chatzer}</span>
+                                                    <span class="card-chatzer-tag"
+                                                          data-action="filter"
+                                                          data-page="chatzeros"
+                                                          data-filter-key="chatzer"
+                                                          data-value="${chatzer}"
+                                                          data-tooltip-value="${chatzer}"
+                                                          data-tooltip-type="chatzer">${chatzer}</span>
                                                 `).join('')}
                                             </div>
                                         ` : ''}
@@ -11159,12 +11237,12 @@ async function fetchStatistics() {
                     
                     html += `
                         <div class="resource-card">
-                            <div class="resource-card-header clickable-header" onclick="navigateToDetail('resources', '${escapeAttr(key)}')">
+                            <div class="resource-card-header clickable-header" data-action="detail" data-category="resources" data-name="${key}">
                                 <div class="resource-sort-label">${groupName}</div>
                             </div>
                             <div class="resource-card-body">
-                                <div class="resource-title clickable-title" onclick="navigateToDetail('resources', '${escapeAttr(key)}')">${key}</div>
-                                ${info.chatzer ? `<div class="resource-chatzer"><span class="chatzer-tag" onmouseenter="showTooltip(event, '${escapeAttr(info.chatzer)}', 'chatzer')" onmouseleave="hideTooltip()" onclick="navigateToDetail('chatzeros', '${escapeAttr(info.chatzer)}')">${info.chatzer}</span></div>` : ''}
+                                <div class="resource-title clickable-title" data-action="detail" data-category="resources" data-name="${key}">${key}</div>
+                                ${info.chatzer ? `<div class="resource-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}" data-tooltip-value="${info.chatzer}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
                                 ${info.description ? `<div class="resource-details">${info.description}</div>` : ''}
                                 ${info.notes ? `<div class="resource-notes">${info.notes}</div>` : ''}
                             </div>
@@ -11240,7 +11318,7 @@ async function fetchStatistics() {
                     
                     html += `
                         <div class="document-card">
-                            <div class="document-card-header clickable-header" onclick="navigateToDetail('documents', '${escapeAttr(key)}')">
+                            <div class="document-card-header clickable-header" data-action="detail" data-category="documents" data-name="${key}">
                                 <div class="document-sort-label">${groupName}</div>
                             </div>
                             ${hasFile ? `
@@ -11252,9 +11330,9 @@ async function fetchStatistics() {
                                 </div>
                             ` : ''}
                             <div class="document-card-body">
-                                <div class="document-title clickable-title" onclick="navigateToDetail('documents', '${escapeAttr(key)}')">${key}</div>
+                                <div class="document-title clickable-title" data-action="detail" data-category="documents" data-name="${key}">${key}</div>
                                 ${info.serie ? `<div class="document-serie">${info.serie.replace(/\`\`\`/g, '')}</div>` : ''}
-                                ${info.chatzer ? `<div class="document-chatzer"><span class="chatzer-tag" onmouseenter="showTooltip(event, '${escapeAttr(info.chatzer)}', 'chatzer')" onmouseleave="hideTooltip()" onclick="navigateToDetail('chatzeros', '${escapeAttr(info.chatzer)}')">${info.chatzer}</span></div>` : ''}
+                                ${info.chatzer ? `<div class="document-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}" data-tooltip-value="${info.chatzer}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
                                 ${info.description ? `<div class="document-details">${info.description.replace(/\`\`\`/g, '').replace(/!\[.*?\]\(.*?\)/g, '')}</div>` : ''}
                                 ${info.notes ? `<div class="document-notes">${info.notes}</div>` : ''}
                             </div>
@@ -11348,18 +11426,18 @@ async function fetchStatistics() {
                     
                     html += `
                         <div class="album-card ${hasImage ? 'has-cover' : ''}">
-                            <div class="album-card-header clickable-header" onclick="navigateToDetail('albums', '${escapeAttr(key)}')">
+                            <div class="album-card-header clickable-header" data-action="detail" data-category="albums" data-name="${key}">
                                 <div class="album-producer-label">${groupName}</div>
                             </div>
                             ${hasImage ? `
-                                <img class="album-cover clickable-cover" src="${coverUrl}" alt="${key}" onclick="navigateToDetail('albums', '${escapeAttr(key)}')" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                <div class="album-cover-placeholder clickable-cover" style="display:none;" onclick="navigateToDetail('albums', '${escapeAttr(key)}')">♪</div>
+                                <img class="album-cover clickable-cover" src="${coverUrl}" alt="${key}" data-action="detail" data-category="albums" data-name="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <div class="album-cover-placeholder clickable-cover" style="display:none;" data-action="detail" data-category="albums" data-name="${key}">♪</div>
                             ` : `
-                                <div class="album-cover-placeholder clickable-cover" onclick="navigateToDetail('albums', '${escapeAttr(key)}')">♪</div>
+                                <div class="album-cover-placeholder clickable-cover" data-action="detail" data-category="albums" data-name="${key}">♪</div>
                             `}
                             <div class="album-info">
-                                <div class="album-title clickable-title" onclick="navigateToDetail('albums', '${escapeAttr(key)}')">${key}</div>
-                                ${info.chatzer ? `<div class="album-chatzer"><span class="chatzer-tag" onmouseenter="showTooltip(event, '${escapeAttr(info.chatzer)}', 'chatzer')" onmouseleave="hideTooltip()" onclick="navigateToDetail('chatzeros', '${escapeAttr(info.chatzer)}')">${info.chatzer}</span></div>` : ''}
+                                <div class="album-title clickable-title" data-action="detail" data-category="albums" data-name="${key}">${key}</div>
+                                ${info.chatzer ? `<div class="album-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}" data-tooltip-value="${info.chatzer}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
                                 ${serie ? `<div class="album-serie">${serie}</div>` : ''}
                                 ${info.year ? `<div class="album-year">שנת ${info.year}</div>` : ''}
                                 ${notes ? `<div class="album-notes">${notes}</div>` : ''}
@@ -11418,7 +11496,7 @@ async function fetchStatistics() {
                             <div class="detail-header-text">
                                 <h1 class="detail-title" style="color: var(--color-album-dark);">${albumName}</h1>
                                 ${producer ? `<div class="detail-subtitle">${producer}</div>` : ''}
-                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" onclick="navigateToDetail('chatzeros', '${escapeAttr(info.chatzer)}')">${info.chatzer}</span></div>` : ''}
+                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}">${info.chatzer}</span></div>` : ''}
                                 ${info.year ? `<div class="detail-year">שנת ${info.year}</div>` : ''}
                             </div>
                         </div>
@@ -11498,7 +11576,7 @@ async function fetchStatistics() {
                                 <h1 class="detail-title" style="color: var(--color-document-dark);">${docName}</h1>
                                 ${sortType ? `<div class="detail-type-badge" style="background: var(--color-document-pale); color: var(--color-document-dark);">${sortType}</div>` : ''}
                                 ${info.serie ? `<div class="detail-subtitle">${info.serie.replace(/\`\`\`/g, '')}</div>` : ''}
-                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" onclick="navigateToDetail('chatzeros', '${escapeAttr(info.chatzer)}')">${info.chatzer}</span></div>` : ''}
+                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}">${info.chatzer}</span></div>` : ''}
                             </div>
                         </div>
                     </div>
@@ -11585,7 +11663,7 @@ async function fetchStatistics() {
                             <div class="detail-header-text">
                                 <h1 class="detail-title" style="color: var(--color-resource-dark);">${resourceName}</h1>
                                 ${sortType ? `<div class="detail-type-badge" style="background: var(--color-resource-pale); color: var(--color-resource-dark);">${sortType}</div>` : ''}
-                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" onclick="navigateToDetail('chatzeros', '${escapeAttr(info.chatzer)}')">${info.chatzer}</span></div>` : ''}
+                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${info.chatzer}">${info.chatzer}</span></div>` : ''}
                             </div>
                         </div>
                     </div>
@@ -11643,10 +11721,7 @@ async function fetchStatistics() {
 
         function showTooltip(event, value, fieldType) {
             clearTimeout(tooltipTimeout);
-            
-            // Decode the value if it was encoded
-            const decodedValue = decodeAttr(value);
-            
+
             const tooltip = hoverTooltip;
             const typeEl = document.getElementById('tooltipType');
             const titleEl = document.getElementById('tooltipTitle');
@@ -11667,58 +11742,58 @@ async function fetchStatistics() {
                 case 'mechaber':
                     categoryKey = 'mechabrim';
                     typeName = 'מחבר';
-                    extraInfo = mechabrimInfo[decodedValue];
+                    extraInfo = mechabrimInfo[value];
                     themeClass = 'tooltip-mechaber';
                     break;
                 case 'chatzer':
                     categoryKey = 'chatzeros';
                     typeName = 'חצר';
-                    extraInfo = chatzerosInfo[decodedValue];
+                    extraInfo = chatzerosInfo[value];
                     themeClass = 'tooltip-chatzer';
                     break;
                 case 'verter':
                     categoryKey = 'verter';
                     typeName = 'ווערטער';
-                    extraInfo = verterInfo[decodedValue];
+                    extraInfo = verterInfo[value];
                     themeClass = 'tooltip-verter';
                     break;
                 case 'zman':
                     categoryKey = 'zmanim';
                     // Check if it's a piyut or zman
-                    if (piyutimInfo[decodedValue]) {
+                    if (piyutimInfo[value]) {
                         typeName = 'פיוט';
-                        extraInfo = piyutimInfo[decodedValue];
+                        extraInfo = piyutimInfo[value];
                         themeClass = 'tooltip-piyut';
                     } else {
                         typeName = 'זמן';
-                        extraInfo = zmaninInfo[decodedValue];
+                        extraInfo = zmaninInfo[value];
                         themeClass = 'tooltip-zman';
                     }
                     break;
                 case 'piyut':
                     categoryKey = 'zmanim';
                     typeName = 'פיוט';
-                    extraInfo = piyutimInfo[decodedValue];
+                    extraInfo = piyutimInfo[value];
                     themeClass = 'tooltip-piyut';
                     break;
                 case 'collection':
                     categoryKey = 'collections';
                     typeName = 'קאלעקשאן';
-                    extraInfo = collectionsInfo[decodedValue];
+                    extraInfo = collectionsInfo[value];
                     themeClass = 'tooltip-collection';
                     break;
             }
-            
+
             // Add theme class
             if (themeClass) {
                 tooltip.classList.add(themeClass);
             }
-            
+
             // Set type label
             typeEl.textContent = typeName;
-            
+
             // For mechaber, build full name
-            let displayName = decodedValue;
+            let displayName = value;
             if (fieldType === 'mechaber' && extraInfo) {
                 const nameParts = [extraInfo.title, extraInfo.firstName, extraInfo.lastName, extraInfo.suffix].filter(Boolean);
                 if (nameParts.length > 0) {
@@ -11766,18 +11841,18 @@ async function fetchStatistics() {
             subtitleEl.style.display = subtitle ? 'block' : 'none';
             
             // Build stats
-            const songIndices = categories[categoryKey]?.[decodedValue] || [];
+            const songIndices = categories[categoryKey]?.[value] || [];
             const songCount = songIndices.length;
-            
+
             let statsHtml = `${songCount} ניגונים`;
-            
+
             // For chatzeros, count mechabrim
             if (fieldType === 'chatzer') {
                 const mechabrimCount = Object.entries(mechabrimInfo)
                     .filter(([mechName, mechInfo]) => {
                         if (!mechInfo.chatzer) return false;
                         const mechChatzeros = mechInfo.chatzer.split(',').map(c => c.trim());
-                        return mechChatzeros.includes(decodedValue);
+                        return mechChatzeros.includes(value);
                     }).length;
                 if (mechabrimCount > 0) {
                     statsHtml = `${mechabrimCount} מחברים · ${statsHtml}`;
@@ -11803,7 +11878,7 @@ async function fetchStatistics() {
         }
 
         // Create meta links for song items (handles multiple comma-separated values)
-        // Uses pill button styling with category colors
+        // Uses pill button styling with category colors and data attributes for event delegation
         function createMetaLinks(value, page, filterKey, entityType = null) {
             if (!value) return '';
             const values = value.split(',').map(v => v.trim()).filter(Boolean);
@@ -11814,9 +11889,12 @@ async function fetchStatistics() {
                              filterKey === 'collection' ? 'collection-tag' : 'song-meta-link';
             return values.map(v =>
                 `<span class="${tagClass} song-meta-tag"
-                    onclick="navigateToWithFilter('${page}', '${filterKey}', '${escapeAttr(v)}'); event.stopPropagation();"
-                    onmouseenter="showTooltip(event, '${escapeAttr(v)}', '${filterKey}')"
-                    onmouseleave="hideTooltip()">${v}</span>`
+                    data-action="filter"
+                    data-page="${page}"
+                    data-filter-key="${filterKey}"
+                    data-value="${v}"
+                    data-tooltip-value="${v}"
+                    data-tooltip-type="${filterKey}">${v}</span>`
             ).join(' ');
         }
 
@@ -11959,12 +12037,11 @@ async function fetchStatistics() {
 
         // Play a collection from the start
         function playCollectionFromStart(collectionName) {
-            const decodedName = decodeAttr(collectionName);
-            const trimmedName = decodedName.trim();
+            const trimmedName = collectionName.trim();
             console.log('Playing collection:', trimmedName);
             console.log('Available collections:', Object.keys(categories.collections));
-            
-            const songIndices = categories.collections[trimmedName] || categories.collections[decodedName] || [];
+
+            const songIndices = categories.collections[trimmedName] || categories.collections[collectionName] || [];
             console.log('Song indices:', songIndices);
             
             if (songIndices.length === 0) {
@@ -11993,11 +12070,10 @@ async function fetchStatistics() {
 
         // Play a music category (scale or ritem)
         function playMusicCategory(categoryType, categoryName) {
-            const decodedName = decodeAttr(categoryName);
-            const trimmedName = decodedName.trim();
-            
+            const trimmedName = categoryName.trim();
+
             const categoryData = categoryType === 'scale' ? categories.scale : categories.ritem;
-            const songIndices = categoryData[trimmedName] || categoryData[decodedName] || [];
+            const songIndices = categoryData[trimmedName] || categoryData[categoryName] || [];
             
             if (songIndices.length === 0) return;
             
@@ -12049,9 +12125,12 @@ async function fetchStatistics() {
             const linkClass = entityType ? `player-meta-link-${entityType}` : 'player-meta-link';
             return values.map(v =>
                 `<a href="#" class="${linkClass}"
-                    onclick="navigateToWithFilter('${page}', '${filterKey}', '${escapeAttr(v)}'); event.preventDefault();"
-                    onmouseenter="showTooltip(event, '${escapeAttr(v)}', '${filterKey}')"
-                    onmouseleave="hideTooltip()">${v}</a>`
+                    data-action="filter"
+                    data-page="${page}"
+                    data-filter-key="${filterKey}"
+                    data-value="${v}"
+                    data-tooltip-value="${v}"
+                    data-tooltip-type="${filterKey}">${v}</a>`
             ).join(', ');
         }
 
@@ -12355,18 +12434,19 @@ async function fetchStatistics() {
                         return v; // No link for other fields
                 }
                 
-                return `<a href="#" class="field-link" 
-                    onclick="navigateToWithFilter('${page}', '${filterKey}', '${escapeAttr(v)}'); closeModal(); event.preventDefault();"
-                    onmouseenter="showTooltip(event, '${escapeAttr(v)}', '${filterKey}')"
-                    onmouseleave="hideTooltip()">${v}</a>`;
+                return `<a href="#" class="field-link"
+                    data-action="filter"
+                    data-page="${page}"
+                    data-filter-key="${filterKey}"
+                    data-value="${v}"
+                    data-close-modal="true"
+                    data-tooltip-value="${v}"
+                    data-tooltip-type="${filterKey}">${v}</a>`;
             }).join(' ');
         }
 
         // Navigate to page with filter applied (opens detail page)
         function navigateToWithFilter(page, filterKey, value) {
-            // Decode the value if it was encoded
-            const decodedValue = decodeAttr(value);
-            
             // Handle scale, rhythm, gezungen, maure - filter songs page
             if (filterKey === 'scale' || filterKey === 'ritem' || filterKey === 'gezungen' || filterKey === 'maure') {
                 // Reset all filters first
@@ -12381,27 +12461,27 @@ async function fetchStatistics() {
                     gezungen: [],
                     maure: []
                 };
-                
+
                 // Set the specific filter
-                activeFilters[filterKey] = [decodedValue];
-                
+                activeFilters[filterKey] = [value];
+
                 // Filter songs
                 applyFilters();
-                
+
                 currentDetailView = null;
                 currentPageView = 'songs';
-                
+
                 // Update nav buttons
                 document.querySelectorAll('.nav-btn').forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.page === 'songs');
                 });
-                
+
                 updateURL();
                 renderCurrentPage();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
                 return;
             }
-            
+
             // Map page to category key
             const categoryMap = {
                 'chatzeros': 'chatzeros',
@@ -12410,11 +12490,11 @@ async function fetchStatistics() {
                 'zmanim': 'zmanim',
                 'collections': 'collections'
             };
-            
+
             const categoryKey = categoryMap[page];
             if (categoryKey) {
                 // Navigate to detail page for this item
-                navigateToDetail(categoryKey, encodeURIComponent(decodedValue));
+                navigateToDetail(categoryKey, value);
             }
         }
 
@@ -12726,7 +12806,7 @@ async function fetchStatistics() {
                             ${displaySongs.map((song, idx) => {
                                 const globalIdx = allSongs.indexOf(song);
                                 const hasAudio = !!song.audioUrl;
-                                const escapedName = escapeAttr(song.name);
+                                // No longer need to escape - using data attributes now
                                 // Build meta with entity-specific colored links
                                 const metaParts = [];
                                 if (song.mechaber) metaParts.push(createMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
@@ -12758,7 +12838,7 @@ async function fetchStatistics() {
                             ${matchingAlbums.map(name => {
                                 const albumData = albumsInfo[name];
                                 return `
-                                <div class="search-result-card result-album" onclick="navigateToDetail('albums', '${escapeAttr(name)}')" style="border-right-color: var(--color-album);">
+                                <div class="search-result-card result-album" data-action="detail" data-category="albums" data-name="${name}" style="border-right-color: var(--color-album);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${albumData?.songs?.length || 0} ניגונים</div>
                                 </div>
@@ -12777,7 +12857,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingChatzeros.map(name => `
-                                <div class="search-result-card result-chatzer" onclick="navigateToDetail('chatzeros', '${escapeAttr(name)}')" style="border-right-color: var(--color-chatzer);">
+                                <div class="search-result-card result-chatzer" data-action="detail" data-category="chatzeros" data-name="${name}" style="border-right-color: var(--color-chatzer);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.chatzeros[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12796,7 +12876,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingMechabrim.map(name => `
-                                <div class="search-result-card result-mechaber" onclick="navigateToDetail('mechabrim', '${escapeAttr(name)}')" style="border-right-color: var(--color-mechaber);">
+                                <div class="search-result-card result-mechaber" data-action="detail" data-category="mechabrim" data-name="${name}" style="border-right-color: var(--color-mechaber);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.mechabrim[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12815,7 +12895,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingCollections.map(name => `
-                                <div class="search-result-card result-collection" onclick="navigateToDetail('collections', '${escapeAttr(name)}')" style="border-right-color: var(--color-collection);">
+                                <div class="search-result-card result-collection" data-action="detail" data-category="collections" data-name="${name}" style="border-right-color: var(--color-collection);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.collections[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12834,7 +12914,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingVerter.map(name => `
-                                <div class="search-result-card result-verter" onclick="navigateToDetail('verter', '${escapeAttr(name)}')" style="border-right-color: var(--color-verter);">
+                                <div class="search-result-card result-verter" data-action="detail" data-category="verter" data-name="${name}" style="border-right-color: var(--color-verter);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.verter[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12853,7 +12933,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingZmanim.map(name => `
-                                <div class="search-result-card result-zman" onclick="navigateToZmanDetail('${escapeAttr(name)}')" style="border-right-color: var(--color-zman);">
+                                <div class="search-result-card result-zman" data-action="zman-detail" data-name="${name}" style="border-right-color: var(--color-zman);">
                                     <div class="result-name">${name}</div>
                                 </div>
                             `).join('')}
@@ -12871,7 +12951,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingGezungen.map(name => `
-                                <div class="search-result-card" onclick="navigateToWithFilter('songs', 'gezungen', '${escapeAttr(name)}')" style="border-right-color: #2e8b2e;">
+                                <div class="search-result-card" data-action="filter" data-page="songs" data-filter-key="gezungen" data-value="${name}" style="border-right-color: #2e8b2e;">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.gezungen[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12890,7 +12970,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingRitem.map(name => `
-                                <div class="search-result-card result-music" onclick="navigateToWithFilter('songs', 'ritem', '${escapeAttr(name)}')" style="border-right-color: var(--color-music);">
+                                <div class="search-result-card result-music" data-action="filter" data-page="songs" data-filter-key="ritem" data-value="${name}" style="border-right-color: var(--color-music);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.ritem[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -12909,7 +12989,7 @@ async function fetchStatistics() {
                         </div>
                         <div class="search-results-grid">
                             ${matchingScale.map(name => `
-                                <div class="search-result-card result-nigun" onclick="navigateToWithFilter('songs', 'scale', '${escapeAttr(name)}')" style="border-right-color: var(--color-nigun);">
+                                <div class="search-result-card result-nigun" data-action="filter" data-page="songs" data-filter-key="scale" data-value="${name}" style="border-right-color: var(--color-nigun);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.scale[name]?.length || 0} ניגונים</div>
                                 </div>
