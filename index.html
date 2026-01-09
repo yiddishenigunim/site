@@ -898,6 +898,20 @@
         .home-stat-card.stat-collection .home-stat-label { color: var(--color-collection); }
         .home-stat-card.stat-collection:hover { border-color: var(--color-collection); }
 
+        /* Statistics Link */
+        .home-stats-link {
+            text-align: left;
+            margin-top: -40px;
+            margin-bottom: 50px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-size: 0.95em;
+            transition: var(--transition-smooth);
+        }
+        .home-stats-link:hover {
+            color: var(--primary);
+        }
+
         .home-section-title {
             text-align: center;
             background: var(--gradient-main);
@@ -8741,6 +8755,11 @@ async function fetchStatistics() {
                                 </div>
                             </div>
                         </div>
+                    </div>
+
+                    <!-- Statistics Link -->
+                    <div class="home-stats-link" onclick="navigateTo('stats')">
+                        סטאטיסטיקס ←
                     </div>
 
                     <!-- About Us Section -->
