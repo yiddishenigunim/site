@@ -6908,72 +6908,75 @@
         }
 
         .contributor-box.featured {
-            background: linear-gradient(135deg, var(--color-nigun-pale) 0%, var(--color-chatzer-pale) 30%, var(--color-mechaber-pale) 60%, var(--gold-pale) 100%);
+            background: var(--gradient-main-pale);
         }
 
         .contributor-box.featured::before {
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-chatzer) 30%, var(--color-mechaber) 60%, var(--gold) 100%);
+            background: var(--gradient-main);
+        }
+
+        .contributor-intro {
+            text-align: center;
+            font-size: 1.1em;
+            margin-bottom: 5px;
         }
 
         .contributor-name {
-            font-size: 1.4em;
+            font-size: 1.5em;
             font-weight: 700;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
             background: var(--gradient-main);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
             text-align: center;
-        }
-
-        .featured .contributor-name {
-            font-size: 1.6em;
-            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--gold) 50%, var(--color-mechaber-dark) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
         .contributor-content {
             color: var(--text-color);
-            line-height: 1.8;
+            line-height: 1.9;
+            text-align: center;
         }
 
         .contributor-content p {
-            margin-bottom: 12px;
+            margin-bottom: 15px;
         }
 
-        .contributor-highlight {
-            font-size: 1.1em;
-            font-style: italic;
-            text-align: center;
-            padding: 15px;
-            background: rgba(255,255,255,0.5);
-            border-radius: 12px;
-            margin: 15px 0;
+        .contributor-content .highlight-line {
+            font-weight: 700;
+            font-size: 1.05em;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .contributor-contact {
             margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(0,0,0,0.1);
             text-align: center;
         }
 
-        .contributor-contact a {
-            display: inline-block;
-            padding: 10px 25px;
-            background: var(--gradient-main);
-            color: white;
-            text-decoration: none;
-            border-radius: 25px;
+        .contributor-contact p {
             font-weight: 600;
-            transition: transform 0.2s, box-shadow 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .contributor-contact a {
+            color: var(--color-chatzer);
+            text-decoration: none;
+            font-weight: 600;
         }
 
         .contributor-contact a:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            text-decoration: underline;
+        }
+
+        .contributor-blessing {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0,0,0,0.1);
+            text-align: center;
+            font-size: 0.95em;
         }
 
         .contributor-row {
@@ -9303,21 +9306,24 @@ async function fetchStatistics() {
                         <div class="contributor-boxes">
                             <!-- Featured Large Box -->
                             <div class="contributor-box featured">
+                                <div class="contributor-intro">א דאנק פאר</div>
                                 <div class="contributor-name">ר' פנחס אליהו שטיינווארצל הי"ו</div>
                                 <div class="contributor-content">
-                                    <p><strong>א דאנק פאר</strong> אונז שענקען אן אוצר בלום פון <strong>1250 'אלטע חסידישע ניגונים'</strong> - באגלייט מיט דעטאלירטע אינפארמאציע איבער זיי, וואס ער האט געזאמלט און צוזאמגעקליבן במשך יארן לאנג.</p>
+                                    <p>פארן אונז שענקען אן אוצר בלום פון <strong>1250 'אלטע חסידישע ניגונים'</strong> - באגלייט מיט <strong>דעטאלירטע אינפארמאציע איבער זיי</strong>, וואס ער האט געזאמלט און צוזאמגעקליבן במשך יארן לאנג. און ער האט דאס אוועקגעשאנקען לזכות את הרבים, אז די וועלט זאל קענען הנאה פון די שיינקייט פון די פארצייטישע כח הנגינה</p>
 
-                                    <div class="contributor-highlight">
-                                        און ער האט דאס אוועקגעשאנקען לזכות את הרבים, אז די וועלט זאל קענען הנאה פון די שיינקייט פון די פארצייטישע כח הנגינה
-                                    </div>
+                                    <p><span class="highlight-line">ר' פיניע שטיינווארצעל ני"ו איז באקאנט מיט זיין שטארקע זיסע שטימע</span><br>
+                                    <span class="highlight-line">אלס בעל תפילה, בעל מנגן, און געוואלדיגע ידען איבער פארצייטישע ניגונים</span></p>
 
-                                    <p>ר' פיניע שטיינווארצעל ני"ו איז באקאנט מיט זיין שטארקע זיסע שטימע אלס בעל תפילה, בעל מנגן, און געוואלדיגע ידען איבער פארצייטישע ניגונים.</p>
-
-                                    <p>פיל האבן שוין נהנה געוועהן פון זיינע הערליכע קומזיצן - ווי זיין זינגן און שפילן אזוי שיין צוזאם געפלאכטן נעמט איבער דאס הארץ און נשמה אויף אן אויסערגעווענליכע שטייגער.</p>
+                                    <p>פיל האבן שוין נהנה געוועהן פון זיינע הערליכע קומזיצן<br>
+                                    ווי זיין זינגן און שפילן אזוי שיין צוזאם געפלאכטן נעמט איבער דאס הארץ און נשמה אויף אן אויסערגעווענליכע שטייגער</p>
 
                                     <div class="contributor-contact">
-                                        <p><strong>פאר א שמחה, קומזיץ, אדער שבת התוועדות מיט א חסידישן טעם</strong></p>
-                                        <a href="mailto:pinye7533@gmail.com">פארבינדט אייך מיט ר' פיניע ✉</a>
+                                        <p>פאר א <strong>שמחה</strong>, <strong>קומזיץ</strong>, אדער <strong>שבת התוועדות</strong> מיט א <strong>חסידישן טעם</strong></p>
+                                        <a href="mailto:pinye7533@gmail.com">פארבינדט אייך מיט ר' פיניע</a>
+                                    </div>
+
+                                    <div class="contributor-blessing">
+                                        בשם אלע וואס טוען זיך דערוויקן פון זיינע אומשאצבארע אוצרות טוען מיר זיך באדאנקען פון טיפן הארצן, און מיר וואונטשן אים אלע ברכות לרוב
                                     </div>
                                 </div>
                             </div>
