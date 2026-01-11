@@ -7295,7 +7295,7 @@
         // ========================================
         // CACHE MANAGER - Minimize API calls
         // ========================================
-        const CACHE_VERSION = 'v6'; // Increment when data structure changes
+        const CACHE_VERSION = 'v7'; // Increment when data structure changes
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
         const CacheManager = {
@@ -8211,21 +8211,19 @@ async function fetchStatistics() {
                     const recordings = [];
                     let recordingCounter = 1;
 
-                    // Debug: show all available column IDs in values
-                    console.log('🔑 ALL column keys in values:', Object.keys(values));
-                    console.log('📋 Looking for slot 2 file column:', 'c-oqB3imNNfk');
-                    console.log('📋 Slot 2 file value:', values['c-oqB3imNNfk']);
+                    // Debug: show what slot 1 (index 1) has - this is the missing one
+                    if (customId === '855') {
+                        console.log('🔍 === CHECKING SLOT 1 (index 1) FOR SONG 855 ===');
+                        console.log('Slot 1 file column ID: c-oqB3imNNfk');
+                        console.log('Slot 1 file raw value:', values['c-oqB3imNNfk']);
+                        console.log('Slot 1 rating column ID: c-YQ-aWW59ej');
+                        console.log('Slot 1 rating raw value:', values['c-YQ-aWW59ej']);
+                        console.log('Is slot 1 file an array?', Array.isArray(values['c-oqB3imNNfk']));
+                        console.log('🔍 ============================================');
+                    }
 
                     recordingSlots.forEach((slot, slotIndex) => {
                         const fileAttachment = values[slot.file];
-
-                        // Debug: log what we're getting from ALL slots (even empty ones)
-                        console.log('Slot ' + (slotIndex + 1) + ' RAW:', {
-                            fileColumnId: slot.file,
-                            fileData: fileAttachment,
-                            ratingColumnId: slot.rating,
-                            ratingData: values[slot.rating]
-                        });
 
                         if (!Array.isArray(fileAttachment) || fileAttachment.length === 0) return;
 
@@ -8233,16 +8231,6 @@ async function fetchStatistics() {
                         const details = extractText(values[slot.details]) || '';
                         const ratingVal = extractText(values[slot.rating]) || '';
                         const album = extractText(values[slot.album]) || '';
-
-                        // Debug: log what we're getting from each slot
-                        console.log('Slot ' + (slotIndex + 1) + ':', {
-                            files: fileAttachment.length,
-                            fileNames: fileAttachment.map(f => f.name),
-                            ratingRaw: values[slot.rating],
-                            ratingExtracted: ratingVal,
-                            personalities: personalities,
-                            album: album
-                        });
 
                         // Parse rating (1-5 stars) - handle different formats
                         let rating = 0;
@@ -8279,6 +8267,16 @@ async function fetchStatistics() {
                             recordingCounter++;
                         });
                     });
+
+                    // Debug summary: show what was loaded from each slot
+                    if (customId === '855') {
+                        console.log('📊 === SONG 855 SLOT SUMMARY ===');
+                        console.log('Total recordings found:', recordings.length);
+                        recordings.forEach((r, i) => {
+                            console.log('  Recording ' + (i+1) + ': slot=' + r.slotIndex + ', rating=' + r.rating + ', file=' + r.name);
+                        });
+                        console.log('📊 ==============================');
+                    }
 
                     // Sort recordings by rating (highest first), then those without rating
                     recordings.sort((a, b) => {
