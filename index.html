@@ -4264,43 +4264,104 @@
             animation-play-state: paused;
         }
 
-        /* Star rating for player */
+        /* Star rating for player - INTERACTIVE */
         .player-rating {
             display: flex;
             align-items: center;
             gap: 2px;
             margin-right: auto;
             padding-left: 15px;
-            cursor: default;
+            cursor: pointer;
             flex-shrink: 0;
         }
 
         .player-rating-star {
             font-size: 1.1em;
             color: #555;
-            transition: opacity 0.2s ease;
+            transition: transform 0.15s ease, opacity 0.2s ease;
+            cursor: pointer;
         }
 
-        /* All 5 stars container with gradient spanning full width */
+        .player-rating-star:hover {
+            transform: scale(1.2);
+        }
+
+        /* All 5 stars container */
         .player-rating-stars {
             display: flex;
             gap: 2px;
-            background: linear-gradient(90deg, var(--color-nigun) 0%, var(--color-chatzer) 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
         }
 
+        /* Each star has its own gradient slice for smooth transitions */
         .player-rating-stars .player-rating-star {
-            color: inherit;
+            background: linear-gradient(90deg, var(--color-nigun) 0%, var(--color-chatzer) 100%);
+            background-size: 500% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            transition: -webkit-text-fill-color 0.25s ease;
         }
 
+        /* Position each star's gradient slice */
+        .player-rating-stars .player-rating-star:nth-child(1) {
+            background-position: 0% 0;
+        }
+
+        .player-rating-stars .player-rating-star:nth-child(2) {
+            background-position: 25% 0;
+        }
+
+        .player-rating-stars .player-rating-star:nth-child(3) {
+            background-position: 50% 0;
+        }
+
+        .player-rating-stars .player-rating-star:nth-child(4) {
+            background-position: 75% 0;
+        }
+
+        .player-rating-stars .player-rating-star:nth-child(5) {
+            background-position: 100% 0;
+        }
+
+        /* Empty stars are gray */
         .player-rating-stars .player-rating-star.empty {
-            -webkit-text-fill-color: #ddd;
+            -webkit-text-fill-color: #ccc;
+        }
+
+        /* Hover preview - gray out non-preview stars */
+        .player-rating-stars:hover .player-rating-star:not(.hover-preview) {
+            -webkit-text-fill-color: #ccc;
+        }
+
+        /* Hover-preview stars show gradient */
+        .player-rating-stars:hover .player-rating-star.hover-preview {
+            -webkit-text-fill-color: transparent;
         }
 
         .player-rating:hover .player-rating-stars {
-            filter: brightness(1.1);
+            filter: brightness(1.05);
+        }
+
+        /* Saving state */
+        .player-rating.saving {
+            pointer-events: none;
+            opacity: 0.6;
+        }
+
+        .player-rating.saving .player-rating-stars {
+            animation: ratingPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes ratingPulse {
+
+            0%,
+            100% {
+                opacity: 0.6;
+            }
+
+            50% {
+                opacity: 1;
+            }
         }
 
         /* Images section */
@@ -8086,6 +8147,15 @@
             collections: 'c-Y9SNk0BOGV'
         };
 
+        // Recording slots configuration (5 recording slots) - used for rating updates
+        const RECORDING_SLOTS = [
+            { file: 'c-XmTlDf3xfw', personalities: 'c-s8sYskJc4M', details: 'c-SuWz2qu9B1', rating: 'c-v5V7PENdFy', album: 'c-FuDbL2XiAj' },
+            { file: 'c-oqB3imNNfk', personalities: 'c-jRuAfCbs28', details: 'c-_TOU9FXYYn', rating: 'c-YQ-aWW59ej', album: 'c-H0XAyaKkPl' },
+            { file: 'c-oGF6C78GZl', personalities: 'c-4trFKY_CK8', details: 'c-dr-m1GnYty', rating: 'c-gmz2rln2dD', album: 'c-HKBBDews5N' },
+            { file: 'c-pf9zW3wypK', personalities: 'c-x0WLb4j4wV', details: 'c-pbtldr4CXD', rating: 'c-_GlQy78PAc', album: 'c-imgRABw0tH' },
+            { file: 'c-aqbocjDGuL', personalities: 'c-ilrb-DW4dV', details: 'c-2T9FWsVE9h', rating: 'c-yuKHpnbHfM', album: 'c-5FSrRNb-Uw' }
+        ];
+
         // Cached statistics from stats table
         let cachedStats = {
             niggunim: 0,
@@ -8207,6 +8277,7 @@
         let currentPlaylist = []; // Track which songs are in current playlist
         let currentPlaylistPosition = -1; // Position within playlist
         let currentRecordingIndex = 0; // Track which recording of current song is playing
+        let currentPlayingRecordingInfo = null; // Track current recording info for rating: { songIdx, recordingIdx, slotIndex, rowId }
         let isInRecordingsMode = false; // Are we navigating between recordings or songs?
         let playerVisible = false; // Track if player banner is visible
         let currentPageView = 'home';
@@ -11765,6 +11836,14 @@
             currentSongIndex = songIdx;
             currentRecordingIndex = recordingIdx;
 
+            // Set recording info for rating updates
+            currentPlayingRecordingInfo = {
+                songIdx: songIdx,
+                recordingIdx: recordingIdx,
+                slotIndex: recording.slotIndex,
+                rowId: song.rowId
+            };
+
             // Enable recordings mode if song has multiple recordings
             isInRecordingsMode = song.recordings.length > 1;
 
@@ -13153,6 +13232,18 @@
             currentSongIndex = idx;
             const song = allSongs[idx];
 
+            // Set recording info for rating updates (default to first recording)
+            if (song.recordings && song.recordings.length > 0) {
+                currentPlayingRecordingInfo = {
+                    songIdx: idx,
+                    recordingIdx: 0,
+                    slotIndex: song.recordings[0].slotIndex,
+                    rowId: song.rowId
+                };
+            } else {
+                currentPlayingRecordingInfo = null;
+            }
+
             audioPlayer.src = song.audioUrl;
             audioPlayer.play();
 
@@ -13236,8 +13327,17 @@
 
             const recording = song.recordings[recordingIdx];
 
-            // Update current song index
+            // Update current song index and recording index
             currentSongIndex = songIdx;
+            currentRecordingIndex = recordingIdx;
+
+            // Set recording info for rating updates
+            currentPlayingRecordingInfo = {
+                songIdx: songIdx,
+                recordingIdx: recordingIdx,
+                slotIndex: recording.slotIndex,
+                rowId: song.rowId
+            };
 
             // Play the specific recording URL
             audioPlayer.src = recording.url;
@@ -13247,6 +13347,9 @@
             // Update player UI with song info
             updatePlayerUI(song);
             updateActiveSongInList();
+
+            // Update rating display in player
+            updatePlayerRating(recording.rating);
 
             // Update active state in modal
             document.querySelectorAll('.modal-recording-item').forEach((item, i) => {
@@ -14262,23 +14365,123 @@
             }
         }
 
-        // Update player rating display
+        // Update player rating display - INTERACTIVE version
         function updatePlayerRating(rating) {
             const playerRating = document.getElementById('playerRating');
             const starsContainer = document.getElementById('playerRatingStars');
             if (!playerRating || !starsContainer) return;
 
-            if (rating && rating > 0) {
-                playerRating.style.display = 'flex';
-                // Generate all 5 stars - filled ones normal, empty ones with 'empty' class
-                let starsHtml = '';
-                for (let i = 0; i < 5; i++) {
-                    const isEmpty = i >= rating;
-                    starsHtml += '<span class="player-rating-star' + (isEmpty ? ' empty' : '') + '">★</span>';
+            // Always show rating container (even if rating is 0, user can click to set one)
+            playerRating.style.display = 'flex';
+            playerRating.classList.remove('saving');
+
+            // Generate all 5 clickable stars
+            let starsHtml = '';
+            for (let i = 0; i < 5; i++) {
+                const starNum = i + 1;
+                const isEmpty = i >= (rating || 0);
+                starsHtml += `<span class="player-rating-star${isEmpty ? ' empty' : ''}" data-rating="${starNum}">★</span>`;
+            }
+            starsContainer.innerHTML = starsHtml;
+
+            // Add hover preview
+            const stars = starsContainer.querySelectorAll('.player-rating-star');
+            stars.forEach((star, idx) => {
+                star.addEventListener('mouseenter', () => {
+                    // Show preview of what rating would be
+                    stars.forEach((s, i) => {
+                        if (i <= idx) {
+                            s.classList.add('hover-preview');
+                        } else {
+                            s.classList.remove('hover-preview');
+                        }
+                    });
+                });
+
+                star.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const newRating = parseInt(star.dataset.rating, 10);
+                    submitRating(newRating);
+                });
+            });
+
+            starsContainer.addEventListener('mouseleave', () => {
+                stars.forEach(s => s.classList.remove('hover-preview'));
+            });
+        }
+
+        // Submit rating to Coda API
+        async function submitRating(newRating) {
+            if (!currentPlayingRecordingInfo) {
+                console.log('No recording info available for rating');
+                return;
+            }
+
+            const { songIdx, recordingIdx, slotIndex, rowId } = currentPlayingRecordingInfo;
+            if (!rowId || slotIndex === undefined) {
+                console.log('Missing rowId or slotIndex for rating update');
+                return;
+            }
+
+            // Get the rating column ID for this recording slot
+            const ratingColId = RECORDING_SLOTS[slotIndex]?.rating;
+            if (!ratingColId) {
+                console.log('No rating column ID for slot', slotIndex);
+                return;
+            }
+
+            const playerRating = document.getElementById('playerRating');
+            if (playerRating) {
+                playerRating.classList.add('saving');
+            }
+
+            console.log(`Submitting rating ${newRating} for song ${songIdx}, recording ${recordingIdx}, slot ${slotIndex}`);
+
+            try {
+                // Coda API requires PUT to update a specific cell
+                const url = `${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows/${rowId}`;
+
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        row: {
+                            cells: [
+                                {
+                                    column: ratingColId,
+                                    value: newRating
+                                }
+                            ]
+                        }
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
                 }
-                starsContainer.innerHTML = starsHtml;
-            } else {
-                playerRating.style.display = 'none';
+
+                console.log('Rating updated successfully');
+
+                // Update local data
+                if (allSongs[songIdx] && allSongs[songIdx].recordings && allSongs[songIdx].recordings[recordingIdx]) {
+                    allSongs[songIdx].recordings[recordingIdx].rating = newRating;
+                }
+
+                // Clear local cache so next load gets fresh data
+                localStorage.removeItem(`${CACHE_VERSION}_songs`);
+
+                // Update the display
+                updatePlayerRating(newRating);
+
+            } catch (error) {
+                console.error('Error submitting rating:', error);
+                alert('פאלגענדער באריכטונג געשלאגן. ביטע פריווט נאכאמאל.');
+            } finally {
+                if (playerRating) {
+                    playerRating.classList.remove('saving');
+                }
             }
         }
 
