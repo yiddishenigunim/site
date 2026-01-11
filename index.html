@@ -10285,6 +10285,24 @@ async function fetchStatistics() {
             // Log full song object to see all data
             console.log('Full song object:', JSON.stringify(song, null, 2));
 
+            // DEBUG: For song 855, make a direct API call to see raw data
+            if (song.customId === '855' && song.rowId) {
+                console.log('🔍 Fetching RAW API data for song 855...');
+                fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows/${song.rowId}?valueFormat=rich&_cb=${Date.now()}`)
+                    .then(response => response.json())
+                    .then(rawData => {
+                        console.log('🔍 === RAW API DATA FOR SONG 855 ===');
+                        console.log('Full raw response:', rawData);
+                        if (rawData.values) {
+                            console.log('Slot 1 file (c-oqB3imNNfk):', rawData.values['c-oqB3imNNfk']);
+                            console.log('Slot 1 rating (c-YQ-aWW59ej):', rawData.values['c-YQ-aWW59ej']);
+                            console.log('All column keys:', Object.keys(rawData.values));
+                        }
+                        console.log('🔍 ==================================');
+                    })
+                    .catch(err => console.error('Debug fetch error:', err));
+            }
+
             console.log('Recordings count:', song.recordings ? song.recordings.length : 0);
             if (song.recordings) {
                 song.recordings.forEach((rec, i) => {
