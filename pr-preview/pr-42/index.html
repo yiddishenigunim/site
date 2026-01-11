@@ -4113,8 +4113,8 @@
             color: rgba(255, 255, 255, 0.9) !important;
         }
 
-        .nigun-recording-item:hover .nigun-recording-meta .song-meta-tag {
-            opacity: 0.9;
+        .nigun-recording-item:hover .nigun-recording-meta-link {
+            color: rgba(255, 255, 255, 0.8) !important;
         }
 
         .nigun-recording-item:hover .nigun-recording-number {
@@ -4140,8 +4140,8 @@
             color: rgba(255, 255, 255, 0.9) !important;
         }
 
-        .nigun-recording-item.active .nigun-recording-meta .song-meta-tag {
-            opacity: 0.9;
+        .nigun-recording-item.active .nigun-recording-meta-link {
+            color: rgba(255, 255, 255, 0.8) !important;
         }
 
         .nigun-recording-item.active .nigun-recording-number {
@@ -4178,23 +4178,32 @@
             color: var(--color-nigun-dark);
         }
 
-        .nigun-recording-name.default-name {
-            color: var(--color-nigun-light);
-        }
-
         .nigun-recording-meta {
             display: flex;
             flex-wrap: wrap;
             gap: 4px;
             align-items: center;
             font-size: 0.85em;
+            color: var(--text-muted);
         }
 
-        /* Override tag styles within recording meta to be smaller */
-        .nigun-recording-meta .song-meta-tag {
-            padding: 2px 8px !important;
-            font-size: 0.75em !important;
-            border-radius: 10px !important;
+        .nigun-recording-meta-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .nigun-recording-meta-link:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .nigun-recording-meta-link.personality {
+            color: var(--color-mechaber-dark);
+        }
+
+        .nigun-recording-meta-link.album {
+            color: var(--color-chatzer-dark);
         }
 
         .nigun-recording-play-btn {
@@ -4269,37 +4278,24 @@
             display: flex;
             align-items: center;
             gap: 2px;
-            margin-right: auto;
-            padding-left: 15px;
+            margin-left: 15px;
             cursor: default;
-            flex-shrink: 0;
         }
 
         .player-rating-star {
             font-size: 1.1em;
-            color: #555;
-            transition: opacity 0.2s ease;
+            color: #ddd;
+            transition: color 0.2s ease;
         }
 
-        /* All 5 stars container with gradient spanning full width */
-        .player-rating-stars {
-            display: flex;
-            gap: 2px;
-            background: linear-gradient(90deg, var(--color-nigun) 0%, var(--color-chatzer) 100%);
+        .player-rating-star.filled {
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-chatzer) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .player-rating-stars .player-rating-star {
-            color: inherit;
-        }
-
-        .player-rating-stars .player-rating-star.empty {
-            -webkit-text-fill-color: #ddd;
-        }
-
-        .player-rating:hover .player-rating-stars {
+        .player-rating:hover .player-rating-star.filled {
             filter: brightness(1.1);
         }
 
@@ -7989,7 +7985,11 @@
                 <div class="player-extra-line" id="playerGezungen"></div>
             </div>
             <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט" style="display: none;">
-                <span class="player-rating-stars" id="playerRatingStars"></span>
+                <span class="player-rating-star">★</span>
+                <span class="player-rating-star">★</span>
+                <span class="player-rating-star">★</span>
+                <span class="player-rating-star">★</span>
+                <span class="player-rating-star">★</span>
             </div>
         </div>
         <audio id="audioPlayer"></audio>
@@ -8227,7 +8227,7 @@
         // ========================================
         // CACHE MANAGER - Minimize API calls
         // ========================================
-        const CACHE_VERSION = 'v8'; // Increment when data structure changes
+        const CACHE_VERSION = 'v3'; // Increment when data structure changes
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
         const CacheManager = {
@@ -8321,14 +8321,12 @@
 
         // Helper function to extract text from Coda value
         function extractText(value) {
-            if (!value && value !== 0) return '';
-            if (typeof value === 'number') return String(value);
+            if (!value) return '';
             if (typeof value === 'string') return value.replace(/```/g, '').trim();
             if (Array.isArray(value)) return value.map(v => extractText(v)).filter(Boolean).join(', ');
             if (typeof value === 'object') {
                 const text = value.name || value.display || value.value || '';
-                if (typeof text === 'number') return String(text);
-                return typeof text === 'string' ? text.replace(/```/g, '').trim() : String(text);
+                return typeof text === 'string' ? text.replace(/```/g, '').trim() : text;
             }
             return '';
         }
@@ -9042,8 +9040,7 @@
                 let isFirstBatch = true;
 
                 do {
-                    const cacheBuster = Date.now();
-                    const url = `${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows?valueFormat=rich&_cb=${cacheBuster}${pageToken ? '&pageToken=' + pageToken : ''}`;
+                    const url = `${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows?valueFormat=rich${pageToken ? '&pageToken=' + pageToken : ''}`;
                     const response = await fetch(url);
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const data = await response.json();
@@ -9140,21 +9137,8 @@
                 let recordingCounter = 1;
 
                 recordingSlots.forEach((slot, slotIndex) => {
-                    let fileAttachment = values[slot.file];
-
-                    // Handle both array and single object formats from Coda
-                    if (!fileAttachment) return;
-
-                    // If it's a single object (not an array), wrap it in an array
-                    if (!Array.isArray(fileAttachment)) {
-                        if (fileAttachment.url && fileAttachment.name) {
-                            fileAttachment = [fileAttachment];
-                        } else {
-                            return; // Not a valid file attachment
-                        }
-                    }
-
-                    if (fileAttachment.length === 0) return;
+                    const fileAttachment = values[slot.file];
+                    if (!Array.isArray(fileAttachment) || fileAttachment.length === 0) return;
 
                     const personalities = extractText(values[slot.personalities]) || '';
                     const details = extractText(values[slot.details]) || '';
@@ -10952,7 +10936,6 @@
 
         // Render detail page for a specific item
         function renderDetailPage() {
-            console.log('renderDetailPage called, currentDetailView:', currentDetailView);
             const { type, name } = currentDetailView;
             const container = document.getElementById('mainContent');
 
@@ -11634,29 +11617,27 @@
                             <h3>רעקארדינגס (${song.recordings.length})</h3>
                             <div class="nigun-recordings-list">
                                 ${song.recordings.map((rec, i) => {
-                                    // Build meta parts with colored tags like songs page
-                                    let metaHtml = '';
-                                    if (rec.personalities) {
-                                        metaHtml += rec.personalities.split(',').map(p => '<span class="mechaber-tag song-meta-tag">' + p.trim() + '</span>').join(' ');
-                                    }
-                                    if (rec.album) {
-                                        if (metaHtml) metaHtml += ' ';
-                                        metaHtml += rec.album.split(',').map(a => '<span class="album-tag song-meta-tag">' + a.trim() + '</span>').join(' ');
-                                    }
+                // Build meta parts
+                const metaParts = [];
+                if (rec.personalities) {
+                    metaParts.push(`<span class="nigun-recording-meta-link personality">${rec.personalities}</span>`);
+                }
+                if (rec.album) {
+                    metaParts.push(`<span class="nigun-recording-meta-link album">${rec.album}</span>`);
+                }
+                const metaHtml = metaParts.length > 0 ? metaParts.join(' • ') : '';
 
-                                    // Determine display name: details, or personalities, or album, or "רעקארדינג X"
-                                    const displayName = rec.details || rec.personalities || rec.album || ('רעקארדינג ' + (i + 1));
-                                    const nameClass = (!rec.details && !rec.personalities && !rec.album) ? 'nigun-recording-name default-name' : 'nigun-recording-name';
-
-                                    return '<div class="nigun-recording-item ' + (i === 0 ? 'active' : '') + '" onclick="playNigunRecording(' + songIdx + ', ' + i + ', this)" data-recording-idx="' + i + '" data-rating="' + (rec.rating || 0) + '">' +
-                                        '<div class="nigun-recording-number">' + (i + 1) + '</div>' +
-                                        '<div class="nigun-recording-info">' +
-                                            '<div class="' + nameClass + '">' + displayName + '</div>' +
-                                            (metaHtml ? '<div class="nigun-recording-meta">' + metaHtml + '</div>' : '') +
-                                        '</div>' +
-                                        '<button class="nigun-recording-play-btn">▶</button>' +
-                                    '</div>';
-                                }).join('')}
+                return `
+                                    <div class="nigun-recording-item ${i === 0 ? 'active' : ''}" onclick="playNigunRecording(${songIdx}, ${i}, this)" data-recording-idx="${i}" data-rating="${rec.rating || 0}">
+                                        <div class="nigun-recording-number">${i + 1}</div>
+                                        <div class="nigun-recording-info">
+                                            <div class="nigun-recording-name">${rec.displayName || 'רעקארדינג ' + (i + 1)}</div>
+                                            ${metaHtml ? `<div class="nigun-recording-meta">${metaHtml}</div>` : ''}
+                                        </div>
+                                        <button class="nigun-recording-play-btn">▶</button>
+                                    </div>
+                                `;
+            }).join('')}
                             </div>
                         </div>
                     ` : ''}
@@ -13616,15 +13597,12 @@
 
         // Show song details
         function showSongDetails(idx) {
-            console.log('showSongDetails called with idx:', idx);
             const song = allSongs[idx];
-            console.log('Song found:', song ? song.name : 'NOT FOUND');
             if (!song) return;
 
             // Navigate to nigun detail page
             currentDetailView = { type: 'nigun', name: song.name, id: song.rowId, customId: song.customId };
             currentPageView = 'songs';
-            console.log('Calling renderDetailPage...');
             updateURL();
             renderDetailPage();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -14243,18 +14221,18 @@
         // Update player rating display
         function updatePlayerRating(rating) {
             const playerRating = document.getElementById('playerRating');
-            const starsContainer = document.getElementById('playerRatingStars');
-            if (!playerRating || !starsContainer) return;
+            if (!playerRating) return;
 
             if (rating && rating > 0) {
                 playerRating.style.display = 'flex';
-                // Generate all 5 stars - filled ones normal, empty ones with 'empty' class
-                let starsHtml = '';
-                for (let i = 0; i < 5; i++) {
-                    const isEmpty = i >= rating;
-                    starsHtml += '<span class="player-rating-star' + (isEmpty ? ' empty' : '') + '">★</span>';
-                }
-                starsContainer.innerHTML = starsHtml;
+                const stars = playerRating.querySelectorAll('.player-rating-star');
+                stars.forEach((star, index) => {
+                    if (index < rating) {
+                        star.classList.add('filled');
+                    } else {
+                        star.classList.remove('filled');
+                    }
+                });
             } else {
                 playerRating.style.display = 'none';
             }
