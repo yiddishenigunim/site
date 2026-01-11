@@ -3650,18 +3650,30 @@
 
         .player-rating-star {
             font-size: 1.1em;
-            color: #ddd;
-            transition: color 0.2s ease;
+            color: #555;
+            transition: opacity 0.2s ease;
         }
 
-        .player-rating-star.filled {
+        /* Container for filled stars with shared gradient */
+        .player-rating-stars-filled {
+            display: flex;
+            gap: 2px;
             background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-chatzer) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
-        .player-rating:hover .player-rating-star.filled {
+        .player-rating-stars-filled .player-rating-star {
+            color: inherit;
+        }
+
+        .player-rating-stars-empty {
+            display: flex;
+            gap: 2px;
+        }
+
+        .player-rating:hover .player-rating-stars-filled {
             filter: brightness(1.1);
         }
 
@@ -7113,11 +7125,8 @@
                 <div class="player-extra-line" id="playerGezungen"></div>
             </div>
             <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט" style="display: none;">
-                <span class="player-rating-star">★</span>
-                <span class="player-rating-star">★</span>
-                <span class="player-rating-star">★</span>
-                <span class="player-rating-star">★</span>
-                <span class="player-rating-star">★</span>
+                <span class="player-rating-stars-filled" id="playerRatingFilled"></span>
+                <span class="player-rating-stars-empty" id="playerRatingEmpty"></span>
             </div>
         </div>
         <audio id="audioPlayer"></audio>
@@ -13134,18 +13143,21 @@ async function fetchStatistics() {
         // Update player rating display
         function updatePlayerRating(rating) {
             const playerRating = document.getElementById('playerRating');
-            if (!playerRating) return;
+            const filledContainer = document.getElementById('playerRatingFilled');
+            const emptyContainer = document.getElementById('playerRatingEmpty');
+            if (!playerRating || !filledContainer || !emptyContainer) return;
 
             if (rating && rating > 0) {
                 playerRating.style.display = 'flex';
-                const stars = playerRating.querySelectorAll('.player-rating-star');
-                stars.forEach((star, index) => {
-                    if (index < rating) {
-                        star.classList.add('filled');
-                    } else {
-                        star.classList.remove('filled');
-                    }
-                });
+                // Generate filled stars (with gradient)
+                filledContainer.innerHTML = '★'.repeat(rating).split('').map(s =>
+                    '<span class="player-rating-star">' + s + '</span>'
+                ).join('');
+                // Generate empty stars
+                const emptyCount = 5 - rating;
+                emptyContainer.innerHTML = emptyCount > 0 ? '★'.repeat(emptyCount).split('').map(s =>
+                    '<span class="player-rating-star">' + s + '</span>'
+                ).join('') : '';
             } else {
                 playerRating.style.display = 'none';
             }
