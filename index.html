@@ -7295,7 +7295,7 @@
         // ========================================
         // CACHE MANAGER - Minimize API calls
         // ========================================
-        const CACHE_VERSION = 'v7'; // Increment when data structure changes
+        const CACHE_VERSION = 'v8'; // Increment when data structure changes
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
         const CacheManager = {
@@ -8223,9 +8223,21 @@ async function fetchStatistics() {
                     }
 
                     recordingSlots.forEach((slot, slotIndex) => {
-                        const fileAttachment = values[slot.file];
+                        let fileAttachment = values[slot.file];
 
-                        if (!Array.isArray(fileAttachment) || fileAttachment.length === 0) return;
+                        // Handle both array and single object formats from Coda
+                        if (!fileAttachment) return;
+
+                        // If it's a single object (not an array), wrap it in an array
+                        if (!Array.isArray(fileAttachment)) {
+                            if (fileAttachment.url && fileAttachment.name) {
+                                fileAttachment = [fileAttachment];
+                            } else {
+                                return; // Not a valid file attachment
+                            }
+                        }
+
+                        if (fileAttachment.length === 0) return;
 
                         const personalities = extractText(values[slot.personalities]) || '';
                         const details = extractText(values[slot.details]) || '';
