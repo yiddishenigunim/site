@@ -7295,7 +7295,7 @@
         // ========================================
         // CACHE MANAGER - Minimize API calls
         // ========================================
-        const CACHE_VERSION = 'v5'; // Increment when data structure changes
+        const CACHE_VERSION = 'v6'; // Increment when data structure changes
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
         const CacheManager = {
@@ -7393,12 +7393,14 @@
 
         // Helper function to extract text from Coda value
         function extractText(value) {
-            if (!value) return '';
+            if (!value && value !== 0) return '';
+            if (typeof value === 'number') return String(value);
             if (typeof value === 'string') return value.replace(/```/g, '').trim();
             if (Array.isArray(value)) return value.map(v => extractText(v)).filter(Boolean).join(', ');
             if (typeof value === 'object') {
                 const text = value.name || value.display || value.value || '';
-                return typeof text === 'string' ? text.replace(/```/g, '').trim() : text;
+                if (typeof text === 'number') return String(text);
+                return typeof text === 'string' ? text.replace(/```/g, '').trim() : String(text);
             }
             return '';
         }
@@ -8208,6 +8210,11 @@ async function fetchStatistics() {
                     // Extract recordings with full metadata
                     const recordings = [];
                     let recordingCounter = 1;
+
+                    // Debug: show all available column IDs in values
+                    console.log('🔑 ALL column keys in values:', Object.keys(values));
+                    console.log('📋 Looking for slot 2 file column:', 'c-oqB3imNNfk');
+                    console.log('📋 Slot 2 file value:', values['c-oqB3imNNfk']);
 
                     recordingSlots.forEach((slot, slotIndex) => {
                         const fileAttachment = values[slot.file];
@@ -10275,6 +10282,11 @@ async function fetchStatistics() {
             // Debug: log song recordings data
             console.log('=== NIGUN DEBUG ===');
             console.log('Song:', song.name);
+            console.log('CustomId:', song.customId);
+
+            // Log full song object to see all data
+            console.log('Full song object:', JSON.stringify(song, null, 2));
+
             console.log('Recordings count:', song.recordings ? song.recordings.length : 0);
             if (song.recordings) {
                 song.recordings.forEach((rec, i) => {
