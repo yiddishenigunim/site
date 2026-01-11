@@ -7384,10 +7384,6 @@
         // Clear old caches on load
         CacheManager.clearOldCaches();
 
-        // TEMPORARY: Force clear all caches for debugging
-        console.log('🔄 FORCING CACHE CLEAR FOR DEBUG');
-        CacheManager.clearAll();
-
         // Helper functions for cache (aliases for CacheManager)
         function getCachedData(key) {
             return CacheManager.get(key);
@@ -8220,17 +8216,6 @@ async function fetchStatistics() {
                     const recordings = [];
                     let recordingCounter = 1;
 
-                    // Debug: show what slot 1 (index 1) has - this is the missing one
-                    if (customId === '855') {
-                        console.log('🔍 === CHECKING SLOT 1 (index 1) FOR SONG 855 ===');
-                        console.log('Slot 1 file column ID: c-oqB3imNNfk');
-                        console.log('Slot 1 file raw value:', values['c-oqB3imNNfk']);
-                        console.log('Slot 1 rating column ID: c-YQ-aWW59ej');
-                        console.log('Slot 1 rating raw value:', values['c-YQ-aWW59ej']);
-                        console.log('Is slot 1 file an array?', Array.isArray(values['c-oqB3imNNfk']));
-                        console.log('🔍 ============================================');
-                    }
-
                     recordingSlots.forEach((slot, slotIndex) => {
                         let fileAttachment = values[slot.file];
 
@@ -8288,16 +8273,6 @@ async function fetchStatistics() {
                             recordingCounter++;
                         });
                     });
-
-                    // Debug summary: show what was loaded from each slot
-                    if (customId === '855') {
-                        console.log('📊 === SONG 855 SLOT SUMMARY ===');
-                        console.log('Total recordings found:', recordings.length);
-                        recordings.forEach((r, i) => {
-                            console.log('  Recording ' + (i+1) + ': slot=' + r.slotIndex + ', rating=' + r.rating + ', file=' + r.name);
-                        });
-                        console.log('📊 ==============================');
-                    }
 
                     // Sort recordings by rating (highest first), then those without rating
                     recordings.sort((a, b) => {
@@ -10297,47 +10272,6 @@ async function fetchStatistics() {
                 container.innerHTML = '<p>ניגון נישט געפונען</p>';
                 return;
             }
-
-            // Debug: log song recordings data
-            console.log('=== NIGUN DEBUG ===');
-            console.log('Song:', song.name);
-            console.log('CustomId:', song.customId);
-
-            // Log full song object to see all data
-            console.log('Full song object:', JSON.stringify(song, null, 2));
-
-            // DEBUG: For song 855, make a direct API call to see raw data
-            if (song.customId === '855' && song.rowId) {
-                console.log('🔍 Fetching RAW API data for song 855...');
-                fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows/${song.rowId}?valueFormat=rich&_cb=${Date.now()}`)
-                    .then(response => response.json())
-                    .then(rawData => {
-                        console.log('🔍 === RAW API DATA FOR SONG 855 ===');
-                        console.log('Full raw response:', rawData);
-                        if (rawData.values) {
-                            console.log('Slot 1 file (c-oqB3imNNfk):', rawData.values['c-oqB3imNNfk']);
-                            console.log('Slot 1 rating (c-YQ-aWW59ej):', rawData.values['c-YQ-aWW59ej']);
-                            console.log('All column keys:', Object.keys(rawData.values));
-                        }
-                        console.log('🔍 ==================================');
-                    })
-                    .catch(err => console.error('Debug fetch error:', err));
-            }
-
-            console.log('Recordings count:', song.recordings ? song.recordings.length : 0);
-            if (song.recordings) {
-                song.recordings.forEach((rec, i) => {
-                    console.log('Recording ' + (i+1) + ':', {
-                        url: rec.url ? 'YES' : 'NO',
-                        name: rec.name,
-                        rating: rec.rating,
-                        personalities: rec.personalities,
-                        album: rec.album,
-                        details: rec.details
-                    });
-                });
-            }
-            console.log('===================');
 
             // Parse chatzeros
             const chatzeros = song.category ? song.category.split(',').map(c => c.trim()).filter(Boolean) : [];
