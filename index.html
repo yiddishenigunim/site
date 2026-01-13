@@ -443,6 +443,7 @@
             background: var(--gradient-main-dark);
             transform: translateY(-2px);
         }
+
         /* Nigun Modal Overlay */
         .nigun-modal-overlay {
             position: fixed;
@@ -485,6 +486,7 @@
                 opacity: 0;
                 transform: scale(0.85) translateY(30px);
             }
+
             to {
                 opacity: 1;
                 transform: scale(1) translateY(0);
@@ -496,6 +498,7 @@
                 opacity: 1;
                 transform: scale(1) translateY(0);
             }
+
             to {
                 opacity: 0;
                 transform: scale(0.9) translateY(20px);
@@ -532,7 +535,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .nigun-modal-close:hover {
@@ -568,6 +571,7 @@
                 max-height: 90vh;
                 border-radius: 16px;
             }
+
             .nigun-modal-body {
                 padding: 15px;
             }
@@ -834,16 +838,46 @@
             width: 200%;
             height: 200%;
             background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            animation: shimmer 15s infinite linear;
+            /* animation: shimmer 15s infinite linear; removed for new animation */
         }
 
-        @keyframes shimmer {
+        /* Hero Musical Background Animation - Relaxing Floating Notes */
+        .hero-musical-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .musical-note {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 20px;
+            animation: warpOut linear infinite;
+            /* Start invisible at center */
+            transform: translate(-50%, -50%) scale(0);
+        }
+
+        @keyframes warpOut {
             0% {
-                transform: rotate(0deg);
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 0.8;
             }
 
             100% {
-                transform: rotate(360deg);
+                /* --tx, --ty, and --rot are set via JS */
+                transform: translate(var(--tx), var(--ty)) scale(2.5) rotate(var(--rot));
+                opacity: 0;
             }
         }
 
@@ -1057,7 +1091,7 @@
 
         .home-hero-content {
             position: relative;
-            z-index: 1;
+            z-index: 2;
         }
 
         .home-logo {
@@ -6557,7 +6591,217 @@
             animation-play-state: paused;
         }
 
-        /* All Songs Page */
+        /* Expanded song item (recordings mode) */
+        .song-item-expanded,
+        .song-item-full {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 0;
+            gap: 0;
+        }
+
+        .song-item-expanded .song-item-header,
+        .song-item-full .song-item-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px 20px;
+        }
+
+        /* Recordings list inside song item */
+        .song-item-recordings {
+            border-top: 1px solid var(--color-nigun-pale);
+            padding: 8px 20px 12px;
+            background: rgba(74, 124, 201, 0.03);
+        }
+
+        .song-item-recording {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .song-item-recording:hover {
+            background: var(--color-nigun-pale);
+        }
+
+        .song-item-rec-num {
+            width: 24px;
+            height: 24px;
+            background: var(--color-nigun-pale);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--color-nigun-dark);
+            flex-shrink: 0;
+        }
+
+        .song-item-rec-name {
+            flex: 1;
+            font-size: 0.9em;
+            color: var(--text-dark);
+        }
+
+        .song-item-rec-play {
+            width: 28px;
+            height: 28px;
+            background: var(--color-nigun);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 0.75em;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            flex-shrink: 0;
+        }
+
+        .song-item-rec-play:hover {
+            background: var(--color-nigun-dark);
+            transform: scale(1.1);
+        }
+
+        /* Full mode - additional info section */
+        .song-full-details {
+            border-top: 1px solid var(--color-nigun-pale);
+            padding: 12px 20px;
+            background: rgba(74, 124, 201, 0.03);
+        }
+
+        .song-full-label {
+            font-weight: 600;
+            color: var(--color-nigun-dark);
+            white-space: nowrap;
+        }
+
+        .song-full-value {
+            color: var(--text-dark);
+        }
+
+        .song-full-info .song-full-value {
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .song-full-recordings {
+            border-top: 1px solid var(--color-nigun-pale);
+            padding: 10px 20px 12px;
+            background: rgba(74, 124, 201, 0.05);
+        }
+
+        .song-full-rec-title {
+            font-weight: 600;
+            font-size: 0.85em;
+            color: var(--color-nigun-dark);
+            margin-bottom: 8px;
+        }
+
+        /* Active state for expanded items */
+        .song-item-expanded.active .song-item-recordings,
+        .song-item-full.active .song-full-details,
+        .song-item-full.active .song-full-recordings {
+            background: rgba(255, 255, 255, 0.1);
+            border-top-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .song-item-expanded.active .song-item-recording:hover,
+        .song-item-full.active .song-item-recording:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .song-item-expanded.active .song-item-rec-num,
+        .song-item-full.active .song-item-rec-num {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .song-item-expanded.active .song-item-rec-name,
+        .song-item-full.active .song-item-rec-name,
+        .song-item-full.active .song-full-label,
+        .song-item-full.active .song-full-value,
+        .song-item-full.active .song-full-rec-title {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .song-item-expanded.active .song-item-rec-play,
+        .song-item-full.active .song-item-rec-play {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .song-item-expanded.active .song-item-rec-play:hover,
+        .song-item-full.active .song-item-rec-play:hover {
+            background: white;
+            color: var(--color-nigun);
+        }
+
+        /* Tags container for full mode */
+        .song-full-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .song-full-row {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            padding: 6px 0;
+            font-size: 0.85em;
+        }
+
+        /* Tag styles for scale and ritem */
+        .tag-scale {
+            background: var(--color-music-pale, #e3f2fd) !important;
+            color: var(--color-music-dark, #1565c0) !important;
+            border-color: var(--color-music-light, #90caf9) !important;
+        }
+
+        .tag-ritem {
+            background: #f3e5f5 !important;
+            color: #7b1fa2 !important;
+            border-color: #ce93d8 !important;
+        }
+
+        .tag-siman {
+            background: #fff3e0 !important;
+            color: #e65100 !important;
+            border-color: #ffcc80 !important;
+        }
+
+        /* Date styling */
+        .song-full-date {
+            font-size: 0.9em;
+            color: var(--text-muted);
+            background: var(--bg-muted, #f5f5f5);
+            padding: 4px 10px;
+            border-radius: 8px;
+        }
+
+        /* Active state adjustments for tags in full mode */
+        .song-item-full.active .nigun-tag-inline {
+            background: rgba(255, 255, 255, 0.2) !important;
+            border-color: rgba(255, 255, 255, 0.3) !important;
+            color: white !important;
+        }
+
+        .song-item-full.active .nigun-tag-inline:hover {
+            background: rgba(255, 255, 255, 0.35) !important;
+        }
+
+        .song-item-full.active .song-full-date {
+            background: rgba(255, 255, 255, 0.15);
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+
         .songs-card {
             background: white;
             border-radius: 16px;
@@ -7657,6 +7901,62 @@
             height: 20px;
             accent-color: var(--color-nigun);
             cursor: pointer;
+        }
+
+        /* Sort toggle slider styles */
+        .sidebar-sort-section {
+            margin-bottom: 20px;
+        }
+
+        .sidebar-sort-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .sort-toggle-container {
+            display: flex;
+            background: var(--color-nigun-pale);
+            border-radius: 10px;
+            padding: 4px;
+            position: relative;
+        }
+
+        .sort-toggle-option {
+            flex: 1;
+            padding: 10px 8px;
+            text-align: center;
+            font-size: 0.85em;
+            font-weight: 500;
+            color: var(--text-dark);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition-smooth);
+            z-index: 1;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .sort-toggle-option:hover {
+            color: var(--color-nigun-dark);
+        }
+
+        .sort-toggle-option.active {
+            color: white;
+            font-weight: 600;
+        }
+
+        .sort-toggle-slider {
+            position: absolute;
+            top: 4px;
+            bottom: 4px;
+            background: var(--color-nigun);
+            border-radius: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            /* Will be positioned dynamically via JavaScript */
         }
 
         .sidebar-section {
@@ -9036,6 +9336,8 @@
         let currentPageView = 'home';
         let searchQuery = ''; // Search query for songs
         let audioOnlyFilter = true; // Show only songs with audio (default on)
+        let currentSortOrder = 'alphabetical'; // Sort order: 'alphabetical', 'recent', 'random'
+        let currentDisplayMode = 'minimal'; // Display mode: 'minimal', 'recordings', 'full'
         let songsFullyLoaded = false; // Track if ALL songs are loaded from API (not just first batch)
 
         // Category data
@@ -10584,6 +10886,9 @@
                 <div class="home-page">
                     <!-- Hero Banner -->
                     <div class="home-hero">
+                        <div class="hero-musical-bg" id="heroMusicalBg">
+                            <!-- Bars will be generated by JS -->
+                        </div>
                         <div class="home-hero-content">
                             <div class="home-logo"></div>
                             <h1 class="home-title">אוצר הניגונים</h1>
@@ -10728,6 +11033,42 @@
                     }
                 });
             });
+
+            // Generate floating musical notes (Starfield / Warp Effect)
+            const musicContainer = document.getElementById('heroMusicalBg');
+            if (musicContainer) {
+                // User requested: "Slower", "More", "Bigger pieces"
+                const noteCount = 60; // Increased count significantly
+                const symbols = ['♪', '♫', '♩', '♬', '♭', '♮', '♯'];
+                let html = '';
+
+                // Radius must be large enough to reach corners of a wide screen
+                const maxRadius = 1500;
+
+                for (let i = 0; i < noteCount; i++) {
+                    const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+
+                    // Random angle
+                    const angle = Math.random() * Math.PI * 2;
+
+                    // Calculate target X and Y based on angle and radius
+                    const tx = Math.cos(angle) * maxRadius;
+                    const ty = Math.sin(angle) * maxRadius;
+
+                    // Random rotation for the note itself
+                    const rot = (Math.random() * 360 - 180) + 'deg';
+
+                    // Slower duration: 10s to 20s
+                    const duration = 10 + Math.random() * 10;
+                    const delay = Math.random() * 10;
+
+                    // Bigger sizes: 50px to 90px
+                    const size = 50 + Math.random() * 40;
+
+                    html += `<span class="musical-note" style="--tx: ${tx}px; --ty: ${ty}px; --rot: ${rot}; animation-duration: ${duration}s; animation-delay: -${delay}s; font-size: ${size}px;">${symbol}</span>`;
+                }
+                musicContainer.innerHTML = html;
+            }
         }
 
         // Helper function to generate info pages sub-navigation
@@ -11223,6 +11564,26 @@
                                 <span>נאר ניגונים מיט אודיאו 🎵</span>
                             </label>
 
+                            <div class="sidebar-sort-section">
+                                <label class="sidebar-sort-label" style="color: var(--color-nigun-dark);">סארטיר:</label>
+                                <div class="sort-toggle-container" id="sortToggle">
+                                    <div class="sort-toggle-slider"></div>
+                                    <div class="sort-toggle-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}" data-sort="alphabetical" onclick="changeSortOrder('alphabetical')">א"ב</div>
+                                    <div class="sort-toggle-option ${currentSortOrder === 'random' ? 'active' : ''}" data-sort="random" onclick="changeSortOrder('random')">רענדאם</div>
+                                    <div class="sort-toggle-option ${currentSortOrder === 'recent' ? 'active' : ''}" data-sort="recent" onclick="changeSortOrder('recent')">לעצט צוגעלייגט</div>
+                                </div>
+                            </div>
+
+                            <div class="sidebar-sort-section">
+                                <label class="sidebar-sort-label" style="color: var(--color-nigun-dark);">ווייז:</label>
+                                <div class="sort-toggle-container" id="displayToggle">
+                                    <div class="sort-toggle-slider"></div>
+                                    <div class="sort-toggle-option ${currentDisplayMode === 'minimal' ? 'active' : ''}" data-mode="minimal" onclick="changeDisplayMode('minimal')">מינימום</div>
+                                    <div class="sort-toggle-option ${currentDisplayMode === 'recordings' ? 'active' : ''}" data-mode="recordings" onclick="changeDisplayMode('recordings')">רעקארדירונגען</div>
+                                    <div class="sort-toggle-option ${currentDisplayMode === 'full' ? 'active' : ''}" data-mode="full" onclick="changeDisplayMode('full')">אלעס</div>
+                                </div>
+                            </div>
+
                             <div class="sidebar-section">
                                 <div class="sidebar-section-title">פילטערס</div>
                             </div>
@@ -11265,6 +11626,9 @@
             if (indicator) observer.observe(indicator);
 
             renderActiveFilterTags();
+
+            // Initialize sort toggle slider position
+            initSortToggleSlider();
         }
 
         // Load more songs (for infinite scroll)
@@ -11487,6 +11851,131 @@
             applyFilters();
         }
 
+        // Sort filteredSongs based on current sort order
+        function sortFilteredSongs() {
+            switch (currentSortOrder) {
+                case 'alphabetical':
+                    filteredSongs.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'he'));
+                    break;
+                case 'recent':
+                    // Sort by zugeleigt (added date) - most recent first
+                    // If zugeleigt is empty, put at the end
+                    filteredSongs.sort((a, b) => {
+                        const dateA = a.zugeleigt || '';
+                        const dateB = b.zugeleigt || '';
+                        // Empty dates go to the end
+                        if (!dateA && !dateB) return (a.name || '').localeCompare(b.name || '', 'he');
+                        if (!dateA) return 1;
+                        if (!dateB) return -1;
+                        // Compare dates (assuming format is consistent and comparable as strings)
+                        // Reverse order for most recent first
+                        return dateB.localeCompare(dateA);
+                    });
+                    break;
+                case 'random':
+                    // Fisher-Yates shuffle
+                    for (let i = filteredSongs.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [filteredSongs[i], filteredSongs[j]] = [filteredSongs[j], filteredSongs[i]];
+                    }
+                    break;
+            }
+        }
+
+        // Change sort order and re-apply
+        function changeSortOrder(order) {
+            currentSortOrder = order;
+            sortFilteredSongs();
+            currentPage = 1;
+
+            // Update toggle UI
+            updateSortToggleSlider(order);
+
+            // Update display with animation
+            if (currentPageView === 'songs') {
+                updateSongsListWithAnimation();
+            } else {
+                renderCurrentPage();
+            }
+        }
+
+        // Update sort toggle slider position dynamically
+        function updateSortToggleSlider(order) {
+            const toggle = document.getElementById('sortToggle');
+            if (!toggle) return;
+
+            const slider = toggle.querySelector('.sort-toggle-slider');
+            const activeOption = toggle.querySelector(`.sort-toggle-option[data-sort="${order}"]`);
+
+            if (slider && activeOption) {
+                // Get the container's bounding rect
+                const containerRect = toggle.getBoundingClientRect();
+                const optionRect = activeOption.getBoundingClientRect();
+
+                // Calculate position relative to container (RTL: use right position)
+                const rightOffset = containerRect.right - optionRect.right;
+                const width = optionRect.width;
+
+                slider.style.right = rightOffset + 'px';
+                slider.style.width = width + 'px';
+            }
+
+            // Update active class on options
+            toggle.querySelectorAll('.sort-toggle-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.sort === order);
+            });
+        }
+
+        // Initialize sort toggle slider position on page load
+        function initSortToggleSlider() {
+            setTimeout(() => {
+                updateSortToggleSlider(currentSortOrder);
+                updateDisplayToggleSlider(currentDisplayMode);
+            }, 50);
+        }
+
+        // Change display mode and re-render
+        function changeDisplayMode(mode) {
+            currentDisplayMode = mode;
+
+            // Update toggle UI
+            updateDisplayToggleSlider(mode);
+
+            // Update display with animation
+            if (currentPageView === 'songs') {
+                updateSongsListWithAnimation();
+            } else {
+                renderCurrentPage();
+            }
+        }
+
+        // Update display toggle slider position dynamically
+        function updateDisplayToggleSlider(mode) {
+            const toggle = document.getElementById('displayToggle');
+            if (!toggle) return;
+
+            const slider = toggle.querySelector('.sort-toggle-slider');
+            const activeOption = toggle.querySelector(`.sort-toggle-option[data-mode="${mode}"]`);
+
+            if (slider && activeOption) {
+                // Get the container's bounding rect
+                const containerRect = toggle.getBoundingClientRect();
+                const optionRect = activeOption.getBoundingClientRect();
+
+                // Calculate position relative to container (RTL: use right position)
+                const rightOffset = containerRect.right - optionRect.right;
+                const width = optionRect.width;
+
+                slider.style.right = rightOffset + 'px';
+                slider.style.width = width + 'px';
+            }
+
+            // Update active class on options
+            toggle.querySelectorAll('.sort-toggle-option').forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.mode === mode);
+            });
+        }
+
         // Apply filters without updating display (for use before animated update)
         function applyFiltersQuiet() {
             filteredSongs = allSongs.filter(song => {
@@ -11531,7 +12020,8 @@
                     if (!activeFilters.chatzer.some(f => song.chatzer?.includes(f))) return false;
                 }
                 return true;
-            }).sort((a, b) => (a.name || '').localeCompare(b.name || '', 'he'));
+            });
+            sortFilteredSongs();
             currentPage = 1;
         }
 
@@ -11591,6 +12081,7 @@
                 return true;
             });
 
+            sortFilteredSongs();
             currentPage = 1;
 
             // If we're on songs page, update the list with fade animation
@@ -14315,10 +14806,11 @@
             ).join(' ');
         }
 
-        // Render song item
+        // Render song item - supports display modes: 'minimal', 'recordings', 'full'
         function renderSongItem(song, globalIdx, displayNum, playlistIndices = null) {
             const isActive = globalIdx === currentSongIndex;
             const hasAudio = song.audioUrl && song.audioUrl.startsWith('http');
+            const displayMode = currentDisplayMode || 'minimal';
 
             // Create meta with links - using entity-specific colors
             let metaParts = [];
@@ -14347,6 +14839,179 @@
                 </div>
             ` : '';
 
+            // === MINIMAL MODE (default) ===
+            if (displayMode === 'minimal') {
+                return `
+                    <div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
+                        <div class="song-number">${displayNum}</div>
+                        <div class="song-info">
+                            <div class="song-name">${song.name}</div>
+                            <div class="song-meta">${metaParts.join(' • ')}</div>
+                        </div>
+                        ${waveAnimation}
+                        ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
+                            <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span>
+                            <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                        </button>` : ''}
+                    </div>
+                `;
+            }
+
+            // === RECORDINGS MODE - show all recordings stacked ===
+            if (displayMode === 'recordings') {
+                let recordingsHtml = '';
+                if (song.recordings && song.recordings.length > 0) {
+                    recordingsHtml = `
+                        <div class="song-item-recordings">
+                            ${song.recordings.map((rec, i) => {
+                        const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this)`;
+                        const displayName = rec.details || rec.personalities || rec.album || ('רעקארדינג ' + (i + 1));
+                        return `
+                                    <div class="song-item-recording" onclick="event.stopPropagation(); ${recPlayAction}">
+                                        <div class="song-item-rec-num">${i + 1}</div>
+                                        <div class="song-item-rec-name">${displayName}</div>
+                                        <button class="song-item-rec-play">▶</button>
+                                    </div>
+                                `;
+                    }).join('')}
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="song-item song-item-expanded ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
+                        <div class="song-item-header">
+                            <div class="song-number">${displayNum}</div>
+                            <div class="song-info">
+                                <div class="song-name">${song.name}</div>
+                                <div class="song-meta">${metaParts.join(' • ')}</div>
+                            </div>
+                            ${waveAnimation}
+                            ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
+                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span>
+                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                            </button>` : ''}
+                        </div>
+                        ${recordingsHtml}
+                    </div>
+                `;
+            }
+
+            // === FULL MODE - show all available info ===
+            if (displayMode === 'full') {
+                // Build additional info sections with colorful tags like detail page
+                let extraInfo = [];
+
+                // Verter (lyrics) - purple/verter color
+                if (song.verter) {
+                    const verterTags = song.verter.split(',').map(v => v.trim()).filter(Boolean).map(v => `
+                        <span class="nigun-tag-inline tag-verter" 
+                              data-action="detail" 
+                              data-category="verter" 
+                              data-name="${escapeHtml(v)}"
+                              onclick="event.stopPropagation();">${v}</span>
+                    `).join('');
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">ווערטער:</span><div class="song-full-tags">${verterTags}</div></div>`);
+                }
+
+                // Collections - collection color
+                if (song.collections) {
+                    const collectionTags = song.collections.split(',').map(c => c.trim()).filter(Boolean).map(c => `
+                        <span class="nigun-tag-inline tag-collection" 
+                              data-action="detail" 
+                              data-category="collections" 
+                              data-name="${escapeHtml(c)}"
+                              onclick="event.stopPropagation();">${c}</span>
+                    `).join('');
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">קאלעקשאנס:</span><div class="song-full-tags">${collectionTags}</div></div>`);
+                }
+
+                // Pasig Oif (suitable for) - zman/piyut color
+                if (song.pasigOif) {
+                    const pasigTags = song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
+                        <span class="nigun-tag-inline tag-piyut" 
+                              data-action="filter" 
+                              data-page="nigunim"
+                              data-filter-key="zman"
+                              data-value="${escapeHtml(p)}"
+                              onclick="event.stopPropagation();">${p}</span>
+                    `).join('');
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">פאסיג אויף:</span><div class="song-full-tags">${pasigTags}</div></div>`);
+                }
+
+                // Scale - music color
+                if (song.scale) {
+                    const scaleTags = song.scale.split(',').map(s => s.trim()).filter(Boolean).map(s => `
+                        <span class="nigun-tag-inline tag-scale" 
+                              data-action="filter" 
+                              data-page="nigunim"
+                              data-filter-key="scale"
+                              data-value="${escapeHtml(s)}"
+                              onclick="event.stopPropagation();">${s}</span>
+                    `).join('');
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סקעיל:</span><div class="song-full-tags">${scaleTags}</div></div>`);
+                }
+
+                // Ritem - music color
+                if (song.ritem) {
+                    const ritemTags = song.ritem.split(',').map(r => r.trim()).filter(Boolean).map(r => `
+                        <span class="nigun-tag-inline tag-ritem" 
+                              data-action="filter" 
+                              data-page="nigunim"
+                              data-filter-key="ritem"
+                              data-value="${escapeHtml(r)}"
+                              onclick="event.stopPropagation();">${r}</span>
+                    `).join('');
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">ריטעם:</span><div class="song-full-tags">${ritemTags}</div></div>`);
+                }
+
+                // Siman - simple tag
+                if (song.siman) {
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סימן:</span><span class="nigun-tag-inline tag-siman">${song.siman}</span></div>`);
+                }
+
+                // Recordings section
+                let recordingsHtml = '';
+                if (song.recordings && song.recordings.length > 0) {
+                    recordingsHtml = `
+                        <div class="song-full-recordings">
+                            <div class="song-full-rec-title">רעקארדירונגען (${song.recordings.length})</div>
+                            ${song.recordings.map((rec, i) => {
+                        const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this)`;
+                        const displayName = rec.details || rec.personalities || rec.album || ('רעקארדינג ' + (i + 1));
+                        return `
+                                    <div class="song-item-recording" onclick="event.stopPropagation(); ${recPlayAction}">
+                                        <div class="song-item-rec-num">${i + 1}</div>
+                                        <div class="song-item-rec-name">${displayName}</div>
+                                        <button class="song-item-rec-play">▶</button>
+                                    </div>
+                                `;
+                    }).join('')}
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="song-item song-item-full ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
+                        <div class="song-item-header">
+                            <div class="song-number">${displayNum}</div>
+                            <div class="song-info">
+                                <div class="song-name">${song.name}</div>
+                                <div class="song-meta">${metaParts.join(' • ')}</div>
+                            </div>
+                            ${waveAnimation}
+                            ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
+                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span>
+                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                            </button>` : ''}
+                        </div>
+                        ${extraInfo.length > 0 ? `<div class="song-full-details">${extraInfo.join('')}</div>` : ''}
+                        ${recordingsHtml}
+                    </div>
+                `;
+            }
+
+            // Fallback to minimal
             return `
                 <div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
                     <div class="song-number">${displayNum}</div>
