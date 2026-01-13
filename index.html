@@ -173,6 +173,43 @@
             }
         }
 
+        /* Category-themed loading wave bars */
+        .page-theme-chatzer .loading-wave-bar.active::before {
+            background: linear-gradient(90deg, transparent 0%, var(--color-chatzer-light) 25%, var(--color-chatzer) 50%, var(--color-chatzer-light) 75%, transparent 100%);
+        }
+
+        .page-theme-mechaber .loading-wave-bar.active::before {
+            background: linear-gradient(90deg, transparent 0%, var(--color-mechaber-light) 25%, var(--color-mechaber) 50%, var(--color-mechaber-light) 75%, transparent 100%);
+        }
+
+        .page-theme-verter .loading-wave-bar.active::before {
+            background: linear-gradient(90deg, transparent 0%, var(--color-verter-light) 25%, var(--color-verter) 50%, var(--color-verter-light) 75%, transparent 100%);
+        }
+
+        .page-theme-zman .loading-wave-bar.active::before {
+            background: linear-gradient(90deg, transparent 0%, var(--color-zman-light) 25%, var(--color-zman) 50%, var(--color-zman-light) 75%, transparent 100%);
+        }
+
+        .page-theme-collection .loading-wave-bar.active::before {
+            background: linear-gradient(90deg, transparent 0%, var(--color-collection-light) 25%, var(--color-collection) 50%, var(--color-collection-light) 75%, transparent 100%);
+        }
+
+        .page-theme-resource .loading-wave-bar.active::before {
+            background: linear-gradient(90deg, transparent 0%, var(--color-resource-light) 25%, var(--color-resource) 50%, var(--color-resource-light) 75%, transparent 100%);
+        }
+
+        .page-theme-document .loading-wave-bar.active::before {
+            background: linear-gradient(90deg, transparent 0%, var(--color-document-light) 25%, var(--color-document) 50%, var(--color-document-light) 75%, transparent 100%);
+        }
+
+        .page-theme-album .loading-wave-bar.active::before {
+            background: linear-gradient(90deg, transparent 0%, var(--color-album-light) 25%, var(--color-album) 50%, var(--color-album-light) 75%, transparent 100%);
+        }
+
+        .page-theme-music .loading-wave-bar.active::before {
+            background: linear-gradient(90deg, transparent 0%, var(--color-music-light) 25%, var(--color-music) 50%, var(--color-music-light) 75%, transparent 100%);
+        }
+
         .subtitle {
             transition: opacity 0.3s ease-out;
         }
@@ -406,6 +443,135 @@
             background: var(--gradient-main-dark);
             transform: translateY(-2px);
         }
+        /* Nigun Modal Overlay */
+        .nigun-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(6px);
+            padding: 20px;
+        }
+
+        .nigun-modal-overlay.active {
+            display: flex;
+        }
+
+        .nigun-modal {
+            background: white;
+            border-radius: 20px;
+            width: 95%;
+            max-width: 700px;
+            max-height: 85vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+            animation: nigunModalIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .nigun-modal-overlay.closing .nigun-modal {
+            animation: nigunModalOut 0.25s ease-out forwards;
+        }
+
+        @keyframes nigunModalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.85) translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        @keyframes nigunModalOut {
+            from {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: scale(0.9) translateY(20px);
+            }
+        }
+
+        .nigun-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #eee;
+            background: linear-gradient(135deg, var(--color-nigun-pale) 0%, white 100%);
+            flex-shrink: 0;
+        }
+
+        .nigun-modal-header h2 {
+            margin: 0;
+            font-size: 1.3em;
+            color: var(--color-nigun-dark);
+            font-weight: 700;
+        }
+
+        .nigun-modal-close {
+            width: 36px;
+            height: 36px;
+            border: none;
+            background: white;
+            border-radius: 50%;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: #666;
+            transition: var(--transition-smooth);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .nigun-modal-close:hover {
+            background: var(--color-nigun);
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .nigun-modal-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .nigun-modal-body .detail-page {
+            padding: 0;
+        }
+
+        .nigun-modal-body .back-button {
+            display: none;
+        }
+
+        .nigun-modal-body .detail-header {
+            margin-bottom: 20px;
+        }
+
+        .nigun-modal-body .detail-category-bar {
+            display: none;
+        }
+
+        @media (max-width: 600px) {
+            .nigun-modal {
+                max-height: 90vh;
+                border-radius: 16px;
+            }
+            .nigun-modal-body {
+                padding: 15px;
+            }
+        }
 
         .stream-btn {
             display: flex;
@@ -534,7 +700,7 @@
             background: var(--gradient-main);
         }
 
-        .nav-dropdown-item[data-dest="songs"]::before {
+        .nav-dropdown-item[data-dest="nigunim"]::before {
             background: var(--color-nigun);
         }
 
@@ -579,7 +745,7 @@
         }
 
         /* Navigation items text colors on hover */
-        .nav-dropdown-item[data-dest="songs"]:hover {
+        .nav-dropdown-item[data-dest="nigunim"]:hover {
             color: var(--color-nigun-dark);
             background: var(--color-nigun-pale);
         }
@@ -8504,14 +8670,14 @@
                 <div class="main-nav">
                     <!-- ניגונים -->
                     <div class="nav-dropdown">
-                        <button class="nav-dropdown-btn nav-nigunim" onclick="navigateTo('songs')">
+                        <button class="nav-dropdown-btn nav-nigunim" onclick="navigateTo('nigunim')">
                             ניגונים
                             <span class="nav-arrow">▼</span>
                         </button>
                         <div class="nav-dropdown-content">
                             <div class="dropdown-inner">
-                                <div class="nav-dropdown-item" data-dest="songs"
-                                    onclick="event.stopPropagation(); navigateTo('songs')">
+                                <div class="nav-dropdown-item" data-dest="nigunim"
+                                    onclick="event.stopPropagation(); navigateTo('nigunim')">
                                     <span>אלע ניגונים</span>
                                 </div>
                                 <div class="nav-dropdown-item" data-dest="mechabrim"
@@ -10015,7 +10181,7 @@
                     zugeleigt: extractText(values['c-iOlvD8H0n3']),
                     pasigOif: extractText(values['c-mTtYp3FK9U']), // פאסיג אויף / זמנים
                     maure: extractText(values['c-J3q8mQIXBh']), // מאורע
-                    info: extractText(values['c-oz8SrLoex3']),
+                    info: extractText(values['c-XmTlDf3xfw']),
                     siman: extractText(values['c-jSVbHezFAS']),
                     notn: extractText(values['c-hodtA6zYsy']),
                     documents: extractText(values['c-nF5sRFoMkJ']), // דאקומענטן
@@ -10244,26 +10410,28 @@
                 content.classList.remove(exitClass);
             }
 
-            currentPageView = page;
+            // Map URL page names to internal page names
+            const internalPage = page === 'nigunim' ? 'songs' : page;
+            currentPageView = internalPage;
             currentPage = 1;
             currentDetailView = null; // Clear any detail view
 
             updateURL();
 
             // Show skeleton loader for pages that need data
-            if (page !== 'home' && !isInfoPage) {
-                if (content && !isDataLoadedForPage(page)) {
-                    content.innerHTML = getSkeletonForPage(page);
+            if (internalPage !== 'home' && !isInfoPage) {
+                if (content && !isDataLoadedForPage(internalPage)) {
+                    content.innerHTML = getSkeletonForPage(internalPage);
                 }
                 // Load required data for this page
-                await ensureDataForPage(page);
+                await ensureDataForPage(internalPage);
             }
 
             renderCurrentPage();
 
             // Add enter animation - home page uses bottom-up, info pages use fade, others use left-to-right
             // Skip animation for songs page to prevent visual jumps with lazy loading
-            if (content && page !== 'songs') {
+            if (content && internalPage !== 'songs') {
                 let enterClass;
                 if (isInfoPage) {
                     enterClass = 'page-enter-info';
@@ -10437,7 +10605,7 @@
 
                     <!-- Statistics - 2 Stack Layout -->
                     <div class="home-stats-grid">
-                        <div class="home-stat-hero" onclick="navigateTo('songs')">
+                        <div class="home-stat-hero" onclick="navigateTo('nigunim')">
                             <div class="home-stat-number">${totalSongs}</div>
                             <div class="home-stat-label">ניגונים</div>
                             <div class="home-stat-subtitle">אינעם דאטאבעיס</div>
@@ -10727,7 +10895,7 @@
 
                     <div class="info-page-content">
                         <div class="stats-page-grid">
-                            <div class="stats-page-card" onclick="navigateTo('songs')">
+                            <div class="stats-page-card" onclick="navigateTo('nigunim')">
                                 <div class="stats-page-number">${totalSongs}</div>
                                 <div class="stats-page-label">ניגונים</div>
                             </div>
@@ -10992,7 +11160,7 @@
             if (query) {
                 searchQuery = query;
                 filterSongs();
-                navigateTo('songs');
+                navigateTo('nigunim');
                 // Set the search input in songs page
                 setTimeout(() => {
                     const searchInput = document.getElementById('searchInput');
@@ -11830,7 +11998,9 @@
                 hash = `#/search/${encodeURIComponent(searchQuery)}`;
             } else {
                 // Category page URL: #/mechabrim or #/home
-                hash = `#/${currentPageView}`;
+                // Map internal 'songs' to external 'nigunim' URL
+                const urlPage = currentPageView === 'songs' ? 'nigunim' : currentPageView;
+                hash = `#/${urlPage}`;
             }
 
             // Update URL without triggering hashchange
@@ -11853,7 +12023,7 @@
                 case 'albums': infoObj = albumsInfo; break;
                 case 'documents': infoObj = documentsInfo; break;
                 case 'resources': infoObj = resourcesInfo; break;
-                case 'nigun':
+                case 'nigunim':
                     // For nigunim, search in allSongs
                     const song = allSongs.find(s => s.customId === idOrName || s.rowId === idOrName || s.name === idOrName);
                     return song ? { name: song.name, id: song.rowId, customId: song.customId } : null;
@@ -11892,11 +12062,11 @@
             console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
 
             // Valid pages
-            const validPages = ['home', 'songs', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'nigun', 'search'];
+            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search'];
 
             if (validPages.includes(page)) {
                 // Show skeleton loader if data not loaded
-                const targetPage = page === 'zman' ? 'zmanim' : (page === 'nigun' ? 'songs' : page);
+                const targetPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
                 if (targetPage !== 'home' && !isDataLoadedForPage(targetPage)) {
                     const content = document.getElementById('mainContent');
                     if (content) {
@@ -11929,10 +12099,10 @@
                         // Zman detail page (shows piyutim and collections for a zman)
                         currentPageView = 'zmanim';
                         currentDetailView = { type: 'zman', name: itemName, id: itemId };
-                    } else if (page === 'nigun') {
-                        // Nigun detail page
+                    } else if (page === 'nigunim') {
+                        // Nigun detail page (nigunim/1 format)
                         currentPageView = 'songs';
-                        currentDetailView = { type: 'nigun', name: itemName, id: itemId };
+                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId };
                     } else {
                         currentPageView = page;
                         currentDetailView = { type: page, name: itemName, id: itemId };
@@ -11941,7 +12111,7 @@
                     // Update nav buttons
                     document.querySelectorAll('.nav-btn').forEach(btn => {
                         const btnPage = btn.dataset.page;
-                        const activePage = page === 'zman' ? 'zmanim' : (page === 'nigun' ? 'songs' : page);
+                        const activePage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
                         btn.classList.toggle('active', btnPage === activePage);
                     });
 
@@ -11949,7 +12119,8 @@
                 } else {
                     // Navigate to category page
                     currentDetailView = null;
-                    currentPageView = page;
+                    // Map URL 'nigunim' to internal 'songs' page
+                    currentPageView = page === 'nigunim' ? 'songs' : page;
                     currentPage = 1;
 
                     // Update nav buttons
@@ -12021,7 +12192,7 @@
             }
 
             // Handle nigun detail page separately
-            if (type === 'nigun') {
+            if (type === 'nigunim') {
                 renderNigunDetailPage(container, name);
                 return;
             }
@@ -12398,6 +12569,7 @@
                         <div class="page-title-bar">זמנים</div>
                         <div class="page-title-content">
                             <div class="subtitle">ניגונים פאסיג פאר ספעציעלע צייטן • <span class="subtitle-count">0</span> זמנים</div>
+                            <div class="loading-wave-bar active" id="zmanLoader"></div>
                         </div>
                     </div>
                     
@@ -12434,6 +12606,10 @@
 
             const countEl = container.querySelector('.subtitle-count');
             if (countEl) animateCountUp(countEl, totalZmanim);
+
+            // Hide loading wave bar
+            const loader = document.getElementById('zmanLoader');
+            if (loader) setTimeout(() => loader.classList.remove('active'), 500);
         }
 
         // Navigate to zman detail page
@@ -12481,7 +12657,7 @@
 
             container.innerHTML = `
                 <div class="detail-page nigun-detail-page">
-                    <button class="back-button" onclick="navigateTo('songs')">
+                    <button class="back-button" onclick="navigateTo('nigunim')">
                         → ניגונים בלאט
                     </button>
                     
@@ -12588,7 +12764,7 @@
                                     ${song.maure.split(',').map(m => m.trim()).filter(Boolean).map(m => `
                                         <span class="nigun-tag-inline tag-piyut"
                                               data-action="filter"
-                                              data-page="songs"
+                                              data-page="nigunim"
                                               data-filter-key="zman"
                                               data-value="${escapeHtml(m)}"
                                               data-tooltip-value="${escapeHtml(m)}"
@@ -12604,7 +12780,7 @@
                                     ${song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
                                         <span class="nigun-tag-inline tag-piyut"
                                               data-action="filter"
-                                              data-page="songs"
+                                              data-page="nigunim"
                                               data-filter-key="zman"
                                               data-value="${escapeHtml(p)}"
                                               data-tooltip-value="${escapeHtml(p)}"
@@ -12927,6 +13103,7 @@
                         <div class="page-title-bar">קאלעקשאנס</div>
                         <div class="page-title-content">
                             <div class="subtitle">פלעיליסטס צום שפילן • <span class="subtitle-count">0</span> קאלעקשאנס</div>
+                            <div class="loading-wave-bar active" id="collectionLoader"></div>
                         </div>
                     </div>
 
@@ -12968,6 +13145,10 @@
 
             const countEl = container.querySelector('.subtitle-count');
             if (countEl) animateCountUp(countEl, sortedKeys.length);
+
+            // Hide loading wave bar
+            const loader = document.getElementById('collectionLoader');
+            if (loader) setTimeout(() => loader.classList.remove('active'), 500);
         }
 
         // Render music page (scale & rhythm)
@@ -13000,6 +13181,7 @@
                         <div class="page-title-bar" style="background: var(--color-music);">מוזיק</div>
                         <div class="page-title-content">
                             <div class="subtitle">ניגונים לויט ריטעם און סקעיל</div>
+                            <div class="loading-wave-bar active" id="musicLoader"></div>
                         </div>
                     </div>
 
@@ -13056,6 +13238,12 @@
                     </div>
                 </div>
             `;
+
+            // Hide loading wave bar
+            setTimeout(() => {
+                const loader = document.getElementById('musicLoader');
+                if (loader) loader.classList.remove('active');
+            }, 500);
         }
 
         // Show all songs for a scale in a ritem
@@ -13064,7 +13252,7 @@
             activeFilters.ritem = [ritem];
             activeFilters.scale = [scale];
             applyFilters();
-            navigateTo('songs');
+            navigateTo('nigunim');
         }
 
         // Lazy loading state for categories
@@ -13206,6 +13394,12 @@
             });
 
             console.log(`Loaded ${batch.length} cards (${categoryLazyState.currentIndex}/${categoryLazyState.allKeys.length})`);
+
+            // Hide loading wave bar when all cards are loaded
+            if (categoryLazyState.currentIndex >= categoryLazyState.allKeys.length) {
+                const loader = document.getElementById('categoryLoader');
+                if (loader) loader.classList.remove('active');
+            }
         }
 
         // Render category page with lazy loading
@@ -13239,6 +13433,7 @@
                         <div class="page-title-bar">${title}</div>
                         <div class="page-title-content">
                             <div class="subtitle">${subtitle} • <span class="subtitle-count">0</span> קאטעגאריעס</div>
+                            <div class="loading-wave-bar category-loader" id="categoryLoader"></div>
                         </div>
                     </div>
 
@@ -13251,6 +13446,12 @@
             // Animate subtitle count
             const countEl = container.querySelector('.subtitle-count');
             if (countEl) animateCountUp(countEl, sortedKeys.length);
+
+            // Show loading wave bar
+            const loader = document.getElementById('categoryLoader');
+            if (loader && sortedKeys.length > 50) {
+                loader.classList.add('active');
+            }
 
             // Load first batch
             loadMoreCategoryCards(categoryKey, icon, infoObj, data);
@@ -13396,6 +13597,7 @@
                         <div class="page-title-bar">רעסורסן</div>
                         <div class="page-title-content">
                             <div class="subtitle">לינקס און רעסורסן • <span class="subtitle-count">0</span> רעסורסן</div>
+                            <div class="loading-wave-bar active" id="resourceLoader"></div>
                         </div>
                     </div>
             `;
@@ -13462,6 +13664,10 @@
 
             const countEl = container.querySelector('.subtitle-count');
             if (countEl) animateCountUp(countEl, allKeys.length);
+
+            // Hide loading wave bar
+            const loader = document.getElementById('resourceLoader');
+            if (loader) setTimeout(() => loader.classList.remove('active'), 500);
         }
 
         // Render documents page
@@ -13490,6 +13696,7 @@
                         <div class="page-title-bar">דאקומענטן</div>
                         <div class="page-title-content">
                             <div class="subtitle">דאקומענטן און PDFs • <span class="subtitle-count">0</span> דאקומענטן</div>
+                            <div class="loading-wave-bar active" id="documentLoader"></div>
                         </div>
                     </div>
             `;
@@ -13554,6 +13761,10 @@
             const countEl = container.querySelector('.subtitle-count');
             if (countEl) animateCountUp(countEl, allKeys.length);
 
+            // Hide loading wave bar
+            const loader = document.getElementById('documentLoader');
+            if (loader) setTimeout(() => loader.classList.remove('active'), 500);
+
             // Lazy load PDF previews when they become visible
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -13598,6 +13809,7 @@
                         <div class="page-title-bar">אלבומס</div>
                         <div class="page-title-content">
                             <div class="subtitle">מוזיק אלבומס • <span class="subtitle-count">0</span> אלבומס</div>
+                            <div class="loading-wave-bar active" id="albumLoader"></div>
                         </div>
                     </div>
             `;
@@ -13667,6 +13879,10 @@
 
             const countEl = container.querySelector('.subtitle-count');
             if (countEl) animateCountUp(countEl, allKeys.length);
+
+            // Hide loading wave bar
+            const loader = document.getElementById('albumLoader');
+            if (loader) setTimeout(() => loader.classList.remove('active'), 500);
         }
 
         // Render album detail page
@@ -14731,7 +14947,7 @@
             if (!song) return;
 
             // Navigate to nigun detail page
-            currentDetailView = { type: 'nigun', name: song.name, id: song.rowId, customId: song.customId };
+            currentDetailView = { type: 'nigunim', name: song.name, id: song.rowId, customId: song.customId };
             currentPageView = 'songs';
             console.log('Calling renderDetailPage...');
             updateURL();
@@ -15183,7 +15399,7 @@
                         </div>
                         <div class="search-results-grid">
                             ${matchingGezungen.map(name => `
-                                <div class="search-result-card" data-action="filter" data-page="songs" data-filter-key="gezungen" data-value="${escapeHtml(name)}" style="border-right-color: #2e8b2e;">
+                                <div class="search-result-card" data-action="filter" data-page="nigunim" data-filter-key="gezungen" data-value="${escapeHtml(name)}" style="border-right-color: #2e8b2e;">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.gezungen[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -15202,7 +15418,7 @@
                         </div>
                         <div class="search-results-grid">
                             ${matchingRitem.map(name => `
-                                <div class="search-result-card result-music" data-action="filter" data-page="songs" data-filter-key="ritem" data-value="${escapeHtml(name)}" style="border-right-color: var(--color-music);">
+                                <div class="search-result-card result-music" data-action="filter" data-page="nigunim" data-filter-key="ritem" data-value="${escapeHtml(name)}" style="border-right-color: var(--color-music);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.ritem[name]?.length || 0} ניגונים</div>
                                 </div>
@@ -15221,7 +15437,7 @@
                         </div>
                         <div class="search-results-grid">
                             ${matchingScale.map(name => `
-                                <div class="search-result-card result-nigun" data-action="filter" data-page="songs" data-filter-key="scale" data-value="${escapeHtml(name)}" style="border-right-color: var(--color-nigun);">
+                                <div class="search-result-card result-nigun" data-action="filter" data-page="nigunim" data-filter-key="scale" data-value="${escapeHtml(name)}" style="border-right-color: var(--color-nigun);">
                                     <div class="result-name">${name}</div>
                                     <div class="result-count">${categories.scale[name]?.length || 0} ניגונים</div>
                                 </div>
