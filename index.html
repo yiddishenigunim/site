@@ -13740,13 +13740,13 @@
                 case 'resources': infoObj = resourcesInfo; break;
                 case 'nigunim':
                     // For nigunim, search in allSongs
-                    const song = allSongs.find(s => s.customId === idOrName || s.rowId === idOrName || s.name === idOrName);
+                    const song = allSongs.find(s => String(s.customId) === String(idOrName) || s.rowId === idOrName || s.name === idOrName);
                     return song ? { name: song.name, id: song.rowId, customId: song.customId } : null;
             }
 
             // First try to find by customId (simple number)
             for (const [name, info] of Object.entries(infoObj)) {
-                if (info.customId === idOrName) {
+                if (String(info.customId) === String(idOrName)) {
                     return { name, id: info.rowId, customId: info.customId };
                 }
             }
