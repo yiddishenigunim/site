@@ -10052,11 +10052,6 @@
                                     if (colNameLower.includes('חצר')) {
                                         info.chatzer = relatedName;
                                     }
-                                    // Check for ID in StructuredValue
-                                    const isIdCol = colNameLower === 'id' || colNameLower.endsWith(' id') || colNameLower.includes(' id') || colNameLower === '#' || colName.includes('ID');
-                                    if (isIdCol && /^#?\d+$/.test(relatedName.trim())) {
-                                        info.customId = relatedName.replace(/^#/, '').trim();
-                                    }
                                 }
                                 return;
                             }
@@ -10111,20 +10106,6 @@
                                 }
                                 if (colNameLower.includes('מקום') || colNameLower.includes('ארט') || colNameLower.includes('location')) {
                                     info.location = textValue;
-                                }
-                                // Check for ID column (e.g. "ניגון ID", "מחבר ID", "ID", "#")
-                                // Also check by value pattern (number with optional #) if no customId yet
-                                const isIdColumn = colNameLower === 'id' || colNameLower.endsWith(' id') || colNameLower.includes(' id') || colNameLower === '#' || colName.includes('ID');
-                                if (isIdColumn && textValue.trim()) {
-                                    // Remove # prefix if present
-                                    const idValue = textValue.replace(/^#/, '').trim();
-                                    if (idValue) {
-                                        info.customId = idValue;
-                                    }
-                                }
-                                // Value-based ID detection: if no customId yet and value looks like a simple ID number
-                                if (!info.customId && /^#?\d+$/.test(textValue.trim())) {
-                                    info.customId = textValue.replace(/^#/, '').trim();
                                 }
                                 if (colNameLower.includes('מקור') && !colNameLower.includes('מראה')) {
                                     info.makor = textValue;
