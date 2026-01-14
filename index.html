@@ -9963,6 +9963,43 @@
 
                             // Extract text value for mechabrim column ID matching (works for any value type)
                             const textVal = extractText(value);
+
+                            // Direct column ID matching for ID columns across all tables
+                            // Check this BEFORE the textVal check in case the value format is different
+                            const idColumnIds = [
+                                'c-pDoyO3lhGs', // מחברים ID
+                                'c-b0wqs6RvRL', // חצרות ID
+                                'c-BUEMMqGeaq', // ווערטער ID
+                                'c-u_op0cdc6C', // פיוטים ID
+                                'c-Hnj-jcC9Fz', // זמנים ID
+                                'c-qWlY1R6WOz', // קאלעקשנס ID
+                                'c-ov8ZZ90jjL', // רעסורסן ID
+                                'c-ABZxwZf5gG', // דאקומענטן ID
+                                'c-6sbXQP4zbj'  // אלבומס ID
+                            ];
+                            if (idColumnIds.includes(colId)) {
+                                // Debug: log the raw value to see what format it's in
+                                console.log(`ID column ${colId} for ${name}: raw value =`, value, `textVal = "${textVal}"`);
+
+                                // Try multiple ways to extract the ID value
+                                let idValue = textVal;
+                                if (!idValue && typeof value === 'number') {
+                                    idValue = String(value);
+                                }
+                                if (!idValue && value && typeof value === 'object') {
+                                    // Try getting value from object properties
+                                    idValue = value.name || value.value || value.text || '';
+                                }
+
+                                if (idValue) {
+                                    idValue = String(idValue).replace(/^#/, '').trim();
+                                    if (idValue) {
+                                        info.customId = idValue;
+                                        console.log(`Found customId for ${name}: ${idValue}`);
+                                    }
+                                }
+                            }
+
                             if (textVal) {
                                 // Direct column ID matching for mechabrim fields
                                 if (colId === 'c-iSyYvX1S79') info.title = textVal;
@@ -9971,26 +10008,6 @@
                                 if (colId === 'c-5hlKINjTSq') info.gerufen = textVal;
                                 if (colId === 'c-qF9asVJ_z1') info.platz = textVal;
                                 if (colId === 'c-2MdIjbFK44') info.suffix = textVal;
-
-                                // Direct column ID matching for ID columns across all tables
-                                const idColumnIds = [
-                                    'c-pDoyO3lhGs', // מחברים ID
-                                    'c-b0wqs6RvRL', // חצרות ID
-                                    'c-BUEMMqGeaq', // ווערטער ID
-                                    'c-u_op0cdc6C', // פיוטים ID
-                                    'c-Hnj-jcC9Fz', // זמנים ID
-                                    'c-qWlY1R6WOz', // קאלעקשנס ID
-                                    'c-ov8ZZ90jjL', // רעסורסן ID
-                                    'c-ABZxwZf5gG', // דאקומענטן ID
-                                    'c-6sbXQP4zbj'  // אלבומס ID
-                                ];
-                                if (idColumnIds.includes(colId)) {
-                                    const idValue = textVal.replace(/^#/, '').trim();
-                                    if (idValue) {
-                                        info.customId = idValue;
-                                        console.log(`Found customId for ${name} from column ID ${colId}: ${idValue}`);
-                                    }
-                                }
                             }
 
                             // Skip lookup/relation columns (they have complex objects)
