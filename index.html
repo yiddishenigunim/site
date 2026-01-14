@@ -859,7 +859,7 @@
             left: 50%;
             color: rgba(255, 255, 255, 0.6);
             font-size: 20px;
-            animation: warpOut linear infinite;
+            animation: warpOut ease-in infinite;
             /* Start invisible at center */
             transform: translate(-50%, -50%) scale(0);
         }
@@ -913,9 +913,31 @@
             }
         }
 
-        .card-stagger {
+        /* Staggered Fade Up Animation using Transform for better performance */
+        @keyframes fadeInUpTransform {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stagger-fade-up {
             opacity: 0;
-            animation: cardFadeIn 0.4s ease-out forwards;
+            animation: fadeInUpTransform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+            will-change: transform, opacity;
+        }
+
+        /* Initial state for elements we want to animate */
+        .home-stat-hero,
+        .home-stat-card,
+        .home-link-card,
+        .home-section {
+            /* We will add the class via JS, but good to know these are the targets */
         }
 
         /* Smooth insertion animation - new items pop in */
@@ -1203,8 +1225,9 @@
 
         .home-stat-hero .home-stat-subtitle {
             font-size: 1em;
-            color: var(--text-muted);
-            margin-top: 15px;
+            color: var(--color-nigun);
+            opacity: 0.8;
+            margin-top: 0px;
         }
 
         /* Right Side - 2 Stacked Rows */
@@ -8467,30 +8490,7 @@
             color: white;
         }
 
-        .audio-only-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            font-size: 0.9em;
-            white-space: nowrap;
-            padding: 8px 12px;
-            border: 2px solid #ddd;
-            border-radius: 8px;
-            background: white;
-            transition: var(--transition-smooth);
-        }
 
-        .audio-only-checkbox:hover {
-            border-color: var(--color-nigun);
-        }
-
-        .audio-only-checkbox input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--color-nigun);
-            cursor: pointer;
-        }
 
         .filters-row {
             display: flex;
@@ -9077,12 +9077,13 @@
         .goal-brick-text {
             font-size: 1em;
             line-height: 1.7;
+            text-align: center;
             color: var(--text-dark);
         }
 
         /* Warning Box */
         .goals-warning {
-            background: var(--gradient-main-pale);
+            background: white;
             border: 2px solid var(--color-chatzer-light);
             border-radius: 16px;
             padding: 25px 30px;
@@ -9550,7 +9551,7 @@
         let playerVisible = false; // Track if player banner is visible
         let currentPageView = 'home';
         let searchQuery = ''; // Search query for songs
-        let audioOnlyFilter = true; // Show only songs with audio (default on)
+
         let currentSortOrder = 'random'; // Sort order: 'random', 'alphabetical', 'recent'
         let currentDisplayMode = 'minimal'; // Display mode: 'minimal', 'recordings', 'full'
         let minQualityRating = 0; // Minimum quality rating (0-5, 0 = all)
@@ -11109,7 +11110,7 @@
                         <div class="home-hero-content">
                             <div class="home-logo"></div>
                             <h1 class="home-title">אוצר הניגונים</h1>
-                            <p class="home-subtitle">די גרעסטע זאמלונג פון חסידישע ניגונים</p>
+                            <p class="home-subtitle">א דאטאבעיס פון חסידישע ניגונים</p>
                         </div>
                     </div>
 
@@ -11188,35 +11189,28 @@
                 </div>
             `;
 
-            // Apply staggered animations to cards
+            // Apply staggered animations to all home page elements
             requestAnimationFrame(() => {
-                // Animate stat cards
-                const statCards = container.querySelectorAll('.home-stat-card');
-                statCards.forEach((card, i) => {
-                    card.style.animationDelay = `${i * 0.08}s`;
-                    card.classList.add('card-stagger');
+                const elements = container.querySelectorAll(
+                    '.home-hero, .home-search-section, .home-stat-hero, .home-stat-card, .home-stats-link, .home-section-title, .home-link-card, .home-section, .home-about-section, .home-terms-link'
+                );
 
-                    // Remove animation class after it's done to allow hover transforms
-                    card.addEventListener('animationend', () => {
-                        card.classList.remove('card-stagger');
-                        card.style.opacity = '1';
-                        // Ensure transform is cleared so hover can work
-                        card.style.transform = '';
-                    }, { once: true });
-                });
+                elements.forEach((el, i) => {
+                    // Start with opacity 0 (handled by class, but ensure immediate effect)
+                    // el.style.opacity = '0'; // Not strictly needed if class is added immediately, but safer?
+                    // actually the class .stagger-fade-up has opacity: 0.
 
-                // Animate link cards
-                const linkCards = container.querySelectorAll('.home-link-card');
-                linkCards.forEach((card, i) => {
-                    card.style.animationDelay = `${(statCards.length * 0.08) + (i * 0.08)}s`;
-                    card.classList.add('card-stagger');
+                    // delay
+                    el.style.animationDelay = `${i * 0.08}s`;
+                    el.classList.add('stagger-fade-up');
 
-                    // Remove animation class after it's done to allow hover transforms
-                    card.addEventListener('animationend', () => {
-                        card.classList.remove('card-stagger');
-                        card.style.opacity = '1';
-                        // Ensure transform is cleared so hover can work
-                        card.style.transform = '';
+                    // Remove animation class after it's done to allow hover transforms to work cleanly
+                    el.addEventListener('animationend', () => {
+                        el.classList.remove('stagger-fade-up');
+                        // Ensure final state is visible and clean for interactions
+                        el.style.opacity = '1';
+                        el.style.transform = '';
+                        el.style.animationDelay = '';
                     }, { once: true });
                 });
 
@@ -11324,56 +11318,56 @@
                         <div class="goals-bricks">
                             <div class="goals-brick-row">
                                 <div class="goal-brick">
-                                    <div class="goal-brick-text">אלע חסידישע ניגונים וואס ווערן געזינגען בחצרות הקודש צאמגענומען אויף איין פלאץ</div>
-                                </div>
-                                <div class="goal-brick">
-                                    <div class="goal-brick-text">היסטארישע רעקארדירונגען פון ניגונים מיט די ארגינעלע קנייטשן</div>
+                                    <div class="goal-brick-text"><strong>אלע חסידישע ניגונים</strong> וואס ווערן געזינגען בחצרות הקודש <strong>צאמגענומען אויף איין פלאץ</strong></div>
                                 </div>
                             </div>
 
                             <div class="goals-brick-row">
                                 <div class="goal-brick">
-                                    <div class="goal-brick-text">דעטאלירטע דאקומענטאציע פון מקורות פון אלטע ניגונים</div>
+                                    <div class="goal-brick-text"><strong>א סעירטש קנעפל</strong><br>צו טרעפן סיי וועלכן ניגון</div>
                                 </div>
                                 <div class="goal-brick">
-                                    <div class="goal-brick-text">א פארגעשריטענעם סעירטש קנעפל צו טרעפן סיי וועלכן ניגון</div>
+                                    <div class="goal-brick-text"><strong>דעטאלירטע דאקומענטאציע</strong><br>פון מקורות פון אלטע ניגונים</div>
                                 </div>
                                 <div class="goal-brick">
-                                    <div class="goal-brick-text">א רשימה מיט גוטע סימנים אויף אלע ניגונים וואס פארמאגן נישט קיין ווערטער</div>
-                                </div>
-                            </div>
-
-                            <div class="goals-brick-row">
-                                <div class="goal-brick">
-                                    <div class="goal-brick-text">געשריבענע נאטן אויף אלע ניגונים וואס פארמאגן נישט קיין ווערטער</div>
-                                </div>
-                                <div class="goal-brick">
-                                    <div class="goal-brick-text">קאלעקשנס פון ניגונים וואס זענען פאסיג צו ווערן געזינגען ביי סיי וועלכן מאורע</div>
+                                    <div class="goal-brick-text"><strong>היסטארישע רעקארדירונגען</strong><br>מיט די ארגינעלע קנייטשן</div>
                                 </div>
                             </div>
 
                             <div class="goals-brick-row">
                                 <div class="goal-brick">
-                                    <div class="goal-brick-text">חסידישע ניגונים ערשטמאליג אויסגעשטעלט לויט די ריטעם, דזשאנער, און סקעיל</div>
+                                    <div class="goal-brick-text"><strong>געשריבענע נאטן</strong><br>אויף ניגונים וואס פארמאגן נישט קיין ווערטער</div>
                                 </div>
                                 <div class="goal-brick">
-                                    <div class="goal-brick-text">העכסט פראפעסינאלע רעקארדירונגען פון אלע חסידישע ניגונים</div>
-                                </div>
-                                <div class="goal-brick">
-                                    <div class="goal-brick-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען אויף זמירות ביי סעודות שבת ויו״ט</div>
+                                    <div class="goal-brick-text"><strong>א רשימה מיט גוטע סימנים</strong><br>אויף ניגונים וואס פארמאגן נישט קיין ווערטער</div>
                                 </div>
                             </div>
 
                             <div class="goals-brick-row">
                                 <div class="goal-brick">
-                                    <div class="goal-brick-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען אויף פיוטים ביים דאווענען</div>
+                                    <div class="goal-brick-text"><strong>העכסט פראפעסינאלע רעקארדירונגען</strong><br>פון אלע חסידישע ניגונים</div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">חסידישע ניגונים ערשטמאליג אויסגעשטעלט<br><strong>לויט די ריטעם און סקעיל</strong></div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text"><strong>קאלעקשנס פון ניגונים</strong><br>וואס זענען פאסיג צו ווערן געזינגען ביי סיי וועלכן מאורע</div>
+                                </div>
+                            </div>
+
+                            <div class="goals-brick-row">
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען<br><strong>אויף פיוטים ביים דאווענען</strong></div>
+                                </div>
+                                <div class="goal-brick">
+                                    <div class="goal-brick-text">פאסיגע געדאנקען פון ניגונים וואס קענען ווערן געזינגען<br><strong>אויף זמירות ביי סעודות שבת ויו״ט</strong></div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="goals-warning">
                             <div class="goals-warning-title">אכטונג!</div>
-                            <div class="goals-warning-text">דער דאטאבעיס איז געמאכט אויסדרוקלעך נאר פאר חסידישע ניגונים וואס ווערן געזינגען בחצרות הקודש</div>
+                            <div class="goals-warning-text"><strong>דער דאטאבעיס איז געמאכט אויסדרוקלעך נאר פאר חסידישע ניגונים וואס ווערן געזינגען בחצרות הקודש</strong></div>
                         </div>
 
                         <div class="goals-contact">
@@ -12354,8 +12348,7 @@
         // Apply filters without updating display (for use before animated update)
         function applyFiltersQuiet() {
             filteredSongs = allSongs.filter(song => {
-                // Check audio only filter
-                if (audioOnlyFilter && !song.audioUrl) return false;
+
 
                 // Check search query
                 if (searchQuery) {
@@ -12403,8 +12396,7 @@
         // Apply filters
         function applyFilters() {
             filteredSongs = allSongs.filter(song => {
-                // Check audio only filter
-                if (audioOnlyFilter && !song.audioUrl) return false;
+
 
                 // Check search query
                 if (searchQuery) {
@@ -12840,12 +12832,7 @@
             renderCurrentPage();
         }
 
-        // Toggle audio only filter
-        function toggleAudioOnly() {
-            audioOnlyFilter = !audioOnlyFilter;
-            currentPage = 1;
-            applyFilters();
-        }
+
 
         // Current detail view
         let currentDetailView = null; // { type: 'mechaber', name: 'xxx' }
@@ -16339,7 +16326,7 @@
 
             // Search in songs
             const matchingSongs = allSongs.filter(song => {
-                if (audioOnlyFilter && !song.audioUrl) return false;
+
                 const searchableText = [
                     song.name,
                     song.mechaber,
@@ -16875,20 +16862,6 @@
                     playerRating.classList.remove('saving');
                 }
             }
-        }
-
-        // Animate cards on page load with staggered delays
-        function animateCards() {
-            // Select all cards that should animate
-            const cards = document.querySelectorAll(
-                '.category-card, .home-stat-card, .home-link-card, .song-item, .zman-item-card'
-            );
-
-            cards.forEach((card, index) => {
-                // Add animation class with staggered delay
-                card.classList.add('animate-on-load');
-                card.style.animationDelay = `${index * 0.1}s`;
-            });
         }
 
         // Note: animateCards disabled for songs page to prevent unwanted animations
