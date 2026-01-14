@@ -6323,15 +6323,13 @@
 
         .song-item.no-audio {
             background: var(--bg-light);
-            opacity: 0.75;
-            border: 2px dashed var(--border-color);
-            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.05);
+            opacity: 0.55;
+            filter: grayscale(40%);
         }
 
         .song-item.no-audio:hover {
-            opacity: 1;
-            border-color: var(--color-nigun-dark);
-            border-style: solid;
+            opacity: 0.9;
+            filter: grayscale(0%);
             box-shadow: 0 6px 20px rgba(74, 124, 201, 0.35);
         }
 
@@ -6535,6 +6533,26 @@
             color: var(--color-nigun) !important;
         }
 
+        /* Low quality indicator button */
+        .song-btn-low-quality {
+            background: var(--color-nigun-pale) !important;
+            color: var(--color-nigun) !important;
+            cursor: default !important;
+            opacity: 0.7;
+        }
+
+        .song-btn-low-quality:hover {
+            background: var(--color-nigun-pale) !important;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        .low-quality-icon {
+            font-size: 18px;
+            line-height: 1;
+            color: var(--color-nigun);
+        }
+
         /* Wave Animation for Playing Song */
         /* Center-mirrored wave animation (streaming style) */
         .song-wave-animation {
@@ -6650,6 +6668,47 @@
             color: var(--text-dark);
         }
 
+        .song-item-rec-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .song-item-rec-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .song-item-rec-tags .nigun-tag-inline {
+            font-size: 0.7em;
+            padding: 2px 6px;
+        }
+
+        /* Album tag color */
+        .tag-album {
+            background: var(--color-album-pale, #e8f5e9) !important;
+            color: var(--color-album-dark, #2e7d32) !important;
+            border-color: var(--color-album-light, #81c784) !important;
+        }
+
+        /* Gezungen (sung by) tag color */
+        .tag-gezungen {
+            background: #fff8e1 !important;
+            color: #f57c00 !important;
+            border-color: #ffcc80 !important;
+        }
+
+        /* Rating display for recordings */
+        .rec-rating-display {
+            color: var(--color-nigun);
+            font-size: 0.7em;
+            letter-spacing: -1px;
+            flex-shrink: 0;
+            margin-left: 8px;
+        }
+
         .song-item-rec-play {
             width: 28px;
             height: 28px;
@@ -6666,6 +6725,29 @@
         .song-item-rec-play:hover {
             background: var(--color-nigun-dark);
             transform: scale(1.1);
+        }
+
+        /* Low quality recording indicator */
+        .song-item-rec-low-quality {
+            background: var(--color-nigun-pale) !important;
+            color: var(--color-nigun) !important;
+            cursor: default !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .song-item-rec-low-quality:hover {
+            background: var(--color-nigun-pale) !important;
+            transform: none !important;
+        }
+
+        .low-quality-rec {
+            opacity: 0.6;
+        }
+
+        .low-quality-rec:hover {
+            opacity: 0.8;
         }
 
         /* Full mode - additional info section */
@@ -6701,6 +6783,26 @@
             font-size: 0.85em;
             color: var(--color-nigun-dark);
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .rec-collapse-toggle {
+            color: var(--color-nigun);
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 20px;
+            height: 20px;
+        }
+
+        .rec-collapse-toggle:hover {
+            color: var(--color-nigun-dark);
+            transform: scale(1.2);
         }
 
         /* Active state for expanded items */
@@ -7814,6 +7916,11 @@
             border-radius: 15px;
             padding: 20px;
             box-shadow: var(--card-shadow);
+            position: sticky;
+            top: 20px;
+            align-self: flex-start;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
         }
 
         .sidebar-search-box {
@@ -7957,6 +8064,114 @@
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             /* Will be positioned dynamically via JavaScript */
+        }
+
+        /* Quality Stars Filter */
+        .quality-stars-filter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 15px;
+            background: var(--color-nigun-pale);
+            border-radius: 12px;
+            direction: ltr;
+            /* Stars fill left to right */
+        }
+
+        .quality-star {
+            font-size: 2em;
+            color: #ccc;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .quality-star.active {
+            color: var(--color-nigun);
+        }
+
+        /* Reset all stars on hover, let JavaScript handle the fill */
+        .quality-stars-filter:hover .quality-star {
+            color: #ccc;
+        }
+
+        .quality-stars-filter .quality-star:hover {
+            transform: scale(1.15);
+        }
+
+        /* Use JavaScript for proper hover fill since CSS sibling selectors don't work backwards */
+        .quality-stars-filter.hovering .quality-star.hover-active {
+            color: var(--color-nigun);
+        }
+
+        .quality-clear {
+            font-size: 1.4em;
+            color: #999;
+            cursor: pointer;
+            margin-left: 8px;
+            transition: all 0.2s ease;
+            line-height: 1;
+        }
+
+        .quality-clear:hover {
+            color: var(--color-nigun-dark);
+            transform: scale(1.1);
+        }
+
+        .quality-clear.hidden {
+            display: none;
+        }
+
+        /* Quality Star Tooltips */
+        .quality-star[data-tooltip],
+        .quality-clear[data-tooltip] {
+            position: relative;
+        }
+
+        .quality-star[data-tooltip]::after,
+        .quality-clear[data-tooltip]::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: calc(100% + 8px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--color-nigun);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 1000;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+            pointer-events: none;
+            font-weight: 400;
+        }
+
+        .quality-star[data-tooltip]::before,
+        .quality-clear[data-tooltip]::before {
+            content: '';
+            position: absolute;
+            bottom: calc(100% + 2px);
+            left: 50%;
+            transform: translateX(-50%);
+            border: 6px solid transparent;
+            border-top-color: var(--color-nigun);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1001;
+        }
+
+        .quality-star[data-tooltip]:hover::after,
+        .quality-star[data-tooltip]:hover::before,
+        .quality-clear[data-tooltip]:hover::after,
+        .quality-clear[data-tooltip]:hover::before {
+            opacity: 1;
+            visibility: visible;
         }
 
         .sidebar-section {
@@ -9336,8 +9551,10 @@
         let currentPageView = 'home';
         let searchQuery = ''; // Search query for songs
         let audioOnlyFilter = true; // Show only songs with audio (default on)
-        let currentSortOrder = 'alphabetical'; // Sort order: 'alphabetical', 'recent', 'random'
+        let currentSortOrder = 'random'; // Sort order: 'random', 'alphabetical', 'recent'
         let currentDisplayMode = 'minimal'; // Display mode: 'minimal', 'recordings', 'full'
+        let minQualityRating = 0; // Minimum quality rating (0-5, 0 = all)
+        let recordingsCollapsed = false; // Collapse recordings in full mode (show only first)
         let songsFullyLoaded = false; // Track if ALL songs are loaded from API (not just first batch)
 
         // Category data
@@ -11559,17 +11776,12 @@
                                 <button class="sidebar-search-btn" onclick="handleSongsSearch(document.getElementById('songsSearchInput').value)">🔍</button>
                             </div>
 
-                            <label class="sidebar-audio-toggle">
-                                <input type="checkbox" ${audioOnlyFilter ? 'checked' : ''} onchange="toggleAudioOnly()">
-                                <span>נאר ניגונים מיט אודיאו 🎵</span>
-                            </label>
-
                             <div class="sidebar-sort-section">
                                 <label class="sidebar-sort-label" style="color: var(--color-nigun-dark);">סארטיר:</label>
                                 <div class="sort-toggle-container" id="sortToggle">
                                     <div class="sort-toggle-slider"></div>
+                                    <div class="sort-toggle-option ${currentSortOrder === 'random' ? 'active' : ''}" data-sort="random" onclick="changeSortOrder('random')">שאפל</div>
                                     <div class="sort-toggle-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}" data-sort="alphabetical" onclick="changeSortOrder('alphabetical')">א"ב</div>
-                                    <div class="sort-toggle-option ${currentSortOrder === 'random' ? 'active' : ''}" data-sort="random" onclick="changeSortOrder('random')">רענדאם</div>
                                     <div class="sort-toggle-option ${currentSortOrder === 'recent' ? 'active' : ''}" data-sort="recent" onclick="changeSortOrder('recent')">לעצט צוגעלייגט</div>
                                 </div>
                             </div>
@@ -11581,6 +11793,35 @@
                                     <div class="sort-toggle-option ${currentDisplayMode === 'minimal' ? 'active' : ''}" data-mode="minimal" onclick="changeDisplayMode('minimal')">מינימום</div>
                                     <div class="sort-toggle-option ${currentDisplayMode === 'recordings' ? 'active' : ''}" data-mode="recordings" onclick="changeDisplayMode('recordings')">רעקארדירונגען</div>
                                     <div class="sort-toggle-option ${currentDisplayMode === 'full' ? 'active' : ''}" data-mode="full" onclick="changeDisplayMode('full')">אלעס</div>
+                                </div>
+                            </div>
+
+                            <div class="sidebar-sort-section">
+                                <label class="sidebar-sort-label" style="color: var(--color-nigun-dark);">אודיאו קוואליטעט:</label>
+                                <div class="quality-stars-filter" id="qualityStarsFilter">
+                                    <span class="quality-star ${minQualityRating >= 1 ? 'active' : ''}" 
+                                          data-rating="1" 
+                                          onclick="setMinQualityRating(1)"
+                                          data-tooltip="א מענטש זינגט פאר זיך">★</span>
+                                    <span class="quality-star ${minQualityRating >= 2 ? 'active' : ''}" 
+                                          data-rating="2" 
+                                          onclick="setMinQualityRating(2)"
+                                          data-tooltip="אראפגעזינגען אן מוזיק">★</span>
+                                    <span class="quality-star ${minQualityRating >= 3 ? 'active' : ''}" 
+                                          data-rating="3" 
+                                          onclick="setMinQualityRating(3)"
+                                          data-tooltip="אלטע מוזיק">★</span>
+                                    <span class="quality-star ${minQualityRating >= 4 ? 'active' : ''}" 
+                                          data-rating="4" 
+                                          onclick="setMinQualityRating(4)"
+                                          data-tooltip="שיין און ניי">★</span>
+                                    <span class="quality-star ${minQualityRating >= 5 ? 'active' : ''}" 
+                                          data-rating="5" 
+                                          onclick="setMinQualityRating(5)"
+                                          data-tooltip="שיין, ניי און געשמאק">★</span>
+                                    <span class="quality-clear ${minQualityRating === 0 ? 'hidden' : ''}" 
+                                          onclick="setMinQualityRating(0)" 
+                                          data-tooltip="באהאלט">×</span>
                                 </div>
                             </div>
 
@@ -11931,6 +12172,7 @@
             setTimeout(() => {
                 updateSortToggleSlider(currentSortOrder);
                 updateDisplayToggleSlider(currentDisplayMode);
+                setupQualityStarsHover();
             }, 50);
         }
 
@@ -11947,6 +12189,139 @@
             } else {
                 renderCurrentPage();
             }
+        }
+
+        // Set minimum quality rating filter
+        function setMinQualityRating(rating) {
+            // Toggle off if clicking the same rating
+            if (minQualityRating === rating) {
+                minQualityRating = 0;
+            } else {
+                minQualityRating = rating;
+            }
+
+            // Update the stars UI
+            updateQualityStarsUI();
+
+            // Re-render songs list
+            if (currentPageView === 'songs') {
+                updateSongsListWithAnimation();
+            }
+        }
+
+        // Toggle recordings collapse in full mode
+        function toggleRecordingsCollapse() {
+            recordingsCollapsed = !recordingsCollapsed;
+            // Re-render songs list
+            if (currentPageView === 'songs') {
+                updateSongsListWithAnimation();
+            }
+        }
+
+        // Update quality stars UI
+        function updateQualityStarsUI() {
+            const container = document.getElementById('qualityStarsFilter');
+            if (!container) return;
+
+            const stars = container.querySelectorAll('.quality-star');
+            stars.forEach((star, idx) => {
+                const starRating = idx + 1;
+                if (minQualityRating >= starRating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+
+            const clearBtn = container.querySelector('.quality-clear');
+            if (clearBtn) {
+                if (minQualityRating === 0) {
+                    clearBtn.classList.add('hidden');
+                } else {
+                    clearBtn.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Setup hover handlers for quality stars (call after rendering)
+        function setupQualityStarsHover() {
+            const container = document.getElementById('qualityStarsFilter');
+            if (!container) return;
+
+            const stars = container.querySelectorAll('.quality-star');
+
+            stars.forEach((star, idx) => {
+                star.addEventListener('mouseenter', () => {
+                    container.classList.add('hovering');
+                    // Highlight all stars up to and including this one
+                    stars.forEach((s, i) => {
+                        if (i <= idx) {
+                            s.classList.add('hover-active');
+                        } else {
+                            s.classList.remove('hover-active');
+                        }
+                    });
+                });
+            });
+
+            container.addEventListener('mouseleave', () => {
+                container.classList.remove('hovering');
+                stars.forEach(s => s.classList.remove('hover-active'));
+            });
+        }
+
+        // Check if a recording meets the minimum quality threshold
+        // Unrated recordings (rating=0 or undefined) always pass so they can be discovered
+        function recordingMeetsQuality(recording) {
+            if (minQualityRating === 0) return true; // No filter
+            const rating = recording.audioRating || recording.rating || 0;
+            // Unrated recordings (0) always pass - otherwise no one will ever hear them
+            if (rating === 0) return true;
+            return rating >= minQualityRating;
+        }
+
+        // Check if a song has any recording that meets the quality threshold
+        function songHasQualityAudio(song) {
+            if (minQualityRating === 0) {
+                // No quality filter, just check if has audio
+                return song.audioUrl && song.audioUrl.startsWith('http');
+            }
+            if (!song.recordings || song.recordings.length === 0) return false;
+            return song.recordings.some(rec => recordingMeetsQuality(rec));
+        }
+
+        // Get the best quality recording for minimal mode playback
+        // Picks the highest-rated recording, randomizes among ties
+        function getBestQualityRecording(song) {
+            if (!song.recordings || song.recordings.length === 0) return null;
+
+            // Filter to quality recordings first
+            let qualityRecs = song.recordings.filter(rec => recordingMeetsQuality(rec));
+            if (qualityRecs.length === 0) return null;
+            if (qualityRecs.length === 1) return qualityRecs[0];
+
+            // Find the highest rating among quality recordings
+            let maxRating = 0;
+            qualityRecs.forEach(rec => {
+                const rating = rec.audioRating || rec.rating || 0;
+                if (rating > maxRating) maxRating = rating;
+            });
+
+            // Get all recordings with the max rating (including unrated if maxRating is 0)
+            let topRecs = qualityRecs.filter(rec => {
+                const rating = rec.audioRating || rec.rating || 0;
+                return rating === maxRating;
+            });
+
+            // Randomly pick one from the top-rated recordings
+            if (topRecs.length === 1) return topRecs[0];
+            const randomIdx = Math.floor(Math.random() * topRecs.length);
+            return topRecs[randomIdx];
+        }
+
+        // Alias for backwards compatibility
+        function getFirstQualityRecording(song) {
+            return getBestQualityRecording(song);
         }
 
         // Update display toggle slider position dynamically
@@ -14809,7 +15184,7 @@
         // Render song item - supports display modes: 'minimal', 'recordings', 'full'
         function renderSongItem(song, globalIdx, displayNum, playlistIndices = null) {
             const isActive = globalIdx === currentSongIndex;
-            const hasAudio = song.audioUrl && song.audioUrl.startsWith('http');
+            const hasAudio = songHasQualityAudio(song); // Uses quality filter
             const displayMode = currentDisplayMode || 'minimal';
 
             // Create meta with links - using entity-specific colors
@@ -14841,6 +15216,25 @@
 
             // === MINIMAL MODE (default) ===
             if (displayMode === 'minimal') {
+                // Determine play button state
+                let playBtnHtml = '';
+                const hasAnyRecordings = song.recordings && song.recordings.length > 0;
+                const hasQualityRecordings = hasAudio; // already checked with songHasQualityAudio
+
+                if (hasQualityRecordings) {
+                    // Quality recordings - show play button
+                    playBtnHtml = `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
+                        <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span>
+                        <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                    </button>`;
+                } else if (hasAnyRecordings) {
+                    // Has recordings but none meet quality - show faded half-star
+                    playBtnHtml = `<div class="song-play-btn-new song-btn-low-quality" title="רעקארדירונגען מיט נידעריגע קוואליטעט">
+                        <span class="low-quality-icon">☆</span>
+                    </div>`;
+                }
+                // No recordings = no button (playBtnHtml stays empty)
+
                 return `
                     <div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
                         <div class="song-number">${displayNum}</div>
@@ -14849,10 +15243,7 @@
                             <div class="song-meta">${metaParts.join(' • ')}</div>
                         </div>
                         ${waveAnimation}
-                        ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
-                            <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                            <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
-                        </button>` : ''}
+                        ${playBtnHtml}
                     </div>
                 `;
             }
@@ -14865,12 +15256,46 @@
                         <div class="song-item-recordings">
                             ${song.recordings.map((rec, i) => {
                         const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this)`;
-                        const displayName = rec.details || rec.personalities || rec.album || ('רעקארדינג ' + (i + 1));
+                        const recMeetsQuality = recordingMeetsQuality(rec);
+                        const recPlayBtn = recMeetsQuality
+                            ? `<button class="song-item-rec-play" onclick="event.stopPropagation(); ${recPlayAction}">▶</button>`
+                            : `<span class="song-item-rec-play song-item-rec-low-quality" title="קוואליטעט נידעריג">☆</span>`;
+                        const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
+
+                        // Build tags for this recording
+                        let recTags = [];
+                        if (rec.album) {
+                            recTags.push(`<span class="nigun-tag-inline tag-album" 
+                                data-action="detail" 
+                                data-category="albums" 
+                                data-name="${escapeHtml(rec.album)}"
+                                style="cursor:pointer;"
+                                onclick="event.stopPropagation();">${rec.album}</span>`);
+                        }
+                        if (rec.personalities) {
+                            rec.personalities.split(',').forEach(p => {
+                                const name = p.trim();
+                                if (name) {
+                                    recTags.push(`<span class="nigun-tag-inline tag-mechaber" 
+                                        data-action="detail"
+                                        data-category="mechabrim"
+                                        data-name="${escapeHtml(name)}"
+                                        style="cursor:pointer;"
+                                        onclick="event.stopPropagation();">${name}</span>`);
+                                }
+                            });
+                        }
+                        const displayName = rec.details || ('רעקארדינג ' + (i + 1));
+
                         return `
-                                    <div class="song-item-recording" onclick="event.stopPropagation(); ${recPlayAction}">
+                                    <div class="song-item-recording ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}">
                                         <div class="song-item-rec-num">${i + 1}</div>
-                                        <div class="song-item-rec-name">${displayName}</div>
-                                        <button class="song-item-rec-play">▶</button>
+                                        <div class="song-item-rec-info">
+                                            <div class="song-item-rec-name">${displayName}</div>
+                                            ${recTags.length > 0 ? `<div class="song-item-rec-tags">${recTags.join('')}</div>` : ''}
+                                        </div>
+                                        ${recRating}
+                                        ${recPlayBtn}
                                     </div>
                                 `;
                     }).join('')}
@@ -14887,10 +15312,6 @@
                                 <div class="song-meta">${metaParts.join(' • ')}</div>
                             </div>
                             ${waveAnimation}
-                            ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
-                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
-                            </button>` : ''}
                         </div>
                         ${recordingsHtml}
                     </div>
@@ -14902,31 +15323,35 @@
                 // Build additional info sections with colorful tags like detail page
                 let extraInfo = [];
 
-                // Verter (lyrics) - purple/verter color
+                // Verter (lyrics) - purple/verter color with tooltip
                 if (song.verter) {
                     const verterTags = song.verter.split(',').map(v => v.trim()).filter(Boolean).map(v => `
                         <span class="nigun-tag-inline tag-verter" 
                               data-action="detail" 
                               data-category="verter" 
                               data-name="${escapeHtml(v)}"
+                              data-tooltip-value="${escapeHtml(v)}"
+                              data-tooltip-type="verter"
                               onclick="event.stopPropagation();">${v}</span>
                     `).join('');
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">ווערטער:</span><div class="song-full-tags">${verterTags}</div></div>`);
                 }
 
-                // Collections - collection color
+                // Collections - collection color with tooltip
                 if (song.collections) {
                     const collectionTags = song.collections.split(',').map(c => c.trim()).filter(Boolean).map(c => `
                         <span class="nigun-tag-inline tag-collection" 
                               data-action="detail" 
                               data-category="collections" 
                               data-name="${escapeHtml(c)}"
+                              data-tooltip-value="${escapeHtml(c)}"
+                              data-tooltip-type="collection"
                               onclick="event.stopPropagation();">${c}</span>
                     `).join('');
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">קאלעקשאנס:</span><div class="song-full-tags">${collectionTags}</div></div>`);
                 }
 
-                // Pasig Oif (suitable for) - zman/piyut color
+                // Pasig Oif (suitable for) - zman/piyut color with tooltip
                 if (song.pasigOif) {
                     const pasigTags = song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
                         <span class="nigun-tag-inline tag-piyut" 
@@ -14934,12 +15359,14 @@
                               data-page="nigunim"
                               data-filter-key="zman"
                               data-value="${escapeHtml(p)}"
+                              data-tooltip-value="${escapeHtml(p)}"
+                              data-tooltip-type="zman"
                               onclick="event.stopPropagation();">${p}</span>
                     `).join('');
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">פאסיג אויף:</span><div class="song-full-tags">${pasigTags}</div></div>`);
                 }
 
-                // Scale - music color
+                // Scale - music color with tooltip
                 if (song.scale) {
                     const scaleTags = song.scale.split(',').map(s => s.trim()).filter(Boolean).map(s => `
                         <span class="nigun-tag-inline tag-scale" 
@@ -14947,12 +15374,14 @@
                               data-page="nigunim"
                               data-filter-key="scale"
                               data-value="${escapeHtml(s)}"
+                              data-tooltip-value="${escapeHtml(s)}"
+                              data-tooltip-type="scale"
                               onclick="event.stopPropagation();">${s}</span>
                     `).join('');
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סקעיל:</span><div class="song-full-tags">${scaleTags}</div></div>`);
                 }
 
-                // Ritem - music color
+                // Ritem - music color with tooltip
                 if (song.ritem) {
                     const ritemTags = song.ritem.split(',').map(r => r.trim()).filter(Boolean).map(r => `
                         <span class="nigun-tag-inline tag-ritem" 
@@ -14960,6 +15389,8 @@
                               data-page="nigunim"
                               data-filter-key="ritem"
                               data-value="${escapeHtml(r)}"
+                              data-tooltip-value="${escapeHtml(r)}"
+                              data-tooltip-type="ritem"
                               onclick="event.stopPropagation();">${r}</span>
                     `).join('');
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">ריטעם:</span><div class="song-full-tags">${ritemTags}</div></div>`);
@@ -14970,27 +15401,66 @@
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סימן:</span><span class="nigun-tag-inline tag-siman">${song.siman}</span></div>`);
                 }
 
-                // Recordings section
+                // Recordings section with more info
                 let recordingsHtml = '';
                 if (song.recordings && song.recordings.length > 0) {
+                    const hasMultipleRecordings = song.recordings.length > 1;
+                    const toggleArrow = hasMultipleRecordings ?
+                        `<span class="rec-collapse-toggle" onclick="event.stopPropagation(); toggleRecordingsCollapse();" title="${recordingsCollapsed ? 'הויף אויף אלע רעקארדירונגען' : 'קלאפ צו רעקארדירונגען'}">${recordingsCollapsed ? '◀' : '▼'}</span>` : '';
+
+                    // If collapsed and multiple recordings, show only first
+                    const displayRecordings = (recordingsCollapsed && hasMultipleRecordings) ? [song.recordings[0]] : song.recordings;
+
                     recordingsHtml = `
-                        <div class="song-full-recordings">
-                            <div class="song-full-rec-title">רעקארדירונגען (${song.recordings.length})</div>
-                            ${song.recordings.map((rec, i) => {
-                        const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this)`;
-                        const displayName = rec.details || rec.personalities || rec.album || ('רעקארדינג ' + (i + 1));
+                        <div class="song-full-recordings ${recordingsCollapsed ? 'collapsed' : ''}">
+                            <div class="song-full-rec-title">${toggleArrow}רעקארדירונגען (${song.recordings.length})</div>
+                            ${displayRecordings.map((rec, i) => {
+                        const actualIndex = recordingsCollapsed && hasMultipleRecordings ? 0 : i;
+                        const recPlayAction = `playNigunRecording(${globalIdx}, ${actualIndex}, this)`;
+                        // Build info tags for this recording
+                        let recTags = [];
+                        if (rec.album) {
+                            recTags.push(`<span class="nigun-tag-inline tag-album" 
+                                data-action="detail" 
+                                data-category="albums" 
+                                data-name="${escapeHtml(rec.album)}"
+                                style="cursor:pointer;"
+                                onclick="event.stopPropagation();">${rec.album}</span>`);
+                        }
+                        if (rec.personalities) {
+                            rec.personalities.split(',').forEach(p => {
+                                const name = p.trim();
+                                if (name) {
+                                    recTags.push(`<span class="nigun-tag-inline tag-mechaber" 
+                                        data-action="detail"
+                                        data-category="mechabrim"
+                                        data-name="${escapeHtml(name)}"
+                                        style="cursor:pointer;"
+                                        onclick="event.stopPropagation();">${name}</span>`);
+                                }
+                            });
+                        }
+                        const displayName = rec.details || ('רעקארדינג ' + (actualIndex + 1));
+                        const recMeetsQuality = recordingMeetsQuality(rec);
+                        const recPlayBtn = recMeetsQuality
+                            ? `<button class="song-item-rec-play" onclick="event.stopPropagation(); ${recPlayAction}">▶</button>`
+                            : `<span class="song-item-rec-play song-item-rec-low-quality" title="קוואליטעט נידעריג">☆</span>`;
+                        const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
                         return `
-                                    <div class="song-item-recording" onclick="event.stopPropagation(); ${recPlayAction}">
-                                        <div class="song-item-rec-num">${i + 1}</div>
-                                        <div class="song-item-rec-name">${displayName}</div>
-                                        <button class="song-item-rec-play">▶</button>
+                                    <div class="song-item-recording ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}">
+                                        <div class="song-item-rec-num">${actualIndex + 1}</div>
+                                        <div class="song-item-rec-info">
+                                            <div class="song-item-rec-name">${displayName}</div>
+                                            ${recTags.length > 0 ? `<div class="song-item-rec-tags">${recTags.join('')}</div>` : ''}
+                                        </div>
+                                        ${recRating}
+                                        ${recPlayBtn}
                                     </div>
                                 `;
                     }).join('')}
                         </div>
                     `;
                 }
-
                 return `
                     <div class="song-item song-item-full ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
                         <div class="song-item-header">
@@ -15000,10 +15470,6 @@
                                 <div class="song-meta">${metaParts.join(' • ')}</div>
                             </div>
                             ${waveAnimation}
-                            ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
-                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
-                            </button>` : ''}
                         </div>
                         ${extraInfo.length > 0 ? `<div class="song-full-details">${extraInfo.join('')}</div>` : ''}
                         ${recordingsHtml}
@@ -15348,26 +15814,54 @@
 
         // Play previous
         function playPrevious() {
-            // If in recordings mode, go to previous recording
-            if (isInRecordingsMode && currentSongIndex >= 0) {
+            // Only cycle through recordings if display mode is 'recordings' or 'full'
+            const allowRecordingsMode = currentDisplayMode === 'recordings' || currentDisplayMode === 'full';
+
+            // If in recordings mode AND display allows it, go to previous quality recording
+            if (allowRecordingsMode && isInRecordingsMode && currentSongIndex >= 0) {
                 const song = allSongs[currentSongIndex];
-                if (song && song.recordings && currentRecordingIndex > 0) {
-                    playNigunRecording(currentSongIndex, currentRecordingIndex - 1, null);
-                    return;
+                if (song && song.recordings) {
+                    // Find previous recording that meets quality
+                    for (let i = currentRecordingIndex - 1; i >= 0; i--) {
+                        if (recordingMeetsQuality(song.recordings[i])) {
+                            playNigunRecording(currentSongIndex, i, null);
+                            return;
+                        }
+                    }
                 }
             }
 
-            // Otherwise, go to previous song in playlist (skip songs without audio)
+            // Otherwise, go to previous song in playlist (skip songs without quality audio)
             if (currentPlaylist.length > 0) {
                 let newPosition = currentPlaylistPosition - 1;
                 while (newPosition >= 0) {
                     const songIdx = currentPlaylist[newPosition];
                     const song = allSongs[songIdx];
-                    if (song && song.audioUrl && song.audioUrl.startsWith('http')) {
+                    if (song && songHasQualityAudio(song)) {
                         currentPlaylistPosition = newPosition;
                         isInRecordingsMode = false;
                         currentRecordingIndex = 0;
-                        playSong(songIdx, currentPlaylist);
+
+                        // If in recordings/full mode, start at the last quality recording of the previous song
+                        if (allowRecordingsMode && song.recordings && song.recordings.length > 1) {
+                            // Find last quality recording
+                            for (let i = song.recordings.length - 1; i >= 0; i--) {
+                                if (recordingMeetsQuality(song.recordings[i])) {
+                                    isInRecordingsMode = true;
+                                    currentRecordingIndex = i;
+                                    playNigunRecording(songIdx, i, null);
+                                    return;
+                                }
+                            }
+                        }
+                        // Play first quality recording
+                        const firstQualityRec = getFirstQualityRecording(song);
+                        if (firstQualityRec) {
+                            const recIdx = song.recordings.indexOf(firstQualityRec);
+                            playNigunRecording(songIdx, recIdx, null);
+                        } else {
+                            playSong(songIdx, currentPlaylist);
+                        }
                         return;
                     }
                     newPosition--;
@@ -15377,26 +15871,55 @@
 
         // Play next
         function playNext() {
-            // If in recordings mode, go to next recording
-            if (isInRecordingsMode && currentSongIndex >= 0) {
+            // Only cycle through recordings if display mode is 'recordings' or 'full'
+            const allowRecordingsMode = currentDisplayMode === 'recordings' || currentDisplayMode === 'full';
+
+            // If in recordings mode AND display allows it, go to next quality recording
+            if (allowRecordingsMode && isInRecordingsMode && currentSongIndex >= 0) {
                 const song = allSongs[currentSongIndex];
-                if (song && song.recordings && currentRecordingIndex < song.recordings.length - 1) {
-                    playNigunRecording(currentSongIndex, currentRecordingIndex + 1, null);
-                    return;
+                if (song && song.recordings) {
+                    // Find next recording that meets quality
+                    for (let i = currentRecordingIndex + 1; i < song.recordings.length; i++) {
+                        if (recordingMeetsQuality(song.recordings[i])) {
+                            playNigunRecording(currentSongIndex, i, null);
+                            return;
+                        }
+                    }
                 }
             }
 
-            // Otherwise, go to next song in playlist (skip songs without audio)
+            // Otherwise, go to next song in playlist (skip songs without quality audio)
             if (currentPlaylist.length > 0) {
                 let newPosition = currentPlaylistPosition + 1;
                 while (newPosition < currentPlaylist.length) {
                     const songIdx = currentPlaylist[newPosition];
                     const song = allSongs[songIdx];
-                    if (song && song.audioUrl && song.audioUrl.startsWith('http')) {
+                    if (song && songHasQualityAudio(song)) {
                         currentPlaylistPosition = newPosition;
                         isInRecordingsMode = false;
                         currentRecordingIndex = 0;
-                        playSong(songIdx, currentPlaylist);
+
+                        // If in recordings/full mode and song has multiple quality recordings, enter recordings mode
+                        if (allowRecordingsMode && song.recordings && song.recordings.length > 1) {
+                            // Find first quality recording
+                            const firstQualityRec = getFirstQualityRecording(song);
+                            if (firstQualityRec) {
+                                const recIdx = song.recordings.indexOf(firstQualityRec);
+                                isInRecordingsMode = true;
+                                playNigunRecording(songIdx, recIdx, null);
+                            } else {
+                                playSong(songIdx, currentPlaylist);
+                            }
+                        } else {
+                            // Play first quality recording
+                            const firstQualityRec = getFirstQualityRecording(song);
+                            if (firstQualityRec) {
+                                const recIdx = song.recordings.indexOf(firstQualityRec);
+                                playNigunRecording(songIdx, recIdx, null);
+                            } else {
+                                playSong(songIdx, currentPlaylist);
+                            }
+                        }
                         return;
                     }
                     newPosition++;
