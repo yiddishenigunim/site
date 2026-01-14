@@ -3125,6 +3125,8 @@
             border: 2px solid transparent;
             /* Removed overflow: hidden to allow hover glow */
             position: relative;
+            text-decoration: none;
+            color: inherit;
         }
 
         .category-card> :first-child {
@@ -6603,6 +6605,98 @@
         .song-item.active .song-play-btn-new:hover {
             background: white !important;
             color: var(--color-nigun) !important;
+        }
+
+        /* Recording play button - smaller version */
+        .rec-play-btn {
+            width: 32px !important;
+            height: 32px !important;
+            flex-shrink: 0;
+        }
+
+        .rec-play-btn svg {
+            width: 12px !important;
+            height: 12px !important;
+        }
+
+        /* ===== ACTIVE NIGUN & RECORDING COLOR SCHEME =====
+         * Color hierarchy (darkest to lightest):
+         * 1. Active nigun header: var(--color-nigun-dark) #2d5aa0
+         * 2. Active nigun body: var(--color-nigun) #4a7cc9  
+         * 3. Recordings container: var(--color-nigun-light) with transparency
+         * 4. Active recording: White with blue glow
+         */
+
+        /* Active recording row - beautiful highlight */
+        .song-item-recording.active-recording {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(227, 242, 253, 0.95) 100%);
+            border-radius: 10px;
+            box-shadow: 0 2px 12px rgba(74, 124, 201, 0.35),
+                inset 0 0 0 2px var(--color-nigun-light);
+            transform: translateX(-3px);
+        }
+
+        .song-item-recording.active-recording .song-item-rec-num {
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            color: white;
+            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.4);
+        }
+
+        .song-item-recording.active-recording .song-item-rec-name {
+            color: var(--color-nigun-dark);
+            font-weight: 600;
+        }
+
+        .song-item-recording.active-recording .rec-play-btn {
+            background: var(--color-nigun) !important;
+            color: white !important;
+            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.4);
+        }
+
+        /* Active nigun with expanded recordings - enhanced header */
+        .song-item-expanded.active .song-item-header,
+        .song-item-full.active .song-item-header {
+            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-nigun) 100%);
+            border-radius: 12px 12px 0 0;
+        }
+
+        /* Recordings container in active nigun */
+        .song-item-expanded.active .song-item-recordings,
+        .song-item-full.active .song-full-recordings {
+            background: linear-gradient(180deg, rgba(74, 124, 201, 0.15) 0%, rgba(74, 124, 201, 0.08) 100%);
+            border-top: 2px solid var(--color-nigun-light);
+        }
+
+        /* Recording rows inside active nigun */
+        .song-item-expanded.active .song-item-recording:not(.active-recording),
+        .song-item-full.active .song-item-recording:not(.active-recording) {
+            background: rgba(255, 255, 255, 0.5);
+            border: 1px solid rgba(74, 124, 201, 0.15);
+        }
+
+        .song-item-expanded.active .song-item-recording:not(.active-recording):hover,
+        .song-item-full.active .song-item-recording:not(.active-recording):hover {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: var(--color-nigun-light);
+        }
+
+        /* Recording number in active nigun */
+        .song-item-expanded.active .song-item-rec-num,
+        .song-item-full.active .song-item-rec-num {
+            background: var(--color-nigun-pale);
+            color: var(--color-nigun);
+        }
+
+        /* Recording name in active nigun */
+        .song-item-expanded.active .song-item-rec-name,
+        .song-item-full.active .song-item-rec-name {
+            color: var(--color-nigun-dark);
+        }
+
+        /* Tags in active nigun recordings */
+        .song-item-expanded.active .song-item-rec-tags .nigun-tag-inline,
+        .song-item-full.active .song-item-rec-tags .nigun-tag-inline {
+            opacity: 0.9;
         }
 
         /* Low quality indicator button */
@@ -13728,7 +13822,7 @@
         // NOTE: popstate listener is now in the nigun modal section to handle modal closing
 
         // Listen to hash changes (from anchor link clicks)
-        window.addEventListener('hashchange', function() {
+        window.addEventListener('hashchange', function () {
             hideAllDropdowns();
             handleURLChange();
         });
@@ -14268,10 +14362,10 @@
                                 ${chatzeros.length > 0 ? `
                                     <div class="nigun-chatzer-tags">
                                         ${chatzeros.map(chatzer => {
-                                            const cInfo = chatzerosInfo[chatzer] || {};
-                                            const cId = cInfo.customId || cInfo.rowId || chatzer;
-                                            return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
-                                        }).join('')}
+                const cInfo = chatzerosInfo[chatzer] || {};
+                const cId = cInfo.customId || cInfo.rowId || chatzer;
+                return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
+            }).join('')}
                                     </div>
                                 ` : ''}
                             </div>
@@ -14571,15 +14665,34 @@
         }
 
         // Play recording from nigun detail page
-        function playNigunRecording(songIdx, recordingIdx, element) {
+        function playNigunRecording(songIdx, recordingIdx, element, playlist = null) {
             const song = allSongs[songIdx];
             if (!song || !song.recordings || !song.recordings[recordingIdx]) return;
 
             const recording = song.recordings[recordingIdx];
 
+            // If clicking the same recording that's currently playing, toggle play/pause
+            if (songIdx === currentSongIndex && recordingIdx === currentRecordingIndex && audioPlayer.src) {
+                togglePlayPause();
+                return;
+            }
+
             // Update current song and recording index
             currentSongIndex = songIdx;
             currentRecordingIndex = recordingIdx;
+
+            // Update playlist if provided, or if song not in current playlist
+            if (playlist && Array.isArray(playlist)) {
+                currentPlaylist = playlist;
+                currentPlaylistPosition = currentPlaylist.indexOf(songIdx);
+            } else if (currentPlaylist.length === 0 || !currentPlaylist.includes(songIdx)) {
+                // If no playlist set or song not in current playlist, use filteredSongs
+                currentPlaylist = filteredSongs.map(s => allSongs.indexOf(s));
+                currentPlaylistPosition = currentPlaylist.indexOf(songIdx);
+            } else {
+                // Song is in current playlist, just update position
+                currentPlaylistPosition = currentPlaylist.indexOf(songIdx);
+            }
 
             // Set recording info for rating updates
             currentPlayingRecordingInfo = {
@@ -14589,8 +14702,8 @@
                 rowId: song.rowId
             };
 
-            // Enable recordings mode if song has multiple recordings
-            isInRecordingsMode = song.recordings.length > 1;
+            // Enable recordings mode when playing any recording
+            isInRecordingsMode = true;
 
             // Play the specific recording URL
             audioPlayer.src = recording.url;
@@ -14604,10 +14717,26 @@
             // Update rating display in player
             updatePlayerRating(recording.rating);
 
-            // Update active state in UI
+            // Update active state in UI (for nigun detail modal)
             document.querySelectorAll('.nigun-recording-item').forEach((item, i) => {
                 item.classList.toggle('active', i === recordingIdx);
             });
+
+            // Update active recording state in song list (recordings mode)
+            document.querySelectorAll('.song-item-recording').forEach(rec => {
+                rec.classList.remove('active-recording');
+            });
+            document.querySelectorAll('.rec-play-btn').forEach(btn => {
+                btn.classList.remove('playing');
+            });
+            const activeRecRow = document.querySelector(`.song-item-recording[data-song-idx="${songIdx}"][data-rec-idx="${recordingIdx}"]`);
+            if (activeRecRow) {
+                activeRecRow.classList.add('active-recording');
+            }
+            const activeRecBtn = document.querySelector(`.rec-play-btn[data-song-idx="${songIdx}"][data-rec-idx="${recordingIdx}"]`);
+            if (activeRecBtn) {
+                activeRecBtn.classList.add('playing');
+            }
         }
 
         // Render zman detail page
@@ -15989,18 +16118,22 @@
                 `;
             }
 
-            // === RECORDINGS MODE - show all recordings stacked ===
             if (displayMode === 'recordings') {
                 let recordingsHtml = '';
                 if (song.recordings && song.recordings.length > 0) {
                     recordingsHtml = `
                         <div class="song-item-recordings">
                             ${song.recordings.map((rec, i) => {
-                        const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this)`;
+                        const playlistParam = playlistIndices ? `, [${playlistIndices.join(',')}]` : '';
+                        const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this${playlistParam})`;
                         const recMeetsQuality = recordingMeetsQuality(rec);
+                        const isRecActive = isActive && currentRecordingIndex === i;
                         const recPlayBtn = recMeetsQuality
-                            ? `<button class="song-item-rec-play" onclick="event.stopPropagation(); ${recPlayAction}">▶</button>`
-                            : `<span class="song-item-rec-play song-item-rec-low-quality" title="קוואליטעט נידעריג">☆</span>`;
+                            ? `<button class="song-play-btn-new rec-play-btn ${isRecActive && !audioPlayer.paused ? 'playing' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
+                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>
+                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                            </button>`
+                            : `<span class="song-play-btn-new song-btn-low-quality rec-play-btn" title="קוואליטעט נידעריג"><span class="low-quality-icon">☆</span></span>`;
                         const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
 
                         // Build tags for this recording
@@ -16029,7 +16162,7 @@
                         const displayName = rec.details || ('רעקארדינג ' + (i + 1));
 
                         return `
-                                    <div class="song-item-recording ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}">
+                                    <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
                                         <div class="song-item-rec-num">${i + 1}</div>
                                         <div class="song-item-rec-info">
                                             <div class="song-item-rec-name">${displayName}</div>
@@ -16157,7 +16290,8 @@
                             <div class="song-full-rec-title">${toggleArrow}רעקארדירונגען (${song.recordings.length})</div>
                             ${displayRecordings.map((rec, i) => {
                         const actualIndex = recordingsCollapsed && hasMultipleRecordings ? 0 : i;
-                        const recPlayAction = `playNigunRecording(${globalIdx}, ${actualIndex}, this)`;
+                        const playlistParam = playlistIndices ? `, [${playlistIndices.join(',')}]` : '';
+                        const recPlayAction = `playNigunRecording(${globalIdx}, ${actualIndex}, this${playlistParam})`;
                         // Build info tags for this recording
                         let recTags = [];
                         if (rec.album) {
@@ -16183,12 +16317,16 @@
                         }
                         const displayName = rec.details || ('רעקארדינג ' + (actualIndex + 1));
                         const recMeetsQuality = recordingMeetsQuality(rec);
+                        const isRecActive = isActive && currentRecordingIndex === actualIndex;
                         const recPlayBtn = recMeetsQuality
-                            ? `<button class="song-item-rec-play" onclick="event.stopPropagation(); ${recPlayAction}">▶</button>`
-                            : `<span class="song-item-rec-play song-item-rec-low-quality" title="קוואליטעט נידעריג">☆</span>`;
+                            ? `<button class="song-play-btn-new rec-play-btn ${isRecActive && !audioPlayer.paused ? 'playing' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${actualIndex}">
+                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>
+                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                            </button>`
+                            : `<span class="song-play-btn-new song-btn-low-quality rec-play-btn" title="קוואליטעט נידעריג"><span class="low-quality-icon">☆</span></span>`;
                         const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
                         return `
-                                    <div class="song-item-recording ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}">
+                                    <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${actualIndex}">
                                         <div class="song-item-rec-num">${actualIndex + 1}</div>
                                         <div class="song-item-rec-info">
                                             <div class="song-item-rec-name">${displayName}</div>
@@ -16520,12 +16658,19 @@
                             <span class="wave-bar"></span>
                             <span class="wave-bar"></span>
                         `;
-                        // Insert before the play button
-                        const playBtn = activeItem.querySelector('.song-play-btn-new');
-                        if (playBtn) {
-                            activeItem.insertBefore(waveDiv, playBtn);
+
+                        // For expanded/full items, insert into header
+                        const header = activeItem.querySelector('.song-item-header');
+                        if (header) {
+                            header.appendChild(waveDiv);
                         } else {
-                            activeItem.appendChild(waveDiv);
+                            // Insert before the play button for minimal items
+                            const playBtn = activeItem.querySelector('.song-play-btn-new');
+                            if (playBtn) {
+                                activeItem.insertBefore(waveDiv, playBtn);
+                            } else {
+                                activeItem.appendChild(waveDiv);
+                            }
                         }
                     }
 
@@ -16738,9 +16883,14 @@
                 item.classList.remove('paused');
             });
 
+            // Remove active-recording class from all recordings
+            document.querySelectorAll('.song-item-recording').forEach(rec => {
+                rec.classList.remove('active-recording');
+            });
+
             // Find the active song's button and update it
             if (currentSongIndex >= 0) {
-                const activeBtn = document.querySelector(`.song-play-btn-new[data-song-idx="${currentSongIndex}"]`);
+                const activeBtn = document.querySelector(`.song-play-btn-new[data-song-idx="${currentSongIndex}"]:not([data-rec-idx])`);
                 const activeItem = document.querySelector(`.song-item[data-song-idx="${currentSongIndex}"]`);
 
                 if (activeBtn && isPlaying) {
@@ -16748,6 +16898,18 @@
                 }
                 if (activeItem && !isPlaying) {
                     activeItem.classList.add('paused');
+                }
+
+                // Update active recording button
+                const activeRecBtn = document.querySelector(`.rec-play-btn[data-song-idx="${currentSongIndex}"][data-rec-idx="${currentRecordingIndex}"]`);
+                if (activeRecBtn && isPlaying) {
+                    activeRecBtn.classList.add('playing');
+                }
+
+                // Highlight active recording row
+                const activeRecRow = document.querySelector(`.song-item-recording[data-song-idx="${currentSongIndex}"][data-rec-idx="${currentRecordingIndex}"]`);
+                if (activeRecRow) {
+                    activeRecRow.classList.add('active-recording');
                 }
             }
         }
