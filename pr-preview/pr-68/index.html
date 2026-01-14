@@ -3125,8 +3125,6 @@
             border: 2px solid transparent;
             /* Removed overflow: hidden to allow hover glow */
             position: relative;
-            text-decoration: none;
-            color: inherit;
         }
 
         .category-card> :first-child {
@@ -6607,98 +6605,6 @@
             color: var(--color-nigun) !important;
         }
 
-        /* Recording play button - smaller version */
-        .rec-play-btn {
-            width: 32px !important;
-            height: 32px !important;
-            flex-shrink: 0;
-        }
-
-        .rec-play-btn svg {
-            width: 12px !important;
-            height: 12px !important;
-        }
-
-        /* ===== ACTIVE NIGUN & RECORDING COLOR SCHEME =====
-         * Color hierarchy (darkest to lightest):
-         * 1. Active nigun header: var(--color-nigun-dark) #2d5aa0
-         * 2. Active nigun body: var(--color-nigun) #4a7cc9  
-         * 3. Recordings container: var(--color-nigun-light) with transparency
-         * 4. Active recording: White with blue glow
-         */
-
-        /* Active recording row - beautiful highlight */
-        .song-item-recording.active-recording {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(227, 242, 253, 0.95) 100%);
-            border-radius: 10px;
-            box-shadow: 0 2px 12px rgba(74, 124, 201, 0.35),
-                inset 0 0 0 2px var(--color-nigun-light);
-            transform: translateX(-3px);
-        }
-
-        .song-item-recording.active-recording .song-item-rec-num {
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            color: white;
-            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.4);
-        }
-
-        .song-item-recording.active-recording .song-item-rec-name {
-            color: var(--color-nigun-dark);
-            font-weight: 600;
-        }
-
-        .song-item-recording.active-recording .rec-play-btn {
-            background: var(--color-nigun) !important;
-            color: white !important;
-            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.4);
-        }
-
-        /* Active nigun with expanded recordings - enhanced header */
-        .song-item-expanded.active .song-item-header,
-        .song-item-full.active .song-item-header {
-            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-nigun) 100%);
-            border-radius: 12px 12px 0 0;
-        }
-
-        /* Recordings container in active nigun */
-        .song-item-expanded.active .song-item-recordings,
-        .song-item-full.active .song-full-recordings {
-            background: linear-gradient(180deg, rgba(74, 124, 201, 0.15) 0%, rgba(74, 124, 201, 0.08) 100%);
-            border-top: 2px solid var(--color-nigun-light);
-        }
-
-        /* Recording rows inside active nigun */
-        .song-item-expanded.active .song-item-recording:not(.active-recording),
-        .song-item-full.active .song-item-recording:not(.active-recording) {
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(74, 124, 201, 0.15);
-        }
-
-        .song-item-expanded.active .song-item-recording:not(.active-recording):hover,
-        .song-item-full.active .song-item-recording:not(.active-recording):hover {
-            background: rgba(255, 255, 255, 0.8);
-            border-color: var(--color-nigun-light);
-        }
-
-        /* Recording number in active nigun */
-        .song-item-expanded.active .song-item-rec-num,
-        .song-item-full.active .song-item-rec-num {
-            background: var(--color-nigun-pale);
-            color: var(--color-nigun);
-        }
-
-        /* Recording name in active nigun */
-        .song-item-expanded.active .song-item-rec-name,
-        .song-item-full.active .song-item-rec-name {
-            color: var(--color-nigun-dark);
-        }
-
-        /* Tags in active nigun recordings */
-        .song-item-expanded.active .song-item-rec-tags .nigun-tag-inline,
-        .song-item-full.active .song-item-rec-tags .nigun-tag-inline {
-            opacity: 0.9;
-        }
-
         /* Low quality indicator button */
         .song-btn-low-quality {
             background: var(--color-nigun-pale) !important;
@@ -9917,7 +9823,6 @@
             // Handle navigate to detail
             const detailEl = e.target.closest('[data-action="detail"]');
             if (detailEl) {
-                e.preventDefault();
                 e.stopPropagation();
                 // Close nigun modal if open before navigating
                 if (nigunModalOpen) {
@@ -10420,39 +10325,6 @@
 
                             // Extract text value for mechabrim column ID matching (works for any value type)
                             const textVal = extractText(value);
-
-                            // Direct column ID matching for ID columns across all tables
-                            // Check this BEFORE the textVal check in case the value format is different
-                            const idColumnIds = [
-                                'c-pDoyO3lhGs', // מחברים ID
-                                'c-b0wqs6RvRL', // חצרות ID
-                                'c-BUEMMqGeaq', // ווערטער ID
-                                'c-u_op0cdc6C', // פיוטים ID
-                                'c-Hnj-jcC9Fz', // זמנים ID
-                                'c-qWlY1R6WOz', // קאלעקשנס ID
-                                'c-ov8ZZ90jjL', // רעסורסן ID
-                                'c-ABZxwZf5gG', // דאקומענטן ID
-                                'c-6sbXQP4zbj'  // אלבומס ID
-                            ];
-                            if (idColumnIds.includes(colId)) {
-                                // Try multiple ways to extract the ID value
-                                let idValue = textVal;
-                                if (!idValue && typeof value === 'number') {
-                                    idValue = String(value);
-                                }
-                                if (!idValue && value && typeof value === 'object') {
-                                    // Try getting value from object properties
-                                    idValue = value.name || value.value || value.text || '';
-                                }
-
-                                if (idValue) {
-                                    idValue = String(idValue).replace(/^#/, '').trim();
-                                    if (idValue) {
-                                        info.customId = idValue;
-                                    }
-                                }
-                            }
-
                             if (textVal) {
                                 // Direct column ID matching for mechabrim fields
                                 if (colId === 'c-iSyYvX1S79') info.title = textVal;
@@ -10563,6 +10435,11 @@
                                 }
                                 if (colNameLower.includes('מקום') || colNameLower.includes('ארט') || colNameLower.includes('location')) {
                                     info.location = textValue;
+                                }
+                                // Check for ID column (e.g. "ניגון ID", "מחבר ID", "ID", "#")
+                                if (colNameLower === 'id' || colNameLower.endsWith(' id') || colNameLower.includes(' id') || colNameLower === '#' || colName.includes('ID')) {
+                                    // Remove # prefix if present
+                                    info.customId = textValue.replace(/^#/, '').trim();
                                 }
                                 if (colNameLower.includes('מקור') && !colNameLower.includes('מראה')) {
                                     info.makor = textValue;
@@ -13705,8 +13582,8 @@
 
             if (currentDetailView) {
                 // Detail page URL: #/mechabrim/123
-                // Prefer customId (simple number), then name (no rowId in URLs)
-                const id = currentDetailView.customId || currentDetailView.name;
+                // Prefer customId (simple number), then rowId, then name
+                const id = currentDetailView.customId || currentDetailView.id || currentDetailView.name;
                 hash = `#/${currentDetailView.type}/${encodeURIComponent(id)}`;
             } else if (currentPageView === 'search' && searchQuery) {
                 // Search page URL: #/search/קדיש
@@ -13776,21 +13653,10 @@
             const idOrName = parts[1] ? decodeURIComponent(parts[1]) : null;
             console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
 
-            // Valid pages (including info pages)
-            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'music', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
-
-            // Info pages that don't need data loading
-            const infoPagesList = ['about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
+            // Valid pages
+            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search'];
 
             if (validPages.includes(page)) {
-                // Handle info pages - they don't need data loading
-                if (infoPagesList.includes(page)) {
-                    currentPageView = page;
-                    currentDetailView = null;
-                    renderCurrentPage();
-                    return;
-                }
-
                 // Show skeleton loader if data not loaded
                 const targetPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
                 if (targetPage !== 'home' && !isDataLoadedForPage(targetPage)) {
@@ -13814,51 +13680,24 @@
 
                     renderCurrentPage();
                 } else if (idOrName) {
-                    // Detail pages that need data loaded
-                    const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
-                    const dataPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
-
-                    // Show loading indicator and ensure data is loaded for detail pages
-                    if (detailPages.includes(page) && !isDataLoadedForPage(dataPage)) {
-                        const content = document.getElementById('mainContent');
-                        if (content) {
-                            content.innerHTML = `
-                                <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
-                                    <div class="loading-wave-bar"></div>
-                                    <p style="color: var(--text-secondary); font-size: 14px;">לאָדן...</p>
-                                </div>
-                            `;
-                        }
-                        await ensureDataForPage(dataPage);
-                    }
-
                     // Find item by ID or name
                     const item = findItemByIdOrName(page, idOrName);
                     console.log('Found item:', item);
-
-                    // Redirect to proper numeric ID URL if we found the item
-                    const isNumericId = /^\d+$/.test(idOrName);
-                    if (!isNumericId && item?.customId) {
-                        const newHash = `#/${page}/${item.customId}`;
-                        history.replaceState(null, '', newHash);
-                    }
-
                     const itemName = item?.name || idOrName;
                     const itemId = item?.id || idOrName;
-                    const itemCustomId = item?.customId;
 
                     // Navigate to detail page
                     if (page === 'zman') {
                         // Zman detail page (shows piyutim and collections for a zman)
                         currentPageView = 'zmanim';
-                        currentDetailView = { type: 'zman', name: itemName, id: itemId, customId: itemCustomId };
+                        currentDetailView = { type: 'zman', name: itemName, id: itemId };
                     } else if (page === 'nigunim') {
                         // Nigun detail page (nigunim/1 format)
                         currentPageView = 'songs';
-                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId, customId: itemCustomId };
+                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId };
                     } else {
                         currentPageView = page;
-                        currentDetailView = { type: page, name: itemName, id: itemId, customId: itemCustomId };
+                        currentDetailView = { type: page, name: itemName, id: itemId };
                     }
 
                     // Update nav buttons
@@ -13889,48 +13728,29 @@
         // NOTE: popstate listener is now in the nigun modal section to handle modal closing
 
         // Listen to hash changes (from anchor link clicks)
-        window.addEventListener('hashchange', function () {
+        window.addEventListener('hashchange', function() {
             hideAllDropdowns();
             handleURLChange();
         });
 
         // Navigate to detail page
-        async function navigateToDetail(categoryKey, name, id = null) {
-            const content = document.getElementById('mainContent');
-            const dataPage = categoryKey === 'zman' ? 'zmanim' : categoryKey;
-
-            // Show loading indicator if data not loaded yet
-            if (!isDataLoadedForPage(dataPage)) {
-                if (content) {
-                    content.innerHTML = `
-                        <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
-                            <div class="loading-wave-bar"></div>
-                            <p style="color: var(--text-secondary); font-size: 14px;">לאָדן ${name}...</p>
-                        </div>
-                    `;
+        function navigateToDetail(categoryKey, name, id = null) {
+            // If no ID provided, try to get it from info object
+            if (!id) {
+                let infoObj = {};
+                switch (categoryKey) {
+                    case 'chatzeros': infoObj = chatzerosInfo; break;
+                    case 'mechabrim': infoObj = mechabrimInfo; break;
+                    case 'verter': infoObj = verterInfo; break;
+                    case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
+                    case 'collections': infoObj = collectionsInfo; break;
+                    case 'albums': infoObj = albumsInfo; break;
+                    case 'documents': infoObj = documentsInfo; break;
+                    case 'resources': infoObj = resourcesInfo; break;
                 }
-                await ensureDataForPage(dataPage);
+                id = infoObj[name]?.rowId;
             }
-
-            // Get info object for this category
-            let infoObj = {};
-            switch (categoryKey) {
-                case 'chatzeros': infoObj = chatzerosInfo; break;
-                case 'mechabrim': infoObj = mechabrimInfo; break;
-                case 'verter': infoObj = verterInfo; break;
-                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
-                case 'collections': infoObj = collectionsInfo; break;
-                case 'albums': infoObj = albumsInfo; break;
-                case 'documents': infoObj = documentsInfo; break;
-                case 'resources': infoObj = resourcesInfo; break;
-            }
-
-            // Get customId and rowId from the loaded data
-            const itemInfo = infoObj[name];
-            const customId = itemInfo?.customId;
-            const rowId = itemInfo?.rowId || id;
-
-            currentDetailView = { type: categoryKey, name: name, id: rowId, customId: customId };
+            currentDetailView = { type: categoryKey, name: name, id: id };
             updateURL();
             renderDetailPage();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -13957,7 +13777,7 @@
         }
 
         // Render detail page for a specific item
-        async function renderDetailPage() {
+        function renderDetailPage() {
             console.log('renderDetailPage called, currentDetailView:', currentDetailView);
             const { type, name } = currentDetailView;
             const container = document.getElementById('mainContent');
@@ -13970,23 +13790,6 @@
 
             // Handle nigun detail page separately
             if (type === 'nigunim') {
-                // Wait for related data to load so links have proper IDs
-                const dataPromises = [];
-                if (!loadedCategories.chatzeros) {
-                    dataPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
-                }
-                if (!loadedCategories.mechabrim) {
-                    dataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
-                }
-                if (!loadedCategories.verter) {
-                    dataPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
-                }
-                if (!loadedCategories.albums) {
-                    dataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
-                }
-                if (dataPromises.length > 0) {
-                    await Promise.all(dataPromises);
-                }
                 renderNigunDetailPage(container, name);
                 return;
             }
@@ -14128,7 +13931,7 @@
                     .map(([mechName, mechInfo]) => ({
                         name: mechName,
                         image: mechInfo.image,
-                        id: mechInfo.customId || mechName,
+                        id: mechInfo.customId || mechInfo.rowId || mechName,
                         description: mechInfo.description
                     }));
             }
@@ -14412,8 +14215,7 @@
         function navigateToZmanDetail(name) {
             const infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
             const id = infoObj[name]?.rowId;
-            const customId = infoObj[name]?.customId;
-            currentDetailView = { type: 'zman', name: name, id: id, customId: customId };
+            currentDetailView = { type: 'zman', name: name, id: id };
             updateURL();
             renderCurrentPage();
         }
@@ -14467,7 +14269,7 @@
                                     <div class="nigun-chatzer-tags">
                                         ${chatzeros.map(chatzer => {
                                             const cInfo = chatzerosInfo[chatzer] || {};
-                                            const cId = cInfo.customId || chatzer;
+                                            const cId = cInfo.customId || cInfo.rowId || chatzer;
                                             return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
                                         }).join('')}
                                     </div>
@@ -14482,7 +14284,7 @@
                             <div class="nigun-mechaber-grid">
                                 ${song.mechaber.split(',').map(m => m.trim()).filter(Boolean).map(mName => {
                 const mInfo = mechabrimInfo[mName];
-                const mId = mInfo?.customId || mName;
+                const mId = mInfo?.customId || mInfo?.rowId || mName;
                 return `
                                         <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(mId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mName)}">
                                             ${mInfo?.image
@@ -14503,7 +14305,7 @@
                             <div class="nigun-mechaber-grid">
                                 ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
                 const pInfo = mechabrimInfo[personName];
-                const pId = pInfo?.customId || personName;
+                const pId = pInfo?.customId || pInfo?.rowId || personName;
                 return `
                                         <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(personName)}">
                                             ${pInfo?.image
@@ -14769,34 +14571,15 @@
         }
 
         // Play recording from nigun detail page
-        function playNigunRecording(songIdx, recordingIdx, element, playlist = null) {
+        function playNigunRecording(songIdx, recordingIdx, element) {
             const song = allSongs[songIdx];
             if (!song || !song.recordings || !song.recordings[recordingIdx]) return;
 
             const recording = song.recordings[recordingIdx];
 
-            // If clicking the same recording that's currently playing, toggle play/pause
-            if (songIdx === currentSongIndex && recordingIdx === currentRecordingIndex && audioPlayer.src) {
-                togglePlayPause();
-                return;
-            }
-
             // Update current song and recording index
             currentSongIndex = songIdx;
             currentRecordingIndex = recordingIdx;
-
-            // Update playlist if provided, or if song not in current playlist
-            if (playlist && Array.isArray(playlist)) {
-                currentPlaylist = playlist;
-                currentPlaylistPosition = currentPlaylist.indexOf(songIdx);
-            } else if (currentPlaylist.length === 0 || !currentPlaylist.includes(songIdx)) {
-                // If no playlist set or song not in current playlist, use filteredSongs
-                currentPlaylist = filteredSongs.map(s => allSongs.indexOf(s));
-                currentPlaylistPosition = currentPlaylist.indexOf(songIdx);
-            } else {
-                // Song is in current playlist, just update position
-                currentPlaylistPosition = currentPlaylist.indexOf(songIdx);
-            }
 
             // Set recording info for rating updates
             currentPlayingRecordingInfo = {
@@ -14806,8 +14589,8 @@
                 rowId: song.rowId
             };
 
-            // Enable recordings mode when playing any recording
-            isInRecordingsMode = true;
+            // Enable recordings mode if song has multiple recordings
+            isInRecordingsMode = song.recordings.length > 1;
 
             // Play the specific recording URL
             audioPlayer.src = recording.url;
@@ -14821,26 +14604,10 @@
             // Update rating display in player
             updatePlayerRating(recording.rating);
 
-            // Update active state in UI (for nigun detail modal)
+            // Update active state in UI
             document.querySelectorAll('.nigun-recording-item').forEach((item, i) => {
                 item.classList.toggle('active', i === recordingIdx);
             });
-
-            // Update active recording state in song list (recordings mode)
-            document.querySelectorAll('.song-item-recording').forEach(rec => {
-                rec.classList.remove('active-recording');
-            });
-            document.querySelectorAll('.rec-play-btn').forEach(btn => {
-                btn.classList.remove('playing');
-            });
-            const activeRecRow = document.querySelector(`.song-item-recording[data-song-idx="${songIdx}"][data-rec-idx="${recordingIdx}"]`);
-            if (activeRecRow) {
-                activeRecRow.classList.add('active-recording');
-            }
-            const activeRecBtn = document.querySelector(`.rec-play-btn[data-song-idx="${songIdx}"][data-rec-idx="${recordingIdx}"]`);
-            if (activeRecBtn) {
-                activeRecBtn.classList.add('playing');
-            }
         }
 
         // Render zman detail page
@@ -14884,7 +14651,7 @@
                             ${collections.sort((a, b) => a.localeCompare(b, 'he')).map(colName => {
                     const songCount = categories.collections[colName]?.length || 0;
                     const colInfo = collectionsInfo[colName] || {};
-                    const colId = colInfo.customId || colName;
+                    const colId = colInfo.customId || colInfo.rowId || colName;
                     return `
                                     <a class="zman-item-card" href="#/collections/${encodeURIComponent(colId)}" data-action="detail" data-category="collections" data-name="${escapeHtml(colName)}">
                                         <div class="zman-item-icon"></div>
@@ -14909,7 +14676,7 @@
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
                     const songCount = categories.zmanim[piyutName]?.length || 0;
                     const piyutInfo = piyutimInfo[piyutName] || {};
-                    const piyutId = piyutInfo.customId || piyutName;
+                    const piyutId = piyutInfo.customId || piyutInfo.rowId || piyutName;
                     return `
                                     <a class="zman-item-card" href="#/zmanim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
                                         <div class="zman-item-icon"></div>
@@ -15107,7 +14874,7 @@
             const info = infoObj[key] || {};
             const hasImage = !!info.image;
             const songCount = data[key].length;
-            const itemId = info.customId || key;
+            const itemId = info.customId || info.rowId || key;
 
             // Only show chatzer tags for mechabrim
             const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
@@ -15336,7 +15103,7 @@
                 const info = infoObj[key] || {};
                 const hasImage = !!info.image;
                 const songCount = data[key].length;
-                const itemId = info.customId || key;
+                const itemId = info.customId || info.rowId || key;
 
                 // Only show chatzer tags for mechabrim
                 const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
@@ -16222,22 +15989,18 @@
                 `;
             }
 
+            // === RECORDINGS MODE - show all recordings stacked ===
             if (displayMode === 'recordings') {
                 let recordingsHtml = '';
                 if (song.recordings && song.recordings.length > 0) {
                     recordingsHtml = `
                         <div class="song-item-recordings">
                             ${song.recordings.map((rec, i) => {
-                        const playlistParam = playlistIndices ? `, [${playlistIndices.join(',')}]` : '';
-                        const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this${playlistParam})`;
+                        const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this)`;
                         const recMeetsQuality = recordingMeetsQuality(rec);
-                        const isRecActive = isActive && currentRecordingIndex === i;
                         const recPlayBtn = recMeetsQuality
-                            ? `<button class="song-play-btn-new rec-play-btn ${isRecActive && !audioPlayer.paused ? 'playing' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
-                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
-                            </button>`
-                            : `<span class="song-play-btn-new song-btn-low-quality rec-play-btn" title="קוואליטעט נידעריג"><span class="low-quality-icon">☆</span></span>`;
+                            ? `<button class="song-item-rec-play" onclick="event.stopPropagation(); ${recPlayAction}">▶</button>`
+                            : `<span class="song-item-rec-play song-item-rec-low-quality" title="קוואליטעט נידעריג">☆</span>`;
                         const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
 
                         // Build tags for this recording
@@ -16266,7 +16029,7 @@
                         const displayName = rec.details || ('רעקארדינג ' + (i + 1));
 
                         return `
-                                    <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
+                                    <div class="song-item-recording ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}">
                                         <div class="song-item-rec-num">${i + 1}</div>
                                         <div class="song-item-rec-info">
                                             <div class="song-item-rec-name">${displayName}</div>
@@ -16394,8 +16157,7 @@
                             <div class="song-full-rec-title">${toggleArrow}רעקארדירונגען (${song.recordings.length})</div>
                             ${displayRecordings.map((rec, i) => {
                         const actualIndex = recordingsCollapsed && hasMultipleRecordings ? 0 : i;
-                        const playlistParam = playlistIndices ? `, [${playlistIndices.join(',')}]` : '';
-                        const recPlayAction = `playNigunRecording(${globalIdx}, ${actualIndex}, this${playlistParam})`;
+                        const recPlayAction = `playNigunRecording(${globalIdx}, ${actualIndex}, this)`;
                         // Build info tags for this recording
                         let recTags = [];
                         if (rec.album) {
@@ -16421,16 +16183,12 @@
                         }
                         const displayName = rec.details || ('רעקארדינג ' + (actualIndex + 1));
                         const recMeetsQuality = recordingMeetsQuality(rec);
-                        const isRecActive = isActive && currentRecordingIndex === actualIndex;
                         const recPlayBtn = recMeetsQuality
-                            ? `<button class="song-play-btn-new rec-play-btn ${isRecActive && !audioPlayer.paused ? 'playing' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${actualIndex}">
-                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
-                            </button>`
-                            : `<span class="song-play-btn-new song-btn-low-quality rec-play-btn" title="קוואליטעט נידעריג"><span class="low-quality-icon">☆</span></span>`;
+                            ? `<button class="song-item-rec-play" onclick="event.stopPropagation(); ${recPlayAction}">▶</button>`
+                            : `<span class="song-item-rec-play song-item-rec-low-quality" title="קוואליטעט נידעריג">☆</span>`;
                         const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
                         return `
-                                    <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${actualIndex}">
+                                    <div class="song-item-recording ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}">
                                         <div class="song-item-rec-num">${actualIndex + 1}</div>
                                         <div class="song-item-rec-info">
                                             <div class="song-item-rec-name">${displayName}</div>
@@ -16762,19 +16520,12 @@
                             <span class="wave-bar"></span>
                             <span class="wave-bar"></span>
                         `;
-
-                        // For expanded/full items, insert into header
-                        const header = activeItem.querySelector('.song-item-header');
-                        if (header) {
-                            header.appendChild(waveDiv);
+                        // Insert before the play button
+                        const playBtn = activeItem.querySelector('.song-play-btn-new');
+                        if (playBtn) {
+                            activeItem.insertBefore(waveDiv, playBtn);
                         } else {
-                            // Insert before the play button for minimal items
-                            const playBtn = activeItem.querySelector('.song-play-btn-new');
-                            if (playBtn) {
-                                activeItem.insertBefore(waveDiv, playBtn);
-                            } else {
-                                activeItem.appendChild(waveDiv);
-                            }
+                            activeItem.appendChild(waveDiv);
                         }
                     }
 
@@ -16987,14 +16738,9 @@
                 item.classList.remove('paused');
             });
 
-            // Remove active-recording class from all recordings
-            document.querySelectorAll('.song-item-recording').forEach(rec => {
-                rec.classList.remove('active-recording');
-            });
-
             // Find the active song's button and update it
             if (currentSongIndex >= 0) {
-                const activeBtn = document.querySelector(`.song-play-btn-new[data-song-idx="${currentSongIndex}"]:not([data-rec-idx])`);
+                const activeBtn = document.querySelector(`.song-play-btn-new[data-song-idx="${currentSongIndex}"]`);
                 const activeItem = document.querySelector(`.song-item[data-song-idx="${currentSongIndex}"]`);
 
                 if (activeBtn && isPlaying) {
@@ -17002,18 +16748,6 @@
                 }
                 if (activeItem && !isPlaying) {
                     activeItem.classList.add('paused');
-                }
-
-                // Update active recording button
-                const activeRecBtn = document.querySelector(`.rec-play-btn[data-song-idx="${currentSongIndex}"][data-rec-idx="${currentRecordingIndex}"]`);
-                if (activeRecBtn && isPlaying) {
-                    activeRecBtn.classList.add('playing');
-                }
-
-                // Highlight active recording row
-                const activeRecRow = document.querySelector(`.song-item-recording[data-song-idx="${currentSongIndex}"][data-rec-idx="${currentRecordingIndex}"]`);
-                if (activeRecRow) {
-                    activeRecRow.classList.add('active-recording');
                 }
             }
         }

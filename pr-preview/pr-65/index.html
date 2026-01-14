@@ -2305,46 +2305,6 @@
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
-        .document-card> :first-child {
-            border-top-left-radius: inherit;
-            border-top-right-radius: inherit;
-        }
-
-        .document-card> :last-child {
-            border-bottom-left-radius: inherit;
-            border-bottom-right-radius: inherit;
-        }
-
-        /* Hover effect for Document Card */
-        .document-card::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 16px;
-            border: 2px solid var(--color-document);
-            opacity: 0;
-            top: -6px;
-            left: -6px;
-            right: -6px;
-            bottom: -6px;
-            transition: opacity 0.2s ease, top 0s 0.2s, bottom 0s 0.2s, left 0s 0.2s, right 0s 0.2s;
-            pointer-events: none;
-            box-sizing: border-box;
-            box-shadow: 0 0 15px rgba(96, 125, 139, 0.15);
-        }
-
-        .document-card:hover::after {
-            opacity: 1;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        }
-
         .document-card:hover {
             transform: translateY(-4px);
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
@@ -3438,6 +3398,8 @@
             border: 2px solid transparent;
             position: relative;
             /* For pseudo-element */
+            text-decoration: none;
+            color: inherit;
         }
 
         /* Hover effect for Zman Item Card */
@@ -4497,6 +4459,8 @@
             border: 2px solid transparent;
             position: relative;
             /* For pseudo-element */
+            text-decoration: none;
+            color: inherit;
         }
 
         /* Hover effect for Mechaber Card */
@@ -6347,6 +6311,7 @@
             padding: 12px 14px;
             border-radius: 10px;
             cursor: pointer;
+            margin-bottom: 8px;
             background: var(--color-nigun-pale);
             border: none;
             box-shadow: 0 2px 8px rgba(74, 124, 201, 0.1);
@@ -6605,98 +6570,6 @@
         .song-item.active .song-play-btn-new:hover {
             background: white !important;
             color: var(--color-nigun) !important;
-        }
-
-        /* Recording play button - smaller version */
-        .rec-play-btn {
-            width: 32px !important;
-            height: 32px !important;
-            flex-shrink: 0;
-        }
-
-        .rec-play-btn svg {
-            width: 12px !important;
-            height: 12px !important;
-        }
-
-        /* ===== ACTIVE NIGUN & RECORDING COLOR SCHEME =====
-         * Color hierarchy (darkest to lightest):
-         * 1. Active nigun header: var(--color-nigun-dark) #2d5aa0
-         * 2. Active nigun body: var(--color-nigun) #4a7cc9  
-         * 3. Recordings container: var(--color-nigun-light) with transparency
-         * 4. Active recording: White with blue glow
-         */
-
-        /* Active recording row - beautiful highlight */
-        .song-item-recording.active-recording {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(227, 242, 253, 0.95) 100%);
-            border-radius: 10px;
-            box-shadow: 0 2px 12px rgba(74, 124, 201, 0.35),
-                inset 0 0 0 2px var(--color-nigun-light);
-            transform: translateX(-3px);
-        }
-
-        .song-item-recording.active-recording .song-item-rec-num {
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            color: white;
-            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.4);
-        }
-
-        .song-item-recording.active-recording .song-item-rec-name {
-            color: var(--color-nigun-dark);
-            font-weight: 600;
-        }
-
-        .song-item-recording.active-recording .rec-play-btn {
-            background: var(--color-nigun) !important;
-            color: white !important;
-            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.4);
-        }
-
-        /* Active nigun with expanded recordings - enhanced header */
-        .song-item-expanded.active .song-item-header,
-        .song-item-full.active .song-item-header {
-            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-nigun) 100%);
-            border-radius: 12px 12px 0 0;
-        }
-
-        /* Recordings container in active nigun */
-        .song-item-expanded.active .song-item-recordings,
-        .song-item-full.active .song-full-recordings {
-            background: linear-gradient(180deg, rgba(74, 124, 201, 0.15) 0%, rgba(74, 124, 201, 0.08) 100%);
-            border-top: 2px solid var(--color-nigun-light);
-        }
-
-        /* Recording rows inside active nigun */
-        .song-item-expanded.active .song-item-recording:not(.active-recording),
-        .song-item-full.active .song-item-recording:not(.active-recording) {
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(74, 124, 201, 0.15);
-        }
-
-        .song-item-expanded.active .song-item-recording:not(.active-recording):hover,
-        .song-item-full.active .song-item-recording:not(.active-recording):hover {
-            background: rgba(255, 255, 255, 0.8);
-            border-color: var(--color-nigun-light);
-        }
-
-        /* Recording number in active nigun */
-        .song-item-expanded.active .song-item-rec-num,
-        .song-item-full.active .song-item-rec-num {
-            background: var(--color-nigun-pale);
-            color: var(--color-nigun);
-        }
-
-        /* Recording name in active nigun */
-        .song-item-expanded.active .song-item-rec-name,
-        .song-item-full.active .song-item-rec-name {
-            color: var(--color-nigun-dark);
-        }
-
-        /* Tags in active nigun recordings */
-        .song-item-expanded.active .song-item-rec-tags .nigun-tag-inline,
-        .song-item-full.active .song-item-rec-tags .nigun-tag-inline {
-            opacity: 0.9;
         }
 
         /* Low quality indicator button */
@@ -7075,6 +6948,8 @@
             border-radius: 16px;
             padding: 25px;
             box-shadow: var(--card-shadow);
+            max-width: 700px;
+            margin: 0 auto;
         }
 
         .filters-container {
@@ -7678,142 +7553,6 @@
             font-size: 0.95em;
         }
 
-        /* Nigun Modal Overlay - Lightbox style */
-        .nigun-modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.3);
-            z-index: 9999;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .nigun-modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .nigun-modal-content {
-            background: var(--bg-cream);
-            border-radius: 20px;
-            max-width: 850px;
-            width: 100%;
-            max-height: 90vh;
-            overflow-y: auto;
-            overflow-x: hidden;
-            position: relative;
-            transform: scale(0.9) translateY(30px);
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
-            border: 3px solid var(--color-nigun);
-        }
-
-        /* Minimal scrollbar for nigun modal - just the thumb, no track */
-        .nigun-modal-content::-webkit-scrollbar {
-            width: 8px;
-            margin-right: -10px;
-        }
-
-        .nigun-modal-content::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .nigun-modal-content::-webkit-scrollbar-thumb {
-            background: var(--color-nigun);
-            border-radius: 10px;
-        }
-
-        .nigun-modal-content::-webkit-scrollbar-thumb:hover {
-            background: var(--color-nigun-dark);
-        }
-
-        /* Hide scrollbar arrows */
-        .nigun-modal-content::-webkit-scrollbar-button {
-            display: none;
-        }
-
-        /* Firefox scrollbar */
-        .nigun-modal-content {
-            scrollbar-width: thin;
-            scrollbar-color: var(--color-nigun) transparent;
-        }
-
-        .nigun-modal-overlay.active .nigun-modal-content {
-            transform: scale(1) translateY(0);
-        }
-
-        .nigun-modal-close {
-            position: absolute;
-            top: 50%;
-            right: -60px;
-            transform: translateY(-50%);
-            width: 45px;
-            height: 45px;
-            background: white;
-            border: 3px solid var(--color-nigun);
-            border-radius: 50%;
-            font-size: 26px;
-            cursor: pointer;
-            z-index: 10;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s ease, background 0.2s ease;
-            color: var(--color-nigun);
-            font-weight: bold;
-        }
-
-        .nigun-modal-close:hover {
-            transform: scale(1.1);
-            background: var(--color-nigun-pale);
-        }
-
-        /* Hide back button inside modal since we have our own close */
-        .nigun-modal-content .back-button {
-            display: none;
-        }
-
-        /* Remove page-level padding inside modal */
-        .nigun-modal-content .detail-page {
-            padding-top: 10px;
-        }
-
-        /* Fix overflow in modal - just hide horizontal scroll */
-        #nigunModalBody {
-            overflow-x: hidden;
-        }
-
-        /* Mobile responsiveness for nigun modal */
-        @media (max-width: 768px) {
-            .nigun-modal-overlay {
-                padding: 10px;
-            }
-
-            .nigun-modal-content {
-                max-height: 95vh;
-                border-radius: 15px;
-                margin-right: 50px;
-                /* Make room for close button */
-            }
-
-            .nigun-modal-close {
-                right: -45px;
-                width: 38px;
-                height: 38px;
-                font-size: 20px;
-            }
-        }
-
         .detail-row {
             display: flex;
             padding: 12px 0;
@@ -7862,7 +7601,7 @@
             padding: 0;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             border: none;
-            z-index: 10001;
+            z-index: 1000;
             pointer-events: none;
             opacity: 0;
             transform: translateY(10px);
@@ -8202,7 +7941,6 @@
             flex-direction: row-reverse;
             gap: 25px;
             align-items: flex-start;
-            position: relative;
         }
 
         .songs-main-content {
@@ -8210,20 +7948,17 @@
             min-width: 0;
         }
 
-        .sidebar-wrapper {
-            width: 280px;
-            flex-shrink: 0;
-        }
-
         .songs-sidebar {
             width: 280px;
+            flex-shrink: 0;
             background: white;
             border-radius: 15px;
             padding: 20px;
             box-shadow: var(--card-shadow);
             position: sticky;
-            top: 0;
-            max-height: 100vh;
+            top: 20px;
+            align-self: flex-start;
+            max-height: calc(100vh - 40px);
             overflow-y: auto;
         }
 
@@ -8312,170 +8047,6 @@
             height: 20px;
             accent-color: var(--color-nigun);
             cursor: pointer;
-        }
-
-        /* Sort toggle slider styles */
-        .sidebar-sort-section {
-            margin-bottom: 20px;
-        }
-
-        .sidebar-sort-label {
-            font-size: 0.9em;
-            font-weight: 600;
-            color: var(--text-dark);
-            margin-bottom: 8px;
-            display: block;
-        }
-
-        .sort-toggle-container {
-            display: flex;
-            background: var(--color-nigun-pale);
-            border-radius: 10px;
-            padding: 4px;
-            position: relative;
-        }
-
-        .sort-toggle-option {
-            flex: 1;
-            padding: 10px 8px;
-            text-align: center;
-            font-size: 0.85em;
-            font-weight: 500;
-            color: var(--text-dark);
-            cursor: pointer;
-            border-radius: 8px;
-            transition: var(--transition-smooth);
-            z-index: 1;
-            position: relative;
-            white-space: nowrap;
-        }
-
-        .sort-toggle-option:hover {
-            color: var(--color-nigun-dark);
-        }
-
-        .sort-toggle-option.active {
-            color: white;
-            font-weight: 600;
-        }
-
-        .sort-toggle-slider {
-            position: absolute;
-            top: 4px;
-            bottom: 4px;
-            background: var(--color-nigun);
-            border-radius: 8px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            /* Will be positioned dynamically via JavaScript */
-        }
-
-        /* Quality Stars Filter */
-        .quality-stars-filter {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 15px;
-            background: var(--color-nigun-pale);
-            border-radius: 12px;
-            direction: ltr;
-            /* Stars fill left to right */
-        }
-
-        .quality-star {
-            font-size: 2em;
-            color: #ccc;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-
-        .quality-star.active {
-            color: var(--color-nigun);
-        }
-
-        /* Reset all stars on hover, let JavaScript handle the fill */
-        .quality-stars-filter:hover .quality-star {
-            color: #ccc;
-        }
-
-        .quality-stars-filter .quality-star:hover {
-            transform: scale(1.15);
-        }
-
-        /* Use JavaScript for proper hover fill since CSS sibling selectors don't work backwards */
-        .quality-stars-filter.hovering .quality-star.hover-active {
-            color: var(--color-nigun);
-        }
-
-        .quality-clear {
-            font-size: 1.4em;
-            color: #999;
-            cursor: pointer;
-            margin-left: 8px;
-            transition: all 0.2s ease;
-            line-height: 1;
-        }
-
-        .quality-clear:hover {
-            color: var(--color-nigun-dark);
-            transform: scale(1.1);
-        }
-
-        .quality-clear.hidden {
-            display: none;
-        }
-
-        /* Quality Star Tooltips */
-        .quality-star[data-tooltip],
-        .quality-clear[data-tooltip] {
-            position: relative;
-        }
-
-        .quality-star[data-tooltip]::after,
-        .quality-clear[data-tooltip]::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            bottom: calc(100% + 8px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--color-nigun);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.2s ease;
-            z-index: 1000;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-            pointer-events: none;
-            font-weight: 400;
-        }
-
-        .quality-star[data-tooltip]::before,
-        .quality-clear[data-tooltip]::before {
-            content: '';
-            position: absolute;
-            bottom: calc(100% + 2px);
-            left: 50%;
-            transform: translateX(-50%);
-            border: 6px solid transparent;
-            border-top-color: var(--color-nigun);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-            z-index: 1001;
-        }
-
-        .quality-star[data-tooltip]:hover::after,
-        .quality-star[data-tooltip]:hover::before,
-        .quality-clear[data-tooltip]:hover::after,
-        .quality-clear[data-tooltip]:hover::before {
-            opacity: 1;
-            visibility: visible;
         }
 
         /* Sort toggle slider styles */
@@ -9811,14 +9382,6 @@
         </div>
     </div>
 
-    <!-- Nigun Modal Overlay (Lightbox) -->
-    <div class="nigun-modal-overlay" id="nigunModalOverlay" onclick="if(event.target === this) closeNigunModal()">
-        <div class="nigun-modal-content">
-            <button class="nigun-modal-close" onclick="event.stopPropagation(); closeNigunModal()">×</button>
-            <div id="nigunModalBody"></div>
-        </div>
-    </div>
-
     <!-- PDF Popup -->
     <div class="pdf-popup-overlay" id="pdfPopup" onclick="closePdfPopup(event)">
         <div class="pdf-popup" onclick="event.stopPropagation()">
@@ -9900,11 +9463,6 @@
             songs: false
         };
 
-        // Nigun modal state (defined early for event handlers)
-        let nigunModalOpen = false;
-        let savedScrollPosition = 0;
-        let currentNigunModalIdx = null;
-
         // Helper to escape quotes for HTML attributes (converts " to &quot;)
         function escapeHtml(str) {
             if (!str) return '';
@@ -9917,15 +9475,7 @@
             // Handle navigate to detail
             const detailEl = e.target.closest('[data-action="detail"]');
             if (detailEl) {
-                e.preventDefault();
                 e.stopPropagation();
-                // Close nigun modal if open before navigating
-                if (nigunModalOpen) {
-                    nigunModalOpen = false;
-                    currentNigunModalIdx = null;
-                    document.getElementById('nigunModalOverlay').classList.remove('active');
-                    document.body.style.overflow = '';
-                }
                 navigateToDetail(detailEl.dataset.category, detailEl.dataset.name);
                 return;
             }
@@ -9935,13 +9485,6 @@
             if (filterEl) {
                 e.stopPropagation();
                 e.preventDefault();
-                // Close nigun modal if open before navigating
-                if (nigunModalOpen) {
-                    nigunModalOpen = false;
-                    currentNigunModalIdx = null;
-                    document.getElementById('nigunModalOverlay').classList.remove('active');
-                    document.body.style.overflow = '';
-                }
                 navigateToWithFilter(filterEl.dataset.page, filterEl.dataset.filterKey, filterEl.dataset.value);
                 if (filterEl.dataset.closeModal === 'true') {
                     closeModal();
@@ -10420,39 +9963,6 @@
 
                             // Extract text value for mechabrim column ID matching (works for any value type)
                             const textVal = extractText(value);
-
-                            // Direct column ID matching for ID columns across all tables
-                            // Check this BEFORE the textVal check in case the value format is different
-                            const idColumnIds = [
-                                'c-pDoyO3lhGs', // מחברים ID
-                                'c-b0wqs6RvRL', // חצרות ID
-                                'c-BUEMMqGeaq', // ווערטער ID
-                                'c-u_op0cdc6C', // פיוטים ID
-                                'c-Hnj-jcC9Fz', // זמנים ID
-                                'c-qWlY1R6WOz', // קאלעקשנס ID
-                                'c-ov8ZZ90jjL', // רעסורסן ID
-                                'c-ABZxwZf5gG', // דאקומענטן ID
-                                'c-6sbXQP4zbj'  // אלבומס ID
-                            ];
-                            if (idColumnIds.includes(colId)) {
-                                // Try multiple ways to extract the ID value
-                                let idValue = textVal;
-                                if (!idValue && typeof value === 'number') {
-                                    idValue = String(value);
-                                }
-                                if (!idValue && value && typeof value === 'object') {
-                                    // Try getting value from object properties
-                                    idValue = value.name || value.value || value.text || '';
-                                }
-
-                                if (idValue) {
-                                    idValue = String(idValue).replace(/^#/, '').trim();
-                                    if (idValue) {
-                                        info.customId = idValue;
-                                    }
-                                }
-                            }
-
                             if (textVal) {
                                 // Direct column ID matching for mechabrim fields
                                 if (colId === 'c-iSyYvX1S79') info.title = textVal;
@@ -10563,6 +10073,11 @@
                                 }
                                 if (colNameLower.includes('מקום') || colNameLower.includes('ארט') || colNameLower.includes('location')) {
                                     info.location = textValue;
+                                }
+                                // Check for ID column (e.g. "ניגון ID", "מחבר ID", "ID", "#")
+                                if (colNameLower === 'id' || colNameLower.endsWith(' id') || colNameLower.includes(' id') || colNameLower === '#' || colName.includes('ID')) {
+                                    // Remove # prefix if present
+                                    info.customId = textValue.replace(/^#/, '').trim();
                                 }
                                 if (colNameLower.includes('מקור') && !colNameLower.includes('מראה')) {
                                     info.makor = textValue;
@@ -12256,7 +11771,6 @@
                             </div>
                         </div>
 
-                        <div class="sidebar-wrapper">
                         <div class="songs-sidebar">
                             <div class="sidebar-search-box">
                                 <input type="text"
@@ -12332,7 +11846,6 @@
 
                             <div class="active-filters" id="activeFilterTags"></div>
                         </div>
-                        </div><!-- sidebar-wrapper -->
                     </div>
                 </div>
             `;
@@ -12668,366 +12181,6 @@
                 updateDisplayToggleSlider(currentDisplayMode);
                 setupQualityStarsHover();
             }, 50);
-        }
-
-        // Change display mode and re-render
-        function changeDisplayMode(mode) {
-            currentDisplayMode = mode;
-
-            // Update toggle UI
-            updateDisplayToggleSlider(mode);
-
-            // Update display with animation
-            if (currentPageView === 'songs') {
-                updateSongsListWithAnimation();
-            } else {
-                renderCurrentPage();
-            }
-        }
-
-        // Set minimum quality rating filter
-        function setMinQualityRating(rating) {
-            // Toggle off if clicking the same rating
-            if (minQualityRating === rating) {
-                minQualityRating = 0;
-            } else {
-                minQualityRating = rating;
-            }
-
-            // Update the stars UI
-            updateQualityStarsUI();
-
-            // Re-render songs list
-            if (currentPageView === 'songs') {
-                updateSongsListWithAnimation();
-            }
-        }
-
-        // Toggle recordings collapse in full mode
-        function toggleRecordingsCollapse() {
-            recordingsCollapsed = !recordingsCollapsed;
-            // Re-render songs list
-            if (currentPageView === 'songs') {
-                updateSongsListWithAnimation();
-            }
-        }
-
-        // Update quality stars UI
-        function updateQualityStarsUI() {
-            const container = document.getElementById('qualityStarsFilter');
-            if (!container) return;
-
-            const stars = container.querySelectorAll('.quality-star');
-            stars.forEach((star, idx) => {
-                const starRating = idx + 1;
-                if (minQualityRating >= starRating) {
-                    star.classList.add('active');
-                } else {
-                    star.classList.remove('active');
-                }
-            });
-
-            const clearBtn = container.querySelector('.quality-clear');
-            if (clearBtn) {
-                if (minQualityRating === 0) {
-                    clearBtn.classList.add('hidden');
-                } else {
-                    clearBtn.classList.remove('hidden');
-                }
-            }
-        }
-
-        // Setup hover handlers for quality stars (call after rendering)
-        function setupQualityStarsHover() {
-            const container = document.getElementById('qualityStarsFilter');
-            if (!container) return;
-
-            const stars = container.querySelectorAll('.quality-star');
-
-            stars.forEach((star, idx) => {
-                star.addEventListener('mouseenter', () => {
-                    container.classList.add('hovering');
-                    // Highlight all stars up to and including this one
-                    stars.forEach((s, i) => {
-                        if (i <= idx) {
-                            s.classList.add('hover-active');
-                        } else {
-                            s.classList.remove('hover-active');
-                        }
-                    });
-                });
-            });
-
-            container.addEventListener('mouseleave', () => {
-                container.classList.remove('hovering');
-                stars.forEach(s => s.classList.remove('hover-active'));
-            });
-        }
-
-        // Check if a recording meets the minimum quality threshold
-        // Unrated recordings (rating=0 or undefined) always pass so they can be discovered
-        function recordingMeetsQuality(recording) {
-            if (minQualityRating === 0) return true; // No filter
-            const rating = recording.audioRating || recording.rating || 0;
-            // Unrated recordings (0) always pass - otherwise no one will ever hear them
-            if (rating === 0) return true;
-            return rating >= minQualityRating;
-        }
-
-        // Check if a song has any recording that meets the quality threshold
-        function songHasQualityAudio(song) {
-            if (minQualityRating === 0) {
-                // No quality filter, just check if has audio
-                return song.audioUrl && song.audioUrl.startsWith('http');
-            }
-            if (!song.recordings || song.recordings.length === 0) return false;
-            return song.recordings.some(rec => recordingMeetsQuality(rec));
-        }
-
-        // Get the best quality recording for minimal mode playback
-        // Picks the highest-rated recording, randomizes among ties
-        function getBestQualityRecording(song) {
-            if (!song.recordings || song.recordings.length === 0) return null;
-
-            // Filter to quality recordings first
-            let qualityRecs = song.recordings.filter(rec => recordingMeetsQuality(rec));
-            if (qualityRecs.length === 0) return null;
-            if (qualityRecs.length === 1) return qualityRecs[0];
-
-            // Find the highest rating among quality recordings
-            let maxRating = 0;
-            qualityRecs.forEach(rec => {
-                const rating = rec.audioRating || rec.rating || 0;
-                if (rating > maxRating) maxRating = rating;
-            });
-
-            // Get all recordings with the max rating (including unrated if maxRating is 0)
-            let topRecs = qualityRecs.filter(rec => {
-                const rating = rec.audioRating || rec.rating || 0;
-                return rating === maxRating;
-            });
-
-            // Randomly pick one from the top-rated recordings
-            if (topRecs.length === 1) return topRecs[0];
-            const randomIdx = Math.floor(Math.random() * topRecs.length);
-            return topRecs[randomIdx];
-        }
-
-        // Alias for backwards compatibility
-        function getFirstQualityRecording(song) {
-            return getBestQualityRecording(song);
-        }
-
-        // Update display toggle slider position dynamically
-        function updateDisplayToggleSlider(mode) {
-            const toggle = document.getElementById('displayToggle');
-            if (!toggle) return;
-
-            const slider = toggle.querySelector('.sort-toggle-slider');
-            const activeOption = toggle.querySelector(`.sort-toggle-option[data-mode="${mode}"]`);
-
-            if (slider && activeOption) {
-                // Get the container's bounding rect
-                const containerRect = toggle.getBoundingClientRect();
-                const optionRect = activeOption.getBoundingClientRect();
-
-                // Calculate position relative to container (RTL: use right position)
-                const rightOffset = containerRect.right - optionRect.right;
-                const width = optionRect.width;
-
-                slider.style.right = rightOffset + 'px';
-                slider.style.width = width + 'px';
-            }
-
-            // Update active class on options
-            toggle.querySelectorAll('.sort-toggle-option').forEach(opt => {
-                opt.classList.toggle('active', opt.dataset.mode === mode);
-            });
-        }
-
-        // Apply filters without updating display (for use before animated update)
-        function applyFiltersQuiet() {
-            filteredSongs = allSongs.filter(song => {
-
-
-                // Check search query
-                if (searchQuery) {
-                    const query = searchQuery.toLowerCase();
-                    const matchName = song.name?.toLowerCase().includes(query);
-                    const matchMechaber = song.mechaber?.some(m => m.toLowerCase().includes(query));
-                    const matchCollection = song.collections?.some(c => c.toLowerCase().includes(query));
-                    if (!matchName && !matchMechaber && !matchCollection) return false;
-                }
-
-                // Check all active filters
-                if (activeFilters.mechaber.length > 0) {
-                    if (!activeFilters.mechaber.some(f => song.mechaber?.includes(f))) return false;
-                }
-                if (activeFilters.collection.length > 0) {
-                    if (!activeFilters.collection.some(f => song.collections?.includes(f))) return false;
-                }
-                if (activeFilters.zman.length > 0) {
-                    if (!activeFilters.zman.some(f => song.pasigOif?.includes(f))) return false;
-                }
-                if (activeFilters.scale.length > 0) {
-                    if (!activeFilters.scale.some(f => song.scale?.includes(f))) return false;
-                }
-                if (activeFilters.ritem.length > 0) {
-                    if (!activeFilters.ritem.some(f => song.ritem?.includes(f))) return false;
-                }
-                if (activeFilters.gezungen.length > 0) {
-                    if (!activeFilters.gezungen.some(f => song.gezungen?.includes(f))) return false;
-                }
-                if (activeFilters.maure.length > 0) {
-                    if (!activeFilters.maure.some(f => song.maure?.includes(f))) return false;
-                }
-                if (activeFilters.verter.length > 0) {
-                    if (!activeFilters.verter.some(f => song.verter?.includes(f))) return false;
-                }
-                if (activeFilters.chatzer.length > 0) {
-                    if (!activeFilters.chatzer.some(f => song.chatzer?.includes(f))) return false;
-                }
-                return true;
-            });
-            sortFilteredSongs();
-            currentPage = 1;
-        }
-
-        // Sort filteredSongs based on current sort order
-        function sortFilteredSongs() {
-            switch (currentSortOrder) {
-                case 'alphabetical':
-                    filteredSongs.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'he'));
-                    break;
-                case 'recent':
-                    // Sort by zugeleigt (added date) - most recent first
-                    // If zugeleigt is empty, put at the end
-                    filteredSongs.sort((a, b) => {
-                        const dateA = a.zugeleigt || '';
-                        const dateB = b.zugeleigt || '';
-                        // Empty dates go to the end
-                        if (!dateA && !dateB) return (a.name || '').localeCompare(b.name || '', 'he');
-                        if (!dateA) return 1;
-                        if (!dateB) return -1;
-                        // Compare dates (assuming format is consistent and comparable as strings)
-                        // Reverse order for most recent first
-                        return dateB.localeCompare(dateA);
-                    });
-                    break;
-                case 'random':
-                    // Fisher-Yates shuffle
-                    for (let i = filteredSongs.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [filteredSongs[i], filteredSongs[j]] = [filteredSongs[j], filteredSongs[i]];
-                    }
-                    break;
-            }
-        }
-
-        // Change sort order and re-apply
-        function changeSortOrder(order) {
-            currentSortOrder = order;
-            sortFilteredSongs();
-            currentPage = 1;
-
-            // Update toggle UI
-            updateSortToggleSlider(order);
-
-            // Update display with animation
-            if (currentPageView === 'songs') {
-                updateSongsListWithAnimation();
-            } else {
-                renderCurrentPage();
-            }
-        }
-
-        // Update sort toggle slider position dynamically
-        function updateSortToggleSlider(order) {
-            const toggle = document.getElementById('sortToggle');
-            if (!toggle) return;
-
-            const slider = toggle.querySelector('.sort-toggle-slider');
-            const activeOption = toggle.querySelector(`.sort-toggle-option[data-sort="${order}"]`);
-
-            if (slider && activeOption) {
-                // Get the container's bounding rect
-                const containerRect = toggle.getBoundingClientRect();
-                const optionRect = activeOption.getBoundingClientRect();
-
-                // Calculate position relative to container (RTL: use right position)
-                const rightOffset = containerRect.right - optionRect.right;
-                const width = optionRect.width;
-
-                slider.style.right = rightOffset + 'px';
-                slider.style.width = width + 'px';
-            }
-
-            // Update active class on options
-            toggle.querySelectorAll('.sort-toggle-option').forEach(opt => {
-                opt.classList.toggle('active', opt.dataset.sort === order);
-            });
-        }
-
-        // Initialize sort toggle slider position on page load
-        function initSortToggleSlider() {
-            setTimeout(() => {
-                updateSortToggleSlider(currentSortOrder);
-                updateDisplayToggleSlider(currentDisplayMode);
-                setupQualityStarsHover();
-                initStickySidebar();
-            }, 50);
-        }
-
-        // Initialize sticky sidebar - CSS sticky handles this now
-        function initStickySidebar() {
-            const sidebar = document.querySelector('.songs-sidebar');
-            const wrapper = document.querySelector('.sidebar-wrapper');
-            if (!sidebar || !wrapper) return;
-
-            const header = document.querySelector('.main-header');
-            const headerHeight = header ? header.offsetHeight : 80;
-            const topOffset = 0;
-
-            // Get initial position
-            const wrapperRect = wrapper.getBoundingClientRect();
-            const initialTop = wrapperRect.top + window.scrollY;
-            const sidebarWidth = sidebar.offsetWidth;
-
-            let isFixed = false;
-
-            function handleScroll() {
-                const currentSidebar = document.querySelector('.songs-sidebar');
-                if (!currentSidebar) {
-                    window.removeEventListener('scroll', handleScroll);
-                    return;
-                }
-
-                const scrollY = window.scrollY;
-                const mainContent = document.querySelector('.songs-main-content');
-                if (!mainContent) return;
-
-                const mainRect = mainContent.getBoundingClientRect();
-                const shouldBeFixed = scrollY > initialTop - topOffset;
-                const maxBottom = mainRect.bottom + scrollY - currentSidebar.offsetHeight - 20;
-
-                if (shouldBeFixed && scrollY < maxBottom) {
-                    if (!isFixed) {
-                        currentSidebar.style.position = 'fixed';
-                        currentSidebar.style.top = topOffset + 'px';
-                        currentSidebar.style.width = sidebarWidth + 'px';
-                        isFixed = true;
-                    }
-                } else if (!shouldBeFixed) {
-                    if (isFixed) {
-                        currentSidebar.style.position = '';
-                        currentSidebar.style.top = '';
-                        currentSidebar.style.width = '';
-                        isFixed = false;
-                    }
-                }
-            }
-
-            window.addEventListener('scroll', handleScroll, { passive: true });
         }
 
         // Change display mode and re-render
@@ -13694,8 +12847,6 @@
 
 
 
-
-
         // Current detail view
         let currentDetailView = null; // { type: 'mechaber', name: 'xxx' }
 
@@ -13705,8 +12856,8 @@
 
             if (currentDetailView) {
                 // Detail page URL: #/mechabrim/123
-                // Prefer customId (simple number), then name (no rowId in URLs)
-                const id = currentDetailView.customId || currentDetailView.name;
+                // Prefer customId (simple number), then rowId, then name
+                const id = currentDetailView.customId || currentDetailView.id || currentDetailView.name;
                 hash = `#/${currentDetailView.type}/${encodeURIComponent(id)}`;
             } else if (currentPageView === 'search' && searchQuery) {
                 // Search page URL: #/search/קדיש
@@ -13776,21 +12927,10 @@
             const idOrName = parts[1] ? decodeURIComponent(parts[1]) : null;
             console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
 
-            // Valid pages (including info pages)
-            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'music', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
-
-            // Info pages that don't need data loading
-            const infoPagesList = ['about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
+            // Valid pages
+            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search'];
 
             if (validPages.includes(page)) {
-                // Handle info pages - they don't need data loading
-                if (infoPagesList.includes(page)) {
-                    currentPageView = page;
-                    currentDetailView = null;
-                    renderCurrentPage();
-                    return;
-                }
-
                 // Show skeleton loader if data not loaded
                 const targetPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
                 if (targetPage !== 'home' && !isDataLoadedForPage(targetPage)) {
@@ -13814,51 +12954,24 @@
 
                     renderCurrentPage();
                 } else if (idOrName) {
-                    // Detail pages that need data loaded
-                    const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
-                    const dataPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
-
-                    // Show loading indicator and ensure data is loaded for detail pages
-                    if (detailPages.includes(page) && !isDataLoadedForPage(dataPage)) {
-                        const content = document.getElementById('mainContent');
-                        if (content) {
-                            content.innerHTML = `
-                                <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
-                                    <div class="loading-wave-bar"></div>
-                                    <p style="color: var(--text-secondary); font-size: 14px;">לאָדן...</p>
-                                </div>
-                            `;
-                        }
-                        await ensureDataForPage(dataPage);
-                    }
-
                     // Find item by ID or name
                     const item = findItemByIdOrName(page, idOrName);
                     console.log('Found item:', item);
-
-                    // Redirect to proper numeric ID URL if we found the item
-                    const isNumericId = /^\d+$/.test(idOrName);
-                    if (!isNumericId && item?.customId) {
-                        const newHash = `#/${page}/${item.customId}`;
-                        history.replaceState(null, '', newHash);
-                    }
-
                     const itemName = item?.name || idOrName;
                     const itemId = item?.id || idOrName;
-                    const itemCustomId = item?.customId;
 
                     // Navigate to detail page
                     if (page === 'zman') {
                         // Zman detail page (shows piyutim and collections for a zman)
                         currentPageView = 'zmanim';
-                        currentDetailView = { type: 'zman', name: itemName, id: itemId, customId: itemCustomId };
+                        currentDetailView = { type: 'zman', name: itemName, id: itemId };
                     } else if (page === 'nigunim') {
                         // Nigun detail page (nigunim/1 format)
                         currentPageView = 'songs';
-                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId, customId: itemCustomId };
+                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId };
                     } else {
                         currentPageView = page;
-                        currentDetailView = { type: page, name: itemName, id: itemId, customId: itemCustomId };
+                        currentDetailView = { type: page, name: itemName, id: itemId };
                     }
 
                     // Update nav buttons
@@ -13886,51 +12999,33 @@
             }
         }
 
-        // NOTE: popstate listener is now in the nigun modal section to handle modal closing
+        // Listen to browser back/forward
+        window.addEventListener('popstate', handleURLChange);
 
         // Listen to hash changes (from anchor link clicks)
-        window.addEventListener('hashchange', function () {
+        window.addEventListener('hashchange', function() {
             hideAllDropdowns();
             handleURLChange();
         });
 
         // Navigate to detail page
-        async function navigateToDetail(categoryKey, name, id = null) {
-            const content = document.getElementById('mainContent');
-            const dataPage = categoryKey === 'zman' ? 'zmanim' : categoryKey;
-
-            // Show loading indicator if data not loaded yet
-            if (!isDataLoadedForPage(dataPage)) {
-                if (content) {
-                    content.innerHTML = `
-                        <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
-                            <div class="loading-wave-bar"></div>
-                            <p style="color: var(--text-secondary); font-size: 14px;">לאָדן ${name}...</p>
-                        </div>
-                    `;
+        function navigateToDetail(categoryKey, name, id = null) {
+            // If no ID provided, try to get it from info object
+            if (!id) {
+                let infoObj = {};
+                switch (categoryKey) {
+                    case 'chatzeros': infoObj = chatzerosInfo; break;
+                    case 'mechabrim': infoObj = mechabrimInfo; break;
+                    case 'verter': infoObj = verterInfo; break;
+                    case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
+                    case 'collections': infoObj = collectionsInfo; break;
+                    case 'albums': infoObj = albumsInfo; break;
+                    case 'documents': infoObj = documentsInfo; break;
+                    case 'resources': infoObj = resourcesInfo; break;
                 }
-                await ensureDataForPage(dataPage);
+                id = infoObj[name]?.rowId;
             }
-
-            // Get info object for this category
-            let infoObj = {};
-            switch (categoryKey) {
-                case 'chatzeros': infoObj = chatzerosInfo; break;
-                case 'mechabrim': infoObj = mechabrimInfo; break;
-                case 'verter': infoObj = verterInfo; break;
-                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
-                case 'collections': infoObj = collectionsInfo; break;
-                case 'albums': infoObj = albumsInfo; break;
-                case 'documents': infoObj = documentsInfo; break;
-                case 'resources': infoObj = resourcesInfo; break;
-            }
-
-            // Get customId and rowId from the loaded data
-            const itemInfo = infoObj[name];
-            const customId = itemInfo?.customId;
-            const rowId = itemInfo?.rowId || id;
-
-            currentDetailView = { type: categoryKey, name: name, id: rowId, customId: customId };
+            currentDetailView = { type: categoryKey, name: name, id: id };
             updateURL();
             renderDetailPage();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -13957,7 +13052,7 @@
         }
 
         // Render detail page for a specific item
-        async function renderDetailPage() {
+        function renderDetailPage() {
             console.log('renderDetailPage called, currentDetailView:', currentDetailView);
             const { type, name } = currentDetailView;
             const container = document.getElementById('mainContent');
@@ -13970,23 +13065,6 @@
 
             // Handle nigun detail page separately
             if (type === 'nigunim') {
-                // Wait for related data to load so links have proper IDs
-                const dataPromises = [];
-                if (!loadedCategories.chatzeros) {
-                    dataPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
-                }
-                if (!loadedCategories.mechabrim) {
-                    dataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
-                }
-                if (!loadedCategories.verter) {
-                    dataPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
-                }
-                if (!loadedCategories.albums) {
-                    dataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
-                }
-                if (dataPromises.length > 0) {
-                    await Promise.all(dataPromises);
-                }
                 renderNigunDetailPage(container, name);
                 return;
             }
@@ -14128,7 +13206,7 @@
                     .map(([mechName, mechInfo]) => ({
                         name: mechName,
                         image: mechInfo.image,
-                        id: mechInfo.customId || mechName,
+                        id: mechInfo.customId || mechInfo.rowId || mechName,
                         description: mechInfo.description
                     }));
             }
@@ -14412,8 +13490,7 @@
         function navigateToZmanDetail(name) {
             const infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
             const id = infoObj[name]?.rowId;
-            const customId = infoObj[name]?.customId;
-            currentDetailView = { type: 'zman', name: name, id: id, customId: customId };
+            currentDetailView = { type: 'zman', name: name, id: id };
             updateURL();
             renderCurrentPage();
         }
@@ -14467,7 +13544,7 @@
                                     <div class="nigun-chatzer-tags">
                                         ${chatzeros.map(chatzer => {
                                             const cInfo = chatzerosInfo[chatzer] || {};
-                                            const cId = cInfo.customId || chatzer;
+                                            const cId = cInfo.customId || cInfo.rowId || chatzer;
                                             return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
                                         }).join('')}
                                     </div>
@@ -14482,7 +13559,7 @@
                             <div class="nigun-mechaber-grid">
                                 ${song.mechaber.split(',').map(m => m.trim()).filter(Boolean).map(mName => {
                 const mInfo = mechabrimInfo[mName];
-                const mId = mInfo?.customId || mName;
+                const mId = mInfo?.customId || mInfo?.rowId || mName;
                 return `
                                         <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(mId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mName)}">
                                             ${mInfo?.image
@@ -14503,7 +13580,7 @@
                             <div class="nigun-mechaber-grid">
                                 ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
                 const pInfo = mechabrimInfo[personName];
-                const pId = pInfo?.customId || personName;
+                const pId = pInfo?.customId || pInfo?.rowId || personName;
                 return `
                                         <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(personName)}">
                                             ${pInfo?.image
@@ -14769,34 +13846,15 @@
         }
 
         // Play recording from nigun detail page
-        function playNigunRecording(songIdx, recordingIdx, element, playlist = null) {
+        function playNigunRecording(songIdx, recordingIdx, element) {
             const song = allSongs[songIdx];
             if (!song || !song.recordings || !song.recordings[recordingIdx]) return;
 
             const recording = song.recordings[recordingIdx];
 
-            // If clicking the same recording that's currently playing, toggle play/pause
-            if (songIdx === currentSongIndex && recordingIdx === currentRecordingIndex && audioPlayer.src) {
-                togglePlayPause();
-                return;
-            }
-
             // Update current song and recording index
             currentSongIndex = songIdx;
             currentRecordingIndex = recordingIdx;
-
-            // Update playlist if provided, or if song not in current playlist
-            if (playlist && Array.isArray(playlist)) {
-                currentPlaylist = playlist;
-                currentPlaylistPosition = currentPlaylist.indexOf(songIdx);
-            } else if (currentPlaylist.length === 0 || !currentPlaylist.includes(songIdx)) {
-                // If no playlist set or song not in current playlist, use filteredSongs
-                currentPlaylist = filteredSongs.map(s => allSongs.indexOf(s));
-                currentPlaylistPosition = currentPlaylist.indexOf(songIdx);
-            } else {
-                // Song is in current playlist, just update position
-                currentPlaylistPosition = currentPlaylist.indexOf(songIdx);
-            }
 
             // Set recording info for rating updates
             currentPlayingRecordingInfo = {
@@ -14806,8 +13864,8 @@
                 rowId: song.rowId
             };
 
-            // Enable recordings mode when playing any recording
-            isInRecordingsMode = true;
+            // Enable recordings mode if song has multiple recordings
+            isInRecordingsMode = song.recordings.length > 1;
 
             // Play the specific recording URL
             audioPlayer.src = recording.url;
@@ -14821,26 +13879,10 @@
             // Update rating display in player
             updatePlayerRating(recording.rating);
 
-            // Update active state in UI (for nigun detail modal)
+            // Update active state in UI
             document.querySelectorAll('.nigun-recording-item').forEach((item, i) => {
                 item.classList.toggle('active', i === recordingIdx);
             });
-
-            // Update active recording state in song list (recordings mode)
-            document.querySelectorAll('.song-item-recording').forEach(rec => {
-                rec.classList.remove('active-recording');
-            });
-            document.querySelectorAll('.rec-play-btn').forEach(btn => {
-                btn.classList.remove('playing');
-            });
-            const activeRecRow = document.querySelector(`.song-item-recording[data-song-idx="${songIdx}"][data-rec-idx="${recordingIdx}"]`);
-            if (activeRecRow) {
-                activeRecRow.classList.add('active-recording');
-            }
-            const activeRecBtn = document.querySelector(`.rec-play-btn[data-song-idx="${songIdx}"][data-rec-idx="${recordingIdx}"]`);
-            if (activeRecBtn) {
-                activeRecBtn.classList.add('playing');
-            }
         }
 
         // Render zman detail page
@@ -14884,7 +13926,7 @@
                             ${collections.sort((a, b) => a.localeCompare(b, 'he')).map(colName => {
                     const songCount = categories.collections[colName]?.length || 0;
                     const colInfo = collectionsInfo[colName] || {};
-                    const colId = colInfo.customId || colName;
+                    const colId = colInfo.customId || colInfo.rowId || colName;
                     return `
                                     <a class="zman-item-card" href="#/collections/${encodeURIComponent(colId)}" data-action="detail" data-category="collections" data-name="${escapeHtml(colName)}">
                                         <div class="zman-item-icon"></div>
@@ -14909,7 +13951,7 @@
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
                     const songCount = categories.zmanim[piyutName]?.length || 0;
                     const piyutInfo = piyutimInfo[piyutName] || {};
-                    const piyutId = piyutInfo.customId || piyutName;
+                    const piyutId = piyutInfo.customId || piyutInfo.rowId || piyutName;
                     return `
                                     <a class="zman-item-card" href="#/zmanim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
                                         <div class="zman-item-icon"></div>
@@ -15107,7 +14149,7 @@
             const info = infoObj[key] || {};
             const hasImage = !!info.image;
             const songCount = data[key].length;
-            const itemId = info.customId || key;
+            const itemId = info.customId || info.rowId || key;
 
             // Only show chatzer tags for mechabrim
             const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
@@ -15336,7 +14378,7 @@
                 const info = infoObj[key] || {};
                 const hasImage = !!info.image;
                 const songCount = data[key].length;
-                const itemId = info.customId || key;
+                const itemId = info.customId || info.rowId || key;
 
                 // Only show chatzer tags for mechabrim
                 const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
@@ -16222,22 +15264,18 @@
                 `;
             }
 
+            // === RECORDINGS MODE - show all recordings stacked ===
             if (displayMode === 'recordings') {
                 let recordingsHtml = '';
                 if (song.recordings && song.recordings.length > 0) {
                     recordingsHtml = `
                         <div class="song-item-recordings">
                             ${song.recordings.map((rec, i) => {
-                        const playlistParam = playlistIndices ? `, [${playlistIndices.join(',')}]` : '';
-                        const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this${playlistParam})`;
+                        const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this)`;
                         const recMeetsQuality = recordingMeetsQuality(rec);
-                        const isRecActive = isActive && currentRecordingIndex === i;
                         const recPlayBtn = recMeetsQuality
-                            ? `<button class="song-play-btn-new rec-play-btn ${isRecActive && !audioPlayer.paused ? 'playing' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
-                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
-                            </button>`
-                            : `<span class="song-play-btn-new song-btn-low-quality rec-play-btn" title="קוואליטעט נידעריג"><span class="low-quality-icon">☆</span></span>`;
+                            ? `<button class="song-item-rec-play" onclick="event.stopPropagation(); ${recPlayAction}">▶</button>`
+                            : `<span class="song-item-rec-play song-item-rec-low-quality" title="קוואליטעט נידעריג">☆</span>`;
                         const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
 
                         // Build tags for this recording
@@ -16266,7 +15304,7 @@
                         const displayName = rec.details || ('רעקארדינג ' + (i + 1));
 
                         return `
-                                    <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
+                                    <div class="song-item-recording ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}">
                                         <div class="song-item-rec-num">${i + 1}</div>
                                         <div class="song-item-rec-info">
                                             <div class="song-item-rec-name">${displayName}</div>
@@ -16394,8 +15432,7 @@
                             <div class="song-full-rec-title">${toggleArrow}רעקארדירונגען (${song.recordings.length})</div>
                             ${displayRecordings.map((rec, i) => {
                         const actualIndex = recordingsCollapsed && hasMultipleRecordings ? 0 : i;
-                        const playlistParam = playlistIndices ? `, [${playlistIndices.join(',')}]` : '';
-                        const recPlayAction = `playNigunRecording(${globalIdx}, ${actualIndex}, this${playlistParam})`;
+                        const recPlayAction = `playNigunRecording(${globalIdx}, ${actualIndex}, this)`;
                         // Build info tags for this recording
                         let recTags = [];
                         if (rec.album) {
@@ -16421,16 +15458,12 @@
                         }
                         const displayName = rec.details || ('רעקארדינג ' + (actualIndex + 1));
                         const recMeetsQuality = recordingMeetsQuality(rec);
-                        const isRecActive = isActive && currentRecordingIndex === actualIndex;
                         const recPlayBtn = recMeetsQuality
-                            ? `<button class="song-play-btn-new rec-play-btn ${isRecActive && !audioPlayer.paused ? 'playing' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${actualIndex}">
-                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
-                            </button>`
-                            : `<span class="song-play-btn-new song-btn-low-quality rec-play-btn" title="קוואליטעט נידעריג"><span class="low-quality-icon">☆</span></span>`;
+                            ? `<button class="song-item-rec-play" onclick="event.stopPropagation(); ${recPlayAction}">▶</button>`
+                            : `<span class="song-item-rec-play song-item-rec-low-quality" title="קוואליטעט נידעריג">☆</span>`;
                         const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
                         return `
-                                    <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${actualIndex}">
+                                    <div class="song-item-recording ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}">
                                         <div class="song-item-rec-num">${actualIndex + 1}</div>
                                         <div class="song-item-rec-info">
                                             <div class="song-item-rec-name">${displayName}</div>
@@ -16762,19 +15795,12 @@
                             <span class="wave-bar"></span>
                             <span class="wave-bar"></span>
                         `;
-
-                        // For expanded/full items, insert into header
-                        const header = activeItem.querySelector('.song-item-header');
-                        if (header) {
-                            header.appendChild(waveDiv);
+                        // Insert before the play button
+                        const playBtn = activeItem.querySelector('.song-play-btn-new');
+                        if (playBtn) {
+                            activeItem.insertBefore(waveDiv, playBtn);
                         } else {
-                            // Insert before the play button for minimal items
-                            const playBtn = activeItem.querySelector('.song-play-btn-new');
-                            if (playBtn) {
-                                activeItem.insertBefore(waveDiv, playBtn);
-                            } else {
-                                activeItem.appendChild(waveDiv);
-                            }
+                            activeItem.appendChild(waveDiv);
                         }
                     }
 
@@ -16987,14 +16013,9 @@
                 item.classList.remove('paused');
             });
 
-            // Remove active-recording class from all recordings
-            document.querySelectorAll('.song-item-recording').forEach(rec => {
-                rec.classList.remove('active-recording');
-            });
-
             // Find the active song's button and update it
             if (currentSongIndex >= 0) {
-                const activeBtn = document.querySelector(`.song-play-btn-new[data-song-idx="${currentSongIndex}"]:not([data-rec-idx])`);
+                const activeBtn = document.querySelector(`.song-play-btn-new[data-song-idx="${currentSongIndex}"]`);
                 const activeItem = document.querySelector(`.song-item[data-song-idx="${currentSongIndex}"]`);
 
                 if (activeBtn && isPlaying) {
@@ -17002,18 +16023,6 @@
                 }
                 if (activeItem && !isPlaying) {
                     activeItem.classList.add('paused');
-                }
-
-                // Update active recording button
-                const activeRecBtn = document.querySelector(`.rec-play-btn[data-song-idx="${currentSongIndex}"][data-rec-idx="${currentRecordingIndex}"]`);
-                if (activeRecBtn && isPlaying) {
-                    activeRecBtn.classList.add('playing');
-                }
-
-                // Highlight active recording row
-                const activeRecRow = document.querySelector(`.song-item-recording[data-song-idx="${currentSongIndex}"][data-rec-idx="${currentRecordingIndex}"]`);
-                if (activeRecRow) {
-                    activeRecRow.classList.add('active-recording');
                 }
             }
         }
@@ -17134,105 +16143,21 @@
             }
         }
 
-        // Show song details - opens in modal overlay
+        // Show song details
         function showSongDetails(idx) {
             console.log('showSongDetails called with idx:', idx);
             const song = allSongs[idx];
             console.log('Song found:', song ? song.name : 'NOT FOUND');
             if (!song) return;
 
-            // Open modal instead of navigating to full page
-            openNigunModal(idx, song);
+            // Navigate to nigun detail page
+            currentDetailView = { type: 'nigunim', name: song.name, id: song.rowId, customId: song.customId };
+            currentPageView = 'songs';
+            console.log('Calling renderDetailPage...');
+            updateURL();
+            renderDetailPage();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
-
-        // Open nigun modal overlay
-        function openNigunModal(idx, song) {
-            // Save current scroll position
-            savedScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-            currentNigunModalIdx = idx;
-            nigunModalOpen = true;
-
-            // Update URL to nigun detail URL using pushState
-            const nigunId = song.customId || song.rowId || song.name;
-            const hash = `#/nigunim/${encodeURIComponent(nigunId)}`;
-            history.pushState({ nigunModal: true, scrollPos: savedScrollPosition, idx: idx }, '', hash);
-
-            // Render content in modal
-            const modalBody = document.getElementById('nigunModalBody');
-            renderNigunDetailInModal(modalBody, song.name, idx);
-
-            // Show overlay
-            const overlay = document.getElementById('nigunModalOverlay');
-            overlay.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent background scrolling
-        }
-
-        // Render nigun detail content inside modal (uses same logic as renderNigunDetailPage)
-        function renderNigunDetailInModal(container, nigunName, idx) {
-            // Find the song
-            let songIdx = idx !== undefined ? idx : allSongs.findIndex(s => s.name === nigunName);
-            if (songIdx === -1) {
-                songIdx = allSongs.findIndex(s => s.rowId === nigunName);
-            }
-            if (songIdx === -1) {
-                songIdx = allSongs.findIndex(s => s.customId === nigunName);
-            }
-            const song = allSongs[songIdx];
-
-            if (!song) {
-                container.innerHTML = '<p>ניגון נישט געפונען</p>';
-                return;
-            }
-
-            // Use the existing render function but target the modal container
-            // Create a temporary container to hold the content
-            const tempContainer = document.createElement('div');
-            renderNigunDetailPage(tempContainer, song.name);
-
-            // Insert the rendered content into modal
-            container.innerHTML = tempContainer.innerHTML;
-        }
-
-        // Close nigun modal overlay
-        function closeNigunModal() {
-            if (!nigunModalOpen) return;
-
-            nigunModalOpen = false;
-            currentNigunModalIdx = null;
-
-            // Hide overlay
-            const overlay = document.getElementById('nigunModalOverlay');
-            overlay.classList.remove('active');
-            document.body.style.overflow = ''; // Restore scrolling
-
-            // Go back in history to restore previous URL
-            history.back();
-        }
-
-        // Handle browser back/forward for nigun modal
-        window.addEventListener('popstate', (e) => {
-            // Check if we're closing the modal
-            if (nigunModalOpen) {
-                // Close modal without triggering another history change
-                nigunModalOpen = false;
-                currentNigunModalIdx = null;
-
-                const overlay = document.getElementById('nigunModalOverlay');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
-
-                // Restore scroll position
-                if (e.state && e.state.scrollPos !== undefined) {
-                    window.scrollTo(0, e.state.scrollPos);
-                } else {
-                    window.scrollTo(0, savedScrollPosition);
-                }
-                return;
-            }
-
-            // Otherwise handle normal URL changes
-            handleURLChange();
-        });
 
         // Wrapper to show details without playing
         function showDetailsOnly(event, idx) {
@@ -17241,7 +16166,7 @@
             showSongDetails(idx);
         }
 
-        // Close modal (old song modal)
+        // Close modal
         function closeModal() {
             document.getElementById('songModal').classList.remove('show');
         }
@@ -17249,13 +16174,6 @@
         // Close modal on outside click
         document.getElementById('songModal').addEventListener('click', (e) => {
             if (e.target.id === 'songModal') closeModal();
-        });
-
-        // Close nigun modal with Escape key
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && nigunModalOpen) {
-                closeNigunModal();
-            }
         });
 
         // PDF Popup functions

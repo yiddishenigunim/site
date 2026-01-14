@@ -9917,7 +9917,6 @@
             // Handle navigate to detail
             const detailEl = e.target.closest('[data-action="detail"]');
             if (detailEl) {
-                e.preventDefault();
                 e.stopPropagation();
                 // Close nigun modal if open before navigating
                 if (nigunModalOpen) {
@@ -10420,39 +10419,6 @@
 
                             // Extract text value for mechabrim column ID matching (works for any value type)
                             const textVal = extractText(value);
-
-                            // Direct column ID matching for ID columns across all tables
-                            // Check this BEFORE the textVal check in case the value format is different
-                            const idColumnIds = [
-                                'c-pDoyO3lhGs', // מחברים ID
-                                'c-b0wqs6RvRL', // חצרות ID
-                                'c-BUEMMqGeaq', // ווערטער ID
-                                'c-u_op0cdc6C', // פיוטים ID
-                                'c-Hnj-jcC9Fz', // זמנים ID
-                                'c-qWlY1R6WOz', // קאלעקשנס ID
-                                'c-ov8ZZ90jjL', // רעסורסן ID
-                                'c-ABZxwZf5gG', // דאקומענטן ID
-                                'c-6sbXQP4zbj'  // אלבומס ID
-                            ];
-                            if (idColumnIds.includes(colId)) {
-                                // Try multiple ways to extract the ID value
-                                let idValue = textVal;
-                                if (!idValue && typeof value === 'number') {
-                                    idValue = String(value);
-                                }
-                                if (!idValue && value && typeof value === 'object') {
-                                    // Try getting value from object properties
-                                    idValue = value.name || value.value || value.text || '';
-                                }
-
-                                if (idValue) {
-                                    idValue = String(idValue).replace(/^#/, '').trim();
-                                    if (idValue) {
-                                        info.customId = idValue;
-                                    }
-                                }
-                            }
-
                             if (textVal) {
                                 // Direct column ID matching for mechabrim fields
                                 if (colId === 'c-iSyYvX1S79') info.title = textVal;
@@ -10563,6 +10529,11 @@
                                 }
                                 if (colNameLower.includes('מקום') || colNameLower.includes('ארט') || colNameLower.includes('location')) {
                                     info.location = textValue;
+                                }
+                                // Check for ID column (e.g. "ניגון ID", "מחבר ID", "ID", "#")
+                                if (colNameLower === 'id' || colNameLower.endsWith(' id') || colNameLower.includes(' id') || colNameLower === '#' || colName.includes('ID')) {
+                                    // Remove # prefix if present
+                                    info.customId = textValue.replace(/^#/, '').trim();
                                 }
                                 if (colNameLower.includes('מקור') && !colNameLower.includes('מראה')) {
                                     info.makor = textValue;
@@ -13705,8 +13676,8 @@
 
             if (currentDetailView) {
                 // Detail page URL: #/mechabrim/123
-                // Prefer customId (simple number), then name (no rowId in URLs)
-                const id = currentDetailView.customId || currentDetailView.name;
+                // Prefer customId (simple number), then rowId, then name
+                const id = currentDetailView.customId || currentDetailView.id || currentDetailView.name;
                 hash = `#/${currentDetailView.type}/${encodeURIComponent(id)}`;
             } else if (currentPageView === 'search' && searchQuery) {
                 // Search page URL: #/search/קדיש
@@ -13776,21 +13747,10 @@
             const idOrName = parts[1] ? decodeURIComponent(parts[1]) : null;
             console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
 
-            // Valid pages (including info pages)
-            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'music', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
-
-            // Info pages that don't need data loading
-            const infoPagesList = ['about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
+            // Valid pages
+            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search'];
 
             if (validPages.includes(page)) {
-                // Handle info pages - they don't need data loading
-                if (infoPagesList.includes(page)) {
-                    currentPageView = page;
-                    currentDetailView = null;
-                    renderCurrentPage();
-                    return;
-                }
-
                 // Show skeleton loader if data not loaded
                 const targetPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
                 if (targetPage !== 'home' && !isDataLoadedForPage(targetPage)) {
@@ -13814,51 +13774,24 @@
 
                     renderCurrentPage();
                 } else if (idOrName) {
-                    // Detail pages that need data loaded
-                    const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
-                    const dataPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
-
-                    // Show loading indicator and ensure data is loaded for detail pages
-                    if (detailPages.includes(page) && !isDataLoadedForPage(dataPage)) {
-                        const content = document.getElementById('mainContent');
-                        if (content) {
-                            content.innerHTML = `
-                                <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
-                                    <div class="loading-wave-bar"></div>
-                                    <p style="color: var(--text-secondary); font-size: 14px;">לאָדן...</p>
-                                </div>
-                            `;
-                        }
-                        await ensureDataForPage(dataPage);
-                    }
-
                     // Find item by ID or name
                     const item = findItemByIdOrName(page, idOrName);
                     console.log('Found item:', item);
-
-                    // Redirect to proper numeric ID URL if we found the item
-                    const isNumericId = /^\d+$/.test(idOrName);
-                    if (!isNumericId && item?.customId) {
-                        const newHash = `#/${page}/${item.customId}`;
-                        history.replaceState(null, '', newHash);
-                    }
-
                     const itemName = item?.name || idOrName;
                     const itemId = item?.id || idOrName;
-                    const itemCustomId = item?.customId;
 
                     // Navigate to detail page
                     if (page === 'zman') {
                         // Zman detail page (shows piyutim and collections for a zman)
                         currentPageView = 'zmanim';
-                        currentDetailView = { type: 'zman', name: itemName, id: itemId, customId: itemCustomId };
+                        currentDetailView = { type: 'zman', name: itemName, id: itemId };
                     } else if (page === 'nigunim') {
                         // Nigun detail page (nigunim/1 format)
                         currentPageView = 'songs';
-                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId, customId: itemCustomId };
+                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId };
                     } else {
                         currentPageView = page;
-                        currentDetailView = { type: page, name: itemName, id: itemId, customId: itemCustomId };
+                        currentDetailView = { type: page, name: itemName, id: itemId };
                     }
 
                     // Update nav buttons
@@ -13895,42 +13828,23 @@
         });
 
         // Navigate to detail page
-        async function navigateToDetail(categoryKey, name, id = null) {
-            const content = document.getElementById('mainContent');
-            const dataPage = categoryKey === 'zman' ? 'zmanim' : categoryKey;
-
-            // Show loading indicator if data not loaded yet
-            if (!isDataLoadedForPage(dataPage)) {
-                if (content) {
-                    content.innerHTML = `
-                        <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
-                            <div class="loading-wave-bar"></div>
-                            <p style="color: var(--text-secondary); font-size: 14px;">לאָדן ${name}...</p>
-                        </div>
-                    `;
+        function navigateToDetail(categoryKey, name, id = null) {
+            // If no ID provided, try to get it from info object
+            if (!id) {
+                let infoObj = {};
+                switch (categoryKey) {
+                    case 'chatzeros': infoObj = chatzerosInfo; break;
+                    case 'mechabrim': infoObj = mechabrimInfo; break;
+                    case 'verter': infoObj = verterInfo; break;
+                    case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
+                    case 'collections': infoObj = collectionsInfo; break;
+                    case 'albums': infoObj = albumsInfo; break;
+                    case 'documents': infoObj = documentsInfo; break;
+                    case 'resources': infoObj = resourcesInfo; break;
                 }
-                await ensureDataForPage(dataPage);
+                id = infoObj[name]?.rowId;
             }
-
-            // Get info object for this category
-            let infoObj = {};
-            switch (categoryKey) {
-                case 'chatzeros': infoObj = chatzerosInfo; break;
-                case 'mechabrim': infoObj = mechabrimInfo; break;
-                case 'verter': infoObj = verterInfo; break;
-                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
-                case 'collections': infoObj = collectionsInfo; break;
-                case 'albums': infoObj = albumsInfo; break;
-                case 'documents': infoObj = documentsInfo; break;
-                case 'resources': infoObj = resourcesInfo; break;
-            }
-
-            // Get customId and rowId from the loaded data
-            const itemInfo = infoObj[name];
-            const customId = itemInfo?.customId;
-            const rowId = itemInfo?.rowId || id;
-
-            currentDetailView = { type: categoryKey, name: name, id: rowId, customId: customId };
+            currentDetailView = { type: categoryKey, name: name, id: id };
             updateURL();
             renderDetailPage();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -13957,7 +13871,7 @@
         }
 
         // Render detail page for a specific item
-        async function renderDetailPage() {
+        function renderDetailPage() {
             console.log('renderDetailPage called, currentDetailView:', currentDetailView);
             const { type, name } = currentDetailView;
             const container = document.getElementById('mainContent');
@@ -13970,23 +13884,6 @@
 
             // Handle nigun detail page separately
             if (type === 'nigunim') {
-                // Wait for related data to load so links have proper IDs
-                const dataPromises = [];
-                if (!loadedCategories.chatzeros) {
-                    dataPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
-                }
-                if (!loadedCategories.mechabrim) {
-                    dataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
-                }
-                if (!loadedCategories.verter) {
-                    dataPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
-                }
-                if (!loadedCategories.albums) {
-                    dataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
-                }
-                if (dataPromises.length > 0) {
-                    await Promise.all(dataPromises);
-                }
                 renderNigunDetailPage(container, name);
                 return;
             }
@@ -14128,7 +14025,7 @@
                     .map(([mechName, mechInfo]) => ({
                         name: mechName,
                         image: mechInfo.image,
-                        id: mechInfo.customId || mechName,
+                        id: mechInfo.customId || mechInfo.rowId || mechName,
                         description: mechInfo.description
                     }));
             }
@@ -14412,8 +14309,7 @@
         function navigateToZmanDetail(name) {
             const infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
             const id = infoObj[name]?.rowId;
-            const customId = infoObj[name]?.customId;
-            currentDetailView = { type: 'zman', name: name, id: id, customId: customId };
+            currentDetailView = { type: 'zman', name: name, id: id };
             updateURL();
             renderCurrentPage();
         }
@@ -14466,10 +14362,10 @@
                                 ${chatzeros.length > 0 ? `
                                     <div class="nigun-chatzer-tags">
                                         ${chatzeros.map(chatzer => {
-                                            const cInfo = chatzerosInfo[chatzer] || {};
-                                            const cId = cInfo.customId || chatzer;
-                                            return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
-                                        }).join('')}
+                const cInfo = chatzerosInfo[chatzer] || {};
+                const cId = cInfo.customId || cInfo.rowId || chatzer;
+                return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
+            }).join('')}
                                     </div>
                                 ` : ''}
                             </div>
@@ -14482,7 +14378,7 @@
                             <div class="nigun-mechaber-grid">
                                 ${song.mechaber.split(',').map(m => m.trim()).filter(Boolean).map(mName => {
                 const mInfo = mechabrimInfo[mName];
-                const mId = mInfo?.customId || mName;
+                const mId = mInfo?.customId || mInfo?.rowId || mName;
                 return `
                                         <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(mId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mName)}">
                                             ${mInfo?.image
@@ -14503,7 +14399,7 @@
                             <div class="nigun-mechaber-grid">
                                 ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
                 const pInfo = mechabrimInfo[personName];
-                const pId = pInfo?.customId || personName;
+                const pId = pInfo?.customId || pInfo?.rowId || personName;
                 return `
                                         <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(personName)}">
                                             ${pInfo?.image
@@ -14884,7 +14780,7 @@
                             ${collections.sort((a, b) => a.localeCompare(b, 'he')).map(colName => {
                     const songCount = categories.collections[colName]?.length || 0;
                     const colInfo = collectionsInfo[colName] || {};
-                    const colId = colInfo.customId || colName;
+                    const colId = colInfo.customId || colInfo.rowId || colName;
                     return `
                                     <a class="zman-item-card" href="#/collections/${encodeURIComponent(colId)}" data-action="detail" data-category="collections" data-name="${escapeHtml(colName)}">
                                         <div class="zman-item-icon"></div>
@@ -14909,7 +14805,7 @@
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
                     const songCount = categories.zmanim[piyutName]?.length || 0;
                     const piyutInfo = piyutimInfo[piyutName] || {};
-                    const piyutId = piyutInfo.customId || piyutName;
+                    const piyutId = piyutInfo.customId || piyutInfo.rowId || piyutName;
                     return `
                                     <a class="zman-item-card" href="#/zmanim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
                                         <div class="zman-item-icon"></div>
@@ -15107,7 +15003,7 @@
             const info = infoObj[key] || {};
             const hasImage = !!info.image;
             const songCount = data[key].length;
-            const itemId = info.customId || key;
+            const itemId = info.customId || info.rowId || key;
 
             // Only show chatzer tags for mechabrim
             const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
@@ -15336,7 +15232,7 @@
                 const info = infoObj[key] || {};
                 const hasImage = !!info.image;
                 const songCount = data[key].length;
-                const itemId = info.customId || key;
+                const itemId = info.customId || info.rowId || key;
 
                 // Only show chatzer tags for mechabrim
                 const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
