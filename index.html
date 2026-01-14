@@ -9954,14 +9954,6 @@
                         }
 
                         // Process all columns for other data
-                        // Debug: Log all column IDs for first item to see what's available
-                        if (name === 'באסטאן' || name.includes('באסטאן')) {
-                            console.log(`All columns for ${name}:`, Object.keys(values));
-                            console.log(`Looking for ID columns:`, ['c-pDoyO3lhGs', 'c-b0wqs6RvRL', 'c-BUEMMqGeaq', 'c-u_op0cdc6C', 'c-Hnj-jcC9Fz', 'c-qWlY1R6WOz', 'c-ov8ZZ90jjL', 'c-ABZxwZf5gG', 'c-6sbXQP4zbj']);
-                            // Check if any ID column exists
-                            const hasIdCol = Object.keys(values).some(k => ['c-pDoyO3lhGs', 'c-b0wqs6RvRL', 'c-BUEMMqGeaq', 'c-u_op0cdc6C', 'c-Hnj-jcC9Fz', 'c-qWlY1R6WOz', 'c-ov8ZZ90jjL', 'c-ABZxwZf5gG', 'c-6sbXQP4zbj'].includes(k));
-                            console.log(`Has ID column: ${hasIdCol}`);
-                        }
                         Object.keys(values).forEach(colId => {
                             if (colId === nameColId || colId === imageColId) return;
 
@@ -9986,9 +9978,6 @@
                                 'c-6sbXQP4zbj'  // אלבומס ID
                             ];
                             if (idColumnIds.includes(colId)) {
-                                // Debug: log the raw value to see what format it's in
-                                console.log(`ID column ${colId} for ${name}: raw value =`, value, `textVal = "${textVal}"`);
-
                                 // Try multiple ways to extract the ID value
                                 let idValue = textVal;
                                 if (!idValue && typeof value === 'number') {
@@ -10003,7 +9992,6 @@
                                     idValue = String(idValue).replace(/^#/, '').trim();
                                     if (idValue) {
                                         info.customId = idValue;
-                                        console.log(`Found customId for ${name}: ${idValue}`);
                                     }
                                 }
                             }
@@ -10068,7 +10056,6 @@
                                     const isIdCol = colNameLower === 'id' || colNameLower.endsWith(' id') || colNameLower.includes(' id') || colNameLower === '#' || colName.includes('ID');
                                     if (isIdCol && /^#?\d+$/.test(relatedName.trim())) {
                                         info.customId = relatedName.replace(/^#/, '').trim();
-                                        console.log(`Found customId for ${name} from StructuredValue: ${info.customId}`);
                                     }
                                 }
                                 return;
@@ -10133,13 +10120,11 @@
                                     const idValue = textValue.replace(/^#/, '').trim();
                                     if (idValue) {
                                         info.customId = idValue;
-                                        console.log(`Found customId for ${name} from column "${colName}": ${idValue}`);
                                     }
                                 }
                                 // Value-based ID detection: if no customId yet and value looks like a simple ID number
                                 if (!info.customId && /^#?\d+$/.test(textValue.trim())) {
                                     info.customId = textValue.replace(/^#/, '').trim();
-                                    console.log(`Found customId for ${name} from value pattern: ${info.customId}`);
                                 }
                                 if (colNameLower.includes('מקור') && !colNameLower.includes('מראה')) {
                                     info.makor = textValue;
@@ -13021,19 +13006,20 @@
                     console.log('Found item:', item);
                     const itemName = item?.name || idOrName;
                     const itemId = item?.id || idOrName;
+                    const itemCustomId = item?.customId;
 
                     // Navigate to detail page
                     if (page === 'zman') {
                         // Zman detail page (shows piyutim and collections for a zman)
                         currentPageView = 'zmanim';
-                        currentDetailView = { type: 'zman', name: itemName, id: itemId };
+                        currentDetailView = { type: 'zman', name: itemName, id: itemId, customId: itemCustomId };
                     } else if (page === 'nigunim') {
                         // Nigun detail page (nigunim/1 format)
                         currentPageView = 'songs';
-                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId };
+                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId, customId: itemCustomId };
                     } else {
                         currentPageView = page;
-                        currentDetailView = { type: page, name: itemName, id: itemId };
+                        currentDetailView = { type: page, name: itemName, id: itemId, customId: itemCustomId };
                     }
 
                     // Update nav buttons
@@ -13086,8 +13072,12 @@
                     case 'resources': infoObj = resourcesInfo; break;
                 }
                 id = infoObj[name]?.rowId;
+                // Also get customId for URL
+                const customId = infoObj[name]?.customId;
+                currentDetailView = { type: categoryKey, name: name, id: id, customId: customId };
+            } else {
+                currentDetailView = { type: categoryKey, name: name, id: id };
             }
-            currentDetailView = { type: categoryKey, name: name, id: id };
             updateURL();
             renderDetailPage();
             window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -13552,7 +13542,8 @@
         function navigateToZmanDetail(name) {
             const infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
             const id = infoObj[name]?.rowId;
-            currentDetailView = { type: 'zman', name: name, id: id };
+            const customId = infoObj[name]?.customId;
+            currentDetailView = { type: 'zman', name: name, id: id, customId: customId };
             updateURL();
             renderCurrentPage();
         }
