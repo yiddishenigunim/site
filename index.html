@@ -12956,10 +12956,21 @@
             const idOrName = parts[1] ? decodeURIComponent(parts[1]) : null;
             console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
 
-            // Valid pages
-            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search'];
+            // Valid pages (including info pages)
+            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
+
+            // Info pages that don't need data loading
+            const infoPagesList = ['about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
 
             if (validPages.includes(page)) {
+                // Handle info pages - they don't need data loading
+                if (infoPagesList.includes(page)) {
+                    currentPageView = page;
+                    currentDetailView = null;
+                    renderCurrentPage();
+                    return;
+                }
+
                 // Show skeleton loader if data not loaded
                 const targetPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
                 if (targetPage !== 'home' && !isDataLoadedForPage(targetPage)) {
