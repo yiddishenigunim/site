@@ -9971,6 +9971,26 @@
                                 if (colId === 'c-5hlKINjTSq') info.gerufen = textVal;
                                 if (colId === 'c-qF9asVJ_z1') info.platz = textVal;
                                 if (colId === 'c-2MdIjbFK44') info.suffix = textVal;
+
+                                // Direct column ID matching for ID columns across all tables
+                                const idColumnIds = [
+                                    'c-pDoyO3lhGs', // מחברים ID
+                                    'c-b0wqs6RvRL', // חצרות ID
+                                    'c-BUEMMqGeaq', // ווערטער ID
+                                    'c-u_op0cdc6C', // פיוטים ID
+                                    'c-Hnj-jcC9Fz', // זמנים ID
+                                    'c-qWlY1R6WOz', // קאלעקשנס ID
+                                    'c-ov8ZZ90jjL', // רעסורסן ID
+                                    'c-ABZxwZf5gG', // דאקומענטן ID
+                                    'c-6sbXQP4zbj'  // אלבומס ID
+                                ];
+                                if (idColumnIds.includes(colId)) {
+                                    const idValue = textVal.replace(/^#/, '').trim();
+                                    if (idValue) {
+                                        info.customId = idValue;
+                                        console.log(`Found customId for ${name} from column ID ${colId}: ${idValue}`);
+                                    }
+                                }
                             }
 
                             // Skip lookup/relation columns (they have complex objects)
