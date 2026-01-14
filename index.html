@@ -13085,7 +13085,7 @@
         }
 
         // Render detail page for a specific item
-        function renderDetailPage() {
+        async function renderDetailPage() {
             console.log('renderDetailPage called, currentDetailView:', currentDetailView);
             const { type, name } = currentDetailView;
             const container = document.getElementById('mainContent');
@@ -13098,6 +13098,23 @@
 
             // Handle nigun detail page separately
             if (type === 'nigunim') {
+                // Wait for related data to load so links have proper IDs
+                const dataPromises = [];
+                if (!loadedCategories.chatzeros) {
+                    dataPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
+                }
+                if (!loadedCategories.mechabrim) {
+                    dataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
+                }
+                if (!loadedCategories.verter) {
+                    dataPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
+                }
+                if (!loadedCategories.albums) {
+                    dataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
+                }
+                if (dataPromises.length > 0) {
+                    await Promise.all(dataPromises);
+                }
                 renderNigunDetailPage(container, name);
                 return;
             }
