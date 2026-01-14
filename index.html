@@ -13299,7 +13299,7 @@
                     .map(([mechName, mechInfo]) => ({
                         name: mechName,
                         image: mechInfo.image,
-                        id: mechInfo.customId || mechInfo.rowId || mechName,
+                        id: mechInfo.customId || mechName,
                         description: mechInfo.description
                     }));
             }
@@ -13638,7 +13638,7 @@
                                     <div class="nigun-chatzer-tags">
                                         ${chatzeros.map(chatzer => {
                                             const cInfo = chatzerosInfo[chatzer] || {};
-                                            const cId = cInfo.customId || cInfo.rowId || chatzer;
+                                            const cId = cInfo.customId || chatzer;
                                             return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
                                         }).join('')}
                                     </div>
@@ -13653,7 +13653,7 @@
                             <div class="nigun-mechaber-grid">
                                 ${song.mechaber.split(',').map(m => m.trim()).filter(Boolean).map(mName => {
                 const mInfo = mechabrimInfo[mName];
-                const mId = mInfo?.customId || mInfo?.rowId || mName;
+                const mId = mInfo?.customId || mName;
                 return `
                                         <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(mId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mName)}">
                                             ${mInfo?.image
@@ -13674,7 +13674,7 @@
                             <div class="nigun-mechaber-grid">
                                 ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
                 const pInfo = mechabrimInfo[personName];
-                const pId = pInfo?.customId || pInfo?.rowId || personName;
+                const pId = pInfo?.customId || personName;
                 return `
                                         <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(personName)}">
                                             ${pInfo?.image
@@ -14020,7 +14020,7 @@
                             ${collections.sort((a, b) => a.localeCompare(b, 'he')).map(colName => {
                     const songCount = categories.collections[colName]?.length || 0;
                     const colInfo = collectionsInfo[colName] || {};
-                    const colId = colInfo.customId || colInfo.rowId || colName;
+                    const colId = colInfo.customId || colName;
                     return `
                                     <a class="zman-item-card" href="#/collections/${encodeURIComponent(colId)}" data-action="detail" data-category="collections" data-name="${escapeHtml(colName)}">
                                         <div class="zman-item-icon"></div>
@@ -14045,7 +14045,7 @@
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
                     const songCount = categories.zmanim[piyutName]?.length || 0;
                     const piyutInfo = piyutimInfo[piyutName] || {};
-                    const piyutId = piyutInfo.customId || piyutInfo.rowId || piyutName;
+                    const piyutId = piyutInfo.customId || piyutName;
                     return `
                                     <a class="zman-item-card" href="#/zmanim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
                                         <div class="zman-item-icon"></div>
@@ -14243,7 +14243,7 @@
             const info = infoObj[key] || {};
             const hasImage = !!info.image;
             const songCount = data[key].length;
-            const itemId = info.customId || info.rowId || key;
+            const itemId = info.customId || key;
 
             // Only show chatzer tags for mechabrim
             const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
@@ -14472,7 +14472,7 @@
                 const info = infoObj[key] || {};
                 const hasImage = !!info.image;
                 const songCount = data[key].length;
-                const itemId = info.customId || info.rowId || key;
+                const itemId = info.customId || key;
 
                 // Only show chatzer tags for mechabrim
                 const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
