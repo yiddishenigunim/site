@@ -12982,9 +12982,35 @@
 
                     renderCurrentPage();
                 } else if (idOrName) {
+                    // Check if idOrName is a name (not a numeric ID) - if so, ensure data is loaded first
+                    const isNumericId = /^\d+$/.test(idOrName);
+
+                    // Detail pages that need related data loaded
+                    const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
+
+                    if (detailPages.includes(page) && !isNumericId) {
+                        // URL has a name, not an ID - need to load data and redirect to proper ID
+                        const dataPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
+                        if (!isDataLoadedForPage(dataPage)) {
+                            const content = document.getElementById('mainContent');
+                            if (content) {
+                                content.innerHTML = getSkeletonForPage(dataPage);
+                            }
+                            await ensureDataForPage(dataPage);
+                        }
+                    }
+
                     // Find item by ID or name
                     const item = findItemByIdOrName(page, idOrName);
                     console.log('Found item:', item);
+
+                    // If we found an item with customId and URL doesn't match, redirect
+                    if (item?.customId && item.customId !== idOrName) {
+                        const newHash = `#/${page}/${item.customId}`;
+                        history.replaceState(null, '', newHash);
+                        // Continue with the proper customId
+                    }
+
                     const itemName = item?.name || idOrName;
                     const itemId = item?.id || idOrName;
                     const itemCustomId = item?.customId;
