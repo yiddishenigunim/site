@@ -628,6 +628,7 @@
             align-items: center;
             gap: 6px;
             color: var(--text-dark);
+            text-decoration: none;
         }
 
         .nav-dropdown-btn:hover {
@@ -686,6 +687,8 @@
             transition: var(--transition-smooth);
             font-size: 0.85em;
             background: white;
+            text-decoration: none;
+            color: inherit;
         }
 
         .nav-dropdown-item:hover {
@@ -9169,7 +9172,7 @@
     <!-- Header -->
     <header class="main-header">
         <div class="header-main">
-            <div class="logo" onclick="navigateTo('home')">
+            <a class="logo" href="#/home">
                 <div class="logo-icon">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -9180,82 +9183,72 @@
                     <span class="logo-word-1">אוצר</span>
                     <span class="logo-word-2">הניגונים</span>
                 </div>
-            </div>
+            </a>
 
             <nav class="header-nav">
                 <div class="main-nav">
                     <!-- ניגונים -->
                     <div class="nav-dropdown">
-                        <button class="nav-dropdown-btn nav-nigunim" onclick="navigateTo('nigunim')">
+                        <a class="nav-dropdown-btn nav-nigunim" href="#/nigunim">
                             ניגונים
                             <span class="nav-arrow">▼</span>
-                        </button>
+                        </a>
                         <div class="nav-dropdown-content">
                             <div class="dropdown-inner">
-                                <div class="nav-dropdown-item" data-dest="nigunim"
-                                    onclick="event.stopPropagation(); navigateTo('nigunim')">
+                                <a class="nav-dropdown-item" data-dest="nigunim" href="#/nigunim">
                                     <span>אלע ניגונים</span>
-                                </div>
-                                <div class="nav-dropdown-item" data-dest="mechabrim"
-                                    onclick="event.stopPropagation(); navigateTo('mechabrim')">
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="mechabrim" href="#/mechabrim">
                                     <span>מחברים</span>
-                                </div>
-                                <div class="nav-dropdown-item" data-dest="chatzeros"
-                                    onclick="event.stopPropagation(); navigateTo('chatzeros')">
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="chatzeros" href="#/chatzeros">
                                     <span>חצרות</span>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </div>
 
                     <!-- פאסיגע ניגונים -->
                     <div class="nav-dropdown">
-                        <button class="nav-dropdown-btn nav-pasig" onclick="navigateTo('zmanim')">
+                        <a class="nav-dropdown-btn nav-pasig" href="#/zmanim">
                             פאסיגע ניגונים
                             <span class="nav-arrow">▼</span>
-                        </button>
+                        </a>
                         <div class="nav-dropdown-content">
                             <div class="dropdown-inner">
-                                <div class="nav-dropdown-item" data-dest="zmanim"
-                                    onclick="event.stopPropagation(); navigateTo('zmanim')">
+                                <a class="nav-dropdown-item" data-dest="zmanim" href="#/zmanim">
                                     <span>מועדים וזמנים</span>
-                                </div>
-                                <div class="nav-dropdown-item" data-dest="collections"
-                                    onclick="event.stopPropagation(); navigateTo('collections')">
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="collections" href="#/collections">
                                     <span>קאלעקשאנס</span>
-                                </div>
-                                <div class="nav-dropdown-item" data-dest="verter"
-                                    onclick="event.stopPropagation(); navigateTo('verter')">
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="verter" href="#/verter">
                                     <span>ווערטער</span>
-                                </div>
-                                <div class="nav-dropdown-item" data-dest="music"
-                                    onclick="event.stopPropagation(); navigateTo('music')">
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="music" href="#/music">
                                     <span>ריטעם</span>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </div>
 
                     <!-- דאקומענטאציע -->
                     <div class="nav-dropdown">
-                        <button class="nav-dropdown-btn nav-docs" onclick="navigateTo('documents')">
+                        <a class="nav-dropdown-btn nav-docs" href="#/documents">
                             דאקומענטאציע
                             <span class="nav-arrow">▼</span>
-                        </button>
+                        </a>
                         <div class="nav-dropdown-content">
                             <div class="dropdown-inner">
-                                <div class="nav-dropdown-item" data-dest="resources"
-                                    onclick="event.stopPropagation(); navigateTo('resources')">
+                                <a class="nav-dropdown-item" data-dest="resources" href="#/resources">
                                     <span>רעסורסן</span>
-                                </div>
-                                <div class="nav-dropdown-item" data-dest="albums"
-                                    onclick="event.stopPropagation(); navigateTo('albums')">
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="albums" href="#/albums">
                                     <span>אלבומס</span>
-                                </div>
-                                <div class="nav-dropdown-item" data-dest="documents"
-                                    onclick="event.stopPropagation(); navigateTo('documents')">
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="documents" href="#/documents">
                                     <span>דאקומענטן</span>
-                                </div>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -12988,6 +12981,12 @@
 
         // Listen to browser back/forward
         window.addEventListener('popstate', handleURLChange);
+
+        // Listen to hash changes (from anchor link clicks)
+        window.addEventListener('hashchange', function() {
+            hideAllDropdowns();
+            handleURLChange();
+        });
 
         // Navigate to detail page
         function navigateToDetail(categoryKey, name, id = null) {
