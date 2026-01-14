@@ -12885,8 +12885,8 @@
 
             if (currentDetailView) {
                 // Detail page URL: #/mechabrim/123
-                // Prefer customId (simple number), then rowId, then name
-                const id = currentDetailView.customId || currentDetailView.id || currentDetailView.name;
+                // Prefer customId (simple number), then name (no rowId in URLs)
+                const id = currentDetailView.customId || currentDetailView.name;
                 hash = `#/${currentDetailView.type}/${encodeURIComponent(id)}`;
             } else if (currentPageView === 'search' && searchQuery) {
                 // Search page URL: #/search/קדיש
