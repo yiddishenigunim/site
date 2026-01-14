@@ -5291,6 +5291,8 @@
             border: 1px solid var(--border-color);
             display: flex;
             flex-direction: column;
+            text-decoration: none;
+            color: inherit;
         }
 
         .nigun-pdf-preview:hover {
@@ -13818,13 +13820,13 @@
                                         `).join('')}
 
                                         ${song.otherMedia.pdfs.map((pdf, i) => `
-                                            <div class="nigun-pdf-preview" onclick="window.open('${pdf.url}', '_blank')">
+                                            <a class="nigun-pdf-preview" href="${pdf.url}" target="_blank" rel="noopener">
                                                 <div class="nigun-pdf-preview-box">
                                                     <div class="nigun-pdf-preview-icon">📄</div>
                                                     <div class="nigun-pdf-preview-label">PDF</div>
                                                 </div>
                                                 <div class="nigun-pdf-preview-name">${pdf.name}</div>
-                                            </div>
+                                            </a>
                                         `).join('')}
                                     </div>
                                 ` : ''}
