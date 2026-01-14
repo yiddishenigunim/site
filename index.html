@@ -628,7 +628,6 @@
             align-items: center;
             gap: 6px;
             color: var(--text-dark);
-            text-decoration: none;
         }
 
         .nav-dropdown-btn:hover {
@@ -687,8 +686,6 @@
             transition: var(--transition-smooth);
             font-size: 0.85em;
             background: white;
-            text-decoration: none;
-            color: inherit;
         }
 
         .nav-dropdown-item:hover {
@@ -1204,8 +1201,6 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
-            text-decoration: none;
-            color: inherit;
         }
 
         .home-stat-hero:hover {
@@ -1264,8 +1259,6 @@
             flex-direction: column;
             justify-content: center;
             transform: translateY(0);
-            text-decoration: none;
-            color: inherit;
         }
 
         .home-stat-card:hover {
@@ -1392,8 +1385,6 @@
             transition: var(--transition-smooth);
             width: 100%;
             gap: 15px;
-            text-decoration: none;
-            color: inherit;
         }
 
         .home-stats-link-line {
@@ -3085,8 +3076,6 @@
             border: 2px solid transparent;
             /* Removed overflow: hidden to allow hover glow */
             position: relative;
-            text-decoration: none;
-            color: inherit;
         }
 
         .category-card> :first-child {
@@ -3398,8 +3387,6 @@
             border: 2px solid transparent;
             position: relative;
             /* For pseudo-element */
-            text-decoration: none;
-            color: inherit;
         }
 
         /* Hover effect for Zman Item Card */
@@ -4042,7 +4029,6 @@
             font-size: 0.9em;
             cursor: pointer;
             transition: var(--transition-smooth);
-            text-decoration: none;
         }
 
         .nigun-tag.mechaber-tag {
@@ -4459,8 +4445,6 @@
             border: 2px solid transparent;
             position: relative;
             /* For pseudo-element */
-            text-decoration: none;
-            color: inherit;
         }
 
         /* Hover effect for Mechaber Card */
@@ -6311,7 +6295,6 @@
             padding: 12px 14px;
             border-radius: 10px;
             cursor: pointer;
-            margin-bottom: 8px;
             background: var(--color-nigun-pale);
             border: none;
             box-shadow: 0 2px 8px rgba(74, 124, 201, 0.1);
@@ -6948,8 +6931,6 @@
             border-radius: 16px;
             padding: 25px;
             box-shadow: var(--card-shadow);
-            max-width: 700px;
-            margin: 0 auto;
         }
 
         .filters-container {
@@ -7941,6 +7922,7 @@
             flex-direction: row-reverse;
             gap: 25px;
             align-items: flex-start;
+            position: relative;
         }
 
         .songs-main-content {
@@ -7948,17 +7930,20 @@
             min-width: 0;
         }
 
-        .songs-sidebar {
+        .sidebar-wrapper {
             width: 280px;
             flex-shrink: 0;
+        }
+
+        .songs-sidebar {
+            width: 280px;
             background: white;
             border-radius: 15px;
             padding: 20px;
             box-shadow: var(--card-shadow);
             position: sticky;
-            top: 20px;
-            align-self: flex-start;
-            max-height: calc(100vh - 40px);
+            top: 0;
+            max-height: 100vh;
             overflow-y: auto;
         }
 
@@ -8654,8 +8639,6 @@
             border-radius: 18px 18px 0 0;
             cursor: pointer;
             transition: var(--transition-smooth);
-            text-decoration: none;
-            color: inherit;
         }
 
         .home-about-header:hover {
@@ -8695,7 +8678,6 @@
             color: var(--text);
             font-size: 0.95em;
             text-align: center;
-            text-decoration: none;
         }
 
         .home-about-link:first-child {
@@ -8715,8 +8697,6 @@
             font-size: 0.9em;
             cursor: pointer;
             transition: var(--transition-smooth);
-            text-decoration: none;
-            display: block;
         }
 
         .home-terms-link:hover {
@@ -8833,8 +8813,6 @@
             cursor: pointer;
             transition: var(--transition-smooth);
             border: 1px solid var(--color-chatzer-pale);
-            text-decoration: none;
-            color: inherit;
         }
 
         .stats-page-card:hover {
@@ -9192,7 +9170,7 @@
     <!-- Header -->
     <header class="main-header">
         <div class="header-main">
-            <a class="logo" href="#/home">
+            <div class="logo" onclick="navigateTo('home')">
                 <div class="logo-icon">
                     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                         <path
@@ -9203,72 +9181,82 @@
                     <span class="logo-word-1">אוצר</span>
                     <span class="logo-word-2">הניגונים</span>
                 </div>
-            </a>
+            </div>
 
             <nav class="header-nav">
                 <div class="main-nav">
                     <!-- ניגונים -->
                     <div class="nav-dropdown">
-                        <a class="nav-dropdown-btn nav-nigunim" href="#/nigunim">
+                        <button class="nav-dropdown-btn nav-nigunim" onclick="navigateTo('nigunim')">
                             ניגונים
                             <span class="nav-arrow">▼</span>
-                        </a>
+                        </button>
                         <div class="nav-dropdown-content">
                             <div class="dropdown-inner">
-                                <a class="nav-dropdown-item" data-dest="nigunim" href="#/nigunim">
+                                <div class="nav-dropdown-item" data-dest="nigunim"
+                                    onclick="event.stopPropagation(); navigateTo('nigunim')">
                                     <span>אלע ניגונים</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="mechabrim" href="#/mechabrim">
+                                </div>
+                                <div class="nav-dropdown-item" data-dest="mechabrim"
+                                    onclick="event.stopPropagation(); navigateTo('mechabrim')">
                                     <span>מחברים</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="chatzeros" href="#/chatzeros">
+                                </div>
+                                <div class="nav-dropdown-item" data-dest="chatzeros"
+                                    onclick="event.stopPropagation(); navigateTo('chatzeros')">
                                     <span>חצרות</span>
-                                </a>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- פאסיגע ניגונים -->
                     <div class="nav-dropdown">
-                        <a class="nav-dropdown-btn nav-pasig" href="#/zmanim">
+                        <button class="nav-dropdown-btn nav-pasig" onclick="navigateTo('zmanim')">
                             פאסיגע ניגונים
                             <span class="nav-arrow">▼</span>
-                        </a>
+                        </button>
                         <div class="nav-dropdown-content">
                             <div class="dropdown-inner">
-                                <a class="nav-dropdown-item" data-dest="zmanim" href="#/zmanim">
+                                <div class="nav-dropdown-item" data-dest="zmanim"
+                                    onclick="event.stopPropagation(); navigateTo('zmanim')">
                                     <span>מועדים וזמנים</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="collections" href="#/collections">
+                                </div>
+                                <div class="nav-dropdown-item" data-dest="collections"
+                                    onclick="event.stopPropagation(); navigateTo('collections')">
                                     <span>קאלעקשאנס</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="verter" href="#/verter">
+                                </div>
+                                <div class="nav-dropdown-item" data-dest="verter"
+                                    onclick="event.stopPropagation(); navigateTo('verter')">
                                     <span>ווערטער</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="music" href="#/music">
+                                </div>
+                                <div class="nav-dropdown-item" data-dest="music"
+                                    onclick="event.stopPropagation(); navigateTo('music')">
                                     <span>ריטעם</span>
-                                </a>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- דאקומענטאציע -->
                     <div class="nav-dropdown">
-                        <a class="nav-dropdown-btn nav-docs" href="#/documents">
+                        <button class="nav-dropdown-btn nav-docs" onclick="navigateTo('documents')">
                             דאקומענטאציע
                             <span class="nav-arrow">▼</span>
-                        </a>
+                        </button>
                         <div class="nav-dropdown-content">
                             <div class="dropdown-inner">
-                                <a class="nav-dropdown-item" data-dest="resources" href="#/resources">
+                                <div class="nav-dropdown-item" data-dest="resources"
+                                    onclick="event.stopPropagation(); navigateTo('resources')">
                                     <span>רעסורסן</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="albums" href="#/albums">
+                                </div>
+                                <div class="nav-dropdown-item" data-dest="albums"
+                                    onclick="event.stopPropagation(); navigateTo('albums')">
                                     <span>אלבומס</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="documents" href="#/documents">
+                                </div>
+                                <div class="nav-dropdown-item" data-dest="documents"
+                                    onclick="event.stopPropagation(); navigateTo('documents')">
                                     <span>דאקומענטן</span>
-                                </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -11141,64 +11129,64 @@
 
                     <!-- Statistics - 2 Stack Layout -->
                     <div class="home-stats-grid">
-                        <a class="home-stat-hero" href="#/nigunim">
+                        <div class="home-stat-hero" onclick="navigateTo('nigunim')">
                             <div class="home-stat-number">${totalSongs}</div>
                             <div class="home-stat-label">ניגונים</div>
                             <div class="home-stat-subtitle">אינעם דאטאבעיס</div>
-                        </a>
+                        </div>
                         <div class="home-stats-right">
                             <div class="home-stats-row">
-                                <a class="home-stat-card stat-mechaber" href="#/mechabrim">
+                                <div class="home-stat-card stat-mechaber" onclick="navigateTo('mechabrim')">
                                     <div class="home-stat-number">${totalMechabrim}</div>
                                     <div class="home-stat-label">מחברים</div>
-                                </a>
-                                <a class="home-stat-card stat-chatzer" href="#/chatzeros">
+                                </div>
+                                <div class="home-stat-card stat-chatzer" onclick="navigateTo('chatzeros')">
                                     <div class="home-stat-number">${totalChatzeros}</div>
                                     <div class="home-stat-label">חצרות</div>
-                                </a>
+                                </div>
                             </div>
                             <div class="home-stats-row">
-                                <a class="home-stat-card stat-verter" href="#/verter">
+                                <div class="home-stat-card stat-verter" onclick="navigateTo('verter')">
                                     <div class="home-stat-number">${totalVerter}</div>
                                     <div class="home-stat-label">ווערטער</div>
-                                </a>
-                                <a class="home-stat-card stat-zman" href="#/zmanim">
+                                </div>
+                                <div class="home-stat-card stat-zman" onclick="navigateTo('zmanim')">
                                     <div class="home-stat-number">${totalZmanim}</div>
                                     <div class="home-stat-label">זמנים</div>
-                                </a>
-                                <a class="home-stat-card stat-collection" href="#/collections">
+                                </div>
+                                <div class="home-stat-card stat-collection" onclick="navigateTo('collections')">
                                     <div class="home-stat-number">${totalCollections}</div>
                                     <div class="home-stat-label">קאלעקשאנס</div>
-                                </a>
+                                </div>
                             </div>
                         </div>
                     </div>
 
                     <!-- Statistics Link -->
-                    <a class="home-stats-link" href="#/stats">
+                    <div class="home-stats-link" onclick="navigateTo('stats')">
                         <div class="home-stats-link-line left"></div>
                         <span class="home-stats-link-text">סטאטיסטיקס</span>
                         <div class="home-stats-link-line"></div>
-                    </a>
+                    </div>
 
                     <!-- About Us Section -->
                     <div class="home-about-section">
-                        <a class="home-about-header" href="#/about">
+                        <div class="home-about-header" onclick="navigateTo('about')">
                             <span class="home-about-title">איבער אונז</span>
                             <span class="home-about-arrow">←</span>
-                        </a>
+                        </div>
                         <div class="home-about-links">
-                            <a class="home-about-link" href="#/about">אונזער ציל</a>
-                            <a class="home-about-link" href="#/instructions">אנווייזונגען</a>
-                            <a class="home-about-link" href="#/credits">קרעדיטס</a>
-                            <a class="home-about-link" href="#/thanks">התודה והברכה</a>
+                            <div class="home-about-link" onclick="navigateTo('about')">אונזער ציל</div>
+                            <div class="home-about-link" onclick="navigateTo('instructions')">אנווייזונגען</div>
+                            <div class="home-about-link" onclick="navigateTo('credits')">קרעדיטס</div>
+                            <div class="home-about-link" onclick="navigateTo('thanks')">התודה והברכה</div>
                         </div>
                     </div>
 
                     <!-- Terms Link -->
-                    <a class="home-terms-link" href="#/terms">
+                    <div class="home-terms-link" onclick="navigateTo('terms')">
                         Terms of Use
-                    </a>
+                    </div>
                 </div>
             `;
 
@@ -11307,10 +11295,10 @@
             return `
                 <nav class="info-nav">
                     ${pages.map((page, index) => `
-                        <a class="info-nav-item ${activePage === page.id ? 'active' : ''}"
-                             href="#/${page.id}">
+                        <div class="info-nav-item ${activePage === page.id ? 'active' : ''}"
+                             onclick="navigateTo('${page.id}')">
                             ${page.label}
-                        </a>
+                        </div>
                     `).join('')}
                 </nav>
             `;
@@ -11460,30 +11448,30 @@
 
                     <div class="info-page-content">
                         <div class="stats-page-grid">
-                            <a class="stats-page-card" href="#/nigunim">
+                            <div class="stats-page-card" onclick="navigateTo('nigunim')">
                                 <div class="stats-page-number">${totalSongs}</div>
                                 <div class="stats-page-label">ניגונים</div>
-                            </a>
-                            <a class="stats-page-card" href="#/chatzeros">
+                            </div>
+                            <div class="stats-page-card" onclick="navigateTo('chatzeros')">
                                 <div class="stats-page-number">${totalChatzeros}</div>
                                 <div class="stats-page-label">חצרות</div>
-                            </a>
-                            <a class="stats-page-card" href="#/mechabrim">
+                            </div>
+                            <div class="stats-page-card" onclick="navigateTo('mechabrim')">
                                 <div class="stats-page-number">${totalMechabrim}</div>
                                 <div class="stats-page-label">מחברים</div>
-                            </a>
-                            <a class="stats-page-card" href="#/verter">
+                            </div>
+                            <div class="stats-page-card" onclick="navigateTo('verter')">
                                 <div class="stats-page-number">${totalVerter}</div>
                                 <div class="stats-page-label">ווערטער</div>
-                            </a>
-                            <a class="stats-page-card" href="#/zmanim">
+                            </div>
+                            <div class="stats-page-card" onclick="navigateTo('zmanim')">
                                 <div class="stats-page-number">${totalZmanim}</div>
                                 <div class="stats-page-label">זמנים</div>
-                            </a>
-                            <a class="stats-page-card" href="#/collections">
+                            </div>
+                            <div class="stats-page-card" onclick="navigateTo('collections')">
                                 <div class="stats-page-number">${totalCollections}</div>
                                 <div class="stats-page-label">קאלעקשאנס</div>
-                            </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -11771,6 +11759,7 @@
                             </div>
                         </div>
 
+                        <div class="sidebar-wrapper">
                         <div class="songs-sidebar">
                             <div class="sidebar-search-box">
                                 <input type="text"
@@ -11846,6 +11835,7 @@
 
                             <div class="active-filters" id="activeFilterTags"></div>
                         </div>
+                        </div><!-- sidebar-wrapper -->
                     </div>
                 </div>
             `;
@@ -12180,7 +12170,60 @@
                 updateSortToggleSlider(currentSortOrder);
                 updateDisplayToggleSlider(currentDisplayMode);
                 setupQualityStarsHover();
+                initStickySidebar();
             }, 50);
+        }
+
+        // Initialize sticky sidebar - CSS sticky handles this now
+        function initStickySidebar() {
+            const sidebar = document.querySelector('.songs-sidebar');
+            const wrapper = document.querySelector('.sidebar-wrapper');
+            if (!sidebar || !wrapper) return;
+
+            const header = document.querySelector('.main-header');
+            const headerHeight = header ? header.offsetHeight : 80;
+            const topOffset = 0;
+
+            // Get initial position
+            const wrapperRect = wrapper.getBoundingClientRect();
+            const initialTop = wrapperRect.top + window.scrollY;
+            const sidebarWidth = sidebar.offsetWidth;
+
+            let isFixed = false;
+
+            function handleScroll() {
+                const currentSidebar = document.querySelector('.songs-sidebar');
+                if (!currentSidebar) {
+                    window.removeEventListener('scroll', handleScroll);
+                    return;
+                }
+
+                const scrollY = window.scrollY;
+                const mainContent = document.querySelector('.songs-main-content');
+                if (!mainContent) return;
+
+                const mainRect = mainContent.getBoundingClientRect();
+                const shouldBeFixed = scrollY > initialTop - topOffset;
+                const maxBottom = mainRect.bottom + scrollY - currentSidebar.offsetHeight - 20;
+
+                if (shouldBeFixed && scrollY < maxBottom) {
+                    if (!isFixed) {
+                        currentSidebar.style.position = 'fixed';
+                        currentSidebar.style.top = topOffset + 'px';
+                        currentSidebar.style.width = sidebarWidth + 'px';
+                        isFixed = true;
+                    }
+                } else if (!shouldBeFixed) {
+                    if (isFixed) {
+                        currentSidebar.style.position = '';
+                        currentSidebar.style.top = '';
+                        currentSidebar.style.width = '';
+                        isFixed = false;
+                    }
+                }
+            }
+
+            window.addEventListener('scroll', handleScroll, { passive: true });
         }
 
         // Change display mode and re-render
@@ -13002,12 +13045,6 @@
         // Listen to browser back/forward
         window.addEventListener('popstate', handleURLChange);
 
-        // Listen to hash changes (from anchor link clicks)
-        window.addEventListener('hashchange', function() {
-            hideAllDropdowns();
-            handleURLChange();
-        });
-
         // Navigate to detail page
         function navigateToDetail(categoryKey, name, id = null) {
             // If no ID provided, try to get it from info object
@@ -13206,7 +13243,6 @@
                     .map(([mechName, mechInfo]) => ({
                         name: mechName,
                         image: mechInfo.image,
-                        id: mechInfo.customId || mechInfo.rowId || mechName,
                         description: mechInfo.description
                     }));
             }
@@ -13313,13 +13349,13 @@
                             <h3>${mechabrimFromChatzer.length} מחברים</h3>
                             <div class="nigun-mechaber-grid">
                                 ${mechabrimFromChatzer.map(mech => `
-                                    <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(mech.id)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mech.name)}">
+                                    <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mech.name)}">
                                         ${mech.image
                     ? `<img class="nigun-mechaber-image" src="${mech.image}" alt="${mech.name}">`
                     : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                 }
                                         <div class="nigun-mechaber-name">${mech.name}</div>
-                                    </a>
+                                    </div>
                                 `).join('')}
                             </div>
                         </div>
@@ -13457,9 +13493,8 @@
                 const piyutimCount = zmanData.piyutim?.length || 0;
                 const collectionsCount = zmanData.collections?.length || 0;
 
-                const zmanId = zmanData.rowId || zmanName;
                 html += `
-                    <a class="category-card" href="#/zman/${encodeURIComponent(zmanId)}" data-action="zman-detail" data-name="${escapeHtml(zmanName)}">
+                    <div class="category-card" data-action="zman-detail" data-name="${escapeHtml(zmanName)}">
                         <div class="card-header">
                             <div class="card-icon"></div>
                             <div class="card-header-text">
@@ -13470,7 +13505,7 @@
                                 </div>
                             </div>
                         </div>
-                    </a>
+                    </div>
                 `;
             });
 
@@ -13542,11 +13577,11 @@
                                 <h1 class="detail-title" style="color: var(--color-nigun-dark);">${song.name}</h1>
                                 ${chatzeros.length > 0 ? `
                                     <div class="nigun-chatzer-tags">
-                                        ${chatzeros.map(chatzer => {
-                                            const cInfo = chatzerosInfo[chatzer] || {};
-                                            const cId = cInfo.customId || cInfo.rowId || chatzer;
-                                            return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
-                                        }).join('')}
+                                        ${chatzeros.map(chatzer => `
+                                            <span class="nigun-tag chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">
+                                                ${chatzer}
+                                            </span>
+                                        `).join('')}
                                     </div>
                                 ` : ''}
                             </div>
@@ -13559,15 +13594,14 @@
                             <div class="nigun-mechaber-grid">
                                 ${song.mechaber.split(',').map(m => m.trim()).filter(Boolean).map(mName => {
                 const mInfo = mechabrimInfo[mName];
-                const mId = mInfo?.customId || mInfo?.rowId || mName;
                 return `
-                                        <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(mId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mName)}">
+                                        <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mName)}">
                                             ${mInfo?.image
                         ? `<img class="nigun-mechaber-image" src="${mInfo.image}" alt="${mName}">`
                         : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                     }
                                             <div class="nigun-mechaber-name">${mName}</div>
-                                        </a>
+                                        </div>
                                     `;
             }).join('')}
                             </div>
@@ -13580,21 +13614,20 @@
                             <div class="nigun-mechaber-grid">
                                 ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
                 const pInfo = mechabrimInfo[personName];
-                const pId = pInfo?.customId || pInfo?.rowId || personName;
                 return `
-                                        <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(personName)}">
+                                        <div class="nigun-mechaber-card" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(personName)}">
                                             ${pInfo?.image
                         ? `<img class="nigun-mechaber-image" src="${pInfo.image}" alt="${personName}">`
                         : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                     }
                                             <div class="nigun-mechaber-name">${personName}</div>
-                                        </a>
+                                        </div>
                                     `;
             }).join('')}
                             </div>
                         </div>
                     ` : ''}
-
+                    
                     <div class="nigun-details-card">
                         ${song.siman ? `
                             <div class="nigun-detail-row">
@@ -13925,16 +13958,14 @@
                         <div class="zman-items-grid">
                             ${collections.sort((a, b) => a.localeCompare(b, 'he')).map(colName => {
                     const songCount = categories.collections[colName]?.length || 0;
-                    const colInfo = collectionsInfo[colName] || {};
-                    const colId = colInfo.customId || colInfo.rowId || colName;
                     return `
-                                    <a class="zman-item-card" href="#/collections/${encodeURIComponent(colId)}" data-action="detail" data-category="collections" data-name="${escapeHtml(colName)}">
+                                    <div class="zman-item-card" data-action="detail" data-category="collections" data-name="${escapeHtml(colName)}">
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${colName}</div>
                                             ${songCount > 0 ? `<div class="zman-item-count">${songCount} ניגונים</div>` : ''}
                                         </div>
-                                    </a>
+                                    </div>
                                 `;
                 }).join('')}
                         </div>
@@ -13950,16 +13981,14 @@
                         <div class="zman-items-grid">
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
                     const songCount = categories.zmanim[piyutName]?.length || 0;
-                    const piyutInfo = piyutimInfo[piyutName] || {};
-                    const piyutId = piyutInfo.customId || piyutInfo.rowId || piyutName;
                     return `
-                                    <a class="zman-item-card" href="#/zmanim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
+                                    <div class="zman-item-card" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${piyutName}</div>
                                             ${songCount > 0 ? `<div class="zman-item-count">${songCount} ניגונים</div>` : ''}
                                         </div>
-                                    </a>
+                                    </div>
                                 `;
                 }).join('')}
                         </div>
@@ -14149,7 +14178,6 @@
             const info = infoObj[key] || {};
             const hasImage = !!info.image;
             const songCount = data[key].length;
-            const itemId = info.customId || info.rowId || key;
 
             // Only show chatzer tags for mechabrim
             const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
@@ -14168,7 +14196,7 @@
             }
 
             return `
-            <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
+            <div class="category-card ${hasImage ? 'has-image' : ''}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
                 <div class="card-header">
                     ${hasImage ? `
                         <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -14232,7 +14260,7 @@
                         </div>
                     </div>
                 </div>
-            </a>
+            </div>
         `;
         }
 
@@ -14378,7 +14406,6 @@
                 const info = infoObj[key] || {};
                 const hasImage = !!info.image;
                 const songCount = data[key].length;
-                const itemId = info.customId || info.rowId || key;
 
                 // Only show chatzer tags for mechabrim
                 const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
@@ -14397,7 +14424,7 @@
                 }
 
                 return `
-                            <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
+                            <div class="category-card ${hasImage ? 'has-image' : ''}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
                                 <div class="card-header">
                                     ${hasImage ? `
                                         <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
@@ -14446,7 +14473,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </a>
+                            </div>
                         `}).join('')}
                     </div>
                 </div>
