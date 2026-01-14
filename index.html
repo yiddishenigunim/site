@@ -12998,11 +12998,16 @@
                     const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
                     const dataPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
 
-                    // Always ensure data is loaded for detail pages
+                    // Show loading indicator and ensure data is loaded for detail pages
                     if (detailPages.includes(page) && !isDataLoadedForPage(dataPage)) {
                         const content = document.getElementById('mainContent');
                         if (content) {
-                            content.innerHTML = getSkeletonForPage(dataPage);
+                            content.innerHTML = `
+                                <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
+                                    <div class="loading-wave-bar"></div>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">לאָדן...</p>
+                                </div>
+                            `;
                         }
                         await ensureDataForPage(dataPage);
                     }
@@ -13011,7 +13016,7 @@
                     const item = findItemByIdOrName(page, idOrName);
                     console.log('Found item:', item);
 
-                    // Check if idOrName is a name (not a numeric ID) - if so, redirect to proper ID
+                    // Redirect to proper numeric ID URL if we found the item
                     const isNumericId = /^\d+$/.test(idOrName);
                     if (!isNumericId && item?.customId) {
                         const newHash = `#/${page}/${item.customId}`;
@@ -13072,36 +13077,41 @@
 
         // Navigate to detail page
         async function navigateToDetail(categoryKey, name, id = null) {
-            // Ensure data is loaded for this category
+            const content = document.getElementById('mainContent');
             const dataPage = categoryKey === 'zman' ? 'zmanim' : categoryKey;
+
+            // Show loading indicator if data not loaded yet
             if (!isDataLoadedForPage(dataPage)) {
-                const content = document.getElementById('mainContent');
                 if (content) {
-                    content.innerHTML = getSkeletonForPage(dataPage);
+                    content.innerHTML = `
+                        <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
+                            <div class="loading-wave-bar"></div>
+                            <p style="color: var(--text-secondary); font-size: 14px;">לאָדן ${name}...</p>
+                        </div>
+                    `;
                 }
                 await ensureDataForPage(dataPage);
             }
 
-            // If no ID provided, try to get it from info object
-            if (!id) {
-                let infoObj = {};
-                switch (categoryKey) {
-                    case 'chatzeros': infoObj = chatzerosInfo; break;
-                    case 'mechabrim': infoObj = mechabrimInfo; break;
-                    case 'verter': infoObj = verterInfo; break;
-                    case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
-                    case 'collections': infoObj = collectionsInfo; break;
-                    case 'albums': infoObj = albumsInfo; break;
-                    case 'documents': infoObj = documentsInfo; break;
-                    case 'resources': infoObj = resourcesInfo; break;
-                }
-                id = infoObj[name]?.rowId;
-                // Also get customId for URL
-                const customId = infoObj[name]?.customId;
-                currentDetailView = { type: categoryKey, name: name, id: id, customId: customId };
-            } else {
-                currentDetailView = { type: categoryKey, name: name, id: id };
+            // Get info object for this category
+            let infoObj = {};
+            switch (categoryKey) {
+                case 'chatzeros': infoObj = chatzerosInfo; break;
+                case 'mechabrim': infoObj = mechabrimInfo; break;
+                case 'verter': infoObj = verterInfo; break;
+                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
+                case 'collections': infoObj = collectionsInfo; break;
+                case 'albums': infoObj = albumsInfo; break;
+                case 'documents': infoObj = documentsInfo; break;
+                case 'resources': infoObj = resourcesInfo; break;
             }
+
+            // Get customId and rowId from the loaded data
+            const itemInfo = infoObj[name];
+            const customId = itemInfo?.customId;
+            const rowId = itemInfo?.rowId || id;
+
+            currentDetailView = { type: categoryKey, name: name, id: rowId, customId: customId };
             updateURL();
             renderDetailPage();
             window.scrollTo({ top: 0, behavior: 'smooth' });
