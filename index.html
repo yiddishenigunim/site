@@ -9954,6 +9954,14 @@
                         }
 
                         // Process all columns for other data
+                        // Debug: Log all column IDs for first item to see what's available
+                        if (name === 'באסטאן' || name.includes('באסטאן')) {
+                            console.log(`All columns for ${name}:`, Object.keys(values));
+                            console.log(`Looking for ID columns:`, ['c-pDoyO3lhGs', 'c-b0wqs6RvRL', 'c-BUEMMqGeaq', 'c-u_op0cdc6C', 'c-Hnj-jcC9Fz', 'c-qWlY1R6WOz', 'c-ov8ZZ90jjL', 'c-ABZxwZf5gG', 'c-6sbXQP4zbj']);
+                            // Check if any ID column exists
+                            const hasIdCol = Object.keys(values).some(k => ['c-pDoyO3lhGs', 'c-b0wqs6RvRL', 'c-BUEMMqGeaq', 'c-u_op0cdc6C', 'c-Hnj-jcC9Fz', 'c-qWlY1R6WOz', 'c-ov8ZZ90jjL', 'c-ABZxwZf5gG', 'c-6sbXQP4zbj'].includes(k));
+                            console.log(`Has ID column: ${hasIdCol}`);
+                        }
                         Object.keys(values).forEach(colId => {
                             if (colId === nameColId || colId === imageColId) return;
 
