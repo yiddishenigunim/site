@@ -6602,16 +6602,16 @@
 
         .wave-bar:nth-child(2) {
             height: 14px;
-            animation-delay: 0.1s;
-        }
-
-        .wave-bar:nth-child(3) {
-            height: 10px;
             animation-delay: 0.2s;
         }
 
-        .wave-bar:nth-child(4) {
+        .wave-bar:nth-child(3) {
             height: 16px;
+            animation-delay: 0.1s;
+        }
+
+        .wave-bar:nth-child(4) {
+            height: 10px;
             animation-delay: 0.3s;
         }
 
@@ -7334,7 +7334,7 @@
 
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--color-nigun) 0%, var(--color-chatzer) 50%, var(--color-mechaber) 100%);
+            background: linear-gradient(90deg, var(--color-mechaber) 0%, var(--color-chatzer) 50%, var(--color-nigun) 100%);
             border-radius: 10px;
             width: 0%;
             transition: width 0.1s linear;
@@ -11774,7 +11774,7 @@
                                 <label class="sidebar-sort-label" style="color: var(--color-nigun-dark);">סארטיר:</label>
                                 <div class="sort-toggle-container" id="sortToggle">
                                     <div class="sort-toggle-slider"></div>
-                                    <div class="sort-toggle-option ${currentSortOrder === 'random' ? 'active' : ''}" data-sort="random" onclick="changeSortOrder('random')">שאפל</div>
+                                    <div class="sort-toggle-option ${currentSortOrder === 'random' ? 'active' : ''}" data-sort="random" onclick="changeSortOrder('random')">שאָפל</div>
                                     <div class="sort-toggle-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}" data-sort="alphabetical" onclick="changeSortOrder('alphabetical')">א"ב</div>
                                     <div class="sort-toggle-option ${currentSortOrder === 'recent' ? 'active' : ''}" data-sort="recent" onclick="changeSortOrder('recent')">לעצט צוגעלייגט</div>
                                 </div>
@@ -11784,7 +11784,7 @@
                                 <label class="sidebar-sort-label" style="color: var(--color-nigun-dark);">ווייז:</label>
                                 <div class="sort-toggle-container" id="displayToggle">
                                     <div class="sort-toggle-slider"></div>
-                                    <div class="sort-toggle-option ${currentDisplayMode === 'minimal' ? 'active' : ''}" data-mode="minimal" onclick="changeDisplayMode('minimal')">מינימום</div>
+                                    <div class="sort-toggle-option ${currentDisplayMode === 'minimal' ? 'active' : ''}" data-mode="minimal" onclick="changeDisplayMode('minimal')">קעפל</div>
                                     <div class="sort-toggle-option ${currentDisplayMode === 'recordings' ? 'active' : ''}" data-mode="recordings" onclick="changeDisplayMode('recordings')">רעקארדירונגען</div>
                                     <div class="sort-toggle-option ${currentDisplayMode === 'full' ? 'active' : ''}" data-mode="full" onclick="changeDisplayMode('full')">אלעס</div>
                                 </div>
