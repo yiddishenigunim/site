@@ -14441,12 +14441,155 @@
             `;
         }
 
+        // Helper function to convert Coda internal links to site links
+        function convertCodaLinkToSiteLink(linkText, url) {
+            // Check if it's a Coda link
+            if (!url.includes('coda.io')) {
+                return null; // Not a Coda link
+            }
+
+            // Extract rowId from Coda URL
+            // Coda URLs can have formats like:
+            // https://coda.io/d/{docId}/...#_{tablePrefix}-{rowId}
+            // https://coda.io/d/{docId}#...{rowId}
+            // The rowId typically starts with 'i-' followed by alphanumeric characters
+            let rowId = null;
+
+            // Try to extract from hash fragment
+            const hashMatch = url.match(/#.*?(i-[a-zA-Z0-9_-]+)/);
+            if (hashMatch) {
+                rowId = hashMatch[1];
+            }
+
+            // If we found a rowId, search for it across all entities
+            if (rowId) {
+                // Search in nigunim
+                const song = allSongs.find(s => s.rowId === rowId);
+                if (song) {
+                    const displayId = song.customId || song.name;
+                    return `#/nigunim/${encodeURIComponent(displayId)}`;
+                }
+
+                // Search in mechabrim
+                for (const [name, info] of Object.entries(mechabrimInfo)) {
+                    if (info.rowId === rowId) {
+                        const displayId = info.customId || name;
+                        return `#/mechabrim/${encodeURIComponent(displayId)}`;
+                    }
+                }
+
+                // Search in verter
+                for (const [name, info] of Object.entries(verterInfo)) {
+                    if (info.rowId === rowId) {
+                        const displayId = info.customId || name;
+                        return `#/verter/${encodeURIComponent(displayId)}`;
+                    }
+                }
+
+                // Search in chatzeros
+                for (const [name, info] of Object.entries(chatzerosInfo)) {
+                    if (info.rowId === rowId) {
+                        const displayId = info.customId || name;
+                        return `#/chatzeros/${encodeURIComponent(displayId)}`;
+                    }
+                }
+
+                // Search in zmanim/piyutim
+                for (const [name, info] of Object.entries(zmaninInfo)) {
+                    if (info.rowId === rowId) {
+                        const displayId = info.customId || name;
+                        return `#/zman/${encodeURIComponent(displayId)}`;
+                    }
+                }
+                for (const [name, info] of Object.entries(piyutimInfo)) {
+                    if (info.rowId === rowId) {
+                        const displayId = info.customId || name;
+                        return `#/zman/${encodeURIComponent(displayId)}`;
+                    }
+                }
+
+                // Search in collections
+                for (const [name, info] of Object.entries(collectionsInfo)) {
+                    if (info.rowId === rowId) {
+                        const displayId = info.customId || name;
+                        return `#/collections/${encodeURIComponent(displayId)}`;
+                    }
+                }
+
+                // Search in albums
+                for (const [name, info] of Object.entries(albumsInfo)) {
+                    if (info.rowId === rowId) {
+                        const displayId = info.customId || name;
+                        return `#/albums/${encodeURIComponent(displayId)}`;
+                    }
+                }
+
+                // Search in documents
+                for (const [name, info] of Object.entries(documentsInfo)) {
+                    if (info.rowId === rowId) {
+                        const displayId = info.customId || name;
+                        return `#/documents/${encodeURIComponent(displayId)}`;
+                    }
+                }
+
+                // Search in resources
+                for (const [name, info] of Object.entries(resourcesInfo)) {
+                    if (info.rowId === rowId) {
+                        const displayId = info.customId || name;
+                        return `#/resources/${encodeURIComponent(displayId)}`;
+                    }
+                }
+            }
+
+            // If no rowId found or no match, try searching by name as fallback
+            const searchText = linkText.trim();
+
+            // Try to find in nigunim by name
+            let found = findItemByIdOrName('nigunim', searchText);
+            if (found) {
+                const displayId = found.customId || found.name;
+                return `#/nigunim/${encodeURIComponent(displayId)}`;
+            }
+
+            // Try to find in mechabrim by name
+            found = findItemByIdOrName('mechabrim', searchText);
+            if (found) {
+                const displayId = found.customId || found.name;
+                return `#/mechabrim/${encodeURIComponent(displayId)}`;
+            }
+
+            // Try to find in verter by name
+            found = findItemByIdOrName('verter', searchText);
+            if (found) {
+                const displayId = found.customId || found.name;
+                return `#/verter/${encodeURIComponent(displayId)}`;
+            }
+
+            // Try to find in chatzeros by name
+            found = findItemByIdOrName('chatzeros', searchText);
+            if (found) {
+                const displayId = found.customId || found.name;
+                return `#/chatzeros/${encodeURIComponent(displayId)}`;
+            }
+
+            // If we can't find a match, return null to use the original link
+            return null;
+        }
+
         // Format description text (handle markdown-like formatting)
         function formatDescription(text) {
             if (!text) return '';
 
-            // Convert markdown links [text](url) to HTML
-            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+            // Convert markdown links [text](url) to HTML, with special handling for Coda links
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, url) => {
+                // Try to convert Coda links to site links
+                const siteLink = convertCodaLinkToSiteLink(linkText, url);
+                if (siteLink) {
+                    return `<a href="${siteLink}">${linkText}</a>`;
+                }
+                // For non-Coda links or unmatched Coda links, use target="_blank"
+                return `<a href="${url}" target="_blank">${linkText}</a>`;
+            });
 
             // Convert **bold** to <strong>
             text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -14666,7 +14809,7 @@
                         ${song.siman ? `
                             <div class="nigun-detail-row">
                                 <span class="nigun-detail-label">סימן:</span>
-                                <span class="nigun-detail-value">${song.siman}</span>
+                                <span class="nigun-detail-value">${formatDescription(song.siman)}</span>
                             </div>
                         ` : ''}
                         ${song.verter ? `
@@ -14795,7 +14938,7 @@
                         <div class="nigun-section">
                             <h3>אינפארמאציע</h3>
                             <div class="nigun-section-content">
-                                <div class="nigun-info-text">${song.info}</div>
+                                <div class="nigun-info-text">${formatDescription(song.info)}</div>
                             </div>
                         </div>
                     ` : ''}
@@ -14846,7 +14989,7 @@
                             <h3>צוגאבן</h3>
                             <div class="nigun-other-media-content">
                                 ${song.otherMedia.text ? `
-                                    <div class="nigun-other-media-text">${song.otherMedia.text}</div>
+                                    <div class="nigun-other-media-text">${formatDescription(song.otherMedia.text)}</div>
                                 ` : ''}
 
                                 ${song.otherMedia.audio.length > 0 ? `
@@ -15621,8 +15764,8 @@
                             <div class="resource-card-body">
                                 <div class="resource-title clickable-title" data-action="detail" data-category="resources" data-name="${escapeHtml(key)}">${key}</div>
                                 ${info.chatzer ? `<div class="resource-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}" data-tooltip-value="${escapeHtml(info.chatzer)}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
-                                ${info.description ? `<div class="resource-details">${info.description}</div>` : ''}
-                                ${info.notes ? `<div class="resource-notes">${info.notes}</div>` : ''}
+                                ${info.description ? `<div class="resource-details">${formatDescription(info.description)}</div>` : ''}
+                                ${info.notes ? `<div class="resource-notes">${formatDescription(info.notes)}</div>` : ''}
                             </div>
                             <div class="resource-card-footer">
                                 ${hasLink ? `
@@ -15719,8 +15862,8 @@
                                 <div class="document-title clickable-title" data-action="detail" data-category="documents" data-name="${escapeHtml(key)}">${key}</div>
                                 ${info.serie ? `<div class="document-serie">${info.serie.replace(/\`\`\`/g, '')}</div>` : ''}
                                 ${info.chatzer ? `<div class="document-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}" data-tooltip-value="${escapeHtml(info.chatzer)}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
-                                ${info.description ? `<div class="document-details">${info.description.replace(/\`\`\`/g, '').replace(/!\[.*?\]\(.*?\)/g, '')}</div>` : ''}
-                                ${info.notes ? `<div class="document-notes">${info.notes}</div>` : ''}
+                                ${info.description ? `<div class="document-details">${formatDescription(info.description)}</div>` : ''}
+                                ${info.notes ? `<div class="document-notes">${formatDescription(info.notes)}</div>` : ''}
                             </div>
                             <div class="document-card-footer">
                                 ${hasLink ? `
@@ -15906,7 +16049,7 @@
                     ${info.description || info.notes ? `
                         <div class="detail-section">
                             <h3>אינפארמאציע</h3>
-                            <p>${info.description || info.notes || ''}</p>
+                            <p>${formatDescription(info.description || info.notes || '')}</p>
                         </div>
                     ` : ''}
                     
@@ -15991,7 +16134,7 @@
                     ${info.description ? `
                         <div class="detail-section">
                             <h3>אינפארמאציע</h3>
-                            <p>${info.description.replace(/\`\`\`/g, '').replace(/!\[.*?\]\(.*?\)/g, '')}</p>
+                            <p>${formatDescription(info.description)}</p>
                         </div>
                     ` : ''}
                     
@@ -16072,7 +16215,7 @@
                     ${info.description ? `
                         <div class="detail-section">
                             <h3>אינפארמאציע</h3>
-                            <p>${info.description}</p>
+                            <p>${formatDescription(info.description)}</p>
                         </div>
                     ` : ''}
                     
@@ -16537,7 +16680,7 @@
 
                 // Siman - simple tag
                 if (song.siman) {
-                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סימן:</span><span class="nigun-tag-inline tag-siman">${song.siman}</span></div>`);
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סימן:</span><span class="nigun-tag-inline tag-siman">${formatDescription(song.siman)}</span></div>`);
                 }
 
                 // Recordings section with more info
