@@ -11765,6 +11765,15 @@
                 case 'resources': return loadedCategories.resources && Object.keys(resourcesInfo).length > 0;
                 case 'documents': return loadedCategories.documents && Object.keys(documentsInfo).length > 0;
                 case 'albums': return loadedCategories.albums && Object.keys(albumsInfo).length > 0;
+                case 'search':
+                    // Search needs all data loaded
+                    return loadedCategories.songs && allSongs.length > 0 &&
+                           loadedCategories.chatzeros && Object.keys(chatzerosInfo).length > 0 &&
+                           loadedCategories.mechabrim && Object.keys(mechabrimInfo).length > 0 &&
+                           loadedCategories.verter && Object.keys(verterInfo).length > 0 &&
+                           loadedCategories.zmanim && Object.keys(zmaninInfo).length > 0 &&
+                           loadedCategories.collections && Object.keys(collectionsInfo).length > 0 &&
+                           loadedCategories.albums && Object.keys(albumsInfo).length > 0;
                 default: return true;
             }
         }
@@ -14022,6 +14031,20 @@
                     // Update search input
                     const searchInput = document.getElementById('globalSearch');
                     if (searchInput) searchInput.value = idOrName;
+
+                    // Show loading indicator and ensure data is loaded for search
+                    if (!isDataLoadedForPage('search')) {
+                        const content = document.getElementById('mainContent');
+                        if (content) {
+                            content.innerHTML = `
+                                <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
+                                    <div class="loading-wave-bar"></div>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">לאָדן...</p>
+                                </div>
+                            `;
+                        }
+                        await ensureDataForPage('search');
+                    }
 
                     renderCurrentPage();
                 } else if (idOrName) {
