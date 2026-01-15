@@ -14107,6 +14107,11 @@
 
             // Handle nigun detail page separately
             if (type === 'nigunim') {
+                // Wait for songs data to load first (critical!)
+                if (!loadedCategories.songs) {
+                    await fetchSongsInBackground();
+                }
+
                 // Wait for related data to load so links have proper IDs
                 const dataPromises = [];
                 if (!loadedCategories.chatzeros) {
