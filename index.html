@@ -10067,6 +10067,8 @@
         let minQualityRating = 0; // Minimum quality rating (0-5, 0 = all)
         let recordingsCollapsed = false; // Collapse recordings in full mode (show only first)
         let songsFullyLoaded = false; // Track if ALL songs are loaded from API (not just first batch)
+        let seenSongIds = new Set(); // Track song IDs from previous batches for FLIP animation
+        let isFlipping = false; // Block loadMoreSongs during FLIP animation
 
         // Category data
         let categories = {
@@ -11037,27 +11039,89 @@
                     processSongsData(allRows);
 
                     // Update filteredSongs after each batch
-                    // skipSort=true for subsequent batches to preserve order
-                    applyFiltersQuiet(!isFirstBatch);
+                    // First batch: shuffle for random mode, skip sort for alphabetical (for FLIP)
+                    // Subsequent batches: skip sort for shuffle (preserve order), sort for alphabetical
+                    if (isFirstBatch) {
+                        if (currentSortOrder === 'random') {
+                            applyFiltersQuiet(false); // Shuffle for random mode
+                            console.log('First batch: shuffling songs for random mode');
+                        } else {
+                            applyFiltersQuiet(true); // Skip sort for FLIP-friendly display
+                            console.log('First batch: skipping sort for FLIP-friendly display');
+                        }
+                    } else if (currentSortOrder === 'random') {
+                        // ALSO shuffle subsequent batches to mix new songs in
+                        applyFiltersQuiet(false);
+                        console.log('Subsequent batch: re-shuffling to mix in new songs');
+                    } else {
+                        applyFiltersQuiet(false); // Sort to put new songs in correct position
+                    }
 
                     if (currentPageView === 'songs') {
                         updateSongsCount();
-                        // Note: New songs from API batches are available when user scrolls
                     }
 
-                    // After first batch, render immediately so user sees content fast
+                    // After first batch, render and mark DISPLAYED songs as "seen"
                     if (isFirstBatch && allRows.length >= 50) {
                         isFirstBatch = false;
                         loadedCategories.songs = true;
                         buildCategoryIndices();
+
                         if (currentPageView === 'songs') {
                             const grid = document.getElementById('songsGrid');
                             if (grid) {
-                                // Grid exists, populate it with songs
-                                loadMoreSongs(true);
+                                // For sorted modes: display 1 song from middle position
+                                // This allows earlier songs to FLIP in before it
+                                if (currentSortOrder !== 'random') {
+                                    // Sort first to know correct order
+                                    applyFiltersQuiet(false);
+                                    // Seed with song at position 49 (or last if less)
+                                    const seedPosition = Math.min(49, filteredSongs.length - 1);
+                                    const seedSong = filteredSongs[seedPosition];
+                                    const seedIdx = allSongs.indexOf(seedSong);
+
+                                    // Create the seed element
+                                    const seedHtml = createSongCard(seedSong, seedIdx, seedPosition);
+                                    grid.insertAdjacentHTML('beforeend', seedHtml);
+                                    songsLazyState.currentIndex = 1;
+
+                                    // Mark only this song as seen
+                                    seenSongIds = new Set([seedSong.rowId || seedSong.name]);
+                                    console.log(`First batch: seeded with song at position ${seedPosition} (alphabetical mode)`);
+                                } else {
+                                    // Shuffle mode: display first song normally
+                                    songsLazyState.batchSize = 1;
+                                    loadMoreSongs(true);
+                                    songsLazyState.batchSize = 50;
+
+                                    const displayedSongs = filteredSongs.slice(0, 1);
+                                    seenSongIds = new Set(displayedSongs.map(s => s.rowId || s.name));
+                                    console.log(`First batch: marked ${seenSongIds.size} displayed song as seen (shuffle mode)`);
+                                }
                             } else {
-                                // No grid yet, render the full page
                                 renderCurrentPage();
+                                seenSongIds = new Set(allSongs.map(s => s.rowId || s.name));
+                            }
+                        } else {
+                            seenSongIds = new Set(allSongs.map(s => s.rowId || s.name));
+                        }
+                    } else if (!isFirstBatch) {
+                        // Subsequent batches: identify new songs (not in displayed set)
+                        const newSongs = allSongs.filter(s => {
+                            const id = s.rowId || s.name;
+                            return !seenSongIds.has(id);
+                        });
+
+                        // Add new songs to seen set
+                        newSongs.forEach(s => seenSongIds.add(s.rowId || s.name));
+
+                        console.log(`FLIP check: newSongs=${newSongs.length}, currentSortOrder=${currentSortOrder}`);
+
+                        // FLIP for ALL sort modes - show songs popping in
+                        if (currentPageView === 'songs' && newSongs.length > 0) {
+                            const grid = document.getElementById('songsGrid');
+                            if (grid && grid.children.length > 0) {
+                                updateSongsListWithNewSongs(newSongs);
                             }
                         }
                     }
@@ -12459,6 +12523,7 @@
 
             // Setup infinite scroll observer
             const observer = new IntersectionObserver((entries) => {
+                console.log(`IntersectionObserver: isIntersecting=${entries[0].isIntersecting}, songsFullyLoaded=${songsFullyLoaded}`);
                 // Only load more if songs are fully loaded from API and user is scrolling
                 if (entries[0].isIntersecting && songsFullyLoaded) {
                     loadMoreSongs(true); // true = animate new items
@@ -12477,6 +12542,8 @@
         // Load more songs (for infinite scroll)
         // animate parameter controls if new items should pop in (only for user scroll)
         function loadMoreSongs(animate = false) {
+            console.log(`loadMoreSongs called: isFlipping=${isFlipping}, isLoading=${songsLazyState.isLoading}, currentIndex=${songsLazyState.currentIndex}, filteredLength=${filteredSongs.length}`);
+            if (isFlipping) return; // Don't interfere with FLIP animation
             if (songsLazyState.isLoading) return;
             if (songsLazyState.currentIndex >= filteredSongs.length) return;
 
@@ -12530,17 +12597,19 @@
                 });
             }
 
-            // Animation for first batch (staggered fade from bottom-up - matches home page style)
+            // Animation for first batch - same pop-in style as FLIP new elements
             if (songsLazyState.isInitialLoad && existingCount === 0) {
                 const newItems = Array.from(grid.children);
                 newItems.forEach((item, i) => {
+                    // Start hidden with scale - same as FLIP
                     item.style.opacity = '0';
-                    item.style.transform = 'translateY(50px) scale(0.97)';
+                    item.style.transform = 'scale(0.9)';
+                    // Pop in with elastic effect - same as FLIP
                     setTimeout(() => {
-                        item.style.transition = 'opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
+                        item.style.transition = 'opacity 0.3s ease-out, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
                         item.style.opacity = '1';
-                        item.style.transform = 'translateY(0) scale(1)';
-                    }, i * 30);
+                        item.style.transform = 'scale(1)';
+                    }, 50 + i * 25); // Faster stagger for first batch
                 });
             }
 
@@ -13184,6 +13253,12 @@
                             item.style.transform = 'translateY(0)';
                         }, i * 20);
                     });
+
+                    // Only mark the DISPLAYED songs as "seen" (first 50, not all)
+                    // This allows subsequent batches to FLIP into positions 0-49
+                    const displayedSongs = filteredSongs.slice(0, 50);
+                    seenSongIds = new Set(displayedSongs.map(s => s.rowId || s.name));
+                    console.log(`Sort change: marked ${seenSongIds.size} displayed songs as seen (not all ${allSongs.length})`);
                 });
             }, 250);
         }
@@ -13227,8 +13302,17 @@
                 return !displayedSongIdxs.has(idx);
             });
 
-            // If no songs to add or too many changes, just reload quietly (no animation)
-            if (songsToAdd.length === 0 || songsToAdd.length > 50) {
+            console.log(`FLIP: ${songsToAdd.length} songs to add out of ${newFilteredBatch.length}`);
+
+            // If no songs to add, nothing to do - just return
+            if (songsToAdd.length === 0) {
+                console.log('FLIP: No new songs in visible range, skipping');
+                return;
+            }
+
+            // If too many changes, just reload quietly (no animation)
+            if (songsToAdd.length > 300) {
+                console.log('FLIP: Too many songs to animate, reloading quietly');
                 songsLazyState = {
                     currentIndex: 0,
                     batchSize: 50,
@@ -13332,6 +13416,143 @@
             updateSongsCount();
         }
 
+        // FLIP animation for specific new songs from API batch
+        // newSongs: array of song objects that are new from this batch
+        function updateSongsListWithNewSongs(newSongs) {
+            isFlipping = true; // Block loadMoreSongs during FLIP
+
+            const grid = document.getElementById('songsGrid');
+            if (!grid) {
+                isFlipping = false;
+                return;
+            }
+
+            const existingItems = Array.from(grid.children);
+            if (existingItems.length === 0) {
+                isFlipping = false;
+                return;
+            }
+
+            // Get the index range we're currently displaying
+            const displayedCount = existingItems.length;
+
+            // Find which new songs should be inserted in the visible range
+            const newSongIds = new Set(newSongs.map(s => s.rowId || s.name));
+            // Always check first 50 positions to ensure FLIP works at top of list
+            const visibleRange = Math.max(displayedCount + 20, 50);
+            const songsToInsert = filteredSongs.slice(0, visibleRange).filter(song => {
+                const id = song.rowId || song.name;
+                return newSongIds.has(id);
+            });
+
+            console.log(`FLIP with new songs: ${songsToInsert.length} to insert in visible range`);
+
+            if (songsToInsert.length === 0 || songsToInsert.length > 100) {
+                // No new songs in visible range or too many - skip animation
+                isFlipping = false;
+                return;
+            }
+
+            // Step 1 (First): Record positions of existing items
+            const firstPositions = new Map();
+            existingItems.forEach(item => {
+                const idx = item.getAttribute('data-song-idx');
+                firstPositions.set(idx, item.getBoundingClientRect());
+            });
+
+            // Step 2: Insert new songs at correct sorted positions
+            const playlistIndices = filteredSongs.map(song => allSongs.indexOf(song));
+            const newElements = [];
+
+            songsToInsert.forEach(song => {
+                const globalIdx = allSongs.indexOf(song);
+
+                // Skip if song already exists in grid
+                if (grid.querySelector(`[data-song-idx="${globalIdx}"]`)) return;
+
+                const displayNum = playlistIndices.indexOf(globalIdx) + 1;
+                const html = renderSongItem(song, globalIdx, displayNum, playlistIndices);
+
+                const template = document.createElement('template');
+                template.innerHTML = html.trim();
+                const newElement = template.content.firstChild;
+
+                // Find insertion point based on position in filteredSongs
+                const songPosInFiltered = filteredSongs.indexOf(song);
+                let insertBefore = null;
+
+                for (const existingItem of grid.children) {
+                    const existingIdx = parseInt(existingItem.getAttribute('data-song-idx'));
+                    const existingSong = allSongs[existingIdx];
+                    if (existingSong) {
+                        const existingPosInFiltered = filteredSongs.indexOf(existingSong);
+                        if (songPosInFiltered < existingPosInFiltered) {
+                            insertBefore = existingItem;
+                            break;
+                        }
+                    }
+                }
+
+                if (insertBefore) {
+                    const insertIndex = Array.from(grid.children).indexOf(insertBefore);
+                    console.log(`FLIP: Inserting at position ${insertIndex}`);
+                    grid.insertBefore(newElement, insertBefore);
+                } else {
+                    console.log(`FLIP: Appending at end (position ${grid.children.length})`);
+                    grid.appendChild(newElement);
+                }
+
+                newElements.push(newElement);
+            });
+
+            console.log(`FLIP: Actually inserted ${newElements.length} new elements`);
+
+            // Step 3 (Last + Invert + Play): Animate
+            requestAnimationFrame(() => {
+                // Animate existing items that moved down
+                existingItems.forEach(item => {
+                    if (!item.isConnected) return;
+
+                    const idx = item.getAttribute('data-song-idx');
+                    const first = firstPositions.get(idx);
+                    if (!first) return;
+
+                    const last = item.getBoundingClientRect();
+                    const deltaY = first.top - last.top;
+
+                    if (Math.abs(deltaY) > 1) {
+                        item.style.transition = 'none';
+                        item.style.transform = `translateY(${deltaY}px)`;
+
+                        requestAnimationFrame(() => {
+                            item.style.transition = 'transform 0.4s cubic-bezier(0.4, 0, 0.2, 1)';
+                            item.style.transform = 'translateY(0)';
+                        });
+                    }
+                });
+
+                // Animate new items with pop-in effect
+                newElements.forEach((item, i) => {
+                    // Start hidden with small scale
+                    item.style.opacity = '0';
+                    item.style.transform = 'scale(0.8)';
+
+                    // Pop in with staggered timing
+                    setTimeout(() => {
+                        item.style.transition = 'opacity 0.3s ease-out, transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                        item.style.opacity = '1';
+                        item.style.transform = 'scale(1)';
+                    }, 50 + i * 30); // Staggered delay
+                });
+            });
+
+            // Update lazy state
+            songsLazyState.currentIndex = grid.children.length;
+            console.log(`FLIP: Grid now has ${grid.children.length} total children`);
+
+            // Allow loadMoreSongs to work again after FLIP is done
+            isFlipping = false;
+        }
 
         // Update songs count display
         function updateSongsCount() {
