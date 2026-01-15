@@ -920,18 +920,18 @@
         @keyframes fadeInUpTransform {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(50px) scale(0.97);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
         .stagger-fade-up {
             opacity: 0;
-            animation: fadeInUpTransform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+            animation: fadeInUpTransform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) both;
             will-change: transform, opacity;
         }
 
@@ -995,7 +995,8 @@
         }
 
         /* Page transition animation (LTR - left to right) */
-        @keyframes pageSlideIn {
+        /* Forward navigation: enter from left */
+        @keyframes pageSlideInFromLeft {
             from {
                 opacity: 0;
                 transform: translateX(-50px);
@@ -1007,7 +1008,8 @@
             }
         }
 
-        @keyframes pageSlideOut {
+        /* Forward navigation: exit to right */
+        @keyframes pageSlideOutToRight {
             from {
                 opacity: 1;
                 transform: translateX(0);
@@ -1019,45 +1021,83 @@
             }
         }
 
-        /* Home page specific animation (bottom to top) */
+        /* Backward navigation: enter from right */
+        @keyframes pageSlideInFromRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* Backward navigation: exit to left */
+        @keyframes pageSlideOutToLeft {
+            from {
+                opacity: 1;
+                transform: translateX(0);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+        }
+
+        /* Home page specific animation (enter from bottom - dramatic) */
         @keyframes pageSlideInUp {
             from {
                 opacity: 0;
-                transform: translateY(50px);
+                transform: translateY(80px) scale(0.97);
             }
 
             to {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateY(0) scale(1);
             }
         }
 
-        @keyframes pageSlideOutDown {
+        /* Home page exit (all to right) */
+        @keyframes homePageExitRight {
             from {
                 opacity: 1;
-                transform: translateY(0);
+                transform: translateX(0);
             }
 
             to {
                 opacity: 0;
-                transform: translateY(-50px);
+                transform: translateX(50px);
             }
         }
 
+        /* Content page transitions - forward */
         .page-enter {
-            animation: pageSlideIn 0.35s ease-out forwards;
+            animation: pageSlideInFromLeft 0.35s ease-out forwards;
         }
 
         .page-exit {
-            animation: pageSlideOut 0.2s ease-in forwards;
+            animation: pageSlideOutToRight 0.2s ease-in forwards;
         }
 
+        /* Content page transitions - backward */
+        .page-enter-back {
+            animation: pageSlideInFromRight 0.35s ease-out forwards;
+        }
+
+        .page-exit-back {
+            animation: pageSlideOutToLeft 0.2s ease-in forwards;
+        }
+
+        /* Home page transitions */
         .page-enter-up {
-            animation: pageSlideInUp 0.35s ease-out forwards;
+            animation: pageSlideInUp 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
         }
 
-        .page-exit-down {
-            animation: pageSlideOutDown 0.2s ease-in forwards;
+        .page-exit-home {
+            animation: homePageExitRight 0.2s ease-in forwards;
         }
 
         /* Info page fade animation - no directional movement */
@@ -10941,8 +10981,18 @@
             }
         }
 
+        // Flag to prevent duplicate fetches
+        let songsCurrentlyLoading = false;
+
         // Fetch songs in background with pagination - OPTIMIZED: first 50 items initially
         async function fetchSongsInBackground() {
+            // Prevent duplicate fetches
+            if (songsCurrentlyLoading) {
+                console.log('⏳ Songs already loading, skipping duplicate fetch');
+                return;
+            }
+            songsCurrentlyLoading = true;
+
             try {
                 // Check cache first
                 const cachedSongs = getCachedData('songs');
@@ -10955,8 +11005,14 @@
                     buildCategoryIndices();
                     updateNavCounts();
                     if (currentPageView === 'songs') {
-                        renderCurrentPage();
+                        // Only update the songs grid, not the whole page
+                        updateSongsCount();
+                        const grid = document.getElementById('songsGrid');
+                        if (grid && grid.children.length === 0) {
+                            loadMoreSongs(true);
+                        }
                     }
+                    songsCurrentlyLoading = false;
                     return;
                 }
 
@@ -10987,7 +11043,13 @@
                         applyFiltersQuiet();  // Quiet version to avoid fade animation
                         buildCategoryIndices();
                         if (currentPageView === 'songs') {
-                            renderCurrentPage();
+                            // Only update the songs grid, not the whole page
+                            updateSongsCount();
+                            const grid = document.getElementById('songsGrid');
+                            if (grid && grid.children.length === 0) {
+                                // Grid is empty (showing skeleton), populate it
+                                loadMoreSongs(true);
+                            }
                         }
                     }
 
@@ -11014,8 +11076,11 @@
                     updateSongsCount();
                 }
 
+                songsCurrentlyLoading = false;
+
             } catch (error) {
                 console.error('Error loading songs:', error);
+                songsCurrentlyLoading = false;
             }
         }
 
@@ -11413,23 +11478,48 @@
         // Info pages list for special transitions
         const infoPages = ['about', 'instructions', 'stats', 'credits', 'thanks', 'terms'];
 
+        // Page order for determining navigation direction
+        const pageOrder = ['home', 'songs', 'mechabrim', 'chatzeros', 'zmanim', 'collections', 'verter', 'music', 'resources', 'documents', 'albums'];
+
+        // Get navigation direction based on page order
+        function getNavigationDirection(fromPage, toPage) {
+            const fromIdx = pageOrder.indexOf(fromPage);
+            const toIdx = pageOrder.indexOf(toPage);
+            // If one of the pages is not in the list (info pages, etc.), default to forward
+            if (fromIdx === -1 || toIdx === -1) return 'forward';
+            return toIdx > fromIdx ? 'forward' : 'backward';
+        }
+
         async function navigateTo(page) {
             hideAllDropdowns();
             const content = document.getElementById('mainContent');
             const isHomePage = page === 'home';
+            const wasHomePage = currentPageView === 'home';
             const isInfoPage = infoPages.includes(page);
             const wasInfoPage = infoPages.includes(currentPageView);
 
-            // Add exit animation - use special animation for info pages
+            // Map URL page names to internal page names
+            const internalPage = page === 'nigunim' ? 'songs' : page;
+            const direction = getNavigationDirection(currentPageView, internalPage);
+
+            // Determine exit animation class
+            let exitClass;
+            if (wasHomePage) {
+                exitClass = 'page-exit-home'; // Home always exits to right
+            } else if (wasInfoPage) {
+                exitClass = 'page-exit-info'; // Info pages just fade out
+            } else {
+                // Content pages: direction-aware
+                exitClass = direction === 'forward' ? 'page-exit' : 'page-exit-back';
+            }
+
+            // Add exit animation
             if (content && content.children.length > 0) {
-                const exitClass = wasInfoPage && isInfoPage ? 'page-exit-info' : 'page-exit';
                 content.classList.add(exitClass);
-                await new Promise(r => setTimeout(r, wasInfoPage && isInfoPage ? 150 : 200));
+                await new Promise(r => setTimeout(r, wasInfoPage ? 150 : 200));
                 content.classList.remove(exitClass);
             }
 
-            // Map URL page names to internal page names
-            const internalPage = page === 'nigunim' ? 'songs' : page;
             currentPageView = internalPage;
             currentPage = 1;
             currentDetailView = null; // Clear any detail view
@@ -11447,17 +11537,19 @@
 
             renderCurrentPage();
 
-            // Add enter animation - home page uses bottom-up, info pages use fade, others use left-to-right
-            // Skip animation for songs page to prevent visual jumps with lazy loading
-            if (content && internalPage !== 'songs') {
-                let enterClass;
-                if (isInfoPage) {
-                    enterClass = 'page-enter-info';
-                } else if (isHomePage) {
-                    enterClass = 'page-enter-up';
-                } else {
-                    enterClass = 'page-enter';
-                }
+            // Determine enter animation class
+            let enterClass;
+            if (isHomePage) {
+                enterClass = null; // Home page uses its own stagger animation, skip page transition
+            } else if (isInfoPage) {
+                enterClass = 'page-enter-info'; // Info pages just fade in
+            } else {
+                // Content pages (including songs): direction-aware
+                enterClass = direction === 'forward' ? 'page-enter' : 'page-enter-back';
+            }
+
+            // Add enter animation
+            if (content && enterClass) {
                 content.classList.add(enterClass);
                 setTimeout(() => content.classList.remove(enterClass), 350);
             }
@@ -12414,17 +12506,17 @@
                 });
             }
 
-            // Animation for first batch (staggered fade from bottom-up)
+            // Animation for first batch (staggered fade from bottom-up - matches home page style)
             if (songsLazyState.isInitialLoad && existingCount === 0) {
                 const newItems = Array.from(grid.children);
                 newItems.forEach((item, i) => {
                     item.style.opacity = '0';
-                    item.style.transform = 'translateY(20px)';
+                    item.style.transform = 'translateY(50px) scale(0.97)';
                     setTimeout(() => {
-                        item.style.transition = 'opacity 0.3s ease-out, transform 0.35s ease-out';
+                        item.style.transition = 'opacity 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1)';
                         item.style.opacity = '1';
-                        item.style.transform = 'translateY(0)';
-                    }, i * 25);
+                        item.style.transform = 'translateY(0) scale(1)';
+                    }, i * 30);
                 });
             }
 
@@ -12584,313 +12676,6 @@
             }
 
             applyFilters();
-        }
-
-        // Sort filteredSongs based on current sort order
-        function sortFilteredSongs() {
-            switch (currentSortOrder) {
-                case 'alphabetical':
-                    filteredSongs.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'he'));
-                    break;
-                case 'recent':
-                    // Sort by zugeleigt (added date) - most recent first
-                    // If zugeleigt is empty, put at the end
-                    filteredSongs.sort((a, b) => {
-                        const dateA = a.zugeleigt || '';
-                        const dateB = b.zugeleigt || '';
-                        // Empty dates go to the end
-                        if (!dateA && !dateB) return (a.name || '').localeCompare(b.name || '', 'he');
-                        if (!dateA) return 1;
-                        if (!dateB) return -1;
-                        // Compare dates (assuming format is consistent and comparable as strings)
-                        // Reverse order for most recent first
-                        return dateB.localeCompare(dateA);
-                    });
-                    break;
-                case 'random':
-                    // Fisher-Yates shuffle
-                    for (let i = filteredSongs.length - 1; i > 0; i--) {
-                        const j = Math.floor(Math.random() * (i + 1));
-                        [filteredSongs[i], filteredSongs[j]] = [filteredSongs[j], filteredSongs[i]];
-                    }
-                    break;
-            }
-        }
-
-        // Change sort order and re-apply
-        function changeSortOrder(order) {
-            currentSortOrder = order;
-            sortFilteredSongs();
-            currentPage = 1;
-
-            // Update toggle UI
-            updateSortToggleSlider(order);
-
-            // Update display with animation
-            if (currentPageView === 'songs') {
-                updateSongsListWithAnimation();
-            } else {
-                renderCurrentPage();
-            }
-        }
-
-        // Update sort toggle slider position dynamically
-        function updateSortToggleSlider(order) {
-            const toggle = document.getElementById('sortToggle');
-            if (!toggle) return;
-
-            const slider = toggle.querySelector('.sort-toggle-slider');
-            const activeOption = toggle.querySelector(`.sort-toggle-option[data-sort="${order}"]`);
-
-            if (slider && activeOption) {
-                // Get the container's bounding rect
-                const containerRect = toggle.getBoundingClientRect();
-                const optionRect = activeOption.getBoundingClientRect();
-
-                // Calculate position relative to container (RTL: use right position)
-                const rightOffset = containerRect.right - optionRect.right;
-                const width = optionRect.width;
-
-                slider.style.right = rightOffset + 'px';
-                slider.style.width = width + 'px';
-            }
-
-            // Update active class on options
-            toggle.querySelectorAll('.sort-toggle-option').forEach(opt => {
-                opt.classList.toggle('active', opt.dataset.sort === order);
-            });
-        }
-
-        // Initialize sort toggle slider position on page load
-        function initSortToggleSlider() {
-            setTimeout(() => {
-                updateSortToggleSlider(currentSortOrder);
-                updateDisplayToggleSlider(currentDisplayMode);
-                setupQualityStarsHover();
-            }, 50);
-        }
-
-        // Change display mode and re-render
-        function changeDisplayMode(mode) {
-            currentDisplayMode = mode;
-
-            // Update toggle UI
-            updateDisplayToggleSlider(mode);
-
-            // Update display with animation
-            if (currentPageView === 'songs') {
-                updateSongsListWithAnimation();
-            } else {
-                renderCurrentPage();
-            }
-        }
-
-        // Set minimum quality rating filter
-        function setMinQualityRating(rating) {
-            // Toggle off if clicking the same rating
-            if (minQualityRating === rating) {
-                minQualityRating = 0;
-            } else {
-                minQualityRating = rating;
-            }
-
-            // Update the stars UI
-            updateQualityStarsUI();
-
-            // Re-render songs list
-            if (currentPageView === 'songs') {
-                updateSongsListWithAnimation();
-            }
-        }
-
-        // Toggle recordings collapse in full mode
-        function toggleRecordingsCollapse() {
-            recordingsCollapsed = !recordingsCollapsed;
-            // Re-render songs list
-            if (currentPageView === 'songs') {
-                updateSongsListWithAnimation();
-            }
-        }
-
-        // Update quality stars UI
-        function updateQualityStarsUI() {
-            const container = document.getElementById('qualityStarsFilter');
-            if (!container) return;
-
-            const stars = container.querySelectorAll('.quality-star');
-            stars.forEach((star, idx) => {
-                const starRating = idx + 1;
-                if (minQualityRating >= starRating) {
-                    star.classList.add('active');
-                } else {
-                    star.classList.remove('active');
-                }
-            });
-
-            const clearBtn = container.querySelector('.quality-clear');
-            if (clearBtn) {
-                if (minQualityRating === 0) {
-                    clearBtn.classList.add('hidden');
-                } else {
-                    clearBtn.classList.remove('hidden');
-                }
-            }
-        }
-
-        // Setup hover handlers for quality stars (call after rendering)
-        function setupQualityStarsHover() {
-            const container = document.getElementById('qualityStarsFilter');
-            if (!container) return;
-
-            const stars = container.querySelectorAll('.quality-star');
-
-            stars.forEach((star, idx) => {
-                star.addEventListener('mouseenter', () => {
-                    container.classList.add('hovering');
-                    // Highlight all stars up to and including this one
-                    stars.forEach((s, i) => {
-                        if (i <= idx) {
-                            s.classList.add('hover-active');
-                        } else {
-                            s.classList.remove('hover-active');
-                        }
-                    });
-                });
-            });
-
-            container.addEventListener('mouseleave', () => {
-                container.classList.remove('hovering');
-                stars.forEach(s => s.classList.remove('hover-active'));
-            });
-        }
-
-        // Check if a recording meets the minimum quality threshold
-        // Unrated recordings (rating=0 or undefined) always pass so they can be discovered
-        function recordingMeetsQuality(recording) {
-            if (minQualityRating === 0) return true; // No filter
-            const rating = recording.audioRating || recording.rating || 0;
-            // Unrated recordings (0) always pass - otherwise no one will ever hear them
-            if (rating === 0) return true;
-            return rating >= minQualityRating;
-        }
-
-        // Check if a song has any recording that meets the quality threshold
-        function songHasQualityAudio(song) {
-            if (minQualityRating === 0) {
-                // No quality filter, just check if has audio
-                return song.audioUrl && song.audioUrl.startsWith('http');
-            }
-            if (!song.recordings || song.recordings.length === 0) return false;
-            return song.recordings.some(rec => recordingMeetsQuality(rec));
-        }
-
-        // Get the best quality recording for minimal mode playback
-        // Picks the highest-rated recording, randomizes among ties
-        function getBestQualityRecording(song) {
-            if (!song.recordings || song.recordings.length === 0) return null;
-
-            // Filter to quality recordings first
-            let qualityRecs = song.recordings.filter(rec => recordingMeetsQuality(rec));
-            if (qualityRecs.length === 0) return null;
-            if (qualityRecs.length === 1) return qualityRecs[0];
-
-            // Find the highest rating among quality recordings
-            let maxRating = 0;
-            qualityRecs.forEach(rec => {
-                const rating = rec.audioRating || rec.rating || 0;
-                if (rating > maxRating) maxRating = rating;
-            });
-
-            // Get all recordings with the max rating (including unrated if maxRating is 0)
-            let topRecs = qualityRecs.filter(rec => {
-                const rating = rec.audioRating || rec.rating || 0;
-                return rating === maxRating;
-            });
-
-            // Randomly pick one from the top-rated recordings
-            if (topRecs.length === 1) return topRecs[0];
-            const randomIdx = Math.floor(Math.random() * topRecs.length);
-            return topRecs[randomIdx];
-        }
-
-        // Alias for backwards compatibility
-        function getFirstQualityRecording(song) {
-            return getBestQualityRecording(song);
-        }
-
-        // Update display toggle slider position dynamically
-        function updateDisplayToggleSlider(mode) {
-            const toggle = document.getElementById('displayToggle');
-            if (!toggle) return;
-
-            const slider = toggle.querySelector('.sort-toggle-slider');
-            const activeOption = toggle.querySelector(`.sort-toggle-option[data-mode="${mode}"]`);
-
-            if (slider && activeOption) {
-                // Get the container's bounding rect
-                const containerRect = toggle.getBoundingClientRect();
-                const optionRect = activeOption.getBoundingClientRect();
-
-                // Calculate position relative to container (RTL: use right position)
-                const rightOffset = containerRect.right - optionRect.right;
-                const width = optionRect.width;
-
-                slider.style.right = rightOffset + 'px';
-                slider.style.width = width + 'px';
-            }
-
-            // Update active class on options
-            toggle.querySelectorAll('.sort-toggle-option').forEach(opt => {
-                opt.classList.toggle('active', opt.dataset.mode === mode);
-            });
-        }
-
-        // Apply filters without updating display (for use before animated update)
-        function applyFiltersQuiet() {
-            filteredSongs = allSongs.filter(song => {
-
-
-                // Check search query
-                if (searchQuery) {
-                    const query = searchQuery.toLowerCase();
-                    const matchName = song.name?.toLowerCase().includes(query);
-                    const matchMechaber = song.mechaber?.some(m => m.toLowerCase().includes(query));
-                    const matchCollection = song.collections?.some(c => c.toLowerCase().includes(query));
-                    if (!matchName && !matchMechaber && !matchCollection) return false;
-                }
-
-                // Check all active filters
-                if (activeFilters.mechaber.length > 0) {
-                    if (!activeFilters.mechaber.some(f => song.mechaber?.includes(f))) return false;
-                }
-                if (activeFilters.collection.length > 0) {
-                    if (!activeFilters.collection.some(f => song.collections?.includes(f))) return false;
-                }
-                if (activeFilters.zman.length > 0) {
-                    if (!activeFilters.zman.some(f => song.pasigOif?.includes(f))) return false;
-                }
-                if (activeFilters.scale.length > 0) {
-                    if (!activeFilters.scale.some(f => song.scale?.includes(f))) return false;
-                }
-                if (activeFilters.ritem.length > 0) {
-                    if (!activeFilters.ritem.some(f => song.ritem?.includes(f))) return false;
-                }
-                if (activeFilters.gezungen.length > 0) {
-                    if (!activeFilters.gezungen.some(f => song.gezungen?.includes(f))) return false;
-                }
-                if (activeFilters.maure.length > 0) {
-                    if (!activeFilters.maure.some(f => song.maure?.includes(f))) return false;
-                }
-                if (activeFilters.verter.length > 0) {
-                    if (!activeFilters.verter.some(f => song.verter?.includes(f))) return false;
-                }
-                if (activeFilters.chatzer.length > 0) {
-                    if (!activeFilters.chatzer.some(f => song.chatzer?.includes(f))) return false;
-                }
-                return true;
-            });
-            sortFilteredSongs();
-            currentPage = 1;
         }
 
         // Sort filteredSongs based on current sort order
@@ -13766,9 +13551,23 @@
             return null;
         }
 
+        // Track last handled hash to prevent duplicate processing
+        let lastHandledHash = '';
+        let lastHandledTime = 0;
+
         // Parse URL and navigate - with lazy loading
         async function handleURLChange() {
             const hash = window.location.hash || '#/home';
+            const now = Date.now();
+
+            // Debounce: skip if same hash was handled within 500ms
+            if (hash === lastHandledHash && (now - lastHandledTime) < 500) {
+                console.log('⏭️ Skipping duplicate handleURLChange for:', hash);
+                return;
+            }
+            lastHandledHash = hash;
+            lastHandledTime = now;
+
             console.log('handleURLChange called with hash:', hash);
             const parts = hash.substring(2).split('/'); // Remove #/ and split
 
@@ -13783,18 +13582,53 @@
             const infoPagesList = ['about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
 
             if (validPages.includes(page)) {
+                const content = document.getElementById('mainContent');
+                const previousPage = currentPageView;
+                const wasHomePage = previousPage === 'home';
+                const wasInfoPage = infoPagesList.includes(previousPage);
+                const isHomePage = page === 'home';
+                const isInfoPage = infoPagesList.includes(page);
+
+                // Map to internal page name for direction calculation
+                const targetPage = page === 'nigunim' ? 'songs' : (page === 'zman' ? 'zmanim' : page);
+                const direction = getNavigationDirection(previousPage, targetPage);
+
+                // Determine exit animation class
+                let exitClass;
+                if (wasHomePage) {
+                    exitClass = 'page-exit-home';
+                } else if (wasInfoPage) {
+                    exitClass = 'page-exit-info';
+                } else {
+                    exitClass = direction === 'forward' ? 'page-exit' : 'page-exit-back';
+                }
+
+                // Apply exit animation (only if there's existing content)
+                if (content && content.children.length > 0 && previousPage !== targetPage) {
+                    content.classList.add(exitClass);
+                    await new Promise(r => setTimeout(r, wasInfoPage ? 150 : 200));
+                    content.classList.remove(exitClass);
+                }
+
                 // Handle info pages - they don't need data loading
-                if (infoPagesList.includes(page)) {
+                if (isInfoPage) {
                     currentPageView = page;
                     currentDetailView = null;
                     renderCurrentPage();
+
+                    // Enter animation for info pages
+                    if (content) {
+                        content.classList.add('page-enter-info');
+                        setTimeout(() => content.classList.remove('page-enter-info'), 300);
+                    }
+
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
                     return;
                 }
 
                 // Show skeleton loader if data not loaded
-                const targetPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
                 if (targetPage !== 'home' && !isDataLoadedForPage(targetPage)) {
-                    const content = document.getElementById('mainContent');
                     if (content) {
                         content.innerHTML = getSkeletonForPage(targetPage);
                     }
@@ -13820,7 +13654,6 @@
 
                     // Show loading indicator and ensure data is loaded for detail pages
                     if (detailPages.includes(page) && !isDataLoadedForPage(dataPage)) {
-                        const content = document.getElementById('mainContent');
                         if (content) {
                             content.innerHTML = `
                                 <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
@@ -13883,6 +13716,24 @@
 
                     renderCurrentPage();
                 }
+
+                // Determine enter animation class
+                let enterClass;
+                if (isHomePage) {
+                    enterClass = null; // Home page uses its own stagger animation
+                } else {
+                    // Content pages (including songs): direction-aware
+                    enterClass = direction === 'forward' ? 'page-enter' : 'page-enter-back';
+                }
+
+                // Apply enter animation
+                if (content && enterClass) {
+                    content.classList.add(enterClass);
+                    setTimeout(() => content.classList.remove(enterClass), 350);
+                }
+
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
@@ -14466,10 +14317,10 @@
                                 ${chatzeros.length > 0 ? `
                                     <div class="nigun-chatzer-tags">
                                         ${chatzeros.map(chatzer => {
-                                            const cInfo = chatzerosInfo[chatzer] || {};
-                                            const cId = cInfo.customId || chatzer;
-                                            return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
-                                        }).join('')}
+                const cInfo = chatzerosInfo[chatzer] || {};
+                const cId = cInfo.customId || chatzer;
+                return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
+            }).join('')}
                                     </div>
                                 ` : ''}
                             </div>
