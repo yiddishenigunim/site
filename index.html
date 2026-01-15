@@ -13981,7 +13981,10 @@
                             content.innerHTML = `
                                 <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
                                     <div class="loading-wave-bar"></div>
-                                    <p style="color: var(--text-secondary); font-size: 14px;">לאודינג...</p>
+                                    <div style="display: flex; align-items: center; gap: 8px;">
+                                        <div class="loader-tiny"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
+                                        <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">לאודינג...</p>
+                                    </div>
                                 </div>
                             `;
                         }
