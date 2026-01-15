@@ -10039,6 +10039,26 @@
             }
         }, true);
 
+        // Hide tooltip immediately when clicking on links or navigating
+        document.addEventListener('click', (e) => {
+            if (!(e.target instanceof Element)) return;
+            const clickedElement = e.target.closest('[data-tooltip-value]');
+            if (clickedElement) {
+                forceHideTooltip();
+            }
+        }, true);
+
+        // Hide tooltip when page visibility changes or before unload
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) {
+                forceHideTooltip();
+            }
+        });
+
+        window.addEventListener('beforeunload', () => {
+            forceHideTooltip();
+        });
+
         // State
         let allSongs = [];
         let filteredSongs = [];
@@ -16081,9 +16101,19 @@
         // Hover tooltip functionality
         const hoverTooltip = document.getElementById('hoverTooltip');
         let tooltipTimeout = null;
+        let showTooltipTimeout = null;
 
         function showTooltip(event, value, fieldType) {
             clearTimeout(tooltipTimeout);
+            clearTimeout(showTooltipTimeout);
+
+            // Add a delay before showing the tooltip
+            showTooltipTimeout = setTimeout(() => {
+                performShowTooltip(event, value, fieldType);
+            }, 400);
+        }
+
+        function performShowTooltip(event, value, fieldType) {
 
             const tooltip = hoverTooltip;
             const typeEl = document.getElementById('tooltipType');
@@ -16235,9 +16265,16 @@
         }
 
         function hideTooltip() {
+            clearTimeout(showTooltipTimeout);
             tooltipTimeout = setTimeout(() => {
                 hoverTooltip.classList.remove('show');
             }, 100);
+        }
+
+        function forceHideTooltip() {
+            clearTimeout(tooltipTimeout);
+            clearTimeout(showTooltipTimeout);
+            hoverTooltip.classList.remove('show');
         }
 
         // Create meta links for song items (handles multiple comma-separated values)
