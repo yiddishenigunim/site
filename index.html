@@ -14441,12 +14441,62 @@
             `;
         }
 
+        // Helper function to convert Coda internal links to site links
+        function convertCodaLinkToSiteLink(linkText, url) {
+            // Check if it's a Coda link
+            if (!url.includes('coda.io')) {
+                return null; // Not a Coda link
+            }
+
+            // Try to find the entity by the link text (which is usually the entity name)
+            const searchText = linkText.trim();
+
+            // Try to find in mechabrim
+            let found = findItemByIdOrName('mechabrim', searchText);
+            if (found) {
+                const displayId = found.customId || found.name;
+                return `#/mechabrim/${encodeURIComponent(displayId)}`;
+            }
+
+            // Try to find in verter
+            found = findItemByIdOrName('verter', searchText);
+            if (found) {
+                const displayId = found.customId || found.name;
+                return `#/verter/${encodeURIComponent(displayId)}`;
+            }
+
+            // Try to find in chatzeros
+            found = findItemByIdOrName('chatzeros', searchText);
+            if (found) {
+                const displayId = found.customId || found.name;
+                return `#/chatzeros/${encodeURIComponent(displayId)}`;
+            }
+
+            // Try to find in nigunim
+            found = findItemByIdOrName('nigunim', searchText);
+            if (found) {
+                const displayId = found.customId || found.name;
+                return `#/nigunim/${encodeURIComponent(displayId)}`;
+            }
+
+            // If we can't find a match, return null to use the original link
+            return null;
+        }
+
         // Format description text (handle markdown-like formatting)
         function formatDescription(text) {
             if (!text) return '';
 
-            // Convert markdown links [text](url) to HTML
-            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+            // Convert markdown links [text](url) to HTML, with special handling for Coda links
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, url) => {
+                // Try to convert Coda links to site links
+                const siteLink = convertCodaLinkToSiteLink(linkText, url);
+                if (siteLink) {
+                    return `<a href="${siteLink}">${linkText}</a>`;
+                }
+                // For non-Coda links or unmatched Coda links, use target="_blank"
+                return `<a href="${url}" target="_blank">${linkText}</a>`;
+            });
 
             // Convert **bold** to <strong>
             text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -14795,7 +14845,7 @@
                         <div class="nigun-section">
                             <h3>אינפארמאציע</h3>
                             <div class="nigun-section-content">
-                                <div class="nigun-info-text">${song.info}</div>
+                                <div class="nigun-info-text">${formatDescription(song.info)}</div>
                             </div>
                         </div>
                     ` : ''}
@@ -14846,7 +14896,7 @@
                             <h3>צוגאבן</h3>
                             <div class="nigun-other-media-content">
                                 ${song.otherMedia.text ? `
-                                    <div class="nigun-other-media-text">${song.otherMedia.text}</div>
+                                    <div class="nigun-other-media-text">${formatDescription(song.otherMedia.text)}</div>
                                 ` : ''}
 
                                 ${song.otherMedia.audio.length > 0 ? `
