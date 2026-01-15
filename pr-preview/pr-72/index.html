@@ -148,115 +148,28 @@
             position: relative;
         }
 
-        /* Musical notes loader animation */
-        .loader-tiny {
-            position: relative;
-            width: 30px;
-            height: 18px;
+        /* Loading ball animation */
+        .loading-ball {
             display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--color-nigun);
+            border-radius: 50%;
             margin-left: 6px;
-            vertical-align: middle;
+            animation: loadingPulse 1s infinite ease-in-out;
         }
 
-        .loader-tiny .note {
-            position: absolute;
-            bottom: 0;
-            color: var(--color-nigun);
-            font-size: 12px;
-            opacity: 0;
-            animation: floatTiny 2.5s infinite ease-out;
-        }
+        @keyframes loadingPulse {
 
-        .loader-tiny .note:nth-child(1) {
-            left: 0;
-            animation-delay: 0s;
-        }
-
-        .loader-tiny .note:nth-child(2) {
-            left: 40%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            animation-delay: 0.8s;
-        }
-
-        .loader-tiny .note:nth-child(3) {
-            right: 0;
-            font-size: 11px;
-            animation-delay: 1.4s;
-        }
-
-        @keyframes floatTiny {
-            0% {
-                transform: translateY(2px) rotate(-15deg) scale(0.8);
-                opacity: 0;
-            }
-
-            15% {
+            0%,
+            100% {
+                transform: scale(1);
                 opacity: 1;
             }
 
-            70% {
-                opacity: 0.9;
-            }
-
-            100% {
-                transform: translateY(-14px) rotate(15deg) scale(1.1);
-                opacity: 0;
-            }
-        }
-
-        /* Medium loader for detail pages */
-        .loader-medium {
-            position: relative;
-            width: 80px;
-            height: 50px;
-            display: inline-block;
-        }
-
-        .loader-medium .note {
-            position: absolute;
-            bottom: 0;
-            color: var(--color-nigun);
-            font-size: 32px;
-            opacity: 0;
-            animation: floatMedium 2.5s infinite ease-out;
-        }
-
-        .loader-medium .note:nth-child(1) {
-            left: 0;
-            animation-delay: 0s;
-        }
-
-        .loader-medium .note:nth-child(2) {
-            left: 40%;
-            transform: translateX(-50%);
-            font-size: 28px;
-            animation-delay: 0.8s;
-        }
-
-        .loader-medium .note:nth-child(3) {
-            right: 0;
-            font-size: 30px;
-            animation-delay: 1.4s;
-        }
-
-        @keyframes floatMedium {
-            0% {
-                transform: translateY(5px) rotate(-15deg) scale(0.8);
-                opacity: 0;
-            }
-
-            15% {
-                opacity: 1;
-            }
-
-            70% {
-                opacity: 0.9;
-            }
-
-            100% {
-                transform: translateY(-40px) rotate(15deg) scale(1.1);
-                opacity: 0;
+            50% {
+                transform: scale(1.3);
+                opacity: 0.6;
             }
         }
 
@@ -11456,7 +11369,7 @@
                     ritem: extractText(values['c-OmWEZXO7Ys']),
                     gezungen: extractText(values['c-kiHIam57Z0']),
                     collections: extractText(values['c-pCBFiGU8ex']),
-                    zugeleigt: extractText(values['c-iOlvD8H0n3']), // צוגעלייגט אום 
+                    zugeleigt: extractText(values['c-iOlvD8H0n3']),
                     pasigOif: extractText(values['c-mTtYp3FK9U']), // פאסיג אויף / זמנים
                     maure: extractText(values['c-J3q8mQIXBh']), // מאורע
                     info: extractText(values['c-0jFLHVYRL8']),
@@ -12526,7 +12439,7 @@
                     <div class="page-title">
                         <div class="page-title-bar">ניגונים</div>
                         <div class="page-title-content">
-                            <div class="subtitle ${!songsFullyLoaded ? 'loading-state' : ''}">${!songsFullyLoaded ? '<div class="loader-tiny"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div> ' : ''}<span class="count-number">${filteredSongs.length}</span> ניגונים</div>
+                            <div class="subtitle ${!songsFullyLoaded ? 'loading-state' : ''}">${!songsFullyLoaded ? '<span class="loading-ball"></span> ' : ''}<span class="count-number">${filteredSongs.length}</span> ניגונים</div>
                             <div class="loading-wave-bar" id="loadingWaveBar"></div>
                         </div>
                     </div>
@@ -13692,23 +13605,23 @@
 
             // If still loading from API
             if (!songsFullyLoaded) {
-                // Show loading state with musical notes + count up
-                let loader = subtitle.querySelector('.loader-tiny');
-                if (!loader) {
-                    subtitle.innerHTML = `<div class="loader-tiny"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div> <span class="count-number">0</span> ניגונים`;
+                // Show loading state with ball + count up
+                let ball = subtitle.querySelector('.loading-ball');
+                if (!ball) {
+                    subtitle.innerHTML = `<span class="loading-ball"></span> <span class="count-number">0</span> ניגונים`;
                     countSpan = subtitle.querySelector('.count-number');
                 }
                 subtitle.classList.add('loading-state');
                 // Animate count up
                 animateCountUp(countSpan, count, 800, '');
             } else {
-                // Loading complete - fade out loader, keep counting
+                // Loading complete - fade out ball, keep counting
                 if (subtitle.classList.contains('loading-state')) {
-                    const loader = subtitle.querySelector('.loader-tiny');
-                    if (loader) {
-                        loader.style.transition = 'opacity 0.3s ease-out';
-                        loader.style.opacity = '0';
-                        setTimeout(() => loader.remove(), 300);
+                    const ball = subtitle.querySelector('.loading-ball');
+                    if (ball) {
+                        ball.style.transition = 'opacity 0.3s ease-out';
+                        ball.style.opacity = '0';
+                        setTimeout(() => ball.remove(), 300);
                     }
                     subtitle.classList.remove('loading-state');
                 }
@@ -14037,10 +13950,7 @@
                             content.innerHTML = `
                                 <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
                                     <div class="loading-wave-bar"></div>
-                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
-                                        <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                                        <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאודינג...</p>
-                                    </div>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">לאודינג...</p>
                                 </div>
                             `;
                         }
@@ -14139,10 +14049,7 @@
                     content.innerHTML = `
                         <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
                             <div class="loading-wave-bar"></div>
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
-                                <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                                <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאודינג ${name}...</p>
-                            </div>
+                            <p style="color: var(--text-secondary); font-size: 14px;">לאודינג ${name}...</p>
                         </div>
                     `;
                 }
@@ -17728,9 +17635,8 @@
                             <div class="subtitle">לאודינג רעזולטאטן...</div>
                         </div>
                     </div>
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 16px;">
-                        <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                        <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאדינג רעזולטאטן...</p>
+                    <div class="loading-songs-message">
+                        <div class="loading-spinner"></div>
                     </div>
                 </div>
             `;
@@ -17759,10 +17665,12 @@
                 <div class="page-theme-nigun">
                     <div class="page-title">
                         <div class="page-title-bar">זוכט "${term}"...</div>
+                        <div class="page-title-content">
+                            <div class="subtitle">לאדינג רעזולטאטן...</div>
+                        </div>
                     </div>
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 16px;">
-                        <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                        <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאדינג רעזולטאטן...</p>
+                    <div class="loading-songs-message">
+                        <div class="loading-spinner"></div>
                     </div>
                 </div>
             `;

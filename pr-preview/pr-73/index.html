@@ -148,115 +148,28 @@
             position: relative;
         }
 
-        /* Musical notes loader animation */
-        .loader-tiny {
-            position: relative;
-            width: 30px;
-            height: 18px;
+        /* Loading ball animation */
+        .loading-ball {
             display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: var(--color-nigun);
+            border-radius: 50%;
             margin-left: 6px;
-            vertical-align: middle;
+            animation: loadingPulse 1s infinite ease-in-out;
         }
 
-        .loader-tiny .note {
-            position: absolute;
-            bottom: 0;
-            color: var(--color-nigun);
-            font-size: 12px;
-            opacity: 0;
-            animation: floatTiny 2.5s infinite ease-out;
-        }
+        @keyframes loadingPulse {
 
-        .loader-tiny .note:nth-child(1) {
-            left: 0;
-            animation-delay: 0s;
-        }
-
-        .loader-tiny .note:nth-child(2) {
-            left: 40%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            animation-delay: 0.8s;
-        }
-
-        .loader-tiny .note:nth-child(3) {
-            right: 0;
-            font-size: 11px;
-            animation-delay: 1.4s;
-        }
-
-        @keyframes floatTiny {
-            0% {
-                transform: translateY(2px) rotate(-15deg) scale(0.8);
-                opacity: 0;
-            }
-
-            15% {
+            0%,
+            100% {
+                transform: scale(1);
                 opacity: 1;
             }
 
-            70% {
-                opacity: 0.9;
-            }
-
-            100% {
-                transform: translateY(-14px) rotate(15deg) scale(1.1);
-                opacity: 0;
-            }
-        }
-
-        /* Medium loader for detail pages */
-        .loader-medium {
-            position: relative;
-            width: 80px;
-            height: 50px;
-            display: inline-block;
-        }
-
-        .loader-medium .note {
-            position: absolute;
-            bottom: 0;
-            color: var(--color-nigun);
-            font-size: 32px;
-            opacity: 0;
-            animation: floatMedium 2.5s infinite ease-out;
-        }
-
-        .loader-medium .note:nth-child(1) {
-            left: 0;
-            animation-delay: 0s;
-        }
-
-        .loader-medium .note:nth-child(2) {
-            left: 40%;
-            transform: translateX(-50%);
-            font-size: 28px;
-            animation-delay: 0.8s;
-        }
-
-        .loader-medium .note:nth-child(3) {
-            right: 0;
-            font-size: 30px;
-            animation-delay: 1.4s;
-        }
-
-        @keyframes floatMedium {
-            0% {
-                transform: translateY(5px) rotate(-15deg) scale(0.8);
-                opacity: 0;
-            }
-
-            15% {
-                opacity: 1;
-            }
-
-            70% {
-                opacity: 0.9;
-            }
-
-            100% {
-                transform: translateY(-40px) rotate(15deg) scale(1.1);
-                opacity: 0;
+            50% {
+                transform: scale(1.3);
+                opacity: 0.6;
             }
         }
 
@@ -11456,7 +11369,7 @@
                     ritem: extractText(values['c-OmWEZXO7Ys']),
                     gezungen: extractText(values['c-kiHIam57Z0']),
                     collections: extractText(values['c-pCBFiGU8ex']),
-                    zugeleigt: extractText(values['c-iOlvD8H0n3']), // צוגעלייגט אום 
+                    zugeleigt: extractText(values['c-iOlvD8H0n3']),
                     pasigOif: extractText(values['c-mTtYp3FK9U']), // פאסיג אויף / זמנים
                     maure: extractText(values['c-J3q8mQIXBh']), // מאורע
                     info: extractText(values['c-0jFLHVYRL8']),
@@ -12526,7 +12439,7 @@
                     <div class="page-title">
                         <div class="page-title-bar">ניגונים</div>
                         <div class="page-title-content">
-                            <div class="subtitle ${!songsFullyLoaded ? 'loading-state' : ''}">${!songsFullyLoaded ? '<div class="loader-tiny"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div> ' : ''}<span class="count-number">${filteredSongs.length}</span> ניגונים</div>
+                            <div class="subtitle ${!songsFullyLoaded ? 'loading-state' : ''}">${!songsFullyLoaded ? '<span class="loading-ball"></span> ' : ''}<span class="count-number">${filteredSongs.length}</span> ניגונים</div>
                             <div class="loading-wave-bar" id="loadingWaveBar"></div>
                         </div>
                     </div>
@@ -13692,23 +13605,23 @@
 
             // If still loading from API
             if (!songsFullyLoaded) {
-                // Show loading state with musical notes + count up
-                let loader = subtitle.querySelector('.loader-tiny');
-                if (!loader) {
-                    subtitle.innerHTML = `<div class="loader-tiny"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div> <span class="count-number">0</span> ניגונים`;
+                // Show loading state with ball + count up
+                let ball = subtitle.querySelector('.loading-ball');
+                if (!ball) {
+                    subtitle.innerHTML = `<span class="loading-ball"></span> <span class="count-number">0</span> ניגונים`;
                     countSpan = subtitle.querySelector('.count-number');
                 }
                 subtitle.classList.add('loading-state');
                 // Animate count up
                 animateCountUp(countSpan, count, 800, '');
             } else {
-                // Loading complete - fade out loader, keep counting
+                // Loading complete - fade out ball, keep counting
                 if (subtitle.classList.contains('loading-state')) {
-                    const loader = subtitle.querySelector('.loader-tiny');
-                    if (loader) {
-                        loader.style.transition = 'opacity 0.3s ease-out';
-                        loader.style.opacity = '0';
-                        setTimeout(() => loader.remove(), 300);
+                    const ball = subtitle.querySelector('.loading-ball');
+                    if (ball) {
+                        ball.style.transition = 'opacity 0.3s ease-out';
+                        ball.style.opacity = '0';
+                        setTimeout(() => ball.remove(), 300);
                     }
                     subtitle.classList.remove('loading-state');
                 }
@@ -14037,10 +13950,7 @@
                             content.innerHTML = `
                                 <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
                                     <div class="loading-wave-bar"></div>
-                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
-                                        <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                                        <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאודינג...</p>
-                                    </div>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">לאודינג...</p>
                                 </div>
                             `;
                         }
@@ -14139,10 +14049,7 @@
                     content.innerHTML = `
                         <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
                             <div class="loading-wave-bar"></div>
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
-                                <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                                <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאודינג ${name}...</p>
-                            </div>
+                            <p style="color: var(--text-secondary); font-size: 14px;">לאודינג ${name}...</p>
                         </div>
                     `;
                 }
@@ -14534,155 +14441,12 @@
             `;
         }
 
-        // Helper function to convert Coda internal links to site links
-        function convertCodaLinkToSiteLink(linkText, url) {
-            // Check if it's a Coda link
-            if (!url.includes('coda.io')) {
-                return null; // Not a Coda link
-            }
-
-            // Extract rowId from Coda URL
-            // Coda URLs can have formats like:
-            // https://coda.io/d/{docId}/...#_{tablePrefix}-{rowId}
-            // https://coda.io/d/{docId}#...{rowId}
-            // The rowId typically starts with 'i-' followed by alphanumeric characters
-            let rowId = null;
-
-            // Try to extract from hash fragment
-            const hashMatch = url.match(/#.*?(i-[a-zA-Z0-9_-]+)/);
-            if (hashMatch) {
-                rowId = hashMatch[1];
-            }
-
-            // If we found a rowId, search for it across all entities
-            if (rowId) {
-                // Search in nigunim
-                const song = allSongs.find(s => s.rowId === rowId);
-                if (song) {
-                    const displayId = song.customId || song.name;
-                    return `#/nigunim/${encodeURIComponent(displayId)}`;
-                }
-
-                // Search in mechabrim
-                for (const [name, info] of Object.entries(mechabrimInfo)) {
-                    if (info.rowId === rowId) {
-                        const displayId = info.customId || name;
-                        return `#/mechabrim/${encodeURIComponent(displayId)}`;
-                    }
-                }
-
-                // Search in verter
-                for (const [name, info] of Object.entries(verterInfo)) {
-                    if (info.rowId === rowId) {
-                        const displayId = info.customId || name;
-                        return `#/verter/${encodeURIComponent(displayId)}`;
-                    }
-                }
-
-                // Search in chatzeros
-                for (const [name, info] of Object.entries(chatzerosInfo)) {
-                    if (info.rowId === rowId) {
-                        const displayId = info.customId || name;
-                        return `#/chatzeros/${encodeURIComponent(displayId)}`;
-                    }
-                }
-
-                // Search in zmanim/piyutim
-                for (const [name, info] of Object.entries(zmaninInfo)) {
-                    if (info.rowId === rowId) {
-                        const displayId = info.customId || name;
-                        return `#/zman/${encodeURIComponent(displayId)}`;
-                    }
-                }
-                for (const [name, info] of Object.entries(piyutimInfo)) {
-                    if (info.rowId === rowId) {
-                        const displayId = info.customId || name;
-                        return `#/zman/${encodeURIComponent(displayId)}`;
-                    }
-                }
-
-                // Search in collections
-                for (const [name, info] of Object.entries(collectionsInfo)) {
-                    if (info.rowId === rowId) {
-                        const displayId = info.customId || name;
-                        return `#/collections/${encodeURIComponent(displayId)}`;
-                    }
-                }
-
-                // Search in albums
-                for (const [name, info] of Object.entries(albumsInfo)) {
-                    if (info.rowId === rowId) {
-                        const displayId = info.customId || name;
-                        return `#/albums/${encodeURIComponent(displayId)}`;
-                    }
-                }
-
-                // Search in documents
-                for (const [name, info] of Object.entries(documentsInfo)) {
-                    if (info.rowId === rowId) {
-                        const displayId = info.customId || name;
-                        return `#/documents/${encodeURIComponent(displayId)}`;
-                    }
-                }
-
-                // Search in resources
-                for (const [name, info] of Object.entries(resourcesInfo)) {
-                    if (info.rowId === rowId) {
-                        const displayId = info.customId || name;
-                        return `#/resources/${encodeURIComponent(displayId)}`;
-                    }
-                }
-            }
-
-            // If no rowId found or no match, try searching by name as fallback
-            const searchText = linkText.trim();
-
-            // Try to find in nigunim by name
-            let found = findItemByIdOrName('nigunim', searchText);
-            if (found) {
-                const displayId = found.customId || found.name;
-                return `#/nigunim/${encodeURIComponent(displayId)}`;
-            }
-
-            // Try to find in mechabrim by name
-            found = findItemByIdOrName('mechabrim', searchText);
-            if (found) {
-                const displayId = found.customId || found.name;
-                return `#/mechabrim/${encodeURIComponent(displayId)}`;
-            }
-
-            // Try to find in verter by name
-            found = findItemByIdOrName('verter', searchText);
-            if (found) {
-                const displayId = found.customId || found.name;
-                return `#/verter/${encodeURIComponent(displayId)}`;
-            }
-
-            // Try to find in chatzeros by name
-            found = findItemByIdOrName('chatzeros', searchText);
-            if (found) {
-                const displayId = found.customId || found.name;
-                return `#/chatzeros/${encodeURIComponent(displayId)}`;
-            }
-
-            // If we can't find a match, return null to use the original link
-            return null;
-        }
-
         // Format description text (handle markdown-like formatting)
         function formatDescription(text) {
             if (!text) return '';
 
-            // Convert markdown links [text](url) to HTML, with special handling for Coda links
-            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, linkText, url) => {
-                // Try to convert Coda links to site links
-                const siteLink = convertCodaLinkToSiteLink(linkText, url);
-                if (siteLink) {
-                    return `<a href="${siteLink}">${linkText}</a>`;
-                }
-                // For non-Coda links or unmatched Coda links, use target="_blank"
-                return `<a href="${url}" target="_blank">${linkText}</a>`;
-            });
+            // Convert markdown links [text](url) to HTML
+            text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
 
             // Convert **bold** to <strong>
             text = text.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
@@ -14902,7 +14666,7 @@
                         ${song.siman ? `
                             <div class="nigun-detail-row">
                                 <span class="nigun-detail-label">סימן:</span>
-                                <span class="nigun-detail-value">${formatDescription(song.siman)}</span>
+                                <span class="nigun-detail-value">${song.siman}</span>
                             </div>
                         ` : ''}
                         ${song.verter ? `
@@ -15031,7 +14795,7 @@
                         <div class="nigun-section">
                             <h3>אינפארמאציע</h3>
                             <div class="nigun-section-content">
-                                <div class="nigun-info-text">${formatDescription(song.info)}</div>
+                                <div class="nigun-info-text">${song.info}</div>
                             </div>
                         </div>
                     ` : ''}
@@ -15082,7 +14846,7 @@
                             <h3>צוגאבן</h3>
                             <div class="nigun-other-media-content">
                                 ${song.otherMedia.text ? `
-                                    <div class="nigun-other-media-text">${formatDescription(song.otherMedia.text)}</div>
+                                    <div class="nigun-other-media-text">${song.otherMedia.text}</div>
                                 ` : ''}
 
                                 ${song.otherMedia.audio.length > 0 ? `
@@ -15857,8 +15621,8 @@
                             <div class="resource-card-body">
                                 <div class="resource-title clickable-title" data-action="detail" data-category="resources" data-name="${escapeHtml(key)}">${key}</div>
                                 ${info.chatzer ? `<div class="resource-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}" data-tooltip-value="${escapeHtml(info.chatzer)}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
-                                ${info.description ? `<div class="resource-details">${formatDescription(info.description)}</div>` : ''}
-                                ${info.notes ? `<div class="resource-notes">${formatDescription(info.notes)}</div>` : ''}
+                                ${info.description ? `<div class="resource-details">${info.description}</div>` : ''}
+                                ${info.notes ? `<div class="resource-notes">${info.notes}</div>` : ''}
                             </div>
                             <div class="resource-card-footer">
                                 ${hasLink ? `
@@ -15955,8 +15719,8 @@
                                 <div class="document-title clickable-title" data-action="detail" data-category="documents" data-name="${escapeHtml(key)}">${key}</div>
                                 ${info.serie ? `<div class="document-serie">${info.serie.replace(/\`\`\`/g, '')}</div>` : ''}
                                 ${info.chatzer ? `<div class="document-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}" data-tooltip-value="${escapeHtml(info.chatzer)}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
-                                ${info.description ? `<div class="document-details">${formatDescription(info.description)}</div>` : ''}
-                                ${info.notes ? `<div class="document-notes">${formatDescription(info.notes)}</div>` : ''}
+                                ${info.description ? `<div class="document-details">${info.description.replace(/\`\`\`/g, '').replace(/!\[.*?\]\(.*?\)/g, '')}</div>` : ''}
+                                ${info.notes ? `<div class="document-notes">${info.notes}</div>` : ''}
                             </div>
                             <div class="document-card-footer">
                                 ${hasLink ? `
@@ -16142,7 +15906,7 @@
                     ${info.description || info.notes ? `
                         <div class="detail-section">
                             <h3>אינפארמאציע</h3>
-                            <p>${formatDescription(info.description || info.notes || '')}</p>
+                            <p>${info.description || info.notes || ''}</p>
                         </div>
                     ` : ''}
                     
@@ -16227,7 +15991,7 @@
                     ${info.description ? `
                         <div class="detail-section">
                             <h3>אינפארמאציע</h3>
-                            <p>${formatDescription(info.description)}</p>
+                            <p>${info.description.replace(/\`\`\`/g, '').replace(/!\[.*?\]\(.*?\)/g, '')}</p>
                         </div>
                     ` : ''}
                     
@@ -16308,7 +16072,7 @@
                     ${info.description ? `
                         <div class="detail-section">
                             <h3>אינפארמאציע</h3>
-                            <p>${formatDescription(info.description)}</p>
+                            <p>${info.description}</p>
                         </div>
                     ` : ''}
                     
@@ -16773,7 +16537,7 @@
 
                 // Siman - simple tag
                 if (song.siman) {
-                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סימן:</span><span class="nigun-tag-inline tag-siman">${formatDescription(song.siman)}</span></div>`);
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סימן:</span><span class="nigun-tag-inline tag-siman">${song.siman}</span></div>`);
                 }
 
                 // Recordings section with more info
@@ -17725,12 +17489,11 @@
                     <div class="page-title">
                         <div class="page-title-bar">זוכט "${term}"...</div>
                         <div class="page-title-content">
-                            <div class="subtitle">לאודינג רעזולטאטן...</div>
+                            <div class="subtitle">לאדינג רעזולטאטן...</div>
                         </div>
                     </div>
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 16px;">
-                        <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                        <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאדינג רעזולטאטן...</p>
+                    <div class="loading-songs-message">
+                        <div class="loading-spinner"></div>
                     </div>
                 </div>
             `;
@@ -17759,10 +17522,12 @@
                 <div class="page-theme-nigun">
                     <div class="page-title">
                         <div class="page-title-bar">זוכט "${term}"...</div>
+                        <div class="page-title-content">
+                            <div class="subtitle">לאדינג רעזולטאטן...</div>
+                        </div>
                     </div>
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 16px;">
-                        <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                        <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאדינג רעזולטאטן...</p>
+                    <div class="loading-songs-message">
+                        <div class="loading-spinner"></div>
                     </div>
                 </div>
             `;
