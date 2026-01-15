@@ -11036,19 +11036,28 @@
                     // Process songs so far and update counts
                     processSongsData(allRows);
 
+                    // Update filteredSongs after each batch
+                    // skipSort=true for subsequent batches to preserve order
+                    applyFiltersQuiet(!isFirstBatch);
+
+                    if (currentPageView === 'songs') {
+                        updateSongsCount();
+                        // Note: New songs from API batches are available when user scrolls
+                    }
+
                     // After first batch, render immediately so user sees content fast
                     if (isFirstBatch && allRows.length >= 50) {
                         isFirstBatch = false;
                         loadedCategories.songs = true;
-                        applyFiltersQuiet();  // Quiet version to avoid fade animation
                         buildCategoryIndices();
                         if (currentPageView === 'songs') {
-                            // Only update the songs grid, not the whole page
-                            updateSongsCount();
                             const grid = document.getElementById('songsGrid');
-                            if (grid && grid.children.length === 0) {
-                                // Grid is empty (showing skeleton), populate it
+                            if (grid) {
+                                // Grid exists, populate it with songs
                                 loadMoreSongs(true);
+                            } else {
+                                // No grid yet, render the full page
+                                renderCurrentPage();
                             }
                         }
                     }
@@ -12315,11 +12324,8 @@
 
         // Render all songs page
         function renderAllSongsPage(container) {
-            // Show skeleton if songs not yet loaded
-            if (allSongs.length === 0) {
-                container.innerHTML = getSkeletonForPage('songs');
-                return;
-            }
+            // NOTE: Always build full page structure so songsGrid exists
+            // If no songs yet, grid will show skeleton rows inside it
 
             // Reset lazy loading state
             songsLazyState = {
@@ -12343,6 +12349,16 @@
                         <div class="songs-main-content">
                             <div class="songs-card">
                                 <div class="all-songs-grid" id="songsGrid">
+                                    ${filteredSongs.length === 0 && !songsFullyLoaded ? `
+                                        <div class="skeleton-song-row"></div>
+                                        <div class="skeleton-song-row"></div>
+                                        <div class="skeleton-song-row"></div>
+                                        <div class="skeleton-song-row"></div>
+                                        <div class="skeleton-song-row"></div>
+                                        <div class="skeleton-song-row"></div>
+                                        <div class="skeleton-song-row"></div>
+                                        <div class="skeleton-song-row"></div>
+                                    ` : ''}
                                 </div>
                                 <div id="songsLoadMoreIndicator" style="text-align: center; padding: 20px; color: var(--text-muted);"></div>
                             </div>
@@ -12471,7 +12487,15 @@
                 return;
             }
 
+            // Clear skeleton rows if this is the first real data
+            if (songsLazyState.isInitialLoad) {
+                const skeletonRows = grid.querySelectorAll('.skeleton-song-row');
+                skeletonRows.forEach(row => row.remove());
+            }
+
+            // Count AFTER skeleton removal
             const existingCount = grid.children.length;
+
             const endIndex = Math.min(
                 songsLazyState.currentIndex + songsLazyState.batchSize,
                 filteredSongs.length
@@ -12991,7 +13015,8 @@
         }
 
         // Apply filters without updating display (for use before animated update)
-        function applyFiltersQuiet() {
+        // skipSort: if true, don't re-sort - used during API loading to preserve order
+        function applyFiltersQuiet(skipSort = false) {
             filteredSongs = allSongs.filter(song => {
 
 
@@ -13034,7 +13059,9 @@
                 }
                 return true;
             });
-            sortFilteredSongs();
+            if (!skipSort) {
+                sortFilteredSongs();
+            }
             currentPage = 1;
         }
 
@@ -13628,12 +13655,19 @@
                 }
 
                 // Show skeleton loader if data not loaded
+                // For songs: don't await, let background fetch populate the grid
                 if (targetPage !== 'home' && !isDataLoadedForPage(targetPage)) {
-                    if (content) {
-                        content.innerHTML = getSkeletonForPage(targetPage);
+                    if (targetPage === 'songs') {
+                        // Songs: start loading in background, don't await
+                        // The page will show skeleton, and fetchSongsInBackground will update the grid
+                        ensureDataForPage(targetPage); // No await!
+                    } else {
+                        // Other pages: show skeleton and await
+                        if (content) {
+                            content.innerHTML = getSkeletonForPage(targetPage);
+                        }
+                        await ensureDataForPage(targetPage);
                     }
-                    // Load required data
-                    await ensureDataForPage(targetPage);
                 }
 
                 if (page === 'search' && idOrName) {
