@@ -10899,10 +10899,14 @@
         }
 
         // Ensure required data is loaded for a specific page
-        async function ensureDataForPage(page) {
+        async function ensureDataForPage(page, waitForAll = false) {
             switch (page) {
                 case 'songs':
                     if (!loadedCategories.songs) {
+                        await fetchSongsInBackground();
+                    }
+                    // For detail pages, wait for ALL songs to be loaded, not just first batch
+                    if (waitForAll && !songsFullyLoaded) {
                         await fetchSongsInBackground();
                     }
                     break;
@@ -11005,15 +11009,19 @@
 
         // Flag to prevent duplicate fetches
         let songsCurrentlyLoading = false;
+        let songsLoadingPromise = null;
 
         // Fetch songs in background with pagination - OPTIMIZED: first 50 items initially
         async function fetchSongsInBackground() {
-            // Prevent duplicate fetches
-            if (songsCurrentlyLoading) {
-                console.log('⏳ Songs already loading, skipping duplicate fetch');
-                return;
+            // Prevent duplicate fetches - return existing promise if already loading
+            if (songsCurrentlyLoading && songsLoadingPromise) {
+                console.log('⏳ Songs already loading, returning existing promise');
+                return songsLoadingPromise;
             }
             songsCurrentlyLoading = true;
+
+            // Create a promise that will be resolved when songs are loaded
+            songsLoadingPromise = (async () => {
 
             try {
                 // Check cache first
@@ -11035,6 +11043,7 @@
                         }
                     }
                     songsCurrentlyLoading = false;
+                    songsLoadingPromise = null;
                     return;
                 }
 
@@ -11170,11 +11179,17 @@
                 }
 
                 songsCurrentlyLoading = false;
+                songsLoadingPromise = null;
 
             } catch (error) {
                 console.error('Error loading songs:', error);
                 songsCurrentlyLoading = false;
+                songsLoadingPromise = null;
+                throw error;
             }
+            })();
+
+            return songsLoadingPromise;
         }
 
         // Process songs data array
@@ -13928,7 +13943,9 @@
                     const dataPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
 
                     // Show loading indicator and ensure data is loaded for detail pages
-                    if (detailPages.includes(page) && !isDataLoadedForPage(dataPage)) {
+                    // For nigunim, need to check songsFullyLoaded, not just loadedCategories
+                    const needsLoading = page === 'nigunim' ? !songsFullyLoaded : !isDataLoadedForPage(dataPage);
+                    if (detailPages.includes(page) && needsLoading) {
                         if (content) {
                             content.innerHTML = `
                                 <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
@@ -13937,7 +13954,8 @@
                                 </div>
                             `;
                         }
-                        await ensureDataForPage(dataPage);
+                        // For nigunim, wait for ALL songs to load so we can find the specific one
+                        await ensureDataForPage(dataPage, page === 'nigunim');
                     }
 
                     // Find item by ID or name
