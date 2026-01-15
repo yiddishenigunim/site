@@ -14716,7 +14716,7 @@
                         ${song.siman ? `
                             <div class="nigun-detail-row">
                                 <span class="nigun-detail-label">סימן:</span>
-                                <span class="nigun-detail-value">${song.siman}</span>
+                                <span class="nigun-detail-value">${formatDescription(song.siman)}</span>
                             </div>
                         ` : ''}
                         ${song.verter ? `
@@ -16587,7 +16587,7 @@
 
                 // Siman - simple tag
                 if (song.siman) {
-                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סימן:</span><span class="nigun-tag-inline tag-siman">${song.siman}</span></div>`);
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סימן:</span><span class="nigun-tag-inline tag-siman">${formatDescription(song.siman)}</span></div>`);
                 }
 
                 // Recordings section with more info
