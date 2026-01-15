@@ -204,6 +204,61 @@
             }
         }
 
+        /* Medium loader for detail pages */
+        .loader-medium {
+            position: relative;
+            width: 80px;
+            height: 50px;
+            display: inline-block;
+        }
+
+        .loader-medium .note {
+            position: absolute;
+            bottom: 0;
+            color: var(--color-nigun);
+            font-size: 32px;
+            opacity: 0;
+            animation: floatMedium 2.5s infinite ease-out;
+        }
+
+        .loader-medium .note:nth-child(1) {
+            left: 0;
+            animation-delay: 0s;
+        }
+
+        .loader-medium .note:nth-child(2) {
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 28px;
+            animation-delay: 0.8s;
+        }
+
+        .loader-medium .note:nth-child(3) {
+            right: 0;
+            font-size: 30px;
+            animation-delay: 1.4s;
+        }
+
+        @keyframes floatMedium {
+            0% {
+                transform: translateY(5px) rotate(-15deg) scale(0.8);
+                opacity: 0;
+            }
+
+            15% {
+                opacity: 1;
+            }
+
+            70% {
+                opacity: 0.9;
+            }
+
+            100% {
+                transform: translateY(-40px) rotate(15deg) scale(1.1);
+                opacity: 0;
+            }
+        }
+
         /* Category-themed loading wave bars */
         .page-theme-chatzer .loading-wave-bar.active::before {
             background: linear-gradient(90deg, transparent 0%, var(--color-chatzer-light) 25%, var(--color-chatzer) 50%, var(--color-chatzer-light) 75%, transparent 100%);
@@ -13981,9 +14036,9 @@
                             content.innerHTML = `
                                 <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
                                     <div class="loading-wave-bar"></div>
-                                    <div style="display: flex; align-items: center; gap: 8px;">
-                                        <div class="loader-tiny"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                                        <p style="color: var(--text-secondary); font-size: 14px; margin: 0;">לאודינג...</p>
+                                    <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
+                                        <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
+                                        <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאודינג...</p>
                                     </div>
                                 </div>
                             `;
@@ -14083,7 +14138,10 @@
                     content.innerHTML = `
                         <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
                             <div class="loading-wave-bar"></div>
-                            <p style="color: var(--text-secondary); font-size: 14px;">לאודינג ${name}...</p>
+                            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
+                                <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
+                                <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאודינג ${name}...</p>
+                            </div>
                         </div>
                     `;
                 }
@@ -17523,7 +17581,7 @@
                     <div class="page-title">
                         <div class="page-title-bar">זוכט "${term}"...</div>
                         <div class="page-title-content">
-                            <div class="subtitle">לאדינג רעזולטאטן...</div>
+                            <div class="subtitle"><div class="loader-tiny"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div> לאדינג רעזולטאטן...</div>
                         </div>
                     </div>
                     <div class="loading-songs-message">
@@ -17557,7 +17615,7 @@
                     <div class="page-title">
                         <div class="page-title-bar">זוכט "${term}"...</div>
                         <div class="page-title-content">
-                            <div class="subtitle">לאדינג רעזולטאטן...</div>
+                            <div class="subtitle"><div class="loader-tiny"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div> לאדינג רעזולטאטן...</div>
                         </div>
                     </div>
                     <div class="loading-songs-message">
