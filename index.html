@@ -11005,15 +11005,19 @@
 
         // Flag to prevent duplicate fetches
         let songsCurrentlyLoading = false;
+        let songsLoadingPromise = null;
 
         // Fetch songs in background with pagination - OPTIMIZED: first 50 items initially
         async function fetchSongsInBackground() {
-            // Prevent duplicate fetches
-            if (songsCurrentlyLoading) {
-                console.log('⏳ Songs already loading, skipping duplicate fetch');
-                return;
+            // Prevent duplicate fetches - return existing promise if already loading
+            if (songsCurrentlyLoading && songsLoadingPromise) {
+                console.log('⏳ Songs already loading, returning existing promise');
+                return songsLoadingPromise;
             }
             songsCurrentlyLoading = true;
+
+            // Create a promise that will be resolved when songs are loaded
+            songsLoadingPromise = (async () => {
 
             try {
                 // Check cache first
@@ -11035,6 +11039,7 @@
                         }
                     }
                     songsCurrentlyLoading = false;
+                    songsLoadingPromise = null;
                     return;
                 }
 
@@ -11170,11 +11175,17 @@
                 }
 
                 songsCurrentlyLoading = false;
+                songsLoadingPromise = null;
 
             } catch (error) {
                 console.error('Error loading songs:', error);
                 songsCurrentlyLoading = false;
+                songsLoadingPromise = null;
+                throw error;
             }
+            })();
+
+            return songsLoadingPromise;
         }
 
         // Process songs data array
