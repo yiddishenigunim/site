@@ -13377,10 +13377,10 @@
             setTimeout(() => {
                 grid.innerHTML = '';
 
-                // For sorted modes: seed with song at position 49 to allow FLIP at 0-48
+                // For sorted modes: seed with song at position 0 to allow smooth FLIP
                 // For shuffle: just load first song normally
-                if (currentSortOrder !== 'random' && filteredSongs.length > 49) {
-                    const seedPosition = Math.min(49, filteredSongs.length - 1);
+                if (currentSortOrder !== 'random' && filteredSongs.length > 0) {
+                    const seedPosition = 0; // Seed with first song, loadMoreSongs starts at 1
                     const seedSong = filteredSongs[seedPosition];
                     const seedIdx = allSongs.indexOf(seedSong);
                     const playlistIndices = filteredSongs.map(song => allSongs.indexOf(song));
@@ -13389,7 +13389,7 @@
                     const seedHtml = renderSongItem(seedSong, seedIdx, seedPosition + 1, playlistIndices);
                     grid.insertAdjacentHTML('beforeend', seedHtml);
                     songsLazyState = {
-                        currentIndex: 1,
+                        currentIndex: 1, // Start AFTER the seed
                         batchSize: 50,
                         isLoading: false,
                         isInitialLoad: false
@@ -13615,20 +13615,20 @@
         // Ensures grid is ALWAYS in correct order, with new songs animating in
         function updateSongsListWithNewSongs(newSongs) {
             isFlipping = true;
-            console.log('=== FLIP START ===');
+
 
             const grid = document.getElementById('songsGrid');
             if (!grid) {
-                console.log('FLIP: No grid found!');
+
                 isFlipping = false;
                 return;
             }
 
             const existingItems = Array.from(grid.children);
-            console.log(`FLIP: Grid has ${existingItems.length} existing items`);
+
 
             if (existingItems.length === 0) {
-                console.log('FLIP: Grid empty, skipping');
+
                 isFlipping = false;
                 return;
             }
@@ -13639,23 +13639,17 @@
                 const idx = parseInt(item.getAttribute('data-song-idx'));
                 if (!isNaN(idx)) existingIdxSet.add(idx);
             });
-            console.log(`FLIP: existingIdxSet has ${existingIdxSet.size} indices`);
+
 
             // Determine how many items to show
             const targetCount = Math.min(existingItems.length + 20, 100);
-            console.log(`FLIP: targetCount = ${targetCount}`);
+
 
             // Get the correct order from filteredSongs
             const correctOrder = filteredSongs.slice(0, targetCount);
-            console.log(`FLIP: correctOrder has ${correctOrder.length} songs`);
 
-            // Debug: Show first 5 songs that SHOULD be in grid
-            console.log('FLIP: First 5 songs that SHOULD be in grid:');
-            correctOrder.slice(0, 5).forEach((song, i) => {
-                const idx = allSongs.indexOf(song);
-                const inGrid = existingIdxSet.has(idx);
-                console.log(`  ${i}: "${song.name?.substring(0, 25)}" idx=${idx} inGrid=${inGrid}`);
-            });
+
+
 
             // In shuffle mode: use newSongs from API, not correctOrder
             const isShuffleModeForInsert = currentSortOrder === 'random';
@@ -13693,7 +13687,7 @@
                         insertCount++;
                     }
                 }
-                console.log(`FLIP: Shuffle mode - selected ${newToInsert.length} random songs from ${newSongs.length} new`);
+
             } else {
                 // SORTED MODE: Use correctOrder to find missing songs
                 correctOrder.forEach((song, pos) => {
@@ -13704,24 +13698,9 @@
                 });
             }
 
-            console.log(`FLIP: ${newToInsert.length} songs to insert`);
-            if (newToInsert.length > 0 && newToInsert.length <= 10) {
-                console.log('FLIP: Songs to insert:');
-                newToInsert.forEach(({ song, idx, targetPos }) => {
-                    console.log(`  targetPos=${targetPos}: "${song.name?.substring(0, 25)}" idx=${idx}`);
-                });
-            }
+
 
             if (newToInsert.length === 0) {
-                console.log('FLIP: Nothing to insert, checking grid order...');
-                // Debug: show current grid order vs correct order
-                console.log('FLIP: Current grid order (first 10):');
-                Array.from(grid.children).slice(0, 10).forEach((item, i) => {
-                    const idx = parseInt(item.getAttribute('data-song-idx'));
-                    const song = allSongs[idx];
-                    const correctPos = song ? filteredSongs.indexOf(song) : -1;
-                    console.log(`  Grid[${i}]: "${song?.name?.substring(0, 20)}" correctPos=${correctPos}`);
-                });
                 isFlipping = false;
                 return;
             }
@@ -13744,13 +13723,13 @@
                     const j = Math.floor(Math.random() * (i + 1));
                     [newToInsert[i], newToInsert[j]] = [newToInsert[j], newToInsert[i]];
                 }
-                console.log(`FLIP: Shuffle mode - inserting ${newToInsert.length} songs at random positions`);
+
             }
 
             newToInsert.forEach(({ song, idx, targetPos }) => {
                 // Double-check not already in grid
                 if (grid.querySelector(`[data-song-idx="${idx}"]`)) {
-                    console.log(`FLIP: SKIP - idx ${idx} already in grid`);
+
                     return;
                 }
 
@@ -13795,10 +13774,10 @@
                 }
 
                 if (insertBefore) {
-                    console.log(`FLIP: INSERT "${song.name?.substring(0, 20)}" at pos ${posInFiltered} BEFORE pos ${insertBeforePos}`);
+
                     grid.insertBefore(newElement, insertBefore);
                 } else {
-                    console.log(`FLIP: APPEND "${song.name?.substring(0, 20)}" at pos ${posInFiltered}`);
+
                     grid.appendChild(newElement);
                 }
 
@@ -13806,9 +13785,51 @@
                 existingIdxSet.add(idx); // Mark as now in grid
             });
 
-            console.log(`FLIP: Inserted ${newElements.length} new elements, grid now has ${grid.children.length} items`);
 
-            // Step 3: Update display numbers for ALL items in grid
+
+            // Step 3a: In SORTED mode, reorder ALL grid items to match correctOrder
+            if (!isShuffleMode) {
+                // Recalculate correctOrder to cover ALL items now in grid
+                const actualGridSize = grid.children.length;
+                const fullCorrectOrder = filteredSongs.slice(0, actualGridSize);
+
+
+                // FIRST: Remove any duplicate idx elements (keep first occurrence)
+                const seenIdxForDedup = new Set();
+                const duplicatesToRemove = [];
+                Array.from(grid.children).forEach(item => {
+                    const idx = parseInt(item.getAttribute('data-song-idx'));
+                    if (!isNaN(idx)) {
+                        if (seenIdxForDedup.has(idx)) {
+                            duplicatesToRemove.push(item);
+
+                        } else {
+                            seenIdxForDedup.add(idx);
+                        }
+                    }
+                });
+                duplicatesToRemove.forEach(item => item.remove());
+
+                // Build a map of song idx to element (now no duplicates)
+                const elemByIdx = new Map();
+                Array.from(grid.children).forEach(item => {
+                    const idx = parseInt(item.getAttribute('data-song-idx'));
+                    if (!isNaN(idx)) elemByIdx.set(idx, item);
+                });
+
+
+
+                // Reorder: for each song in fullCorrectOrder, append to grid (moves to end in order)
+                fullCorrectOrder.forEach(song => {
+                    const idx = allSongs.indexOf(song);
+                    const elem = elemByIdx.get(idx);
+                    if (elem) {
+                        grid.appendChild(elem); // Moves to end
+                    }
+                });
+            }
+
+            // Step 3b: Update display numbers for ALL items in grid
             Array.from(grid.children).forEach((item, gridPos) => {
                 const numEl = item.querySelector('.song-number');
                 if (numEl) {
@@ -13827,16 +13848,7 @@
                 }
             });
 
-            // Debug: Verify grid order after insertion
-            console.log('FLIP: Grid order after insertion (first 10):');
-            Array.from(grid.children).slice(0, 10).forEach((item, i) => {
-                const idx = parseInt(item.getAttribute('data-song-idx'));
-                const song = allSongs[idx];
-                const correctPos = song ? filteredSongs.indexOf(song) : -1;
-                console.log(`  Grid[${i}]: "${song?.name?.substring(0, 20)}" correctPos=${correctPos}`);
-            });
 
-            console.log('=== FLIP END ===');
 
             // Step 4 (Last + Invert + Play): Animate
             requestAnimationFrame(() => {
