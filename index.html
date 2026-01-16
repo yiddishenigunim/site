@@ -932,6 +932,7 @@
         }
 
         /* Hero Musical Background Animation - Relaxing Floating Notes */
+        /* Hero Musical Background Animation - Relaxing Floating Notes + Wandering */
         .hero-musical-bg {
             position: absolute;
             top: 0;
@@ -941,33 +942,101 @@
             overflow: hidden;
             pointer-events: none;
             z-index: 1;
+            perspective: 1000px;
         }
 
-        .musical-note {
+        /* Wrapper handles the main flight path (center to outward) */
+        .note-wrapper {
             position: absolute;
             top: 50%;
             left: 50%;
-            color: rgba(255, 255, 255, 0.6);
-            font-size: 20px;
-            animation: warpOut ease-in infinite;
-            /* Start invisible at center */
-            transform: translate(-50%, -50%) scale(0);
+            transform-style: preserve-3d;
+            animation: flight linear infinite;
         }
 
-        @keyframes warpOut {
+        /* Inner note handles rotation and random wandering */
+        .musical-note {
+            display: block;
+            color: rgba(255, 255, 255, 0.6);
+            /* font-size set inline */
+            transform-style: preserve-3d;
+        }
+
+        .musical-note.wander-1 {
+            animation: wander1 ease-in-out infinite alternate;
+        }
+
+        .musical-note.wander-2 {
+            animation: wander2 ease-in-out infinite alternate;
+        }
+
+        .musical-note.wander-3 {
+            animation: wander3 ease-in-out infinite alternate;
+        }
+
+        @keyframes flight {
             0% {
                 transform: translate(-50%, -50%) scale(0);
                 opacity: 0;
             }
 
-            10% {
+            50% {
                 opacity: 0.8;
             }
 
             100% {
-                /* --tx, --ty, and --rot are set via JS */
-                transform: translate(var(--tx), var(--ty)) scale(2.5) rotate(var(--rot));
+                transform: translate(var(--tx), var(--ty)) scale(2.5);
                 opacity: 0;
+            }
+        }
+
+        @keyframes wander1 {
+            0% {
+                transform: translate3d(0, 0, 0) rotateZ(var(--rot)) rotateX(0deg) rotateY(0deg);
+            }
+
+            33% {
+                transform: translate3d(250px, -400px, 150px) rotateZ(calc(var(--rot) + 120deg)) rotateX(40deg) rotateY(30deg);
+            }
+
+            66% {
+                transform: translate3d(-150px, 300px, -200px) rotateZ(calc(var(--rot) + 240deg)) rotateX(-30deg) rotateY(-40deg);
+            }
+
+            100% {
+                transform: translate3d(0, 0, 0) rotateZ(calc(var(--rot) + 360deg)) rotateX(0deg) rotateY(0deg);
+            }
+        }
+
+        @keyframes wander2 {
+            0% {
+                transform: translate3d(0, 0, 0) rotateZ(var(--rot)) rotateX(0deg) rotateY(0deg);
+            }
+
+            50% {
+                transform: translate3d(-400px, 0, 300px) rotateZ(calc(var(--rot) - 180deg)) rotateX(-45deg) rotateY(45deg);
+            }
+
+            100% {
+                transform: translate3d(400px, -200px, -400px) rotateZ(calc(var(--rot) - 360deg)) rotateX(0deg) rotateY(0deg);
+            }
+        }
+
+        @keyframes wander3 {
+            0% {
+                transform: translate3d(0, 0, 0) rotateZ(var(--rot)) rotateX(0deg) rotateY(0deg);
+            }
+
+            25% {
+                transform: translate3d(300px, 300px, 300px) rotateZ(calc(var(--rot) + 90deg)) rotateX(50deg) rotateY(-30deg);
+            }
+
+            75% {
+                transform: translate3d(-300px, -300px, -300px) rotateZ(calc(var(--rot) + 270deg)) rotateX(-50deg) rotateY(30deg);
+            }
+
+            100% {
+                transform: translate3d(0, 0, 0) rotateZ(calc(var(--rot) + 360deg)) rotateX(0deg) rotateY(0deg);
             }
         }
 
@@ -9908,12 +9977,12 @@
     <div class="search-modal-overlay" id="searchModalOverlay" onclick="closeSearchModal()">
         <div class="search-modal" onclick="event.stopPropagation()">
             <div class="search-modal-header">
-                <h3>🔍 זוך אין אוצר הניגונים</h3>
+                <h3>🔍 זוכט אין אוצר הניגונים</h3>
                 <button class="search-modal-close" onclick="closeSearchModal()">×</button>
             </div>
             <div class="search-modal-body">
                 <input type="text" id="searchModalInput" class="search-modal-input"
-                    placeholder="זוך א ניגון, מחבר, חצר..."
+                    placeholder="זוכט א ניגון, מחבר, חצר..."
                     onkeydown="if(event.key==='Enter') executeSearchFromModal()">
                 <button class="search-modal-btn" onclick="executeSearchFromModal()">זוך</button>
             </div>
@@ -12156,8 +12225,8 @@
             // Generate floating musical notes (Starfield / Warp Effect)
             const musicContainer = document.getElementById('heroMusicalBg');
             if (musicContainer) {
-                // User requested: "Slower", "More", "Bigger pieces"
-                const noteCount = 60; // Increased count significantly
+                // User requested: "Slower", "More", "Bigger pieces", "More in middle"
+                const noteCount = 150; // Increased count significantly to fill the middle
                 const symbols = ['♪', '♫', '♩', '♬', '♭', '♮', '♯'];
                 let html = '';
 
@@ -12177,14 +12246,26 @@
                     // Random rotation for the note itself
                     const rot = (Math.random() * 360 - 180) + 'deg';
 
-                    // Slower duration: 10s to 20s
-                    const duration = 10 + Math.random() * 10;
-                    const delay = Math.random() * 10;
+                    // Slower duration: 25s to 45s (User requested slower)
+                    const duration = 25 + Math.random() * 20;
+                    // Spread delay across the entire duration so they are strictly uniform
+                    const delay = Math.random() * duration;
 
                     // Bigger sizes: 50px to 90px
                     const size = 50 + Math.random() * 40;
 
-                    html += `<span class="musical-note" style="--tx: ${tx}px; --ty: ${ty}px; --rot: ${rot}; animation-duration: ${duration}s; animation-delay: -${delay}s; font-size: ${size}px;">${symbol}</span>`;
+                    // Decide on a specific wander animation pattern (1, 2, or 3)
+                    const wanderClass = 'wander-' + (Math.floor(Math.random() * 3) + 1);
+
+                    // Note: animation-duration applies to the FLIGHT (wrapper).
+                    // We can let the inner wander animation inherit it or have its own speed. 
+                    // To keep them synced (one full drift per flight), we'll use the same duration variable.
+
+                    html += `
+                        <div class="note-wrapper" style="--tx: ${tx}px; --ty: ${ty}px; animation-duration: ${duration}s; animation-delay: -${delay}s;">
+                            <span class="musical-note ${wanderClass}" style="--rot: ${rot}; font-size: ${size}px; animation-duration: ${duration}s;">${symbol}</span>
+                        </div>
+                    `;
                 }
                 musicContainer.innerHTML = html;
             }
@@ -12679,7 +12760,7 @@
                                 <input type="text"
                                        id="songsSearchInput"
                                        class="sidebar-search-input"
-                                       placeholder="זוך א ניגון..."
+                                       placeholder="זוכט א ניגון..."
                                        value="${searchQuery || ''}"
                                        onkeypress="if(event.key==='Enter')handleSongsSearch(this.value)">
                                 ${searchQuery ? '<button class="sidebar-search-clear" onclick="clearSearch()">×</button>' : ''}
@@ -18174,7 +18255,7 @@
             content.innerHTML = `
                 <div class="page-theme-nigun">
                     <div class="page-title">
-                        <div class="page-title-bar">זוך "${term}"...</div>
+                        <div class="page-title-bar">זוכט "${term}"...</div>
                         <div class="page-title-content">
                             <div class="subtitle">לאודינג רעזולטאטן...</div>
                         </div>
@@ -18209,7 +18290,7 @@
             content.innerHTML = `
                 <div class="page-theme-nigun">
                     <div class="page-title">
-                        <div class="page-title-bar">זוך "${term}"...</div>
+                        <div class="page-title-bar">זוכט "${term}"...</div>
                     </div>
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 16px;">
                         <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
@@ -18367,7 +18448,7 @@
                         <input type="text" 
                                id="searchResultsInput" 
                                class="search-results-input" 
-                               placeholder="זוך עפעס אנדערש..."
+                               placeholder="זוכט עפעס אנדערש..."
                                value="${searchQuery}"
                                onkeydown="if(event.key==='Enter') executeSearchFromResults()">
                         <button class="search-results-btn" onclick="executeSearchFromResults()">🔍 זוכן</button>
