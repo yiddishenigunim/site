@@ -149,66 +149,110 @@
         }
 
         /* Musical notes loader animation */
+        /* --- LOADER TINY CSS --- */
         .loader-tiny {
             position: relative;
-            width: 30px;
-            height: 18px;
+            width: 40px;
+            height: 20px;
             display: inline-block;
-            margin-left: 6px;
+            margin-left: 8px;
             vertical-align: middle;
+            overflow: visible;
         }
 
         .loader-tiny .note {
             position: absolute;
             bottom: 0;
             color: var(--color-nigun);
-            font-size: 12px;
-            opacity: 0;
-            animation: floatTiny 2.5s infinite ease-out;
-        }
-
-        .loader-tiny .note:nth-child(1) {
-            left: 0;
-            animation-delay: 0s;
-        }
-
-        .loader-tiny .note:nth-child(2) {
-            left: 40%;
-            transform: translateX(-50%);
-            font-size: 10px;
-            animation-delay: 0.8s;
-        }
-
-        .loader-tiny .note:nth-child(3) {
-            right: 0;
             font-size: 11px;
-            animation-delay: 1.4s;
+            opacity: 0;
+            will-change: transform, opacity;
         }
 
-        @keyframes floatTiny {
+        /* Note 1 */
+        .loader-tiny .note.n1 {
+            left: 15%;
+            animation: floatTinyLeft 2.8s infinite ease-out;
+        }
+
+        /* Note 2 */
+        .loader-tiny .note.n2 {
+            left: 50%;
+            animation: floatTinyRight 3.2s infinite ease-out;
+            animation-delay: 1s;
+        }
+
+        /* Note 3 */
+        .loader-tiny .note.n3 {
+            left: 85%;
+            animation: floatTinyCenter 2.5s infinite ease-out;
+            animation-delay: 2s;
+        }
+
+        @keyframes floatTinyLeft {
             0% {
-                transform: translateY(2px) rotate(-15deg) scale(0.8);
+                transform: translate(5px, 2px) rotate(-5deg) scale(0.8);
                 opacity: 0;
             }
 
-            15% {
+            20% {
                 opacity: 1;
             }
 
-            70% {
-                opacity: 0.9;
+            80% {
+                opacity: 0.8;
             }
 
             100% {
-                transform: translateY(-14px) rotate(15deg) scale(1.1);
+                transform: translate(-10px, -20px) rotate(-10deg) scale(1.0);
                 opacity: 0;
             }
         }
 
-        /* Medium loader for detail pages */
+        @keyframes floatTinyRight {
+            0% {
+                transform: translate(-5px, 2px) rotate(5deg) scale(0.8);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translate(10px, -20px) rotate(10deg) scale(1.0);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatTinyCenter {
+            0% {
+                transform: translate(0, 2px) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translate(2px, -20px) rotate(5deg) scale(1.0);
+                opacity: 0;
+            }
+        }
+
+        /* --- LOADER MEDIUM CSS --- */
         .loader-medium {
             position: relative;
-            width: 80px;
+            width: 100px;
             height: 50px;
             display: inline-block;
         }
@@ -217,45 +261,84 @@
             position: absolute;
             bottom: 0;
             color: var(--color-nigun);
-            font-size: 32px;
-            opacity: 0;
-            animation: floatMedium 2.5s infinite ease-out;
-        }
-
-        .loader-medium .note:nth-child(1) {
-            left: 0;
-            animation-delay: 0s;
-        }
-
-        .loader-medium .note:nth-child(2) {
-            left: 40%;
-            transform: translateX(-50%);
-            font-size: 28px;
-            animation-delay: 0.8s;
-        }
-
-        .loader-medium .note:nth-child(3) {
-            right: 0;
             font-size: 30px;
-            animation-delay: 1.4s;
+            opacity: 0;
+            will-change: transform, opacity;
         }
 
-        @keyframes floatMedium {
+        .loader-medium .note.n1 {
+            left: 15%;
+            animation: floatMediumLeft 2.8s infinite ease-out;
+        }
+
+        .loader-medium .note.n2 {
+            left: 50%;
+            animation: floatMediumRight 3.2s infinite ease-out;
+            animation-delay: 1s;
+        }
+
+        .loader-medium .note.n3 {
+            left: 85%;
+            animation: floatMediumCenter 2.5s infinite ease-out;
+            animation-delay: 2s;
+        }
+
+        @keyframes floatMediumLeft {
             0% {
-                transform: translateY(5px) rotate(-15deg) scale(0.8);
+                transform: translate(10px, 5px) rotate(-5deg) scale(0.8);
                 opacity: 0;
             }
 
-            15% {
+            20% {
                 opacity: 1;
             }
 
-            70% {
-                opacity: 0.9;
+            80% {
+                opacity: 0.8;
             }
 
             100% {
-                transform: translateY(-40px) rotate(15deg) scale(1.1);
+                transform: translate(-25px, -50px) rotate(-15deg) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatMediumRight {
+            0% {
+                transform: translate(-10px, 5px) rotate(5deg) scale(0.8);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translate(25px, -50px) rotate(15deg) scale(1.1);
+                opacity: 0;
+            }
+        }
+
+        @keyframes floatMediumCenter {
+            0% {
+                transform: translate(0, 5px) rotate(0deg) scale(0.8);
+                opacity: 0;
+            }
+
+            20% {
+                opacity: 1;
+            }
+
+            80% {
+                opacity: 0.8;
+            }
+
+            100% {
+                transform: translate(5px, -50px) rotate(5deg) scale(1.1);
                 opacity: 0;
             }
         }
@@ -10277,6 +10360,62 @@
             forceHideTooltip();
         });
 
+        // --- Musical Notes Loader Helpers ---
+        function getTinyLoaderHTML() {
+            const notes = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
+            // Pick 3 random distinct notes
+            const shuffled = [...notes].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 3);
+
+            return `
+                <div class="loader-tiny">
+                    <span class="note n1">${selected[0]}</span>
+                    <span class="note n2">${selected[1]}</span>
+                    <span class="note n3">${selected[2]}</span>
+                </div>
+            `;
+        }
+
+        function getMediumLoaderHTML() {
+            const notes = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
+            const shuffled = [...notes].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 3);
+
+            return `
+                <div class="loader-medium">
+                    <span class="note n1" style="font-size: 28px;">${selected[0]}</span>
+                    <span class="note n2" style="font-size: 34px;">${selected[1]}</span>
+                    <span class="note n3" style="font-size: 30px;">${selected[2]}</span>
+                </div>
+            `;
+        }
+
+        // Continuous Symbol Randomization
+        // Listen for the end of each animation cycle (when note is invisible)
+        // and swap the text content to a new random note.
+        document.addEventListener('animationiteration', (e) => {
+            // Check if it's a note element
+            if (e.target.classList && e.target.classList.contains('note')) {
+                // 1. Random Symbol
+                const notes = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
+                const randomNote = notes[Math.floor(Math.random() * notes.length)];
+                e.target.innerText = randomNote;
+
+                // 2. Random Trajectory
+                const isMedium = e.target.closest('.loader-medium');
+                const types = ['Left', 'Right', 'Center'];
+                const randomType = types[Math.floor(Math.random() * types.length)];
+
+                const prefix = isMedium ? 'floatMedium' : 'floatTiny';
+                const newAnimName = prefix + randomType;
+
+                // Update animation name to shift path
+                e.target.style.animationName = newAnimName;
+                // Critical: Prevent delay from re-applying on new animation
+                e.target.style.animationDelay = '0s';
+            }
+        }, true);
+
         // State
         let allSongs = [];
         let filteredSongs = [];
@@ -10327,6 +10466,37 @@
         let resourcesInfo = {};
         let documentsInfo = {};
         let albumsInfo = {};
+
+        // --- Helper: Generate tiny random loader HTML ---
+        function getTinyLoaderHTML() {
+            const notes = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
+            // Pick 3 random distinct notes
+            const shuffled = [...notes].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 3);
+
+            // Assign classes n1, n2, n3 for CSS-driven randomness
+            return `
+                <div class="loader-tiny">
+                    <span class="note n1">${selected[0]}</span>
+                    <span class="note n2">${selected[1]}</span>
+                    <span class="note n3">${selected[2]}</span>
+                </div>
+            `;
+        }
+
+        function getMediumLoaderHTML() {
+            const notes = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
+            const shuffled = [...notes].sort(() => 0.5 - Math.random());
+            const selected = shuffled.slice(0, 3);
+
+            return `
+                <div class="loader-medium">
+                    <span class="note n1" style="font-size: 28px;">${selected[0]}</span>
+                    <span class="note n2" style="font-size: 34px;">${selected[1]}</span>
+                    <span class="note n3" style="font-size: 30px;">${selected[2]}</span>
+                </div>
+            `;
+        }
 
         // Active filters for all-songs view
         let activeFilters = {
@@ -12730,7 +12900,7 @@
                     <div class="page-title">
                         <div class="page-title-bar">ניגונים</div>
                         <div class="page-title-content">
-                            <div class="subtitle ${!songsFullyLoaded ? 'loading-state' : ''}">${!songsFullyLoaded ? '<div class="loader-tiny"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div> ' : ''}<span class="count-number">${filteredSongs.length}</span> ניגונים</div>
+                            <div class="subtitle ${!songsFullyLoaded ? 'loading-state' : ''}">${!songsFullyLoaded ? getTinyLoaderHTML() + ' ' : ''}<span class="count-number">${filteredSongs.length}</span> ניגונים</div>
                             <div class="loading-wave-bar" id="loadingWaveBar"></div>
                         </div>
                     </div>
@@ -14095,7 +14265,7 @@
                 // Show loading state with musical notes + count up
                 let loader = subtitle.querySelector('.loader-tiny');
                 if (!loader) {
-                    subtitle.innerHTML = `<div class="loader-tiny"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div> <span class="count-number">0</span> ניגונים`;
+                    subtitle.innerHTML = `${getTinyLoaderHTML()} <span class="count-number">0</span> ניגונים`;
                     countSpan = subtitle.querySelector('.count-number');
                 }
                 subtitle.classList.add('loading-state');
@@ -14398,7 +14568,7 @@
                 }
 
                 // Track if we're showing skeleton (data isn't loaded yet)
-                const hadSkeleton = targetPage !== 'home' && targetPage !== 'search' && !isDataLoadedForPage(targetPage);
+                const hadSkeleton = targetPage !== 'home' && !isDataLoadedForPage(targetPage);
 
                 // Show skeleton loader if data not loaded
                 // For songs: don't await, let background fetch populate the grid
@@ -14426,27 +14596,17 @@
                     const searchInput = document.getElementById('globalSearch');
                     if (searchInput) searchInput.value = idOrName;
 
-                    // Always show loading indicator for consistent UX
-                    const content = document.getElementById('mainContent');
-                    if (content) {
-                        content.innerHTML = `
-                            <div class="page-theme-nigun">
-                                <div class="page-title">
-                                    <div class="page-title-bar">זוכט "${idOrName}"...</div>
-                                    <div class="page-title-content">
-                                        <div class="subtitle">לאודינג רעזולטאטן...</div>
-                                    </div>
-                                </div>
-                                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 16px;">
-                                    <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                                    <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאדינג רעזולטאטן...</p>
-                                </div>
-                            </div>
-                        `;
-                    }
-
-                    // Ensure data is loaded for search
+                    // Show loading indicator and ensure data is loaded for search
                     if (!isDataLoadedForPage('search')) {
+                        const content = document.getElementById('mainContent');
+                        if (content) {
+                            content.innerHTML = `
+                                <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
+                                    <div class="loading-wave-bar"></div>
+                                    <p style="color: var(--text-secondary); font-size: 14px;">לאָדן...</p>
+                                </div>
+                            `;
+                        }
                         await ensureDataForPage('search');
                     }
 
@@ -14465,7 +14625,7 @@
                                 <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
                                     <div class="loading-wave-bar"></div>
                                     <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
-                                        <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
+                                        ${getMediumLoaderHTML()}
                                         <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאודינג...</p>
                                     </div>
                                 </div>
@@ -14575,7 +14735,7 @@
                         <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
                             <div class="loading-wave-bar"></div>
                             <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
-                                <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
+                                ${getMediumLoaderHTML()}
                                 <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאודינג ${name}...</p>
                             </div>
                         </div>
