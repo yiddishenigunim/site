@@ -12920,7 +12920,7 @@
                                         <div class="skeleton-song-row"></div>
                                     ` : ''}
                                 </div>
-                                <div id="songsLoadMoreIndicator" style="text-align: center; padding: 20px; color: var(--text-muted);"></div>
+                                <div id="songsLoadMoreIndicator" style="height: 1px;"></div>
                             </div>
                         </div>
 
@@ -13112,16 +13112,6 @@
             // Mark initial load as complete after first batch
             if (songsLazyState.isInitialLoad) {
                 songsLazyState.isInitialLoad = false;
-            }
-
-            // Update indicator
-            const indicator = document.getElementById('songsLoadMoreIndicator');
-            if (indicator) {
-                if (songsLazyState.currentIndex >= filteredSongs.length) {
-                    indicator.textContent = '';
-                } else {
-                    indicator.textContent = `${songsLazyState.currentIndex} / ${filteredSongs.length}`;
-                }
             }
 
             console.log(`Loaded ${batch.length} songs (${songsLazyState.currentIndex}/${filteredSongs.length})`);
