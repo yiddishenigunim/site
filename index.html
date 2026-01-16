@@ -11297,6 +11297,25 @@
                     if (waitForAll && !songsFullyLoaded) {
                         await fetchSongsInBackground();
                     }
+                    // For nigun detail pages, also ensure related data is loaded (for links)
+                    if (waitForAll) {
+                        const relatedDataPromises = [];
+                        if (!loadedCategories.chatzeros) {
+                            relatedDataPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
+                        }
+                        if (!loadedCategories.mechabrim) {
+                            relatedDataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
+                        }
+                        if (!loadedCategories.verter) {
+                            relatedDataPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
+                        }
+                        if (!loadedCategories.albums) {
+                            relatedDataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
+                        }
+                        if (relatedDataPromises.length > 0) {
+                            await Promise.all(relatedDataPromises);
+                        }
+                    }
                     break;
                 case 'chatzeros':
                     if (!loadedCategories.chatzeros) {
@@ -14797,7 +14816,8 @@
         }
 
         // Render detail page for a specific item
-        async function renderDetailPage() {
+        // All required data is loaded BEFORE this function is called (in handleURLChange/navigateToDetail)
+        function renderDetailPage() {
             console.log('renderDetailPage called, currentDetailView:', currentDetailView);
             const { type, name } = currentDetailView;
             const container = document.getElementById('mainContent');
@@ -14809,24 +14829,8 @@
             }
 
             // Handle nigun detail page separately
+            // Related data is already loaded by ensureDataForPage('songs', true) in handleURLChange
             if (type === 'nigunim') {
-                // Wait for related data to load so links have proper IDs
-                const dataPromises = [];
-                if (!loadedCategories.chatzeros) {
-                    dataPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
-                }
-                if (!loadedCategories.mechabrim) {
-                    dataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
-                }
-                if (!loadedCategories.verter) {
-                    dataPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
-                }
-                if (!loadedCategories.albums) {
-                    dataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
-                }
-                if (dataPromises.length > 0) {
-                    await Promise.all(dataPromises);
-                }
                 renderNigunDetailPage(container, name);
                 return;
             }
