@@ -13144,7 +13144,7 @@
                                 ${options.map(opt => {
                 const escapedOpt = opt.replace(/"/g, '&quot;');
                 return `
-                                    <label class="sidebar-filter-option" data-value="${escapedOpt.toLowerCase()}" onclick="event.stopPropagation()">
+                                    <label class="sidebar-filter-option" onclick="event.stopPropagation()">
                                         <input type="checkbox"
                                             value="${escapedOpt}"
                                             ${activeFilters[key]?.includes(opt) ? 'checked' : ''}
