@@ -13142,13 +13142,12 @@
                             </div>
                             <div class="dropdown-options" id="dropdown-options-${key}">
                                 ${options.map(opt => {
-                const escapedOpt = opt.replace(/'/g, "\\'").replace(/"/g, '\\"');
                 return `
                                     <label class="sidebar-filter-option" data-value="${opt.toLowerCase()}" onclick="event.stopPropagation()">
-                                        <input type="checkbox" 
-                                            value="${opt.replace(/"/g, '&quot;')}" 
+                                        <input type="checkbox"
+                                            value="${opt.replace(/"/g, '&quot;')}"
                                             ${activeFilters[key]?.includes(opt) ? 'checked' : ''}
-                                            onchange="handleFilterChange('${key}', '${escapedOpt}', this.checked)">
+                                            onchange="handleFilterChange('${key}', this.value, this.checked)">
                                         ${opt}
                                     </label>
                                 `}).join('')}
@@ -13220,10 +13219,10 @@
                     <div class="filter-dropdown-content" id="dropdown-${key}">
                         ${options.map(opt => `
                             <label class="filter-option">
-                                <input type="checkbox" 
-                                    value="${opt}" 
+                                <input type="checkbox"
+                                    value="${opt.replace(/"/g, '&quot;')}"
                                     ${activeFilters[key]?.includes(opt) ? 'checked' : ''}
-                                    onchange="handleFilterChange('${key}', '${opt}', this.checked)">
+                                    onchange="handleFilterChange('${key}', this.value, this.checked)">
                                 ${opt} (${data[opt].length})
                             </label>
                         `).join('')}
