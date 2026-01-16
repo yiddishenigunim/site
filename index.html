@@ -13142,10 +13142,11 @@
                             </div>
                             <div class="dropdown-options" id="dropdown-options-${key}">
                                 ${options.map(opt => {
+                const escapedOpt = opt.replace(/"/g, '&quot;');
                 return `
-                                    <label class="sidebar-filter-option" data-value="${opt.toLowerCase()}" onclick="event.stopPropagation()">
+                                    <label class="sidebar-filter-option" data-value="${escapedOpt.toLowerCase()}" onclick="event.stopPropagation()">
                                         <input type="checkbox"
-                                            value="${opt.replace(/"/g, '&quot;')}"
+                                            value="${escapedOpt}"
                                             ${activeFilters[key]?.includes(opt) ? 'checked' : ''}
                                             onchange="handleFilterChange('${key}', this.value, this.checked)">
                                         ${opt}
