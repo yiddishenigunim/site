@@ -101,6 +101,11 @@
             --color-home-pale: color-mix(in srgb, var(--color-nigun-pale) 33%, color-mix(in srgb, var(--color-chatzer-pale) 50%, var(--color-mechaber-pale)));
         }
 
+        /* Full page background color */
+        html {
+            background: #f8fafc;
+        }
+
         /* Loading wave bar animation */
         .loading-wave-bar {
             position: absolute;
@@ -396,7 +401,7 @@
 
         body {
             font-family: 'Heebo', 'David Libre', sans-serif;
-            background: var(--bg-cream);
+            background: transparent;
             min-height: 100vh;
             direction: rtl;
             color: var(--text-dark);
@@ -406,11 +411,13 @@
 
         /* Header */
         .main-header {
-            background: white;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(248, 250, 252, 0.85) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .header-main {
@@ -747,134 +754,650 @@
             }
         }
 
+        .global-search-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: var(--gradient-main);
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(156, 91, 181, 0.4);
+            margin-left: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .global-search-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            transform: translateX(-100%) rotate(45deg);
+            transition: transform 0.4s ease;
+        }
+
+        .global-search-btn:hover {
+            transform: translateY(-2px) scale(1.1);
+            box-shadow: 0 8px 25px rgba(156, 91, 181, 0.6);
+        }
+
+        .global-search-btn:hover::before {
+            transform: translateX(100%) rotate(45deg);
+        }
+
+        .global-search-btn svg {
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .global-search-btn:hover svg {
+            transform: scale(1.15) rotate(15deg);
+        }
+
+        .search-btn-text {
+            max-width: 0;
+            opacity: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            transition: all 0.4s ease;
+            font-weight: 700;
+            font-size: 0.95em;
+            margin-right: 0;
+        }
+
+        .global-search-btn:hover {
+            width: 95px;
+            /* Expand to show text */
+            border-radius: 30px;
+            /* Pill shape */
+            gap: 6px;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(156, 91, 181, 0.6);
+        }
+
+        .global-search-btn:hover .search-btn-text {
+            max-width: 50px;
+            opacity: 1;
+            margin-right: 4px;
+        }
+
+        /* Compact header buttons - gradient only */
         .stream-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 8px 18px;
-            background: linear-gradient(145deg, #1a3a5a, #0a2a4a);
-            border: 1px solid rgba(212, 175, 55, 0.4);
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--gradient-main);
+            border: none;
             border-radius: 20px;
             text-decoration: none;
-            font-size: 0.9em;
+            font-size: 0.85em;
             font-weight: 600;
-            color: #f5e6c8;
+            color: white;
             transition: all 0.3s ease;
-            margin-left: 10px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 3px 12px rgba(156, 91, 181, 0.3);
+            white-space: nowrap;
+        }
+
+        .stream-btn::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: white;
+            border-radius: 50%;
+            animation: pulse-white 2s infinite;
+        }
+
+        @keyframes pulse-white {
+
+            0%,
+            100% {
+                opacity: 0.6;
+                transform: scale(0.9);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
         }
 
         .stream-btn:hover {
-            transform: scale(1.05);
-            border-color: #d4af37;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.2);
-            background: linear-gradient(145deg, #2a4a6a, #1a3a5a);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 91, 181, 0.5);
         }
 
-        /* Navigation - Simple Box Buttons */
+        /* New swapped button styles */
+        .search-pill-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--gradient-main);
+            border: none;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 12px rgba(156, 91, 181, 0.3);
+            white-space: nowrap;
+        }
+
+        .search-pill-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 91, 181, 0.5);
+        }
+
+        /* Search button with icon + text */
+        .search-btn-new {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 14px;
+            background: var(--gradient-main);
+            border: none;
+            border-radius: 20px;
+            font-family: inherit;
+            font-size: 0.85em;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 12px rgba(156, 91, 181, 0.3);
+            white-space: nowrap;
+        }
+
+        .search-icon-new {
+            width: 16px;
+            height: 16px;
+            fill: white;
+        }
+
+        .search-btn-new:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(156, 91, 181, 0.5);
+        }
+
+        /* Streaming ball button - expands on hover */
+        .stream-ball-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 32px;
+            height: 32px;
+            padding: 0 10px;
+            background: transparent;
+            border: 2px solid #9c5bb5;
+            border-radius: 16px;
+            text-decoration: none;
+            color: #9c5bb5;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .stream-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--gradient-main);
+            border-radius: 50%;
+            animation: pulse-dot 2s infinite;
+            flex-shrink: 0;
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 0.5;
+                transform: scale(0.9);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.1);
+            }
+        }
+
+        .stream-text-new {
+            max-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            font-size: 0.8em;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s ease;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stream-ball-btn:hover {
+            padding: 6px 12px;
+            gap: 5px;
+            background: rgba(156, 91, 181, 0.05);
+        }
+
+        .stream-ball-btn:hover .stream-text-new {
+            max-width: 80px;
+            opacity: 1;
+            margin-left: 4px;
+        }
+
+        .global-search-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background: var(--gradient-main);
+            border: none;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 12px rgba(156, 91, 181, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .global-search-btn:hover {
+            transform: translateY(-2px) scale(1.1);
+            box-shadow: 0 6px 20px rgba(156, 91, 181, 0.5);
+        }
+
+        .search-btn-text {
+            display: none;
+            /* Hide text for compact design */
+        }
+
+        /* Navigation - Clean Layout, Individual Button Colors */
         .main-nav {
             display: flex;
-            gap: 5px;
+            gap: 16px;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
+            perspective: 800px;
+        }
+
+        .main-nav>* {
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        /* Tablecloth slide effect - corrected for divider at position 5 */
+        /* Nav order: 1=Nigunim, 2=Mechabrim, 3=Verter, 4=Zmanim, 5=Divider, 6=Docs */
+
+        /* When hovering Nigunim (1) - others slide right */
+        .main-nav>*:nth-child(1):hover~* {
+            transform: translateX(8px);
+        }
+
+        /* When hovering Mechabrim (2) */
+        .main-nav:has(*:nth-child(2):hover)>*:nth-child(1) {
+            transform: translateX(-6px);
+        }
+
+        .main-nav>*:nth-child(2):hover~* {
+            transform: translateX(6px);
+        }
+
+        /* When hovering Verter (3) */
+        .main-nav:has(*:nth-child(3):hover)>*:nth-child(1),
+        .main-nav:has(*:nth-child(3):hover)>*:nth-child(2) {
+            transform: translateX(-5px);
+        }
+
+        .main-nav>*:nth-child(3):hover~* {
+            transform: translateX(5px);
+        }
+
+        /* When hovering Zmanim (4) */
+        .main-nav:has(*:nth-child(4):hover)>*:nth-child(1),
+        .main-nav:has(*:nth-child(4):hover)>*:nth-child(2),
+        .main-nav:has(*:nth-child(4):hover)>*:nth-child(3) {
+            transform: translateX(-4px);
+        }
+
+        .main-nav>*:nth-child(4):hover~* {
+            transform: translateX(4px);
+        }
+
+        /* When hovering Docs (6) - all others slide left toward it */
+        .main-nav:has(*:nth-child(6):hover)>*:nth-child(1),
+        .main-nav:has(*:nth-child(6):hover)>*:nth-child(2),
+        .main-nav:has(*:nth-child(6):hover)>*:nth-child(3),
+        .main-nav:has(*:nth-child(6):hover)>*:nth-child(4),
+        .main-nav:has(*:nth-child(6):hover)>*:nth-child(5) {
+            transform: translateX(-8px);
+        }
+
+        .nav-btn {
+            padding: 12px 28px;
+            background: var(--color-nigun);
+            border: none;
+            border-radius: 30px;
+            font-size: 1.1em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            font-family: inherit;
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.35);
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.5px;
+        }
+
+        /* Animated glow ring */
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 35px;
+            background: var(--color-nigun);
+            z-index: -1;
+            opacity: 0.5;
+            filter: blur(8px);
+            transition: all 0.4s ease;
+        }
+
+        /* Inner shine effect */
+        /* Inner shine effect - RTL direction, hover only */
+        .nav-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: none;
+        }
+
+        .nav-btn:hover::after {
+            left: -100%;
+            transition: left 0.5s ease;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(3px) scale(1.08);
+            box-shadow: 0 8px 25px rgba(74, 124, 201, 0.5);
+        }
+
+        .nav-btn:hover::before {
+            opacity: 0.8;
+            filter: blur(12px);
         }
 
         .nav-dropdown {
             position: relative;
         }
 
+        /* Base dropdown button style */
         .nav-dropdown-btn {
-            padding: 8px 14px;
-            border: 1px solid #ddd;
-            background: white;
-            border-radius: 6px;
-            font-size: 0.9em;
-            font-weight: 500;
+            padding: 10px 18px;
+            border: none;
+            border-radius: 25px;
+            font-size: 0.95em;
+            font-weight: 600;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             font-family: inherit;
             display: flex;
             align-items: center;
-            gap: 6px;
-            color: var(--text-dark);
+            gap: 8px;
             text-decoration: none;
-        }
-
-        .nav-dropdown-btn:hover {
-            border-color: #bbb;
-            background: #f5f5f5;
+            position: relative;
+            z-index: 2;
         }
 
         .nav-dropdown-btn .nav-arrow {
-            font-size: 0.6em;
-            opacity: 0.5;
+            font-size: 1.1em;
+            opacity: 0.6;
+            transition: transform 0.3s ease;
+        }
+
+        .nav-dropdown:hover .nav-dropdown-btn .nav-arrow {
+            transform: rotate(180deg);
+        }
+
+        /* Each button with its own category color border */
+        .nav-dropdown-btn.nav-mechaber {
+            background: white;
+            color: var(--color-mechaber);
+            border: 2px solid var(--color-mechaber);
+            box-shadow: 0 2px 8px rgba(196, 53, 168, 0.2);
+        }
+
+        .nav-dropdown-btn.nav-mechaber:hover,
+        .nav-dropdown:hover .nav-dropdown-btn.nav-mechaber {
+            background: var(--color-mechaber-pale);
+            transform: translateY(3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(196, 53, 168, 0.4);
+        }
+
+        .nav-dropdown-btn.nav-verter {
+            background: white;
+            color: var(--color-verter);
+            border: 2px solid var(--color-verter);
+            box-shadow: 0 2px 8px rgba(107, 114, 128, 0.2);
+        }
+
+        .nav-dropdown-btn.nav-verter:hover,
+        .nav-dropdown:hover .nav-dropdown-btn.nav-verter {
+            background: var(--color-verter-pale);
+            transform: translateY(3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
+        }
+
+        .nav-dropdown-btn.nav-zman {
+            background: white;
+            color: var(--color-zman);
+            border: 2px solid var(--color-zman);
+            box-shadow: 0 2px 8px rgba(233, 106, 27, 0.2);
+        }
+
+        .nav-dropdown-btn.nav-zman:hover,
+        .nav-dropdown:hover .nav-dropdown-btn.nav-zman {
+            background: var(--color-zman-pale);
+            transform: translateY(3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(233, 106, 27, 0.4);
+        }
+
+        .nav-dropdown-btn.nav-docs {
+            background: white;
+            color: var(--color-document);
+            border: 2px solid var(--color-document);
+            box-shadow: 0 2px 8px rgba(0, 160, 176, 0.2);
+            border-radius: 10px;
+            padding: 6px 12px;
+            gap: 3px;
+            font-size: 0.82em;
+        }
+
+        .nav-dropdown-btn.nav-docs:hover,
+        .nav-dropdown:hover .nav-dropdown-btn.nav-docs {
+            background: var(--color-document-pale);
+            transform: translateY(3px) scale(1.05);
+            box-shadow: 0 6px 20px rgba(0, 160, 176, 0.4);
         }
 
         .nav-dropdown-content {
             display: none;
             position: absolute;
             top: 100%;
-            right: 0;
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            margin-top: 4px;
+            right: auto;
+            left: 50%;
+            transform: translateX(-50%);
+            background: transparent;
             min-width: 160px;
             z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: visible;
+            padding-top: 12px;
         }
 
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Bridge between button and dropdown to prevent losing hover */
         .nav-dropdown-content::before {
             content: '';
             position: absolute;
-            top: -8px;
-            right: 0;
-            left: 0;
-            height: 10px;
+            top: 0;
+            right: -20px;
+            left: -20px;
+            height: 15px;
+            pointer-events: none;
         }
 
         .nav-dropdown-content .dropdown-inner {
-            padding: 4px 0;
+            background: transparent;
+            border-radius: 16px;
+            padding: 6px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
         }
 
+        @keyframes dropdownSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Keep dropdown open and parent styled when hovering anywhere in the dropdown area */
         .nav-dropdown:hover .nav-dropdown-content,
-        .nav-dropdown-content:hover {
+        .nav-dropdown:focus-within .nav-dropdown-content {
             display: block;
         }
+
+        /* Parent button stays in hover state when dropdown is open */
+        /* Individual button hover styles handle the transform */
 
         .nav-dropdown-content.hiding {
             display: none !important;
         }
 
-        /* Dropdown item colors - small color box */
+        /* Beautiful dropdown items - each as separate white card */
         .nav-dropdown-item {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 8px 14px;
+            gap: 12px;
+            padding: 12px 16px;
+            margin: 0;
             cursor: pointer;
-            transition: var(--transition-smooth);
-            font-size: 0.85em;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 0.9em;
+            font-weight: 500;
             background: white;
             text-decoration: none;
-            color: inherit;
+            color: var(--text-dark);
+            border-radius: 14px;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            animation: itemDropIn 0.35s ease-out forwards;
+            border: none;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Staggered animation delays - items come in one by one */
+        .nav-dropdown-item:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        .nav-dropdown-item:nth-child(2) {
+            animation-delay: 0.08s;
+        }
+
+        .nav-dropdown-item:nth-child(3) {
+            animation-delay: 0.16s;
+        }
+
+        .nav-dropdown-item:nth-child(4) {
+            animation-delay: 0.24s;
+        }
+
+        .nav-dropdown-item:nth-child(5) {
+            animation-delay: 0.32s;
+        }
+
+        .nav-dropdown-item:nth-child(6) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes itemDropIn {
+            from {
+                opacity: 0;
+                transform: translateY(-15px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .nav-dropdown-item:hover {
-            background: #f5f5f5;
+            transform: translateX(-4px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
+        /* Color indicator dot */
         .nav-dropdown-item::before {
             content: '';
-            width: 8px;
-            height: 8px;
-            border-radius: 2px;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
             flex-shrink: 0;
+            transition: all 0.25s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Stars need bigger size */
+        .nav-dropdown-item[data-dest="resources"]::before,
+        .nav-dropdown-item[data-dest="albums"]::before,
+        .nav-dropdown-item[data-dest="documents"]::before,
+        .nav-dropdown-item[data-dest="info"]::before {
+            width: 14px;
+            height: 14px;
+        }
+
+        .nav-dropdown-item:hover::before {
+            transform: scale(1.3);
         }
 
         .nav-dropdown-item[data-dest="home"]::before {
-            background: var(--gradient-main);
+            background: var(--color-nigun);
         }
 
         .nav-dropdown-item[data-dest="nigunim"]::before {
@@ -891,34 +1414,56 @@
 
         .nav-dropdown-item[data-dest="verter"]::before {
             background: var(--color-verter);
+            border-radius: 2px;
+            /* Square shape */
         }
 
         .nav-dropdown-item[data-dest="zmanim"]::before {
             background: var(--color-zman);
+            border-radius: 0;
+            clip-path: polygon(0 50%, 100% 0, 100% 100%);
+            /* Play triangle - RTL direction */
         }
 
         .nav-dropdown-item[data-dest="music"]::before {
             background: var(--color-music);
+            border-radius: 2px;
+            /* Square shape like verter */
         }
 
         .nav-dropdown-item[data-dest="collections"]::before {
             background: var(--color-collection);
+            border-radius: 0;
+            clip-path: polygon(0 50%, 100% 0, 100% 100%);
+            /* Play triangle - RTL direction */
         }
 
         .nav-dropdown-item[data-dest="resources"]::before {
             background: var(--color-resource);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            /* Star */
+            border-radius: 0;
         }
 
         .nav-dropdown-item[data-dest="albums"]::before {
             background: var(--color-album);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            /* Star */
+            border-radius: 0;
         }
 
         .nav-dropdown-item[data-dest="documents"]::before {
             background: var(--color-document);
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            /* Star */
+            border-radius: 0;
         }
 
         .nav-dropdown-item[data-dest="info"]::before {
             background: #999;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            /* Star */
+            border-radius: 0;
         }
 
         /* Navigation items text colors on hover */
@@ -2230,43 +2775,43 @@
         }
 
         .page-theme-chatzer {
-            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-mechaber {
-            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-verter {
-            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-zman {
-            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-collection {
-            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-nigun {
-            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-resource {
-            background: linear-gradient(180deg, var(--color-resource-pale) 0%, color-mix(in srgb, var(--color-resource-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-resource-pale) 0%, color-mix(in srgb, var(--color-resource-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-document {
-            background: linear-gradient(180deg, var(--color-document-pale) 0%, color-mix(in srgb, var(--color-document-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-document-pale) 0%, color-mix(in srgb, var(--color-document-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-album {
-            background: linear-gradient(180deg, var(--color-album-pale) 0%, color-mix(in srgb, var(--color-album-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-album-pale) 0%, color-mix(in srgb, var(--color-album-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-music {
-            background: linear-gradient(180deg, var(--color-music-pale) 0%, color-mix(in srgb, var(--color-music-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-music-pale) 0%, color-mix(in srgb, var(--color-music-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         /* Center content within full-width themed pages */
@@ -2857,7 +3402,7 @@
 
         .pdf-popup-footer {
             padding: 10px 20px;
-            background: var(--bg-cream);
+            background: #f8fafc;
             display: flex;
             justify-content: center;
             gap: 10px;
@@ -3710,7 +4255,7 @@
             align-items: center;
             gap: 12px;
             padding: 12px 15px;
-            background: var(--bg-cream);
+            background: #f8fafc;
             border-radius: 12px;
             cursor: pointer;
             transition: var(--transition-smooth);
@@ -4297,7 +4842,7 @@
             padding-left: calc(50vw - 50%);
             padding-right: calc(50vw - 50%);
             min-height: calc(100vh - 180px);
-            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .nigun-detail-page>* {
@@ -5966,27 +6511,27 @@
         }
 
         .detail-page.theme-chatzer {
-            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .detail-page.theme-mechaber {
-            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .detail-page.theme-verter {
-            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .detail-page.theme-zman {
-            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .detail-page.theme-piyut {
-            background: linear-gradient(180deg, #e8f5e9 0%, color-mix(in srgb, #e8f5e9 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, #e8f5e9 0%, color-mix(in srgb, #e8f5e9 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .detail-page.theme-collection {
-            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         /* Center content within full-width themed detail pages */
@@ -6329,7 +6874,7 @@
         }
 
         .detail-info-item {
-            background: var(--bg-cream);
+            background: #f8fafc;
             padding: 12px 15px;
             border-radius: 10px;
             border-right: 3px solid var(--primary);
@@ -6389,7 +6934,7 @@
         }
 
         .mechaber-card {
-            background: var(--bg-cream);
+            background: #f8fafc;
             border-radius: 12px;
             padding: 15px;
             text-align: center;
@@ -6484,7 +7029,7 @@
         }
 
         .verter-content {
-            background: linear-gradient(135deg, var(--bg-cream) 0%, #fff 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #fff 100%);
             padding: 25px;
             border-radius: 15px;
             border-right: 4px solid var(--accent-gold);
@@ -7982,7 +8527,7 @@
         }
 
         .nigun-modal-content {
-            background: var(--bg-cream);
+            background: #f8fafc;
             border-radius: 20px;
             max-width: 850px;
             width: 100%;
@@ -8262,7 +8807,7 @@
 
         .hover-tooltip-stats {
             padding: 10px 15px;
-            background: var(--bg-cream);
+            background: #f8fafc;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
             font-size: 0.9em;
             color: var(--text-muted);
@@ -9975,79 +10520,245 @@
                 </div>
             </a>
 
-            <nav class="header-nav">
-                <div class="main-nav">
-                    <!-- ניגונים -->
-                    <div class="nav-dropdown">
-                        <a class="nav-dropdown-btn nav-nigunim" href="#/nigunim">
-                            ניגונים
-                            <span class="nav-arrow">▼</span>
-                        </a>
-                        <div class="nav-dropdown-content">
-                            <div class="dropdown-inner">
-                                <a class="nav-dropdown-item" data-dest="nigunim" href="#/nigunim">
-                                    <span>אלע ניגונים</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="mechabrim" href="#/mechabrim">
-                                    <span>מחברים</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="chatzeros" href="#/chatzeros">
-                                    <span>חצרות</span>
-                                </a>
-                            </div>
+            <!-- Removed nav wrapper, elements are now direct children for better centering -->
+            <div class="main-nav">
+                <!-- ניגונים - Standalone (no children) -->
+                <a class="nav-btn nav-nigunim" href="#/nigunim">ניגונים</a>
+
+                <!-- מחברים - with children: מחברים, חצרות -->
+                <div class="nav-dropdown">
+                    <a class="nav-dropdown-btn nav-mechaber" href="#/mechabrim">
+                        מחברים
+                        <span class="nav-arrow">▾</span>
+                    </a>
+                    <div class="nav-dropdown-content">
+                        <div class="dropdown-inner">
+                            <a class="nav-dropdown-item" data-dest="mechabrim" href="#/mechabrim">
+                                <span>מחברים</span>
+                            </a>
+                            <a class="nav-dropdown-item" data-dest="chatzeros" href="#/chatzeros">
+                                <span>חצרות</span>
+                            </a>
                         </div>
                     </div>
+                </div>
 
-                    <!-- פאסיגע ניגונים -->
-                    <div class="nav-dropdown">
-                        <a class="nav-dropdown-btn nav-pasig" href="#/zmanim">
-                            פאסיגע ניגונים
-                            <span class="nav-arrow">▼</span>
-                        </a>
-                        <div class="nav-dropdown-content">
-                            <div class="dropdown-inner">
-                                <a class="nav-dropdown-item" data-dest="zmanim" href="#/zmanim">
-                                    <span>מועדים וזמנים</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="collections" href="#/collections">
-                                    <span>קאלעקשאנס</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="verter" href="#/verter">
-                                    <span>ווערטער</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="music" href="#/music">
-                                    <span>ריטעם</span>
-                                </a>
-                            </div>
+                <!-- ווערטער - with children: ווערטער, ריטעם -->
+                <div class="nav-dropdown">
+                    <a class="nav-dropdown-btn nav-verter" href="#/verter">
+                        ווערטער
+                        <span class="nav-arrow">▾</span>
+                    </a>
+                    <div class="nav-dropdown-content">
+                        <div class="dropdown-inner">
+                            <a class="nav-dropdown-item" data-dest="verter" href="#/verter">
+                                <span>ווערטער</span>
+                            </a>
+                            <a class="nav-dropdown-item" data-dest="music" href="#/music">
+                                <span>ריטעם</span>
+                            </a>
                         </div>
                     </div>
+                </div>
 
-                    <!-- דאקומענטאציע -->
-                    <div class="nav-dropdown">
-                        <a class="nav-dropdown-btn nav-docs" href="#/documents">
-                            דאקומענטאציע
-                            <span class="nav-arrow">▼</span>
-                        </a>
-                        <div class="nav-dropdown-content">
-                            <div class="dropdown-inner">
-                                <a class="nav-dropdown-item" data-dest="resources" href="#/resources">
-                                    <span>רעסורסן</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="albums" href="#/albums">
-                                    <span>אלבומס</span>
-                                </a>
-                                <a class="nav-dropdown-item" data-dest="documents" href="#/documents">
-                                    <span>דאקומענטן</span>
-                                </a>
-                            </div>
+                <!-- זמנים - with children: מועדים וזמנים, קאלעקשאנס, פיוטים -->
+                <div class="nav-dropdown">
+                    <a class="nav-dropdown-btn nav-zman" href="#/zmanim">
+                        זמנים
+                        <span class="nav-arrow">▾</span>
+                    </a>
+                    <div class="nav-dropdown-content">
+                        <div class="dropdown-inner">
+                            <a class="nav-dropdown-item" data-dest="zmanim" href="#/zmanim">
+                                <span>מועדים וזמנים</span>
+                            </a>
+                            <a class="nav-dropdown-item" data-dest="collections" href="#/collections">
+                                <span>קאלעקשאנס</span>
+                            </a>
+                            <a class="nav-dropdown-item" data-dest="piyutim" href="#/piyutim">
+                                <span>פיוטים</span>
+                            </a>
                         </div>
                     </div>
-            </nav>
+                </div>
 
-            <button class="global-search-btn" onclick="openSearchModal()" title="זוך">🔍</button>
-            <a href="https://stream.oitzerhanigunim.org/" target="_blank" class="stream-btn"
-                title="סטרימינג">סטרימינג</a>
-            </nav>
+                <!-- Divider -->
+                <div class="nav-divider"></div>
+
+                <style>
+                    .nav-divider {
+                        width: 4px;
+                        height: 4px;
+                        background: var(--gradient-main);
+                        margin: 0 6px;
+                        opacity: 0.6;
+                        border-radius: 50%;
+                    }
+                </style>
+
+                <!-- דאקומענטאציע - with children: רעסורסן, ארכיוון, אלבומס -->
+                <div class="nav-dropdown">
+                    <a class="nav-dropdown-btn nav-docs" href="#/resources">
+                        דאקומענטאציע
+                        <span class="nav-arrow">▾</span>
+                    </a>
+                    <div class="nav-dropdown-content">
+                        <div class="dropdown-inner">
+                            <a class="nav-dropdown-item" data-dest="resources" href="#/resources">
+                                <span>רעסורסן</span>
+                            </a>
+                            <a class="nav-dropdown-item" data-dest="documents" href="#/documents">
+                                <span>ארכיוון</span>
+                            </a>
+                            <a class="nav-dropdown-item" data-dest="albums" href="#/albums">
+                                <span>אלבומס</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right side buttons wrapper - matches logo width on left -->
+            <div class="header-right-buttons">
+                <!-- Search Button - with magnifying glass icon + text -->
+                <button class="search-btn-new" onclick="openSearchModal()" title="זוך">
+                    <svg class="search-icon-new" viewBox="0 0 24 24" fill="currentColor">
+                        <path
+                            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                    </svg>
+                    <span class="search-text-new">זוך</span>
+                </button>
+
+                <!-- Streaming Button - ball with blinking dot, expands on hover -->
+                <a href="https://stream.oitzerhanigunim.org/" target="_blank" class="stream-ball-btn">
+                    <span class="stream-dot"></span>
+                    <span class="stream-text-new">סטרימינג</span>
+                </a>
+            </div>
+        </div>
+
+        <style>
+            /* Sticky header with hide on scroll down, show on scroll up */
+            .main-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                z-index: 1000;
+                transition: transform 0.4s ease, opacity 0.4s ease;
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.85) 100%);
+                backdrop-filter: blur(16px);
+                -webkit-backdrop-filter: blur(16px);
+            }
+
+            .main-header.header-hidden {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+
+            /* Main content - offset for fixed header */
+            .main-content {
+                padding-top: 80px;
+            }
+
+            .header-main {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                /* Better distribution */
+                gap: 30px;
+                /* Increased gap */
+                width: 100%;
+                max-width: 1400px;
+                margin: 0 auto;
+                padding: 12px 30px;
+                flex-wrap: wrap;
+                /* Allow wrapping on very small screens */
+            }
+
+            .logo {
+                margin-left: 20px;
+                /* Space between logo and nav */
+            }
+
+            .main-nav {
+                margin: 0;
+                /* Reset margins */
+            }
+
+            .global-search-btn {
+                margin-right: 0;
+            }
+
+            .header-right-buttons {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                margin-right: 20px;
+                /* Match logo margin on left */
+            }
+
+            /* Logo hover effect with fade both ways */
+            .logo {
+                transition: all 0.4s ease;
+            }
+
+            .logo-icon,
+            .logo-text {
+                transition: filter 0.4s ease, transform 0.4s ease;
+            }
+
+            .logo:hover {
+                transform: scale(1.05);
+            }
+
+            .logo:hover .logo-icon {
+                filter: drop-shadow(0 4px 12px rgba(156, 91, 181, 0.4));
+            }
+
+            .logo:hover .logo-text {
+                filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+            }
+
+            /* Search button styled like logo */
+            .global-search-btn {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: transparent;
+                border: none;
+                cursor: pointer;
+                padding: 0;
+                transition: all 0.4s ease;
+            }
+
+            .search-icon {
+                width: 32px;
+                height: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .search-icon svg {
+                width: 100%;
+                height: 100%;
+                fill: url(#search-gradient);
+            }
+
+            .search-text {
+                font-size: 1.1em;
+                font-weight: 700;
+                background: var(--gradient-main);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+            }
+
+            .global-search-btn:hover {
+                opacity: 0.8;
+            }
+        </style>
         </div>
     </header>
 
@@ -19145,6 +19856,43 @@
         setTimeout(() => {
             initTypingForInput('homeSearchInput');
         }, 500);
+
+        // Header hide on scroll down, show on scroll up
+        (function () {
+            const header = document.querySelector('.main-header');
+            if (!header) return;
+
+            let lastScrollY = window.scrollY;
+            let ticking = false;
+
+            function updateHeader() {
+                const currentScrollY = window.scrollY;
+
+                // Only hide if scrolled past 100px
+                if (currentScrollY > 100) {
+                    if (currentScrollY > lastScrollY) {
+                        // Scrolling down - hide header
+                        header.classList.add('header-hidden');
+                    } else {
+                        // Scrolling up - show header
+                        header.classList.remove('header-hidden');
+                    }
+                } else {
+                    // At top - always show header
+                    header.classList.remove('header-hidden');
+                }
+
+                lastScrollY = currentScrollY;
+                ticking = false;
+            }
+
+            window.addEventListener('scroll', function () {
+                if (!ticking) {
+                    window.requestAnimationFrame(updateHeader);
+                    ticking = true;
+                }
+            }, { passive: true });
+        })();
     </script>
 </body>
 
