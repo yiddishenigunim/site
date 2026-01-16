@@ -8137,14 +8137,14 @@
             opacity: 0.5;
         }
 
-        /* Skeleton Loader */
+        /* Skeleton Loader - RTL shimmer direction */
         @keyframes skeleton-shimmer {
             0% {
-                background-position: 200% 0;
+                background-position: -200% 0;
             }
 
             100% {
-                background-position: -200% 0;
+                background-position: 200% 0;
             }
         }
 
@@ -8191,13 +8191,63 @@
         .skeleton-card {
             height: 120px;
             border-radius: 16px;
-            background: linear-gradient(90deg,
-                    rgba(255, 255, 255, 0.5) 25%,
-                    rgba(255, 255, 255, 0.8) 50%,
-                    rgba(255, 255, 255, 0.5) 75%);
+            background: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(270deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    transparent 100%);
             background-size: 200% 100%;
-            animation: skeleton-shimmer 1.5s ease-in-out infinite;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            animation: skeleton-shimmer 2.5s ease-in-out infinite;
+        }
+
+        /* Theme-specific skeleton colors */
+        .page-theme-chatzer .skeleton-card {
+            background: color-mix(in srgb, var(--color-chatzer-pale) 70%, white);
+        }
+
+        .page-theme-mechaber .skeleton-card {
+            background: color-mix(in srgb, var(--color-mechaber-pale) 70%, white);
+        }
+
+        .page-theme-verter .skeleton-card {
+            background: color-mix(in srgb, var(--color-verter-pale) 70%, white);
+        }
+
+        .page-theme-zman .skeleton-card {
+            background: color-mix(in srgb, var(--color-zman-pale) 70%, white);
+        }
+
+        .page-theme-collection .skeleton-card {
+            background: color-mix(in srgb, var(--color-collection-pale) 70%, white);
+        }
+
+        .page-theme-nigun .skeleton-card,
+        .page-theme-nigun .skeleton-song-row {
+            background: color-mix(in srgb, var(--color-nigun-pale) 70%, white);
+        }
+
+        .page-theme-resource .skeleton-card {
+            background: color-mix(in srgb, var(--color-resource-pale) 70%, white);
+        }
+
+        .page-theme-document .skeleton-card {
+            background: color-mix(in srgb, var(--color-document-pale) 70%, white);
+        }
+
+        .page-theme-album .skeleton-card {
+            background: color-mix(in srgb, var(--color-album-pale) 70%, white);
         }
 
         .skeleton-songs-layout {
@@ -8230,12 +8280,24 @@
             height: 60px;
             margin-bottom: 10px;
             border-radius: 12px;
-            background: linear-gradient(90deg,
-                    rgba(255, 255, 255, 0.5) 25%,
-                    rgba(255, 255, 255, 0.8) 50%,
-                    rgba(255, 255, 255, 0.5) 75%);
+            background: rgba(255, 255, 255, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skeleton-song-row::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(270deg,
+                    transparent 0%,
+                    rgba(255, 255, 255, 0.3) 50%,
+                    transparent 100%);
             background-size: 200% 100%;
-            animation: skeleton-shimmer 1.5s ease-in-out infinite;
+            animation: skeleton-shimmer 2.5s ease-in-out infinite;
         }
 
         @media (max-width: 768px) {
@@ -11250,6 +11312,13 @@
                                     updateSongsListWithNewSongs(newSongs);
                                 }
                             }
+
+                            // Update category page incrementally as songs load
+                            const categoryPagesForUpdate = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections'];
+                            if (categoryPagesForUpdate.includes(currentPageView)) {
+                                buildCategoryIndices();
+                                updateCategoryPageCards();
+                            }
                         }
 
                         console.log(`Loaded ${allRows.length} songs...`);
@@ -11265,6 +11334,16 @@
                     // Final update - just refresh filters and count (no animation for background data)
                     applyFiltersQuiet();  // Update filteredSongs without animation
                     buildCategoryIndices();
+
+                    // Update category page if user is viewing one (categories grew as songs loaded)
+                    const categoryPagesList = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections'];
+                    if (categoryPagesList.includes(currentPageView)) {
+                        // Final update with all categories
+                        updateCategoryPageCards();
+                        // Make sure wave bar is hidden now that all songs are loaded
+                        const categoryLoader = document.getElementById('categoryLoader');
+                        if (categoryLoader) categoryLoader.classList.remove('active');
+                    }
 
                     // Hide loading wave bar and update subtitle (fade out ball)
                     const waveBarToHide = document.getElementById('loadingWaveBar');
@@ -11623,16 +11702,32 @@
                 'music': 'page-theme-music'
             };
 
+            // Page titles and subtitles for real headers
+            const pageTitles = {
+                'songs': { title: 'ניגונים', subtitle: '', countLabel: 'ניגונים' },
+                'chatzeros': { title: 'חצרות', subtitle: 'חצרות', countLabel: 'חצרות' },
+                'mechabrim': { title: 'מחברים', subtitle: 'מחברים', countLabel: 'מחברים' },
+                'verter': { title: 'ווערטער', subtitle: 'ווערטער', countLabel: 'ווערטער' },
+                'zmanim': { title: 'זמנים', subtitle: 'זמנים', countLabel: 'זמנים' },
+                'collections': { title: 'קאלעקשאנס', subtitle: 'קאלעקשאנס', countLabel: 'קאלעקשאנס' },
+                'resources': { title: 'רעסורסן', subtitle: 'רעסורסן', countLabel: 'רעסורסן' },
+                'documents': { title: 'דאקומענטן', subtitle: 'דאקומענטן', countLabel: 'דאקומענטן' },
+                'albums': { title: 'אלבומס', subtitle: 'אלבומס', countLabel: 'אלבומס' },
+                'music': { title: 'מוזיק', subtitle: 'מוזיק', countLabel: 'מוזיק' }
+            };
+
             const themeClass = pageThemes[page] || 'page-theme-nigun';
+            const pageInfo = pageTitles[page] || { title: '', subtitle: '', countLabel: '' };
 
             // Songs page has a different layout with sidebar
             if (page === 'songs') {
                 return `
-                    <div class="${themeClass} skeleton-page">
+                    <div class="${themeClass}">
                         <div class="page-title">
-                            <div class="skeleton-title-bar"></div>
+                            <div class="page-title-bar">${pageInfo.title}</div>
                             <div class="page-title-content">
-                                <div class="skeleton skeleton-subtitle"></div>
+                                <div class="subtitle"><span class="count-number">0</span> ${pageInfo.countLabel}</div>
+                                <div class="loading-wave-bar active" id="loadingWaveBar"></div>
                             </div>
                         </div>
                         <div class="skeleton-songs-layout">
@@ -11658,13 +11753,14 @@
                 `;
             }
 
-            // Category pages (chatzeros, mechabrim, etc.) with grid
+            // Category pages (chatzeros, mechabrim, etc.) with grid - REAL header, skeleton cards
             return `
-                <div class="${themeClass} skeleton-page">
+                <div class="${themeClass}">
                     <div class="page-title">
-                        <div class="skeleton-title-bar"></div>
+                        <div class="page-title-bar">${pageInfo.title}</div>
                         <div class="page-title-content">
-                            <div class="skeleton skeleton-subtitle"></div>
+                            <div class="subtitle"><span class="subtitle-count">0</span> ${pageInfo.countLabel}</div>
+                            <div class="loading-wave-bar active" id="categoryLoader"></div>
                         </div>
                     </div>
                     <div class="skeleton-grid">
@@ -11733,9 +11829,12 @@
 
             updateURL();
 
+            // Track if we showed skeleton (data wasn't loaded)
+            const hadSkeleton = internalPage !== 'home' && !isInfoPage && !isDataLoadedForPage(internalPage);
+
             // Show skeleton loader for pages that need data
-            if (internalPage !== 'home' && !isInfoPage) {
-                if (content && !isDataLoadedForPage(internalPage)) {
+            if (hadSkeleton) {
+                if (content) {
                     content.innerHTML = getSkeletonForPage(internalPage);
                 }
                 // Load required data for this page
@@ -11745,8 +11844,11 @@
             renderCurrentPage();
 
             // Determine enter animation class
+            // Skip animation if we showed skeleton (header is already visible)
             let enterClass;
-            if (isHomePage) {
+            if (hadSkeleton) {
+                enterClass = null; // Coming from skeleton - no page animation needed
+            } else if (isHomePage) {
                 enterClass = null; // Home page uses its own stagger animation, skip page transition
             } else if (isInfoPage) {
                 enterClass = 'page-enter-info'; // Info pages just fade in
@@ -14214,9 +14316,12 @@
                     return;
                 }
 
+                // Track if we're showing skeleton (data isn't loaded yet)
+                const hadSkeleton = targetPage !== 'home' && !isDataLoadedForPage(targetPage);
+
                 // Show skeleton loader if data not loaded
                 // For songs: don't await, let background fetch populate the grid
-                if (targetPage !== 'home' && !isDataLoadedForPage(targetPage)) {
+                if (hadSkeleton) {
                     if (targetPage === 'songs') {
                         // Songs: start loading in background, don't await
                         // The page will show skeleton, and fetchSongsInBackground will update the grid
@@ -14332,9 +14437,17 @@
                 }
 
                 // Determine enter animation class
+                // Skip animation for certain pages
+                const categoryPages = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'resources', 'documents', 'albums'];
+                const isCategoryPage = categoryPages.includes(targetPage);
+
                 let enterClass;
-                if (isHomePage) {
+                if (hadSkeleton) {
+                    enterClass = null; // Coming from skeleton - no page animation needed
+                } else if (isHomePage) {
                     enterClass = null; // Home page uses its own stagger animation
+                } else if (isCategoryPage) {
+                    enterClass = null; // Category pages use card animations, no page fade
                 } else {
                     // Content pages (including songs): direction-aware
                     enterClass = direction === 'forward' ? 'page-enter' : 'page-enter-back';
@@ -14974,7 +15087,7 @@
                     <div class="page-title">
                         <div class="page-title-bar">זמנים</div>
                         <div class="page-title-content">
-                            <div class="subtitle">ניגונים פאסיג פאר ספעציעלע צייטן • <span class="subtitle-count">0</span> זמנים</div>
+                            <div class="subtitle"><span class="subtitle-count">0</span> זמנים</div>
                             <div class="loading-wave-bar active" id="zmanLoader"></div>
                         </div>
                     </div>
@@ -15551,7 +15664,7 @@
                     <div class="page-title">
                         <div class="page-title-bar">קאלעקשאנס</div>
                         <div class="page-title-content">
-                            <div class="subtitle">פלעיליסטס צום שפילן • <span class="subtitle-count">0</span> קאלעקשאנס</div>
+                            <div class="subtitle"><span class="subtitle-count">0</span> קאלעקשאנס</div>
                             <div class="loading-wave-bar active" id="collectionLoader"></div>
                         </div>
                     </div>
@@ -15805,6 +15918,73 @@
         `;
         }
 
+        // Update category page cards incrementally (when categories grow as songs load)
+        function updateCategoryPageCards() {
+            const grid = document.getElementById('categoryGrid');
+            if (!grid) return;
+
+            const categoryKey = currentPageView;
+            const data = categories[categoryKey];
+            if (!data) return;
+
+            const sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
+
+            // Get existing card keys
+            const existingKeys = new Set();
+            grid.querySelectorAll('.category-card').forEach(card => {
+                const key = card.dataset.name;
+                if (key) existingKeys.add(key);
+            });
+
+            // Find new keys that don't have cards yet
+            const newKeys = sortedKeys.filter(key => !existingKeys.has(key));
+            if (newKeys.length === 0) return;
+
+            // Get info object and icon for this category
+            let infoObj = {};
+            let icon = '';
+            switch (categoryKey) {
+                case 'chatzeros': infoObj = chatzerosInfo; icon = '🏛️'; break;
+                case 'mechabrim': infoObj = mechabrimInfo; icon = '✍️'; break;
+                case 'verter': infoObj = verterInfo; icon = '📝'; break;
+                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); icon = '📅'; break;
+                case 'collections': infoObj = collectionsInfo; icon = '📚'; break;
+            }
+
+            // Add new cards
+            const html = newKeys.map(key => renderCategoryCard(key, categoryKey, icon, infoObj, data)).join('');
+            grid.insertAdjacentHTML('beforeend', html);
+
+            // Animate new cards
+            const newCards = Array.from(grid.children).slice(-newKeys.length);
+            newCards.forEach((card, i) => {
+                card.style.animationDelay = `${i * 0.03}s`;
+                card.classList.add('item-pop-in');
+            });
+
+            // Update count in header
+            const countEl = document.querySelector('.subtitle-count');
+            if (countEl) {
+                const currentCount = parseInt(countEl.textContent) || 0;
+                if (sortedKeys.length > currentCount) {
+                    animateCountUp(countEl, sortedKeys.length);
+                }
+            }
+
+            // Update lazy state
+            categoryLazyState.allKeys = sortedKeys;
+
+            // Show/hide wave bar based on whether all songs are loaded
+            const loader = document.getElementById('categoryLoader');
+            if (loader) {
+                if (songsFullyLoaded) {
+                    loader.classList.remove('active');
+                } else {
+                    loader.classList.add('active');
+                }
+            }
+        }
+
         // Load more category cards (lazy loading)
         function loadMoreCategoryCards(categoryKey, icon, infoObj, data) {
             if (categoryLazyState.isLoading) return;
@@ -15845,10 +16025,11 @@
 
             console.log(`Loaded ${batch.length} cards (${categoryLazyState.currentIndex}/${categoryLazyState.allKeys.length})`);
 
-            // Hide loading wave bar when all cards are loaded
-            if (categoryLazyState.currentIndex >= categoryLazyState.allKeys.length) {
-                const loader = document.getElementById('categoryLoader');
-                if (loader) loader.classList.remove('active');
+            // Hide loading wave bar when all cards are loaded OR songs are fully loaded
+            const allCardsLoaded = categoryLazyState.currentIndex >= categoryLazyState.allKeys.length;
+            const loader = document.getElementById('categoryLoader');
+            if (loader && (allCardsLoaded || songsFullyLoaded)) {
+                loader.classList.remove('active');
             }
         }
 
@@ -15877,25 +16058,64 @@
                 case 'collections': infoObj = collectionsInfo; themeClass = 'page-theme-collection'; break;
             }
 
-            container.innerHTML = `
-                <div class="${themeClass}">
-                    <div class="page-title">
-                        <div class="page-title-bar">${title}</div>
-                        <div class="page-title-content">
-                            <div class="subtitle">${subtitle} • <span class="subtitle-count">0</span> קאטעגאריעס</div>
-                            <div class="loading-wave-bar category-loader" id="categoryLoader"></div>
+            // Check if we're coming from skeleton (skeleton-grid exists)
+            const existingSkeletonGrid = container.querySelector('.skeleton-grid');
+            const existingCountEl = container.querySelector('.subtitle-count');
+
+            if (existingSkeletonGrid && existingCountEl) {
+                // Coming from skeleton - just update count and replace grid, keep header
+                animateCountUp(existingCountEl, sortedKeys.length);
+
+                // Replace skeleton-grid with category-grid
+                const categoryGrid = document.createElement('div');
+                categoryGrid.className = 'category-grid';
+                categoryGrid.id = 'categoryGrid';
+                existingSkeletonGrid.replaceWith(categoryGrid);
+
+                // Add load more indicator
+                const indicator = document.createElement('div');
+                indicator.id = 'loadMoreIndicator';
+                indicator.style.cssText = 'text-align: center; padding: 20px; color: var(--text-muted);';
+                categoryGrid.after(indicator);
+
+                // Show wave bar if large dataset
+                if (sortedKeys.length > 50) {
+                    const loader = document.getElementById('categoryLoader');
+                    if (loader) loader.classList.add('active');
+                }
+
+                // Load first batch of cards
+                loadMoreCategoryCards(categoryKey, icon, infoObj, data);
+
+                // Setup infinite scroll for skeleton path too
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        loadMoreCategoryCards(categoryKey, icon, infoObj, data);
+                    }
+                }, { rootMargin: '200px' });
+                if (indicator) observer.observe(indicator);
+            } else {
+                // Fresh render - create everything
+                container.innerHTML = `
+                    <div class="${themeClass}">
+                        <div class="page-title">
+                            <div class="page-title-bar">${title}</div>
+                            <div class="page-title-content">
+                                <div class="subtitle"><span class="subtitle-count">0</span> ${title}</div>
+                                <div class="loading-wave-bar category-loader" id="categoryLoader"></div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="category-grid" id="categoryGrid">
+                        <div class="category-grid" id="categoryGrid">
+                        </div>
+                        <div id="loadMoreIndicator" style="text-align: center; padding: 20px; color: var(--text-muted);"></div>
                     </div>
-                    <div id="loadMoreIndicator" style="text-align: center; padding: 20px; color: var(--text-muted);"></div>
-                </div>
-            `;
+                `;
 
-            // Animate subtitle count
-            const countEl = container.querySelector('.subtitle-count');
-            if (countEl) animateCountUp(countEl, sortedKeys.length);
+                // Animate subtitle count
+                const countEl = container.querySelector('.subtitle-count');
+                if (countEl) animateCountUp(countEl, sortedKeys.length);
+            }
 
             // Show loading wave bar
             const loader = document.getElementById('categoryLoader');
@@ -16047,7 +16267,7 @@
                     <div class="page-title">
                         <div class="page-title-bar">רעסורסן</div>
                         <div class="page-title-content">
-                            <div class="subtitle">לינקס און רעסורסן • <span class="subtitle-count">0</span> רעסורסן</div>
+                            <div class="subtitle"><span class="subtitle-count">0</span> רעסורסן</div>
                             <div class="loading-wave-bar active" id="resourceLoader"></div>
                         </div>
                     </div>
@@ -16146,7 +16366,7 @@
                     <div class="page-title">
                         <div class="page-title-bar">דאקומענטן</div>
                         <div class="page-title-content">
-                            <div class="subtitle">דאקומענטן און PDFs • <span class="subtitle-count">0</span> דאקומענטן</div>
+                            <div class="subtitle"><span class="subtitle-count">0</span> דאקומענטן</div>
                             <div class="loading-wave-bar active" id="documentLoader"></div>
                         </div>
                     </div>
@@ -16259,7 +16479,7 @@
                     <div class="page-title">
                         <div class="page-title-bar">אלבומס</div>
                         <div class="page-title-content">
-                            <div class="subtitle">מוזיק אלבומס • <span class="subtitle-count">0</span> אלבומס</div>
+                            <div class="subtitle"><span class="subtitle-count">0</span> אלבומס</div>
                             <div class="loading-wave-bar active" id="albumLoader"></div>
                         </div>
                     </div>
