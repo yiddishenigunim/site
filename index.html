@@ -14570,9 +14570,10 @@
                 }
 
                 // Track if we're showing skeleton (data isn't loaded yet)
-                const hadSkeleton = targetPage !== 'home' && !isDataLoadedForPage(targetPage);
+                // IMPORTANT: Don't show category skeleton for detail pages (when idOrName exists)
+                const hadSkeleton = targetPage !== 'home' && !isDataLoadedForPage(targetPage) && !idOrName;
 
-                // Show skeleton loader if data not loaded
+                // Show skeleton loader if data not loaded (category pages only, not detail pages)
                 // For songs: don't await, let background fetch populate the grid
                 if (hadSkeleton) {
                     if (targetPage === 'songs') {
