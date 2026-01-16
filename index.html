@@ -13124,6 +13124,11 @@
             const selectedCount = activeFilters[key]?.length || 0;
             const selectedValue = selectedCount > 0 ? `(${selectedCount})` : '(אלע)';
 
+            // Store options in a global map for lookup
+            if (!window.filterOptionsMap) window.filterOptionsMap = {};
+            if (!window.filterOptionsMap[key]) window.filterOptionsMap[key] = [];
+            window.filterOptionsMap[key] = options;
+
             return `
                 <div class="sidebar-filter" data-filter="${key}">
                     <div class="sidebar-filter-dropdown">
@@ -13134,24 +13139,23 @@
                         </button>
                         <div class="sidebar-dropdown-content" id="sidebar-dropdown-${key}">
                             <div class="dropdown-search-box">
-                                <input type="text" 
-                                       class="dropdown-search-input" 
+                                <input type="text"
+                                       class="dropdown-search-input"
                                        placeholder="זוך..."
                                        onclick="event.stopPropagation()"
                                        oninput="filterDropdownOptions('${key}', this.value)">
                             </div>
                             <div class="dropdown-options" id="dropdown-options-${key}">
-                                ${options.map(opt => {
-                const escapedOpt = opt.replace(/'/g, "\\'").replace(/"/g, '\\"');
-                return `
-                                    <label class="sidebar-filter-option" data-value="${opt.toLowerCase()}" onclick="event.stopPropagation()">
-                                        <input type="checkbox" 
-                                            value="${opt.replace(/"/g, '&quot;')}" 
+                                ${options.map((opt, idx) => `
+                                    <label class="sidebar-filter-option" onclick="event.stopPropagation()">
+                                        <input type="checkbox"
+                                            data-filter-key="${key}"
+                                            data-filter-index="${idx}"
                                             ${activeFilters[key]?.includes(opt) ? 'checked' : ''}
-                                            onchange="handleFilterChange('${key}', '${escapedOpt}', this.checked)">
+                                            onchange="handleFilterChangeByIndex('${key}', ${idx}, this.checked)">
                                         ${opt}
                                     </label>
-                                `}).join('')}
+                                `).join('')}
                             </div>
                         </div>
                     </div>
@@ -13162,12 +13166,13 @@
         // Filter dropdown options based on search
         function filterDropdownOptions(key, searchTerm) {
             const container = document.getElementById('dropdown-options-' + key);
-            const options = container.querySelectorAll('.sidebar-filter-option[data-value]');
+            const options = container.querySelectorAll('.sidebar-filter-option');
             const term = searchTerm.toLowerCase();
 
-            options.forEach(option => {
-                const value = option.getAttribute('data-value');
-                if (value.includes(term)) {
+            options.forEach((option, idx) => {
+                if (!window.filterOptionsMap || !window.filterOptionsMap[key]) return;
+                const value = window.filterOptionsMap[key][idx];
+                if (value && value.toLowerCase().includes(term)) {
                     option.style.display = 'flex';
                 } else {
                     option.style.display = 'none';
@@ -13220,10 +13225,10 @@
                     <div class="filter-dropdown-content" id="dropdown-${key}">
                         ${options.map(opt => `
                             <label class="filter-option">
-                                <input type="checkbox" 
-                                    value="${opt}" 
+                                <input type="checkbox"
+                                    value="${opt.replace(/"/g, '&quot;')}"
                                     ${activeFilters[key]?.includes(opt) ? 'checked' : ''}
-                                    onchange="handleFilterChange('${key}', '${opt}', this.checked)">
+                                    onchange="handleFilterChange('${key}', this.value, this.checked)">
                                 ${opt} (${data[opt].length})
                             </label>
                         `).join('')}
@@ -13255,6 +13260,13 @@
             }
 
             applyFilters();
+        }
+
+        // Handle filter change by index
+        function handleFilterChangeByIndex(key, index, checked) {
+            if (!window.filterOptionsMap || !window.filterOptionsMap[key]) return;
+            const value = window.filterOptionsMap[key][index];
+            handleFilterChange(key, value, checked);
         }
 
         // Sort filteredSongs based on current sort order
