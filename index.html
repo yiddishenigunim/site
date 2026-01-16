@@ -13162,11 +13162,12 @@
         // Filter dropdown options based on search
         function filterDropdownOptions(key, searchTerm) {
             const container = document.getElementById('dropdown-options-' + key);
-            const options = container.querySelectorAll('.sidebar-filter-option[data-value]');
+            const options = container.querySelectorAll('.sidebar-filter-option');
             const term = searchTerm.toLowerCase();
 
             options.forEach(option => {
-                const value = option.getAttribute('data-value');
+                const checkbox = option.querySelector('input[type="checkbox"]');
+                const value = checkbox ? checkbox.value.toLowerCase() : '';
                 if (value.includes(term)) {
                     option.style.display = 'flex';
                 } else {
