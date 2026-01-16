@@ -13142,12 +13142,10 @@
                             </div>
                             <div class="dropdown-options" id="dropdown-options-${key}">
                                 ${options.map(opt => `
-                                    <label class="sidebar-filter-option" onclick="event.stopPropagation()">
+                                    <label class="sidebar-filter-option" data-option-value="${opt.replace(/"/g, '&quot;')}" onclick="event.stopPropagation()">
                                         <input type="checkbox"
-                                            data-filter-key="${key}"
-                                            data-filter-value="${opt.replace(/"/g, '&quot;')}"
                                             ${activeFilters[key]?.includes(opt) ? 'checked' : ''}
-                                            onchange="handleFilterChange(this.dataset.filterKey, this.dataset.filterValue, this.checked)">
+                                            onchange="handleFilterChangeByElement(this.parentElement, '${key}', this.checked)">
                                         ${opt}
                                     </label>
                                 `).join('')}
@@ -13165,8 +13163,7 @@
             const term = searchTerm.toLowerCase();
 
             options.forEach(option => {
-                const checkbox = option.querySelector('input[type="checkbox"]');
-                const value = checkbox ? checkbox.dataset.filterValue.toLowerCase() : '';
+                const value = option.dataset.optionValue ? option.dataset.optionValue.toLowerCase() : '';
                 if (value.includes(term)) {
                     option.style.display = 'flex';
                 } else {
@@ -13255,6 +13252,12 @@
             }
 
             applyFilters();
+        }
+
+        // Handle filter change by reading from element's data attribute
+        function handleFilterChangeByElement(element, key, checked) {
+            const value = element.dataset.optionValue;
+            handleFilterChange(key, value, checked);
         }
 
         // Sort filteredSongs based on current sort order
