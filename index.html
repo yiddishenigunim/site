@@ -13124,6 +13124,11 @@
             const selectedCount = activeFilters[key]?.length || 0;
             const selectedValue = selectedCount > 0 ? `(${selectedCount})` : '(אלע)';
 
+            // Store options in a global map for lookup
+            if (!window.filterOptionsMap) window.filterOptionsMap = {};
+            if (!window.filterOptionsMap[key]) window.filterOptionsMap[key] = [];
+            window.filterOptionsMap[key] = options;
+
             return `
                 <div class="sidebar-filter" data-filter="${key}">
                     <div class="sidebar-filter-dropdown">
@@ -13134,18 +13139,20 @@
                         </button>
                         <div class="sidebar-dropdown-content" id="sidebar-dropdown-${key}">
                             <div class="dropdown-search-box">
-                                <input type="text" 
-                                       class="dropdown-search-input" 
+                                <input type="text"
+                                       class="dropdown-search-input"
                                        placeholder="זוך..."
                                        onclick="event.stopPropagation()"
                                        oninput="filterDropdownOptions('${key}', this.value)">
                             </div>
                             <div class="dropdown-options" id="dropdown-options-${key}">
-                                ${options.map(opt => `
-                                    <label class="sidebar-filter-option" data-option-value="${opt.replace(/"/g, '&quot;')}" onclick="event.stopPropagation()">
+                                ${options.map((opt, idx) => `
+                                    <label class="sidebar-filter-option" onclick="event.stopPropagation()">
                                         <input type="checkbox"
+                                            data-filter-key="${key}"
+                                            data-filter-index="${idx}"
                                             ${activeFilters[key]?.includes(opt) ? 'checked' : ''}
-                                            onchange="handleFilterChangeByElement(this.parentElement, '${key}', this.checked)">
+                                            onchange="handleFilterChangeByIndex('${key}', ${idx}, this.checked)">
                                         ${opt}
                                     </label>
                                 `).join('')}
@@ -13162,9 +13169,10 @@
             const options = container.querySelectorAll('.sidebar-filter-option');
             const term = searchTerm.toLowerCase();
 
-            options.forEach(option => {
-                const value = option.dataset.optionValue ? option.dataset.optionValue.toLowerCase() : '';
-                if (value.includes(term)) {
+            options.forEach((option, idx) => {
+                if (!window.filterOptionsMap || !window.filterOptionsMap[key]) return;
+                const value = window.filterOptionsMap[key][idx];
+                if (value && value.toLowerCase().includes(term)) {
                     option.style.display = 'flex';
                 } else {
                     option.style.display = 'none';
@@ -13254,9 +13262,10 @@
             applyFilters();
         }
 
-        // Handle filter change by reading from element's data attribute
-        function handleFilterChangeByElement(element, key, checked) {
-            const value = element.dataset.optionValue;
+        // Handle filter change by index
+        function handleFilterChangeByIndex(key, index, checked) {
+            if (!window.filterOptionsMap || !window.filterOptionsMap[key]) return;
+            const value = window.filterOptionsMap[key][index];
             handleFilterChange(key, value, checked);
         }
 
