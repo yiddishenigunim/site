@@ -14398,7 +14398,7 @@
                 }
 
                 // Track if we're showing skeleton (data isn't loaded yet)
-                const hadSkeleton = targetPage !== 'home' && !isDataLoadedForPage(targetPage);
+                const hadSkeleton = targetPage !== 'home' && targetPage !== 'search' && !isDataLoadedForPage(targetPage);
 
                 // Show skeleton loader if data not loaded
                 // For songs: don't await, let background fetch populate the grid
@@ -14426,25 +14426,27 @@
                     const searchInput = document.getElementById('globalSearch');
                     if (searchInput) searchInput.value = idOrName;
 
-                    // Show loading indicator and ensure data is loaded for search
-                    if (!isDataLoadedForPage('search')) {
-                        const content = document.getElementById('mainContent');
-                        if (content) {
-                            content.innerHTML = `
-                                <div class="page-theme-nigun">
-                                    <div class="page-title">
-                                        <div class="page-title-bar">זוכט "${idOrName}"...</div>
-                                        <div class="page-title-content">
-                                            <div class="subtitle">לאודינג רעזולטאטן...</div>
-                                        </div>
-                                    </div>
-                                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 16px;">
-                                        <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
-                                        <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאדינג רעזולטאטן...</p>
+                    // Always show loading indicator for consistent UX
+                    const content = document.getElementById('mainContent');
+                    if (content) {
+                        content.innerHTML = `
+                            <div class="page-theme-nigun">
+                                <div class="page-title">
+                                    <div class="page-title-bar">זוכט "${idOrName}"...</div>
+                                    <div class="page-title-content">
+                                        <div class="subtitle">לאודינג רעזולטאטן...</div>
                                     </div>
                                 </div>
-                            `;
-                        }
+                                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 16px;">
+                                    <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
+                                    <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאדינג רעזולטאטן...</p>
+                                </div>
+                            </div>
+                        `;
+                    }
+
+                    // Ensure data is loaded for search
+                    if (!isDataLoadedForPage('search')) {
                         await ensureDataForPage('search');
                     }
 
