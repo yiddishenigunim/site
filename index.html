@@ -13141,17 +13141,16 @@
                                        oninput="filterDropdownOptions('${key}', this.value)">
                             </div>
                             <div class="dropdown-options" id="dropdown-options-${key}">
-                                ${options.map(opt => {
-                const escapedOpt = opt.replace(/"/g, '&quot;');
-                return `
+                                ${options.map(opt => `
                                     <label class="sidebar-filter-option" onclick="event.stopPropagation()">
                                         <input type="checkbox"
-                                            value="${escapedOpt}"
+                                            data-filter-key="${key}"
+                                            data-filter-value="${opt.replace(/"/g, '&quot;')}"
                                             ${activeFilters[key]?.includes(opt) ? 'checked' : ''}
-                                            onchange="handleFilterChange('${key}', this.value, this.checked)">
+                                            onchange="handleFilterChange(this.dataset.filterKey, this.dataset.filterValue, this.checked)">
                                         ${opt}
                                     </label>
-                                `}).join('')}
+                                `).join('')}
                             </div>
                         </div>
                     </div>
@@ -13167,7 +13166,7 @@
 
             options.forEach(option => {
                 const checkbox = option.querySelector('input[type="checkbox"]');
-                const value = checkbox ? checkbox.value.toLowerCase() : '';
+                const value = checkbox ? checkbox.dataset.filterValue.toLowerCase() : '';
                 if (value.includes(term)) {
                     option.style.display = 'flex';
                 } else {
