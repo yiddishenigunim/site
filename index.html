@@ -14617,8 +14617,8 @@
                     const dataPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
 
                     // Show loading indicator and ensure data is loaded for detail pages
-                    // For nigunim, need to check songsFullyLoaded, not just loadedCategories
-                    const needsLoading = page === 'nigunim' ? !songsFullyLoaded : !isDataLoadedForPage(dataPage);
+                    // Check if data is loaded for the page, and for nigunim, also check if all songs are fully loaded
+                    const needsLoading = !isDataLoadedForPage(dataPage) || (page === 'nigunim' && !songsFullyLoaded);
                     if (detailPages.includes(page) && needsLoading) {
                         if (content) {
                             content.innerHTML = `
