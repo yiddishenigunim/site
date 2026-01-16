@@ -401,7 +401,7 @@
 
         body {
             font-family: 'Heebo', 'David Libre', sans-serif;
-            background: var(--bg-cream);
+            background: transparent;
             min-height: 100vh;
             direction: rtl;
             color: var(--text-dark);
@@ -411,11 +411,13 @@
 
         /* Header */
         .main-header {
-            background: white;
+            background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(248, 250, 252, 0.85) 100%);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
 
         .header-main {
@@ -934,7 +936,7 @@
             justify-content: center;
             min-width: 32px;
             height: 32px;
-            padding: 0 8px;
+            padding: 0 10px;
             background: transparent;
             border: 2px solid #9c5bb5;
             border-radius: 16px;
@@ -942,6 +944,7 @@
             color: #9c5bb5;
             transition: all 0.3s ease;
             overflow: hidden;
+            cursor: pointer;
         }
 
         .stream-dot {
@@ -1158,10 +1161,12 @@
             align-items: center;
             gap: 8px;
             text-decoration: none;
+            position: relative;
+            z-index: 2;
         }
 
         .nav-dropdown-btn .nav-arrow {
-            font-size: 0.7em;
+            font-size: 1.1em;
             opacity: 0.6;
             transition: transform 0.3s ease;
         }
@@ -1261,10 +1266,11 @@
         .nav-dropdown-content::before {
             content: '';
             position: absolute;
-            top: -20px;
+            top: 0;
             right: -20px;
             left: -20px;
-            height: 28px;
+            height: 15px;
+            pointer-events: none;
         }
 
         .nav-dropdown-content .dropdown-inner {
@@ -2769,43 +2775,43 @@
         }
 
         .page-theme-chatzer {
-            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-mechaber {
-            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-verter {
-            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-zman {
-            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-collection {
-            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-nigun {
-            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-resource {
-            background: linear-gradient(180deg, var(--color-resource-pale) 0%, color-mix(in srgb, var(--color-resource-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-resource-pale) 0%, color-mix(in srgb, var(--color-resource-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-document {
-            background: linear-gradient(180deg, var(--color-document-pale) 0%, color-mix(in srgb, var(--color-document-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-document-pale) 0%, color-mix(in srgb, var(--color-document-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-album {
-            background: linear-gradient(180deg, var(--color-album-pale) 0%, color-mix(in srgb, var(--color-album-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-album-pale) 0%, color-mix(in srgb, var(--color-album-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-music {
-            background: linear-gradient(180deg, var(--color-music-pale) 0%, color-mix(in srgb, var(--color-music-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-music-pale) 0%, color-mix(in srgb, var(--color-music-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         /* Center content within full-width themed pages */
@@ -3396,7 +3402,7 @@
 
         .pdf-popup-footer {
             padding: 10px 20px;
-            background: var(--bg-cream);
+            background: #f8fafc;
             display: flex;
             justify-content: center;
             gap: 10px;
@@ -4249,7 +4255,7 @@
             align-items: center;
             gap: 12px;
             padding: 12px 15px;
-            background: var(--bg-cream);
+            background: #f8fafc;
             border-radius: 12px;
             cursor: pointer;
             transition: var(--transition-smooth);
@@ -4836,7 +4842,7 @@
             padding-left: calc(50vw - 50%);
             padding-right: calc(50vw - 50%);
             min-height: calc(100vh - 180px);
-            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .nigun-detail-page>* {
@@ -6505,27 +6511,27 @@
         }
 
         .detail-page.theme-chatzer {
-            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .detail-page.theme-mechaber {
-            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .detail-page.theme-verter {
-            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .detail-page.theme-zman {
-            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .detail-page.theme-piyut {
-            background: linear-gradient(180deg, #e8f5e9 0%, color-mix(in srgb, #e8f5e9 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, #e8f5e9 0%, color-mix(in srgb, #e8f5e9 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .detail-page.theme-collection {
-            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
+            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         /* Center content within full-width themed detail pages */
@@ -6868,7 +6874,7 @@
         }
 
         .detail-info-item {
-            background: var(--bg-cream);
+            background: #f8fafc;
             padding: 12px 15px;
             border-radius: 10px;
             border-right: 3px solid var(--primary);
@@ -6928,7 +6934,7 @@
         }
 
         .mechaber-card {
-            background: var(--bg-cream);
+            background: #f8fafc;
             border-radius: 12px;
             padding: 15px;
             text-align: center;
@@ -7023,7 +7029,7 @@
         }
 
         .verter-content {
-            background: linear-gradient(135deg, var(--bg-cream) 0%, #fff 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #fff 100%);
             padding: 25px;
             border-radius: 15px;
             border-right: 4px solid var(--accent-gold);
@@ -8521,7 +8527,7 @@
         }
 
         .nigun-modal-content {
-            background: var(--bg-cream);
+            background: #f8fafc;
             border-radius: 20px;
             max-width: 850px;
             width: 100%;
@@ -8801,7 +8807,7 @@
 
         .hover-tooltip-stats {
             padding: 10px 15px;
-            background: var(--bg-cream);
+            background: #f8fafc;
             border-top: 1px solid rgba(0, 0, 0, 0.05);
             font-size: 0.9em;
             color: var(--text-muted);
@@ -10581,12 +10587,12 @@
 
                 <style>
                     .nav-divider {
-                        width: 2px;
-                        height: 24px;
+                        width: 4px;
+                        height: 4px;
                         background: var(--gradient-main);
-                        margin: 0 4px;
+                        margin: 0 6px;
                         opacity: 0.6;
-                        border-radius: 2px;
+                        border-radius: 50%;
                     }
                 </style>
 
@@ -10624,7 +10630,7 @@
                 </button>
 
                 <!-- Streaming Button - ball with blinking dot, expands on hover -->
-                <a href="https://stream.oitzerhanigunim.org/" target="_blank" class="stream-ball-btn" title="סטרימינג">
+                <a href="https://stream.oitzerhanigunim.org/" target="_blank" class="stream-ball-btn">
                     <span class="stream-dot"></span>
                     <span class="stream-text-new">סטרימינג</span>
                 </a>
@@ -10650,27 +10656,22 @@
                 opacity: 0;
             }
 
-            /* Body background */
-            body {
-                background: transparent;
-            }
-
-            /* Main content - transparent to show html background */
+            /* Main content - offset for fixed header */
             .main-content {
                 padding-top: 80px;
-                background: transparent;
             }
 
             .header-main {
                 display: flex;
                 align-items: center;
-                justify-content: center;
-                /* Center everything */
-                gap: 16px;
+                justify-content: space-between;
+                /* Better distribution */
+                gap: 30px;
+                /* Increased gap */
                 width: 100%;
                 max-width: 1400px;
                 margin: 0 auto;
-                padding: 10px 20px;
+                padding: 12px 30px;
                 flex-wrap: wrap;
                 /* Allow wrapping on very small screens */
             }
