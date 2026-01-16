@@ -11553,8 +11553,9 @@
                             }
 
                             // Update category page incrementally as songs load
+                            // Only update if we're on a category page, not on a detail page
                             const categoryPagesForUpdate = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections'];
-                            if (categoryPagesForUpdate.includes(currentPageView)) {
+                            if (categoryPagesForUpdate.includes(currentPageView) && !currentDetailView) {
                                 buildCategoryIndices();
                                 updateCategoryPageCards();
                             }
@@ -11575,8 +11576,9 @@
                     buildCategoryIndices();
 
                     // Update category page if user is viewing one (categories grew as songs loaded)
+                    // Only update if we're on a category page, not on a detail page
                     const categoryPagesList = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections'];
-                    if (categoryPagesList.includes(currentPageView)) {
+                    if (categoryPagesList.includes(currentPageView) && !currentDetailView) {
                         // Final update with all categories
                         updateCategoryPageCards();
                         // Make sure wave bar is hidden now that all songs are loaded
@@ -14616,6 +14618,20 @@
                     const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
                     const dataPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
 
+                    // IMPORTANT: Set currentDetailView FIRST before loading data
+                    // This prevents updateCategoryPageCards from running during fetchSongsInBackground
+                    const tempItemName = idOrName; // Use idOrName as temporary name
+                    if (page === 'zman') {
+                        currentPageView = 'zmanim';
+                        currentDetailView = { type: 'zman', name: tempItemName, id: null };
+                    } else if (page === 'nigunim') {
+                        currentPageView = 'songs';
+                        currentDetailView = { type: 'nigunim', name: tempItemName, id: null };
+                    } else {
+                        currentPageView = page;
+                        currentDetailView = { type: page, name: tempItemName, id: null };
+                    }
+
                     // Show loading indicator and ensure data is loaded for detail pages
                     // Check if data is loaded for the page, and for nigunim, also check if all songs are fully loaded
                     const needsLoading = !isDataLoadedForPage(dataPage) || (page === 'nigunim' && !songsFullyLoaded);
@@ -14635,7 +14651,7 @@
                         await ensureDataForPage(dataPage, page === 'nigunim');
                     }
 
-                    // Find item by ID or name
+                    // Find item by ID or name (now that data is loaded)
                     const item = findItemByIdOrName(page, idOrName);
                     console.log('Found item:', item);
 
@@ -14650,19 +14666,10 @@
                     const itemId = item?.id || idOrName;
                     const itemCustomId = item?.customId;
 
-                    // Navigate to detail page
-                    if (page === 'zman') {
-                        // Zman detail page (shows piyutim and collections for a zman)
-                        currentPageView = 'zmanim';
-                        currentDetailView = { type: 'zman', name: itemName, id: itemId, customId: itemCustomId };
-                    } else if (page === 'nigunim') {
-                        // Nigun detail page (nigunim/1 format)
-                        currentPageView = 'songs';
-                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId, customId: itemCustomId };
-                    } else {
-                        currentPageView = page;
-                        currentDetailView = { type: page, name: itemName, id: itemId, customId: itemCustomId };
-                    }
+                    // Update currentDetailView with the actual item details
+                    currentDetailView.name = itemName;
+                    currentDetailView.id = itemId;
+                    currentDetailView.customId = itemCustomId;
 
                     // Update nav buttons
                     document.querySelectorAll('.nav-btn').forEach(btn => {
