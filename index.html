@@ -426,8 +426,9 @@
             padding: 15px 20px;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            justify-content: center;
             gap: 20px;
+            position: relative;
         }
 
         .logo {
@@ -9108,24 +9109,45 @@
             padding: 20px;
             box-shadow: var(--card-shadow);
             position: sticky;
-            top: 0;
-            max-height: 100vh;
+            top: 90px;
+            min-height: calc(100vh - 100px);
+            max-height: calc(100vh - 100px);
             overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(74, 124, 201, 0.3) transparent;
+        }
+
+        .songs-sidebar::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .songs-sidebar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .songs-sidebar::-webkit-scrollbar-thumb {
+            background: rgba(74, 124, 201, 0.3);
+            border-radius: 4px;
+        }
+
+        .songs-sidebar::-webkit-scrollbar-thumb:hover {
+            background: rgba(74, 124, 201, 0.5);
         }
 
         .sidebar-search-box {
             display: flex;
             position: relative;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .sidebar-search-input {
             flex: 1;
-            padding: 12px 15px;
-            padding-left: 40px;
+            padding: 8px 12px;
+            padding-left: 35px;
             border: 2px solid var(--color-nigun-pale);
-            border-radius: 10px;
-            font-size: 0.95em;
+            border-radius: 8px;
+            font-size: 0.9em;
             font-family: inherit;
             direction: rtl;
             transition: var(--transition-smooth);
@@ -9202,14 +9224,14 @@
 
         /* Sort toggle slider styles */
         .sidebar-sort-section {
-            margin-bottom: 20px;
+            margin-bottom: 10px;
         }
 
         .sidebar-sort-label {
-            font-size: 0.9em;
+            font-size: 0.8em;
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 8px;
+            margin-bottom: 4px;
             display: block;
         }
 
@@ -9223,13 +9245,13 @@
 
         .sort-toggle-option {
             flex: 1;
-            padding: 10px 8px;
+            padding: 6px 6px;
             text-align: center;
-            font-size: 0.85em;
+            font-size: 0.8em;
             font-weight: 500;
             color: var(--text-dark);
             cursor: pointer;
-            border-radius: 8px;
+            border-radius: 6px;
             transition: var(--transition-smooth);
             z-index: 1;
             position: relative;
@@ -9261,20 +9283,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 12px 15px;
+            gap: 6px;
+            padding: 4px;
             background: var(--color-nigun-pale);
-            border-radius: 12px;
+            border-radius: 10px;
             direction: ltr;
             /* Stars fill left to right */
         }
 
         .quality-star {
-            font-size: 2em;
+            font-size: 1.3em;
             color: #ccc;
             cursor: pointer;
             transition: all 0.2s ease;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            padding: 4px 3px;
         }
 
         .quality-star.active {
@@ -9425,20 +9448,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            padding: 12px 15px;
+            gap: 6px;
+            padding: 4px;
             background: var(--color-nigun-pale);
-            border-radius: 12px;
+            border-radius: 10px;
             direction: ltr;
             /* Stars fill left to right */
         }
 
         .quality-star {
-            font-size: 2em;
+            font-size: 1.6em;
             color: #ccc;
             cursor: pointer;
             transition: all 0.2s ease;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            padding: 6px 4px;
         }
 
         .quality-star.active {
@@ -9529,16 +9553,15 @@
         }
 
         .sidebar-section {
-            margin-bottom: 15px;
+            margin-bottom: 6px;
         }
 
         .sidebar-section-title {
-            font-weight: 700;
-            font-size: 1.1em;
+            font-size: 0.8em;
+            font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--color-nigun-pale);
+            margin-bottom: 4px;
+            display: block;
         }
 
         .sidebar-collection-btn {
@@ -9560,8 +9583,9 @@
             color: white;
         }
 
+
         .sidebar-filter {
-            margin-bottom: 12px;
+            margin-bottom: 6px;
         }
 
         .sidebar-filter-dropdown {
@@ -9570,20 +9594,22 @@
 
         .sidebar-filter-btn {
             width: 100%;
-            padding: 10px 15px;
-            background: white;
-            border: 2px solid #ddd;
+            padding: 8px 12px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
+            border: 1px solid rgba(74, 124, 201, 0.15);
             border-radius: 8px;
             font-family: inherit;
-            font-size: 0.9em;
+            font-size: 0.85em;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 8px;
-            transition: var(--transition-smooth);
+            gap: 6px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
-            padding-right: 20px;
+            padding-right: 14px;
+            box-shadow: 0 2px 6px rgba(74, 124, 201, 0.06);
+            overflow: hidden;
         }
 
         .sidebar-filter-btn::before {
@@ -9593,73 +9619,120 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            border-radius: 0 8px 8px 0;
+            border-radius: 0 12px 12px 0;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-filter-btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg, transparent 0%, rgba(74, 124, 201, 0.05) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .sidebar-filter-btn:hover::after {
+            opacity: 1;
+        }
+
+        .sidebar-filter-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 16px rgba(74, 124, 201, 0.15);
+            border-color: rgba(74, 124, 201, 0.25);
+        }
+
+        .sidebar-filter-btn:hover::before {
+            width: 6px;
         }
 
         /* Filter colors as right border */
         .sidebar-filter[data-filter="collection"] .sidebar-filter-btn::before {
-            background: var(--color-collection);
+            background: linear-gradient(180deg, var(--color-collection) 0%, var(--color-collection-dark) 100%);
         }
 
         .sidebar-filter[data-filter="chatzer"] .sidebar-filter-btn::before {
-            background: var(--color-chatzer);
+            background: linear-gradient(180deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
         }
 
         .sidebar-filter[data-filter="mechaber"] .sidebar-filter-btn::before {
-            background: var(--color-mechaber);
+            background: linear-gradient(180deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
         }
 
         .sidebar-filter[data-filter="verter"] .sidebar-filter-btn::before {
-            background: var(--color-verter);
+            background: linear-gradient(180deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
         }
 
         .sidebar-filter[data-filter="gezungen"] .sidebar-filter-btn::before {
-            background: #2e8b2e;
+            background: linear-gradient(180deg, #2e8b2e 0%, #1e6b1e 100%);
         }
 
         /* גרין - פיוטים */
         .sidebar-filter[data-filter="ritem"] .sidebar-filter-btn::before {
-            background: var(--color-music);
+            background: linear-gradient(180deg, var(--color-music) 0%, var(--color-music-dark) 100%);
         }
 
         .sidebar-filter[data-filter="scale"] .sidebar-filter-btn::before {
-            background: var(--color-nigun);
+            background: linear-gradient(180deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
         }
 
         .sidebar-filter-btn .sidebar-filter-label {
-            font-size: 0.95em;
+            font-size: 0.9em;
             font-weight: 600;
-            color: var(--text-dark);
+            color: var(--color-nigun-dark);
         }
 
         .sidebar-filter-btn .sidebar-filter-value {
             flex: 1;
             text-align: left;
-            color: var(--text-dark);
+            color: var(--text-muted);
+            font-size: 0.85em;
         }
 
-        .sidebar-filter-btn:hover {
-            border-color: var(--color-nigun);
+        .sidebar-filter-btn .dropdown-arrow {
+            color: var(--color-nigun);
+            font-size: 0.7em;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-filter-btn.active .dropdown-arrow {
+            transform: rotate(180deg);
         }
 
         .sidebar-filter-btn.active {
             border-color: var(--color-nigun);
-            background: var(--color-nigun-pale);
+            background: linear-gradient(135deg, var(--color-nigun-pale) 0%, rgba(227, 242, 253, 0.8) 100%);
+            box-shadow: 0 4px 16px rgba(74, 124, 201, 0.2);
         }
 
         .sidebar-dropdown-content {
             display: none;
             position: absolute;
-            top: 100%;
+            top: calc(100% + 4px);
             right: 0;
             left: 0;
-            background: white;
-            border: 2px solid var(--color-nigun);
-            border-radius: 8px;
-            max-height: 250px;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(74, 124, 201, 0.2);
+            border-radius: 12px;
+            max-height: 280px;
             overflow-y: auto;
             z-index: 50;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 40px rgba(74, 124, 201, 0.2);
+            animation: dropdownSlide 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes dropdownSlide {
+            from {
+                opacity: 0;
+                transform: translateY(-8px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .sidebar-dropdown-content.show {
@@ -9667,45 +9740,55 @@
         }
 
         .dropdown-search-box {
-            padding: 8px;
-            border-bottom: 1px solid #eee;
+            padding: 10px;
+            border-bottom: 1px solid rgba(74, 124, 201, 0.1);
             position: sticky;
             top: 0;
-            background: white;
+            background: linear-gradient(180deg, white 0%, rgba(255, 255, 255, 0.95) 100%);
+            backdrop-filter: blur(8px);
+            z-index: 1;
         }
 
         .dropdown-search-input {
             width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            padding: 10px 14px;
+            border: 1px solid rgba(74, 124, 201, 0.2);
+            border-radius: 8px;
             font-size: 0.85em;
             font-family: inherit;
             direction: rtl;
+            background: rgba(248, 250, 252, 0.8);
+            transition: all 0.2s ease;
         }
 
         .dropdown-search-input:focus {
             outline: none;
             border-color: var(--color-nigun);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(74, 124, 201, 0.1);
         }
 
         .dropdown-options {
-            max-height: 200px;
+            max-height: 220px;
             overflow-y: auto;
+            padding: 4px;
         }
 
         .sidebar-filter-option {
             display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 15px;
+            gap: 10px;
+            padding: 10px 12px;
             cursor: pointer;
-            transition: var(--transition-smooth);
-            font-size: 0.9em;
+            transition: all 0.2s ease;
+            font-size: 0.88em;
+            border-radius: 8px;
+            margin: 2px 0;
         }
 
         .sidebar-filter-option:hover {
-            background: var(--color-nigun-pale);
+            background: linear-gradient(135deg, var(--color-nigun-pale) 0%, rgba(227, 242, 253, 0.6) 100%);
+            transform: translateX(-2px);
         }
 
         .sidebar-filter-option input {
@@ -9714,6 +9797,11 @@
             height: 16px;
             cursor: pointer;
             flex-shrink: 0;
+        }
+
+        .sidebar-filter-option input:checked+* {
+            color: var(--color-nigun-dark);
+            font-weight: 500;
         }
 
         /* Mobile responsive */
@@ -10072,6 +10160,7 @@
             padding: 40px;
             box-shadow: var(--card-shadow);
             line-height: 1.8;
+            margin-bottom: 25px;
         }
 
         .info-page-content p {
@@ -10124,6 +10213,37 @@
             color: white;
             border-color: var(--color-chatzer);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .info-nav-item.info-nav-featured {
+            background: white;
+            border: 2px solid;
+            border-image: var(--gradient-main) 1;
+            border-radius: 10px;
+            font-weight: 700;
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.15);
+            position: relative;
+            margin: 0 8px;
+        }
+
+        .info-nav-item.info-nav-featured {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .info-nav-item.info-nav-featured:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.25);
+        }
+
+        .info-nav-item.info-nav-featured.active {
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
         }
 
         .info-nav-divider {
@@ -10486,6 +10606,409 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
+        /* Contribute Page Styles */
+        .contribute-page {
+            background: var(--bg-color);
+        }
+
+        .contribute-hero {
+            background: var(--gradient-main);
+            padding: 60px 40px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contribute-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.3;
+        }
+
+        .contribute-hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .contribute-hero-title {
+            color: white;
+            font-size: 2.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .contribute-hero-subtitle {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2em;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .contribute-content {
+            padding: 30px 20px 20px 20px;
+        }
+
+        .contribute-intro {
+            text-align: center;
+            font-size: 1.1em;
+            color: var(--text-dark);
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contribute-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .contribute-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(74, 124, 201, 0.1);
+            border: 1px solid rgba(74, 124, 201, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .contribute-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(74, 124, 201, 0.2);
+            border-color: var(--color-nigun);
+        }
+
+        .contribute-card-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .contribute-card-title {
+            color: var(--color-nigun-dark);
+            font-size: 1.3em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .contribute-card-text {
+            color: var(--text-muted);
+            font-size: 0.95em;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .contribute-card-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.3);
+        }
+
+        .contribute-card-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 124, 201, 0.4);
+        }
+
+        .contribute-card-btn .btn-arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .contribute-card-btn:hover .btn-arrow {
+            transform: translateX(-5px);
+        }
+
+        .contribute-contact {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(74, 124, 201, 0.05) 0%, rgba(74, 124, 201, 0.1) 100%);
+            padding: 40px;
+            border-radius: 16px;
+            border: 1px solid rgba(74, 124, 201, 0.15);
+        }
+
+        .contribute-contact-title {
+            color: var(--text-dark);
+            font-size: 1.2em;
+            margin-bottom: 15px;
+        }
+
+        .contribute-email {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            color: white;
+            padding: 15px 30px;
+            border-radius: 12px;
+            font-size: 1.1em;
+            text-decoration: none;
+            direction: ltr;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.3);
+        }
+
+        .contribute-email:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(74, 124, 201, 0.4);
+        }
+
+        /* Main Nigun Button - Largest */
+        .contribute-main-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            padding: 25px 40px;
+            border-radius: 16px;
+            text-decoration: none;
+            font-size: 1.4em;
+            font-weight: 600;
+            color: white;
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+
+        .contribute-main-btn .btn-external {
+            transition: transform 0.3s ease;
+            font-size: 1.2em;
+        }
+
+        .contribute-main-btn:hover .btn-external {
+            transform: translate(3px, -3px);
+        }
+
+        .contribute-btn-main-gradient {
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            box-shadow: 0 6px 25px rgba(74, 124, 201, 0.4);
+        }
+
+        .contribute-btn-main-gradient:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 35px rgba(74, 124, 201, 0.5);
+        }
+
+        /* External arrow for all buttons */
+        .btn-external {
+            transition: transform 0.3s ease;
+            opacity: 0.9;
+        }
+
+        .contribute-btn:hover .btn-external {
+            transform: translate(3px, -3px);
+            opacity: 1;
+        }
+
+        /* Gezungen color for piyut */
+        .contribute-btn-gezungen {
+            background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+            box-shadow: 0 4px 15px rgba(245, 124, 0, 0.3);
+        }
+
+        .contribute-btn-gezungen:hover {
+            box-shadow: 0 6px 25px rgba(245, 124, 0, 0.4);
+        }
+
+        /* Category Buttons Grid */
+        .contribute-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .contribute-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 16px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 500;
+            color: white;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .contribute-btn-icon {
+            font-size: 1.3em;
+        }
+
+        .contribute-btn-text {
+            text-align: center;
+        }
+
+        .contribute-btn .btn-arrow {
+            transition: transform 0.3s ease;
+            opacity: 0.8;
+        }
+
+        .contribute-btn:hover .btn-arrow {
+            transform: translateX(-5px);
+            opacity: 1;
+        }
+
+        .contribute-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        /* Category-specific colors */
+        .contribute-btn-mechaber {
+            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
+            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
+        }
+
+        .contribute-btn-mechaber:hover {
+            box-shadow: 0 6px 25px rgba(34, 197, 94, 0.4);
+        }
+
+        .contribute-btn-chatzer {
+            background: linear-gradient(135deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
+            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+        }
+
+        .contribute-btn-chatzer:hover {
+            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.4);
+        }
+
+        .contribute-btn-verter {
+            background: linear-gradient(135deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
+            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+        }
+
+        .contribute-btn-verter:hover {
+            box-shadow: 0 6px 25px rgba(236, 72, 153, 0.4);
+        }
+
+        .contribute-btn-zman {
+            background: linear-gradient(135deg, var(--color-zman) 0%, var(--color-zman-dark) 100%);
+            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
+        }
+
+        .contribute-btn-zman:hover {
+            box-shadow: 0 6px 25px rgba(249, 115, 22, 0.4);
+        }
+
+        .contribute-btn-piyut {
+            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+        }
+
+        .contribute-btn-piyut:hover {
+            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
+        }
+
+        .contribute-btn-collection {
+            background: linear-gradient(135deg, var(--color-collection) 0%, var(--color-collection-dark) 100%);
+            box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);
+        }
+
+        .contribute-btn-collection:hover {
+            box-shadow: 0 6px 25px rgba(20, 184, 166, 0.4);
+        }
+
+        /* Extra Section */
+        .contribute-extra-section {
+            margin-bottom: 40px;
+        }
+
+        .contribute-section-title {
+            color: var(--text-dark);
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .contribute-extra-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .contribute-btn-resource {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
+        }
+
+        .contribute-btn-resource:hover {
+            box-shadow: 0 6px 25px rgba(14, 165, 233, 0.4);
+        }
+
+        .contribute-btn-document {
+            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+            box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
+        }
+
+        .contribute-btn-document:hover {
+            box-shadow: 0 6px 25px rgba(100, 116, 139, 0.4);
+        }
+
+        .contribute-btn-album {
+            background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
+        }
+
+        .contribute-btn-album:hover {
+            box-shadow: 0 6px 25px rgba(168, 85, 247, 0.4);
+        }
+
+        /* Terms Link */
+        .contribute-terms {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+        }
+
+        .contribute-terms-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9em;
+            transition: color 0.3s ease;
+        }
+
+        .contribute-terms-link:hover {
+            color: var(--color-nigun);
+        }
+
+        @media (max-width: 768px) {
+            .contribute-hero {
+                padding: 40px 20px;
+            }
+
+            .contribute-hero-title {
+                font-size: 1.8em;
+            }
+
+            .contribute-hero-subtitle {
+                font-size: 1em;
+            }
+
+            .contribute-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .contribute-card {
+                padding: 25px;
+            }
+        }
+
         @media (max-width: 768px) {
             .goals-brick-row {
                 flex-direction: column;
@@ -10620,14 +11143,20 @@
 
             <!-- Right side buttons wrapper - matches logo width on left -->
             <div class="header-right-buttons">
-                <!-- Search Button - with magnifying glass icon + text -->
-                <button class="search-btn-new" onclick="openSearchModal()" title="זוך">
-                    <svg class="search-icon-new" viewBox="0 0 24 24" fill="currentColor">
-                        <path
-                            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                    </svg>
-                    <span class="search-text-new">זוך</span>
-                </button>
+                <!-- Combined Search + Add Button -->
+                <div class="header-combo-btn">
+                    <button class="combo-search" onclick="openSearchModal()">
+                        <svg class="combo-search-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path
+                                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+                        </svg>
+                        <span class="combo-search-text">זוך</span>
+                    </button>
+                    <a href="#/contribute" class="combo-add">
+                        <span class="combo-add-icon">+</span>
+                        <span class="combo-add-text">לייג צו</span>
+                    </a>
+                </div>
 
                 <!-- Streaming Button - ball with blinking dot, expands on hover -->
                 <a href="https://stream.oitzerhanigunim.org/" target="_blank" class="stream-ball-btn">
@@ -10664,21 +11193,20 @@
             .header-main {
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
-                /* Better distribution */
+                justify-content: center;
                 gap: 30px;
-                /* Increased gap */
                 width: 100%;
                 max-width: 1400px;
                 margin: 0 auto;
                 padding: 12px 30px;
-                flex-wrap: wrap;
-                /* Allow wrapping on very small screens */
+                position: relative;
             }
 
             .logo {
-                margin-left: 20px;
-                /* Space between logo and nav */
+                position: absolute;
+                right: 30px;
+                top: 50%;
+                transform: translateY(-50%);
             }
 
             .main-nav {
@@ -10691,11 +11219,132 @@
             }
 
             .header-right-buttons {
+                position: absolute;
+                left: 20px;
+                top: 50%;
+                transform: translateY(-50%);
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                margin-right: 20px;
-                /* Match logo margin on left */
+                z-index: 10;
+            }
+
+            /* Combined Search + Add Button */
+            .header-combo-btn {
+                display: flex;
+                align-items: stretch;
+                background: var(--gradient-main);
+                border-radius: 25px;
+                overflow: hidden;
+                box-shadow: 0 2px 12px rgba(139, 92, 246, 0.3);
+                height: 40px;
+                gap: 3px;
+                padding: 3px;
+            }
+
+            .combo-search {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                padding: 0 16px;
+                background: rgba(255, 255, 255, 0.15);
+                border: none;
+                border-radius: 22px;
+                cursor: pointer;
+                font-family: inherit;
+                font-size: 0.95em;
+                font-weight: 600;
+                color: white;
+                transition: all 0.4s ease;
+                flex: 3;
+                min-width: 60px;
+            }
+
+            .combo-search-icon {
+                width: 16px;
+                height: 16px;
+                fill: white;
+                opacity: 0;
+                max-width: 0;
+                transition: all 0.4s ease;
+            }
+
+            .combo-search-text {
+                transition: all 0.4s ease;
+            }
+
+            .combo-add {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 6px;
+                padding: 0 12px;
+                background: rgba(255, 255, 255, 0.15);
+                border: none;
+                border-radius: 22px;
+                cursor: pointer;
+                text-decoration: none;
+                font-family: inherit;
+                font-size: 0.95em;
+                font-weight: 600;
+                color: white;
+                transition: all 0.4s ease;
+                flex: 1;
+                min-width: 36px;
+            }
+
+            .combo-add-icon {
+                font-size: 1.3em;
+                font-weight: 700;
+                color: white;
+                transition: all 0.4s ease;
+            }
+
+            .combo-add-text {
+                color: white;
+                opacity: 0;
+                max-width: 0;
+                overflow: hidden;
+                white-space: nowrap;
+                transition: all 0.4s ease;
+            }
+
+            /* Hover on Search - expands to show icon */
+            .header-combo-btn:hover .combo-search:hover {
+                flex: 10;
+                background: rgba(255, 255, 255, 0.25);
+            }
+
+            .header-combo-btn:hover .combo-search:hover .combo-search-icon {
+                opacity: 1;
+                max-width: 20px;
+            }
+
+            .header-combo-btn:hover .combo-search:hover~.combo-add {
+                flex: 0;
+                padding: 0;
+                min-width: 0;
+                opacity: 0;
+            }
+
+            /* Hover on Add - expands to show text */
+            .header-combo-btn:hover .combo-add:hover {
+                flex: 10;
+                padding: 0 16px;
+                background: rgba(255, 255, 255, 0.25);
+            }
+
+            .header-combo-btn:hover .combo-add:hover .combo-add-text {
+                opacity: 1;
+                max-width: 80px;
+            }
+
+            .header-combo-btn:has(.combo-add:hover) .combo-search {
+                flex: 0;
+                padding: 0;
+                min-width: 0;
+                opacity: 0;
             }
 
             /* Logo hover effect with fade both ways */
@@ -12729,7 +13378,7 @@
         }
 
         // Info pages list for special transitions
-        const infoPages = ['about', 'instructions', 'stats', 'credits', 'thanks', 'terms'];
+        const infoPages = ['about', 'instructions', 'stats', 'credits', 'thanks', 'terms', 'contribute'];
 
         // Page order for determining navigation direction
         const pageOrder = ['home', 'songs', 'mechabrim', 'chatzeros', 'zmanim', 'collections', 'verter', 'music', 'resources', 'documents', 'albums'];
@@ -12944,6 +13593,9 @@
                 case 'terms':
                     renderTermsPage(content);
                     break;
+                case 'contribute':
+                    renderContributePage(content);
+                    break;
             }
         }
 
@@ -13157,6 +13809,7 @@
             const pages = [
                 { id: 'about', label: 'אונזער ציל' },
                 { id: 'instructions', label: 'אנווייזונגען' },
+                { id: 'contribute', label: 'לייג צו', featured: true },
                 { id: 'credits', label: 'קרעדיטס' },
                 { id: 'thanks', label: 'התודה והברכה' }
             ];
@@ -13164,7 +13817,7 @@
             return `
                 <nav class="info-nav">
                     ${pages.map((page, index) => `
-                        <a class="info-nav-item ${activePage === page.id ? 'active' : ''}"
+                        <a class="info-nav-item ${activePage === page.id ? 'active' : ''} ${page.featured ? 'info-nav-featured' : ''}"
                              href="#/${page.id}">
                             ${page.label}
                         </a>
@@ -13570,6 +14223,96 @@
             `;
         }
 
+        // Render Contribute Page (צולייגן אינפֿאָרמאַציע)
+        function renderContributePage(container) {
+            container.innerHTML = `
+                <div class="info-page contribute-page">
+                    ${getInfoNavHTML('contribute')}
+
+                    <div class="contribute-hero">
+                        <div class="contribute-hero-content">
+                            <h1 class="contribute-hero-title">ביישטייערט צום אוצר</h1>
+                            <p class="contribute-hero-subtitle">העלפט אונז פארגרעסערן און פארבעסערן דעם דאטאבעיס</p>
+                        </div>
+                    </div>
+
+                    <div class="info-page-content contribute-content">
+                        <!-- Main Nigun Button -->
+                        <a href="https://coda.io/form/_deegJpdfVC5" class="contribute-main-btn contribute-btn-main-gradient" target="_blank" rel="noopener">
+                            <span class="contribute-main-text">לייג צו / אפדעיט א <strong>ניגון</strong></span>
+                            <span class="btn-external">↗</span>
+                        </a>
+
+                        <!-- Category Buttons Grid -->
+                        <div class="contribute-grid">
+                            <a href="https://coda.io/form/_dpAUcVRsKjH" class="contribute-btn contribute-btn-mechaber" target="_blank" rel="noopener">
+                                <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>מחבר</strong></span>
+                                <span class="btn-external">↗</span>
+                            </a>
+                            
+                            <a href="https://coda.io/form/_dctTYOyS0RX" class="contribute-btn contribute-btn-chatzer" target="_blank" rel="noopener">
+                                <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>חצר</strong></span>
+                                <span class="btn-external">↗</span>
+                            </a>
+                            
+                            <a href="https://coda.io/form/_dgAvntb_zik" class="contribute-btn contribute-btn-verter" target="_blank" rel="noopener">
+                                <span class="contribute-btn-text">לייג צו / אפדעיט <strong>ווערטער</strong></span>
+                                <span class="btn-external">↗</span>
+                            </a>
+                            
+                            <a href="https://coda.io/form/_d5bHKMFR3lD" class="contribute-btn contribute-btn-zman" target="_blank" rel="noopener">
+                                <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>זמן</strong></span>
+                                <span class="btn-external">↗</span>
+                            </a>
+                            
+                            <a href="https://coda.io/form/_dZD54k66986" class="contribute-btn contribute-btn-gezungen" target="_blank" rel="noopener">
+                                <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>פיוט</strong></span>
+                                <span class="btn-external">↗</span>
+                            </a>
+                            
+                            <a href="https://coda.io/form/_d6Apy3XTmnZ" class="contribute-btn contribute-btn-collection" target="_blank" rel="noopener">
+                                <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>קאלעקשן</strong></span>
+                                <span class="btn-external">↗</span>
+                            </a>
+                        </div>
+
+                        <!-- Extra Resources Section -->
+                        <div class="contribute-extra-section">
+                            <h3 class="contribute-section-title">לייג צו נאך רעסורן</h3>
+                            <div class="contribute-extra-grid">
+                                <a href="https://coda.io/form/_dMIXJIsbjLg" class="contribute-btn contribute-btn-resource" target="_blank" rel="noopener">
+                                    <span class="contribute-btn-text">לייג צו א <strong>רעסורס</strong></span>
+                                    <span class="btn-external">↗</span>
+                                </a>
+                                
+                                <a href="https://coda.io/form/_d9KgrPJTikk" class="contribute-btn contribute-btn-resource" target="_blank" rel="noopener">
+                                    <span class="contribute-btn-text">לייג צו א <strong>דאקומענט</strong></span>
+                                    <span class="btn-external">↗</span>
+                                </a>
+                                
+                                <a href="https://coda.io/form/_dVpYtnuj24f" class="contribute-btn contribute-btn-resource" target="_blank" rel="noopener">
+                                    <span class="contribute-btn-text">לייג צו אן <strong>אלבום</strong></span>
+                                    <span class="btn-external">↗</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Section (outside white container) -->
+                    <div class="goals-contact">
+                        <div class="goals-contact-title">הערות והארות</div>
+                        <div class="goals-contact-text">פאר סיי וועלכע הערות אדער זיך צו פארבינדן מיט מערכת אידישע ניגונים</div>
+                        <a href="mailto:yiddishenigunim@gmail.com" class="goals-contact-email">yiddishenigunim@gmail.com</a>
+                    </div>
+
+                    <!-- Terms Link -->
+                    <div class="contribute-terms">
+                        <a href="#/terms" class="contribute-terms-link">Terms of Use</a>
+                    </div>
+                </div>
+            `;
+        }
+
         // Handle home search
         function handleHomeSearch(event) {
             if (event.key === 'Enter') {
@@ -13641,7 +14384,7 @@
                                 <input type="text"
                                        id="songsSearchInput"
                                        class="sidebar-search-input"
-                                       placeholder="זוכט א ניגון..."
+                                       placeholder="זוך א ניגון..."
                                        value="${searchQuery || ''}"
                                        onkeypress="if(event.key==='Enter')handleSongsSearch(this.value)">
                                 ${searchQuery ? '<button class="sidebar-search-clear" onclick="clearSearch()">×</button>' : ''}
@@ -13698,7 +14441,7 @@
                             </div>
 
                             <div class="sidebar-section">
-                                <div class="sidebar-section-title">פילטערס</div>
+                                <div class="sidebar-section-title">פילטערס:</div>
                             </div>
 
                             ${renderSidebarFilter('collection', 'קאלעקשאנס:', categories.collections)}
@@ -15217,10 +15960,10 @@
             console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
 
             // Valid pages (including info pages)
-            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'music', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
+            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'music', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats', 'contribute'];
 
             // Info pages that don't need data loading
-            const infoPagesList = ['about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
+            const infoPagesList = ['about', 'instructions', 'credits', 'thanks', 'terms', 'stats', 'contribute'];
 
             if (validPages.includes(page)) {
                 const content = document.getElementById('mainContent');
