@@ -16127,8 +16127,8 @@
                     renderCurrentPage();
                 } else if (idOrName) {
                     // Detail pages that need data loaded
-                    const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
-                    const dataPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
+                    const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'piyutim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
+                    const dataPage = page === 'zman' ? 'zmanim' : (page === 'piyutim' ? 'piyutim' : (page === 'nigunim' ? 'songs' : page));
 
                     // Show loading indicator and ensure data is loaded for detail pages
                     // For nigunim, need to check songsFullyLoaded, not just loadedCategories
@@ -17506,7 +17506,7 @@
                 const songCount = categories.zmanim[piyutName]?.length || 0;
                 const piyutId = info.customId || piyutName;
                 return `
-                            <a class="category-card piyut-card" href="#/zmanim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
+                            <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
                                 <div class="category-card-content">
                                     <div class="category-card-info">
                                         <div class="category-card-title">${piyutName}</div>
