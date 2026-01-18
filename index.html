@@ -57,6 +57,12 @@
             --color-collection-dark: #8e0000;
             --color-collection-pale: #ffebee;
 
+            /* פיוטים - Green */
+            --color-piyut: #2e8b2e;
+            --color-piyut-light: #81c784;
+            --color-piyut-dark: #1b5e20;
+            --color-piyut-pale: #e8f5e9;
+
             /* ניגונים - Blue */
             --color-nigun: #4a7cc9;
             --color-nigun-light: #7aa3e0;
@@ -367,6 +373,10 @@
 
         .page-theme-collection .loading-wave-bar.active::before {
             background: linear-gradient(90deg, transparent 0%, var(--color-collection-light) 25%, var(--color-collection) 50%, var(--color-collection-light) 75%, transparent 100%);
+        }
+
+        .page-theme-piyut .loading-wave-bar.active::before {
+            background: linear-gradient(90deg, transparent 0%, var(--color-piyut-light) 25%, var(--color-piyut) 50%, var(--color-piyut-light) 75%, transparent 100%);
         }
 
         .page-theme-resource .loading-wave-bar.active::before {
@@ -1439,6 +1449,13 @@
             /* Play triangle - RTL direction */
         }
 
+        .nav-dropdown-item[data-dest="piyutim"]::before {
+            background: var(--color-piyut);
+            border-radius: 0;
+            clip-path: polygon(0 50%, 100% 0, 100% 100%);
+            /* Play triangle - RTL direction */
+        }
+
         .nav-dropdown-item[data-dest="resources"]::before {
             background: var(--color-resource);
             clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
@@ -1501,6 +1518,11 @@
         .nav-dropdown-item[data-dest="collections"]:hover {
             color: var(--color-collection-dark);
             background: var(--color-collection-pale);
+        }
+
+        .nav-dropdown-item[data-dest="piyutim"]:hover {
+            color: var(--color-piyut-dark);
+            background: var(--color-piyut-pale);
         }
 
         .nav-dropdown-item[data-dest="resources"]:hover {
@@ -2740,6 +2762,10 @@
             background: var(--color-collection);
         }
 
+        .page-theme-piyut .page-title-bar {
+            background: var(--color-piyut);
+        }
+
         .page-theme-nigun .page-title-bar {
             background: var(--color-nigun);
         }
@@ -2762,6 +2788,7 @@
         .page-theme-verter,
         .page-theme-zman,
         .page-theme-collection,
+        .page-theme-piyut,
         .page-theme-nigun,
         .page-theme-resource,
         .page-theme-document,
@@ -2793,6 +2820,10 @@
 
         .page-theme-collection {
             background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+        }
+
+        .page-theme-piyut {
+            background: linear-gradient(180deg, var(--color-piyut-pale) 0%, color-mix(in srgb, var(--color-piyut-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
         .page-theme-nigun {
@@ -4046,6 +4077,20 @@
         .page-theme-collection .category-card::after {
             border-color: var(--color-collection);
             box-shadow: 0 0 15px rgba(76, 175, 80, 0.15);
+        }
+
+        .page-theme-piyut .category-card {
+            background: var(--color-piyut-pale);
+            border-color: var(--color-piyut-light);
+        }
+
+        .page-theme-piyut .category-card::after {
+            border-color: var(--color-piyut);
+            box-shadow: 0 0 15px rgba(46, 139, 46, 0.15);
+        }
+
+        .page-theme-piyut .category-card-title {
+            color: var(--color-piyut);
         }
 
         .category-card:hover {
@@ -8745,11 +8790,11 @@
         }
 
         .hover-tooltip.tooltip-piyut .hover-tooltip-type {
-            background: #2e8b2e;
+            background: var(--color-piyut);
         }
 
         .hover-tooltip.tooltip-piyut .hover-tooltip-title {
-            color: #1b5e20;
+            color: var(--color-piyut-dark);
         }
 
         .hover-tooltip.tooltip-collection .hover-tooltip-type {
@@ -11706,6 +11751,18 @@
             const clickedElement = e.target.closest('[data-tooltip-value]');
             if (clickedElement) {
                 forceHideTooltip();
+
+                // Check if it's a piyut tooltip click - navigate to piyut detail page
+                const tooltipType = clickedElement.getAttribute('data-tooltip-type');
+                const tooltipValue = clickedElement.getAttribute('data-tooltip-value');
+
+                if (tooltipType === 'zman' && tooltipValue && piyutimInfo[tooltipValue]) {
+                    // This is a piyut, navigate to piyutim detail page
+                    const piyutId = piyutimInfo[tooltipValue].customId || tooltipValue;
+                    e.preventDefault();
+                    e.stopPropagation();
+                    window.location.hash = `#/piyutim/${encodeURIComponent(piyutId)}`;
+                }
             }
         }, true);
 
@@ -12708,6 +12765,15 @@
                         fetchSongsInBackground();
                     }
                     break;
+                case 'piyutim':
+                    if (!loadedCategories.piyutim) {
+                        await fetchPiyutimInfo();
+                        loadedCategories.piyutim = true;
+                    }
+                    if (!loadedCategories.songs) {
+                        fetchSongsInBackground();
+                    }
+                    break;
                 case 'resources':
                     if (!loadedCategories.resources) {
                         await fetchResourcesInfo();
@@ -13475,6 +13541,7 @@
                 case 'verter': return loadedCategories.verter && Object.keys(verterInfo).length > 0;
                 case 'zmanim': return loadedCategories.zmanim && Object.keys(zmaninInfo).length > 0;
                 case 'collections': return loadedCategories.collections && Object.keys(collectionsInfo).length > 0;
+                case 'piyutim': return loadedCategories.piyutim && Object.keys(piyutimInfo).length > 0;
                 case 'resources': return loadedCategories.resources && Object.keys(resourcesInfo).length > 0;
                 case 'documents': return loadedCategories.documents && Object.keys(documentsInfo).length > 0;
                 case 'albums': return loadedCategories.albums && Object.keys(albumsInfo).length > 0;
@@ -13565,6 +13632,9 @@
                     break;
                 case 'collections':
                     renderCollectionsPage(content);
+                    break;
+                case 'piyutim':
+                    renderPiyutimPage(content);
                     break;
                 case 'resources':
                     renderResourcesPage(content);
@@ -15960,7 +16030,7 @@
             console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
 
             // Valid pages (including info pages)
-            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'music', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats', 'contribute'];
+            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'piyutim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'music', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats', 'contribute'];
 
             // Info pages that don't need data loading
             const infoPagesList = ['about', 'instructions', 'credits', 'thanks', 'terms', 'stats', 'contribute'];
@@ -16195,6 +16265,7 @@
                 case 'mechabrim': infoObj = mechabrimInfo; break;
                 case 'verter': infoObj = verterInfo; break;
                 case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
+                case 'piyutim': infoObj = piyutimInfo; break;
                 case 'collections': infoObj = collectionsInfo; break;
                 case 'albums': infoObj = albumsInfo; break;
                 case 'documents': infoObj = documentsInfo; break;
@@ -16223,6 +16294,7 @@
                 'mechabrim': 'mechabrim',
                 'verter': 'verter',
                 'zmanim': 'zmanim',
+                'piyutim': 'piyutim',
                 'collections': 'collections',
                 'albums': 'albums',
                 'documents': 'documents',
@@ -16315,6 +16387,11 @@
                     } else {
                         typeName = 'זמן';
                     }
+                    break;
+                case 'piyutim':
+                    infoObj = piyutimInfo;
+                    icon = '';
+                    typeName = 'פיוט';
                     break;
                 case 'collections':
                     infoObj = collectionsInfo;
@@ -17405,6 +17482,49 @@
 
             // Hide loading wave bar
             const loader = document.getElementById('collectionLoader');
+            if (loader) setTimeout(() => loader.classList.remove('active'), 500);
+        }
+
+        // Render piyutim page
+        function renderPiyutimPage(container) {
+            // Get all piyutim from piyutimInfo
+            const sortedPiyutim = Object.keys(piyutimInfo).sort((a, b) => a.localeCompare(b, 'he'));
+
+            container.innerHTML = `
+                <div class="page-theme-piyut">
+                    <div class="page-title">
+                        <div class="page-title-bar">פיוטים</div>
+                        <div class="page-title-content">
+                            <div class="subtitle"><span class="subtitle-count">0</span> פיוטים</div>
+                            <div class="loading-wave-bar active" id="piyutimLoader"></div>
+                        </div>
+                    </div>
+
+                    <div class="category-grid" id="piyutimGrid">
+                        ${sortedPiyutim.map(piyutName => {
+                const info = piyutimInfo[piyutName] || {};
+                const songCount = categories.zmanim[piyutName]?.length || 0;
+                const piyutId = info.customId || piyutName;
+                return `
+                            <a class="category-card piyut-card" href="#/zmanim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
+                                <div class="category-card-content">
+                                    <div class="category-card-info">
+                                        <div class="category-card-title">${piyutName}</div>
+                                        ${songCount > 0 ? `<div class="category-card-count">${songCount} ניגונים</div>` : ''}
+                                    </div>
+                                </div>
+                            </a>
+                        `;
+            }).join('')}
+                    </div>
+                </div>
+            `;
+
+            const countEl = container.querySelector('.subtitle-count');
+            if (countEl) animateCountUp(countEl, sortedPiyutim.length);
+
+            // Hide loading wave bar
+            const loader = document.getElementById('piyutimLoader');
             if (loader) setTimeout(() => loader.classList.remove('active'), 500);
         }
 
@@ -18551,20 +18671,21 @@
                     themeClass = 'tooltip-verter';
                     break;
                 case 'zman':
-                    categoryKey = 'zmanim';
                     // Check if it's a piyut or zman
                     if (piyutimInfo[value]) {
+                        categoryKey = 'piyutim';
                         typeName = 'פיוט';
                         extraInfo = piyutimInfo[value];
                         themeClass = 'tooltip-piyut';
                     } else {
+                        categoryKey = 'zmanim';
                         typeName = 'זמן';
                         extraInfo = zmaninInfo[value];
                         themeClass = 'tooltip-zman';
                     }
                     break;
                 case 'piyut':
-                    categoryKey = 'zmanim';
+                    categoryKey = 'piyutim';
                     typeName = 'פיוט';
                     extraInfo = piyutimInfo[value];
                     themeClass = 'tooltip-piyut';
