@@ -10541,16 +10541,6 @@
             transform: translate(3px, -3px);
         }
 
-        .contribute-btn-main-gradient {
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            box-shadow: 0 6px 25px rgba(74, 124, 201, 0.4);
-        }
-
-        .contribute-btn-main-gradient:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 35px rgba(74, 124, 201, 0.5);
-        }
-
         /* External arrow for all buttons */
         .btn-external {
             transition: transform 0.3s ease;
@@ -10560,16 +10550,6 @@
         .contribute-btn:hover .btn-external {
             transform: translate(3px, -3px);
             opacity: 1;
-        }
-
-        /* Gezungen color for piyut */
-        .contribute-btn-gezungen {
-            background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
-            box-shadow: 0 4px 15px rgba(245, 124, 0, 0.3);
-        }
-
-        .contribute-btn-gezungen:hover {
-            box-shadow: 0 6px 25px rgba(245, 124, 0, 0.4);
         }
 
         /* Category Buttons Grid */
@@ -10616,61 +10596,6 @@
             transform: translateY(-3px);
         }
 
-        /* Category-specific colors */
-        .contribute-btn-mechaber {
-            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
-        }
-
-        .contribute-btn-mechaber:hover {
-            box-shadow: 0 6px 25px rgba(34, 197, 94, 0.4);
-        }
-
-        .contribute-btn-chatzer {
-            background: linear-gradient(135deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-
-        .contribute-btn-chatzer:hover {
-            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.4);
-        }
-
-        .contribute-btn-verter {
-            background: linear-gradient(135deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
-        }
-
-        .contribute-btn-verter:hover {
-            box-shadow: 0 6px 25px rgba(236, 72, 153, 0.4);
-        }
-
-        .contribute-btn-zman {
-            background: linear-gradient(135deg, var(--color-zman) 0%, var(--color-zman-dark) 100%);
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
-        }
-
-        .contribute-btn-zman:hover {
-            box-shadow: 0 6px 25px rgba(249, 115, 22, 0.4);
-        }
-
-        .contribute-btn-piyut {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .contribute-btn-piyut:hover {
-            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
-        }
-
-        .contribute-btn-collection {
-            background: linear-gradient(135deg, var(--color-collection) 0%, var(--color-collection-dark) 100%);
-            box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);
-        }
-
-        .contribute-btn-collection:hover {
-            box-shadow: 0 6px 25px rgba(20, 184, 166, 0.4);
-        }
-
         /* Extra Section */
         .contribute-extra-section {
             margin-bottom: 40px;
@@ -10688,33 +10613,6 @@
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
-        }
-
-        .contribute-btn-resource {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
-        }
-
-        .contribute-btn-resource:hover {
-            box-shadow: 0 6px 25px rgba(14, 165, 233, 0.4);
-        }
-
-        .contribute-btn-document {
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-            box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
-        }
-
-        .contribute-btn-document:hover {
-            box-shadow: 0 6px 25px rgba(100, 116, 139, 0.4);
-        }
-
-        .contribute-btn-album {
-            background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
-        }
-
-        .contribute-btn-album:hover {
-            box-shadow: 0 6px 25px rgba(168, 85, 247, 0.4);
         }
 
         /* Terms Link */

@@ -235,3 +235,18 @@
     flex-direction: column;
     gap: 8px;
 }
+
+/* ========================================
+   CONTRIBUTE BUTTONS - Consolidated
+   ======================================== */
+
+/* Base contribute button with gradient - uses theme colors */
+/* Use with two classes: contribute-btn themed theme-{name} */
+.contribute-btn.themed {
+    background: linear-gradient(135deg, var(--theme-color) 0%, var(--theme-dark) 100%);
+    box-shadow: 0 4px 15px color-mix(in srgb, var(--theme-color) 30%, transparent);
+}
+
+.contribute-btn.themed:hover {
+    box-shadow: 0 6px 25px color-mix(in srgb, var(--theme-color) 40%, transparent);
+}

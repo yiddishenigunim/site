@@ -2680,39 +2680,39 @@
 
                     <div class="info-page-content contribute-content">
                         <!-- Main Nigun Button -->
-                        <a href="https://coda.io/form/_deegJpdfVC5" class="contribute-main-btn contribute-btn-main-gradient" target="_blank" rel="noopener">
+                        <a href="https://coda.io/form/_deegJpdfVC5" class="contribute-main-btn contribute-btn themed theme-nigun" target="_blank" rel="noopener">
                             <span class="contribute-main-text">לייג צו / אפדעיט א <strong>ניגון</strong></span>
                             <span class="btn-external">↗</span>
                         </a>
 
                         <!-- Category Buttons Grid -->
                         <div class="contribute-grid">
-                            <a href="https://coda.io/form/_dpAUcVRsKjH" class="contribute-btn contribute-btn-mechaber" target="_blank" rel="noopener">
+                            <a href="https://coda.io/form/_dpAUcVRsKjH" class="contribute-btn themed theme-mechaber" target="_blank" rel="noopener">
                                 <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>מחבר</strong></span>
                                 <span class="btn-external">↗</span>
                             </a>
-                            
-                            <a href="https://coda.io/form/_dctTYOyS0RX" class="contribute-btn contribute-btn-chatzer" target="_blank" rel="noopener">
+
+                            <a href="https://coda.io/form/_dctTYOyS0RX" class="contribute-btn themed theme-chatzer" target="_blank" rel="noopener">
                                 <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>חצר</strong></span>
                                 <span class="btn-external">↗</span>
                             </a>
-                            
-                            <a href="https://coda.io/form/_dgAvntb_zik" class="contribute-btn contribute-btn-verter" target="_blank" rel="noopener">
+
+                            <a href="https://coda.io/form/_dgAvntb_zik" class="contribute-btn themed theme-verter" target="_blank" rel="noopener">
                                 <span class="contribute-btn-text">לייג צו / אפדעיט <strong>ווערטער</strong></span>
                                 <span class="btn-external">↗</span>
                             </a>
-                            
-                            <a href="https://coda.io/form/_d5bHKMFR3lD" class="contribute-btn contribute-btn-zman" target="_blank" rel="noopener">
+
+                            <a href="https://coda.io/form/_d5bHKMFR3lD" class="contribute-btn themed theme-zman" target="_blank" rel="noopener">
                                 <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>זמן</strong></span>
                                 <span class="btn-external">↗</span>
                             </a>
-                            
-                            <a href="https://coda.io/form/_dZD54k66986" class="contribute-btn contribute-btn-gezungen" target="_blank" rel="noopener">
+
+                            <a href="https://coda.io/form/_dZD54k66986" class="contribute-btn themed theme-piyut" target="_blank" rel="noopener">
                                 <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>פיוט</strong></span>
                                 <span class="btn-external">↗</span>
                             </a>
-                            
-                            <a href="https://coda.io/form/_d6Apy3XTmnZ" class="contribute-btn contribute-btn-collection" target="_blank" rel="noopener">
+
+                            <a href="https://coda.io/form/_d6Apy3XTmnZ" class="contribute-btn themed theme-collection" target="_blank" rel="noopener">
                                 <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>קאלעקשן</strong></span>
                                 <span class="btn-external">↗</span>
                             </a>
@@ -2722,17 +2722,17 @@
                         <div class="contribute-extra-section">
                             <h3 class="contribute-section-title">לייג צו נאך רעסורן</h3>
                             <div class="contribute-extra-grid">
-                                <a href="https://coda.io/form/_dMIXJIsbjLg" class="contribute-btn contribute-btn-resource" target="_blank" rel="noopener">
+                                <a href="https://coda.io/form/_dMIXJIsbjLg" class="contribute-btn themed theme-resource" target="_blank" rel="noopener">
                                     <span class="contribute-btn-text">לייג צו א <strong>רעסורס</strong></span>
                                     <span class="btn-external">↗</span>
                                 </a>
-                                
-                                <a href="https://coda.io/form/_d9KgrPJTikk" class="contribute-btn contribute-btn-resource" target="_blank" rel="noopener">
+
+                                <a href="https://coda.io/form/_d9KgrPJTikk" class="contribute-btn themed theme-document" target="_blank" rel="noopener">
                                     <span class="contribute-btn-text">לייג צו א <strong>דאקומענט</strong></span>
                                     <span class="btn-external">↗</span>
                                 </a>
-                                
-                                <a href="https://coda.io/form/_dVpYtnuj24f" class="contribute-btn contribute-btn-resource" target="_blank" rel="noopener">
+
+                                <a href="https://coda.io/form/_dVpYtnuj24f" class="contribute-btn themed theme-album" target="_blank" rel="noopener">
                                     <span class="contribute-btn-text">לייג צו אן <strong>אלבום</strong></span>
                                     <span class="btn-external">↗</span>
                                 </a>
