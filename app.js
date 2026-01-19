@@ -6786,246 +6786,259 @@
             if (loader) setTimeout(() => loader.classList.remove('active'), 500);
         }
 
-        // Render album detail page
+        // Generic detail page renderer - consolidates album, document, resource detail pages
+        function renderGenericDetailPage(config) {
+            const {
+                container,
+                itemName,
+                infoSource,
+                type, // 'albums', 'documents', 'resources'
+                typeLabel, // 'אלבום', 'דאקומענט', 'רעסורס'
+                backPage, // 'albums', 'documents', 'resources'
+                backLabel, // 'אלבומס בלאט', etc.
+                themeVar, // 'album', 'document', 'resource'
+                buildSections // function that returns custom HTML sections
+            } = config;
+
+            const trimmedName = itemName.trim();
+            const info = infoSource[trimmedName] || infoSource[itemName] || {};
+
+            // Find related nigunim
+            const relatedNigunim = allSongs.filter(song => {
+                const field = song[type]; // e.g., song.albums, song.documents
+                return field && field.split(',').map(x => x.trim()).includes(itemName);
+            });
+
+            // Build custom sections
+            const customSections = buildSections(info, itemName);
+
+            container.innerHTML = `
+                <div class="detail-page page-theme theme-${themeVar}">
+                    <button class="back-button" onclick="navigateTo('${backPage}')">
+                        → ${backLabel}
+                    </button>
+
+                    <div class="detail-header">
+                        <div class="detail-category-bar" style="background: var(--color-${themeVar});">${typeLabel}</div>
+                        ${customSections.header}
+                    </div>
+
+                    ${customSections.body}
+
+                    ${relatedNigunim.length > 0 ? `
+                        <div class="detail-section">
+                            <h3>פארבונדענע ניגונים (${relatedNigunim.length})</h3>
+                            <div class="songs-card">
+                                <div class="all-songs-grid">
+                                    ${(() => {
+                                        const playlistIndices = relatedNigunim.map(song => allSongs.indexOf(song));
+                                        return relatedNigunim.map((song, idx) => {
+                                            const globalIdx = allSongs.indexOf(song);
+                                            return renderSongItem(song, globalIdx, idx + 1, playlistIndices);
+                                        }).join('');
+                                    })()}
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        // Render album detail page - uses generic renderer
         function renderAlbumDetailPage(container, albumName) {
-            const trimmedName = albumName.trim();
-            const info = albumsInfo[trimmedName] || albumsInfo[albumName] || {};
-            const hasImage = info.cover || info.image;
-            const coverUrl = info.cover || info.image;
-            const hasBooklet = info.booklet && info.booklet.startsWith('http');
-            const hasBuyLink = info.whereToBuy && info.whereToBuy.startsWith('http');
-            const producer = info.producer?.replace(/\`\`\`/g, '') || '';
+            renderGenericDetailPage({
+                container,
+                itemName: albumName,
+                infoSource: albumsInfo,
+                type: 'albums',
+                typeLabel: 'אלבום',
+                backPage: 'albums',
+                backLabel: 'אלבומס בלאט',
+                themeVar: 'album',
+                buildSections: (info, name) => {
+                    const hasImage = info.cover || info.image;
+                    const coverUrl = info.cover || info.image;
+                    const hasBooklet = info.booklet && info.booklet.startsWith('http');
+                    const hasBuyLink = info.whereToBuy && info.whereToBuy.startsWith('http');
+                    const producer = info.producer?.replace(/\`\`\`/g, '') || '';
 
-            // Find nigunim that reference this album
-            const relatedNigunim = allSongs.filter(song =>
-                song.albums && song.albums.split(',').map(a => a.trim()).includes(albumName)
-            );
-
-            container.innerHTML = `
-                <div class="detail-page page-theme theme-album">
-                    <button class="back-button" onclick="navigateTo('albums')">
-                        → אלבומס בלאט
-                    </button>
-                    
-                    <div class="detail-header">
-                        <div class="detail-category-bar" style="background: var(--color-album);">אלבום</div>
-                        <div class="detail-header-content ${hasImage ? '' : 'no-image'}">
-                            ${hasImage ? `<img class="detail-image" src="${coverUrl}" alt="${albumName}">` : ''}
-                            <div class="detail-header-text">
-                                <h1 class="detail-title" style="color: var(--color-album-dark);">${albumName}</h1>
-                                ${producer ? `<div class="detail-subtitle">${producer}</div>` : ''}
-                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
-                                ${info.year ? `<div class="detail-year">שנת ${info.year}</div>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    ${info.description || info.notes ? `
-                        <div class="detail-section">
-                            <h3>אינפארמאציע</h3>
-                            <p>${formatDescription(info.description || info.notes || '')}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${(hasBooklet || hasBuyLink) ? `
-                        <div class="detail-actions">
-                            ${hasBooklet ? `
-                                <button class="detail-action-btn album-booklet-btn" onclick="openPdfPopup('${encodeURIComponent(info.booklet)}', '${encodeURIComponent(albumName + ' - בוקלעט')}')">
-                                    📄 בוקלעט
-                                </button>
-                            ` : ''}
-                            ${hasBuyLink ? `
-                                <a href="${info.whereToBuy}" target="_blank" class="detail-action-btn album-buy-btn">
-                                    🛒 צו באקומען
-                                </a>
-                            ` : ''}
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-        }
-
-        // Render document detail page
-        function renderDocumentDetailPage(container, docName) {
-            // Trim the name to handle leading/trailing spaces
-            const trimmedName = docName.trim();
-            const info = documentsInfo[trimmedName] || documentsInfo[docName] || {};
-
-            console.log('Document detail for:', docName, '| trimmed:', trimmedName);
-            console.log('info:', info);
-            console.log('info.file:', info.file);
-            console.log('info.allData:', info.allData);
-
-            // Try to get file URL from multiple sources
-            let fileUrl = info.file;
-            if (!fileUrl && info.allData) {
-                fileUrl = extractUrl(info.allData['פייל']) || extractUrl(info.allData['file']);
-                console.log('Extracted fileUrl from allData:', fileUrl);
-            }
-
-            // Try to get link URL from multiple sources
-            let linkUrl = info.link;
-            if (!linkUrl && info.allData) {
-                linkUrl = extractUrl(info.allData['לינק']) || extractUrl(info.allData['link']);
-            }
-
-            console.log('Final fileUrl:', fileUrl);
-            console.log('Final linkUrl:', linkUrl);
-
-            const hasFile = fileUrl && fileUrl.startsWith('http');
-            const hasLink = linkUrl && linkUrl.startsWith('http');
-            const sortType = (info.allData?.['סארט'] || info.sort || '').replace(/\`\`\`/g, '');
-
-            // Find nigunim that reference this document
-            const relatedNigunim = allSongs.filter(song =>
-                song.documents && song.documents.split(',').map(d => d.trim()).includes(docName)
-            );
-
-            container.innerHTML = `
-                <div class="detail-page page-theme theme-document">
-                    <button class="back-button" onclick="navigateTo('documents')">
-                        → דאקומענטן בלאט
-                    </button>
-                    
-                    <div class="detail-header">
-                        <div class="detail-category-bar" style="background: var(--color-document);">דאקומענט</div>
-                        <div class="detail-header-content no-image">
-                            <div class="detail-header-text">
-                                <h1 class="detail-title" style="color: var(--color-document-dark);">${docName}</h1>
-                                ${sortType ? `<div class="detail-type-badge" style="background: var(--color-document-pale); color: var(--color-document-dark);">${sortType}</div>` : ''}
-                                ${info.serie ? `<div class="detail-subtitle">${info.serie.replace(/\`\`\`/g, '')}</div>` : ''}
-                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    ${hasFile ? `
-                        <div class="detail-pdf-preview">
-                            <iframe src="https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true" style="width:100%; height:500px; border:none; border-radius:10px;"></iframe>
-                        </div>
-                    ` : ''}
-                    
-                    ${info.description ? `
-                        <div class="detail-section">
-                            <h3>אינפארמאציע</h3>
-                            <p>${formatDescription(info.description)}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${(hasFile || hasLink) ? `
-                        <div class="detail-actions">
-                            ${hasFile ? `
-                                <button class="detail-action-btn document-pdf-btn" onclick="openPdfPopup('${encodeURIComponent(fileUrl)}', '${encodeURIComponent(docName)}')">
-                                    📄 עפן PDF
-                                </button>
-                            ` : ''}
-                            ${hasLink ? `
-                                <a href="${linkUrl}" target="_blank" class="detail-action-btn document-link-btn">
-                                    🔗 לינק
-                                </a>
-                            ` : ''}
-                        </div>
-                    ` : ''}
-                    
-                    ${relatedNigunim.length > 0 ? `
-                        <div class="detail-section">
-                            <h3>פארבונדענע ניגונים (${relatedNigunim.length})</h3>
-                            <div class="songs-card">
-                                <div class="all-songs-grid">
-                                    ${(() => {
-                        const playlistIndices = relatedNigunim.map(song => allSongs.indexOf(song));
-                        return relatedNigunim.map((song, idx) => {
-                            const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, idx + 1, playlistIndices);
-                        }).join('');
-                    })()}
+                    return {
+                        header: `
+                            <div class="detail-header-content ${hasImage ? '' : 'no-image'}">
+                                ${hasImage ? `<img class="detail-image" src="${coverUrl}" alt="${name}">` : ''}
+                                <div class="detail-header-text">
+                                    <h1 class="detail-title" style="color: var(--color-album-dark);">${name}</h1>
+                                    ${producer ? `<div class="detail-subtitle">${producer}</div>` : ''}
+                                    ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
+                                    ${info.year ? `<div class="detail-year">שנת ${info.year}</div>` : ''}
                                 </div>
                             </div>
-                        </div>
-                    ` : ''}
-                </div>
-            `;
-        }
+                        `,
+                        body: `
+                            ${info.description || info.notes ? `
+                                <div class="detail-section">
+                                    <h3>אינפארמאציע</h3>
+                                    <p>${formatDescription(info.description || info.notes || '')}</p>
+                                </div>
+                            ` : ''}
 
-        // Render resource detail page
-        function renderResourceDetailPage(container, resourceName) {
-            const trimmedName = resourceName.trim();
-            const info = resourcesInfo[trimmedName] || resourcesInfo[resourceName] || {};
-            let linkUrl = info.link;
-            if (!linkUrl && info.allData) {
-                const linkData = info.allData['לינק / נאמבער'] || info.allData['לינק'];
-                if (linkData) {
-                    const urlMatch = linkData.match(/https?:\/\/[^\s\)]+/);
-                    if (urlMatch) linkUrl = urlMatch[0];
+                            ${(hasBooklet || hasBuyLink) ? `
+                                <div class="detail-actions">
+                                    ${hasBooklet ? `
+                                        <button class="detail-action-btn album-booklet-btn" onclick="openPdfPopup('${encodeURIComponent(info.booklet)}', '${encodeURIComponent(name + ' - בוקלעט')}')">
+                                            📄 בוקלעט
+                                        </button>
+                                    ` : ''}
+                                    ${hasBuyLink ? `
+                                        <a href="${info.whereToBuy}" target="_blank" class="detail-action-btn album-buy-btn">
+                                            🛒 צו באקומען
+                                        </a>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                        `
+                    };
                 }
-            }
-            const hasLink = linkUrl && linkUrl.startsWith('http');
-            const linkText = info.allData?.['לינק / נאמבער'] || '';
-            const isPhone = linkText && !linkText.includes('http') && linkText.match(/\d{3}/);
-            const sortType = (info.sort || info.allData?.['סארט'] || '').replace(/\`\`\`/g, '');
+            });
+        }
 
-            // Find nigunim that reference this resource
-            const relatedNigunim = allSongs.filter(song =>
-                song.resources && song.resources.split(',').map(r => r.trim()).includes(resourceName)
-            );
+        // Render document detail page - uses generic renderer
+        function renderDocumentDetailPage(container, docName) {
+            renderGenericDetailPage({
+                container,
+                itemName: docName,
+                infoSource: documentsInfo,
+                type: 'documents',
+                typeLabel: 'דאקומענט',
+                backPage: 'documents',
+                backLabel: 'דאקומענטן בלאט',
+                themeVar: 'document',
+                buildSections: (info, name) => {
+                    // Extract file URL
+                    let fileUrl = info.file;
+                    if (!fileUrl && info.allData) {
+                        fileUrl = extractUrl(info.allData['פייל']) || extractUrl(info.allData['file']);
+                    }
 
-            container.innerHTML = `
-                <div class="detail-page page-theme theme-resource">
-                    <button class="back-button" onclick="navigateTo('resources')">
-                        → רעסורסן בלאט
-                    </button>
-                    
-                    <div class="detail-header">
-                        <div class="detail-category-bar" style="background: var(--color-resource);">רעסורס</div>
-                        <div class="detail-header-content no-image">
-                            <div class="detail-header-text">
-                                <h1 class="detail-title" style="color: var(--color-resource-dark);">${resourceName}</h1>
-                                ${sortType ? `<div class="detail-type-badge" style="background: var(--color-resource-pale); color: var(--color-resource-dark);">${sortType}</div>` : ''}
-                                ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    ${info.description ? `
-                        <div class="detail-section">
-                            <h3>אינפארמאציע</h3>
-                            <p>${formatDescription(info.description)}</p>
-                        </div>
-                    ` : ''}
-                    
-                    ${isPhone ? `
-                        <div class="detail-section">
-                            <h3>טעלעפאן נומער</h3>
-                            <div class="resource-phone-display">${linkText.replace(/\`\`\`/g, '')}</div>
-                        </div>
-                    ` : ''}
-                    
-                    ${hasLink ? `
-                        <div class="detail-actions">
-                            <a href="${linkUrl}" target="_blank" class="detail-action-btn resource-link-btn">
-                                🔗 עפן לינק
-                            </a>
-                        </div>
-                    ` : ''}
-                    
-                    ${relatedNigunim.length > 0 ? `
-                        <div class="detail-section">
-                            <h3>פארבונדענע ניגונים (${relatedNigunim.length})</h3>
-                            <div class="songs-card">
-                                <div class="all-songs-grid">
-                                    ${(() => {
-                        const playlistIndices = relatedNigunim.map(song => allSongs.indexOf(song));
-                        return relatedNigunim.map((song, idx) => {
-                            const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, idx + 1, playlistIndices);
-                        }).join('');
-                    })()}
+                    // Extract link URL
+                    let linkUrl = info.link;
+                    if (!linkUrl && info.allData) {
+                        linkUrl = extractUrl(info.allData['לינק']) || extractUrl(info.allData['link']);
+                    }
+
+                    const hasFile = fileUrl && fileUrl.startsWith('http');
+                    const hasLink = linkUrl && linkUrl.startsWith('http');
+                    const sortType = (info.allData?.['סארט'] || info.sort || '').replace(/\`\`\`/g, '');
+
+                    return {
+                        header: `
+                            <div class="detail-header-content no-image">
+                                <div class="detail-header-text">
+                                    <h1 class="detail-title" style="color: var(--color-document-dark);">${name}</h1>
+                                    ${sortType ? `<div class="detail-type-badge" style="background: var(--color-document-pale); color: var(--color-document-dark);">${sortType}</div>` : ''}
+                                    ${info.serie ? `<div class="detail-subtitle">${info.serie.replace(/\`\`\`/g, '')}</div>` : ''}
+                                    ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
                                 </div>
                             </div>
-                        </div>
-                    ` : ''}
-                </div>
-            `;
+                        `,
+                        body: `
+                            ${hasFile ? `
+                                <div class="detail-pdf-preview">
+                                    <iframe src="https://docs.google.com/viewer?url=${encodeURIComponent(fileUrl)}&embedded=true" style="width:100%; height:500px; border:none; border-radius:10px;"></iframe>
+                                </div>
+                            ` : ''}
+
+                            ${info.description ? `
+                                <div class="detail-section">
+                                    <h3>אינפארמאציע</h3>
+                                    <p>${formatDescription(info.description)}</p>
+                                </div>
+                            ` : ''}
+
+                            ${(hasFile || hasLink) ? `
+                                <div class="detail-actions">
+                                    ${hasFile ? `
+                                        <button class="detail-action-btn document-pdf-btn" onclick="openPdfPopup('${encodeURIComponent(fileUrl)}', '${encodeURIComponent(name)}')">
+                                            📄 עפן PDF
+                                        </button>
+                                    ` : ''}
+                                    ${hasLink ? `
+                                        <a href="${linkUrl}" target="_blank" class="detail-action-btn document-link-btn">
+                                            🔗 לינק
+                                        </a>
+                                    ` : ''}
+                                </div>
+                            ` : ''}
+                        `
+                    };
+                }
+            });
+        }
+
+        // Render resource detail page - uses generic renderer
+        function renderResourceDetailPage(container, resourceName) {
+            renderGenericDetailPage({
+                container,
+                itemName: resourceName,
+                infoSource: resourcesInfo,
+                type: 'resources',
+                typeLabel: 'רעסורס',
+                backPage: 'resources',
+                backLabel: 'רעסורסן בלאט',
+                themeVar: 'resource',
+                buildSections: (info, name) => {
+                    // Extract link URL
+                    let linkUrl = info.link;
+                    if (!linkUrl && info.allData) {
+                        const linkData = info.allData['לינק / נאמבער'] || info.allData['לינק'];
+                        if (linkData) {
+                            const urlMatch = linkData.match(/https?:\/\/[^\s\)]+/);
+                            if (urlMatch) linkUrl = urlMatch[0];
+                        }
+                    }
+
+                    const hasLink = linkUrl && linkUrl.startsWith('http');
+                    const linkText = info.allData?.['לינק / נאמבער'] || '';
+                    const isPhone = linkText && !linkText.includes('http') && linkText.match(/\d{3}/);
+                    const sortType = (info.sort || info.allData?.['סארט'] || '').replace(/\`\`\`/g, '');
+
+                    return {
+                        header: `
+                            <div class="detail-header-content no-image">
+                                <div class="detail-header-text">
+                                    <h1 class="detail-title" style="color: var(--color-resource-dark);">${name}</h1>
+                                    ${sortType ? `<div class="detail-type-badge" style="background: var(--color-resource-pale); color: var(--color-resource-dark);">${sortType}</div>` : ''}
+                                    ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
+                                </div>
+                            </div>
+                        `,
+                        body: `
+                            ${info.description ? `
+                                <div class="detail-section">
+                                    <h3>אינפארמאציע</h3>
+                                    <p>${formatDescription(info.description)}</p>
+                                </div>
+                            ` : ''}
+
+                            ${isPhone ? `
+                                <div class="detail-section">
+                                    <h3>טעלעפאן נומער</h3>
+                                    <div class="resource-phone-display">${linkText.replace(/\`\`\`/g, '')}</div>
+                                </div>
+                            ` : ''}
+
+                            ${hasLink ? `
+                                <div class="detail-actions">
+                                    <a href="${linkUrl}" target="_blank" class="detail-action-btn resource-link-btn">
+                                        🔗 עפן לינק
+                                    </a>
+                                </div>
+                            ` : ''}
+                        `
+                    };
+                }
+            });
         }
 
         // Toggle category card - no longer needed but keep for compatibility
