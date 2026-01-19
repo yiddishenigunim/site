@@ -200,3 +200,27 @@
 .detail-page h1 {
     color: var(--theme-dark);
 }
+
+/* ========================================
+   DETAIL ACTION BUTTONS - Consolidated
+   ======================================== */
+
+/* Primary action buttons - solid background */
+.detail-page .detail-action-btn.primary {
+    background: var(--theme-color);
+    color: white;
+}
+
+.detail-page .detail-action-btn.primary:hover {
+    background: var(--theme-dark);
+}
+
+/* Secondary action buttons - pale background */
+.detail-page .detail-action-btn.secondary {
+    background: var(--theme-pale);
+    color: var(--theme-dark);
+}
+
+.detail-page .detail-action-btn.secondary:hover {
+    background: color-mix(in srgb, var(--theme-pale) 70%, var(--theme-color));
+}

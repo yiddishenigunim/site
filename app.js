@@ -6738,12 +6738,12 @@
                             ${(hasBooklet || hasBuyLink) ? `
                                 <div class="detail-actions">
                                     ${hasBooklet ? `
-                                        <button class="detail-action-btn album-booklet-btn" onclick="openPdfPopup('${encodeURIComponent(info.booklet)}', '${encodeURIComponent(name + ' - בוקלעט')}')">
+                                        <button class="detail-action-btn primary" onclick="openPdfPopup('${encodeURIComponent(info.booklet)}', '${encodeURIComponent(name + ' - בוקלעט')}')">
                                             📄 בוקלעט
                                         </button>
                                     ` : ''}
                                     ${hasBuyLink ? `
-                                        <a href="${info.whereToBuy}" target="_blank" class="detail-action-btn album-buy-btn">
+                                        <a href="${info.whereToBuy}" target="_blank" class="detail-action-btn primary">
                                             🛒 צו באקומען
                                         </a>
                                     ` : ''}
@@ -6811,12 +6811,12 @@
                             ${(hasFile || hasLink) ? `
                                 <div class="detail-actions">
                                     ${hasFile ? `
-                                        <button class="detail-action-btn document-pdf-btn" onclick="openPdfPopup('${encodeURIComponent(fileUrl)}', '${encodeURIComponent(name)}')">
+                                        <button class="detail-action-btn primary" onclick="openPdfPopup('${encodeURIComponent(fileUrl)}', '${encodeURIComponent(name)}')">
                                             📄 עפן PDF
                                         </button>
                                     ` : ''}
                                     ${hasLink ? `
-                                        <a href="${linkUrl}" target="_blank" class="detail-action-btn document-link-btn">
+                                        <a href="${linkUrl}" target="_blank" class="detail-action-btn secondary">
                                             🔗 לינק
                                         </a>
                                     ` : ''}
@@ -6882,7 +6882,7 @@
 
                             ${hasLink ? `
                                 <div class="detail-actions">
-                                    <a href="${linkUrl}" target="_blank" class="detail-action-btn resource-link-btn">
+                                    <a href="${linkUrl}" target="_blank" class="detail-action-btn primary">
                                         🔗 עפן לינק
                                     </a>
                                 </div>

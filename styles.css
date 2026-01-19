@@ -6391,40 +6391,6 @@
             gap: 8px;
         }
 
-        .detail-action-btn.album-booklet-btn,
-        .detail-action-btn.album-buy-btn {
-            background: var(--color-album);
-            color: white;
-        }
-
-        .detail-action-btn.album-booklet-btn:hover,
-        .detail-action-btn.album-buy-btn:hover {
-            background: var(--color-album-dark);
-        }
-
-        .detail-action-btn.document-pdf-btn {
-            background: var(--color-document);
-            color: white;
-        }
-
-        .detail-action-btn.document-pdf-btn:hover {
-            background: var(--color-document-dark);
-        }
-
-        .detail-action-btn.document-link-btn {
-            background: var(--color-document-pale);
-            color: var(--color-document-dark);
-        }
-
-        .detail-action-btn.resource-link-btn {
-            background: var(--color-resource);
-            color: white;
-        }
-
-        .detail-action-btn.resource-link-btn:hover {
-            background: var(--color-resource-dark);
-        }
-
         .detail-pdf-preview {
             margin-bottom: 20px;
             border-radius: 15px;
