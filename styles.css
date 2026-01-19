@@ -2675,37 +2675,10 @@
             margin-bottom: 15px;
         }
 
-        .resource-group-header {
-            background: linear-gradient(135deg, var(--color-resource-pale) 0%, white 100%);
-            border-right: 4px solid var(--color-resource);
-        }
-
-        .document-group-header {
-            background: linear-gradient(135deg, var(--color-document-pale) 0%, white 100%);
-            border-right: 4px solid var(--color-document);
-        }
-
-        .album-group-header {
-            background: linear-gradient(135deg, var(--color-album-pale) 0%, white 100%);
-            border-right: 4px solid var(--color-album);
-        }
-
         .category-group-title {
             font-size: 1.2em;
             font-weight: 600;
             font-family: 'Heebo', sans-serif;
-        }
-
-        .resource-group-header .category-group-title {
-            color: var(--color-resource-dark);
-        }
-
-        .document-group-header .category-group-title {
-            color: var(--color-document-dark);
-        }
-
-        .album-group-header .category-group-title {
-            color: var(--color-album-dark);
         }
 
         .category-group-count {

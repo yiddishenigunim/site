@@ -6360,7 +6360,7 @@
 
                 html += `
                     <div class="category-group">
-                        <div class="category-group-header resource-group-header">
+                        <div class="category-group-header themed theme-resource">
                             <span class="category-group-title">${groupName}</span>
                             <span class="category-group-count">${items.length}</span>
                         </div>
@@ -6459,7 +6459,7 @@
 
                 html += `
                     <div class="category-group">
-                        <div class="category-group-header document-group-header">
+                        <div class="category-group-header themed theme-document">
                             <span class="category-group-title">${groupName}</span>
                             <span class="category-group-count">${items.length}</span>
                         </div>
@@ -6572,7 +6572,7 @@
 
                 html += `
                     <div class="category-group">
-                        <div class="category-group-header album-group-header">
+                        <div class="category-group-header themed theme-album">
                             <span class="category-group-title">${groupName}</span>
                             <span class="category-group-count">${items.length}</span>
                         </div>

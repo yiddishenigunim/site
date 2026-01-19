@@ -250,3 +250,18 @@
 .contribute-btn.themed:hover {
     box-shadow: 0 6px 25px color-mix(in srgb, var(--theme-color) 40%, transparent);
 }
+
+/* ========================================
+   CATEGORY GROUP HEADERS - Consolidated
+   ======================================== */
+
+/* Category group header with gradient - uses theme colors */
+/* Use with two classes: category-group-header themed theme-{name} */
+.category-group-header.themed {
+    background: linear-gradient(135deg, var(--theme-pale) 0%, white 100%);
+    border-right: 4px solid var(--theme-color);
+}
+
+.category-group-header.themed .category-group-title {
+    color: var(--theme-dark);
+}
