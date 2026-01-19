@@ -791,29 +791,68 @@
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
-        /* Bottom bar container for chatzer and maure */
-        .nigun-modal-hero-bottom {
+        /* Close button - simple X at top right */
+        .nigun-modal-close {
             position: absolute;
-            bottom: -14px;
-            left: 0;
-            right: 0;
-            display: flex;
-            justify-content: center;
-            gap: 60px;
-            z-index: 5;
-            padding: 0 80px;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            color: var(--color-nigun-dark);
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
         }
 
-        /* Chatzer tags - positioned on far right */
-        .nigun-modal-hero-chatzeros {
-            position: absolute;
-            right: 20px;
+        .nigun-modal-close:hover {
+            opacity: 1;
+        }
+
+        /* Tags bar - below hero, centered */
+        .nigun-modal-hero-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            padding: 8px 20px;
+            flex-wrap: wrap;
+        }
+
+        /* Personalities tags */
+        .nigun-modal-hero-personalities {
             display: flex;
             flex-wrap: wrap;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 6px;
-            max-width: 45%;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .personality-tag {
+            background: var(--color-mechaber);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(196, 53, 168, 0.3);
+        }
+
+        .personality-tag:hover {
+            background: var(--color-mechaber-dark);
+            transform: scale(1.05);
+        }
+
+        /* Chatzer tags */
+        .nigun-modal-hero-chatzeros {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
         }
 
         .nigun-modal-hero-chatzeros .chatzer-tag {
@@ -829,14 +868,20 @@
             transform: scale(1.05);
         }
 
-        /* Maure (gezungen oif) tags - positioned in center */
+        /* Ball divider between chatzer and maure */
+        .nigun-modal-divider {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-nigun);
+        }
+
+        /* Maure (gezungen oif) tags */
         .nigun-modal-hero-maure {
             display: flex;
             flex-wrap: wrap;
-            flex-direction: column;
             align-items: center;
-            gap: 6px;
-            max-width: 50%;
+            gap: 8px;
         }
 
         .maure-tag {
@@ -857,35 +902,49 @@
             transform: scale(1.05);
         }
 
-        /* Mechaber profile - on left wall, button on border, picture above */
+        /* Mechaber profile - stamp coming down from top left */
         .nigun-modal-mechaber-profile {
             position: absolute;
-            bottom: -15px;
-            left: -10px;
+            top: 0;
+            left: 25px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
-            z-index: 5;
+            z-index: 10;
             text-decoration: none;
         }
 
+        /* Stamp body - mechaber color strip, standard width */
+        .nigun-modal-mechaber-profile::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: calc(100% - 5px);
+            background: var(--color-mechaber);
+            border-radius: 0 0 0 0;
+            z-index: -1;
+        }
+
         .nigun-modal-mechaber-avatar {
-            width: 80px;
-            height: 80px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             background: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            border: 4px solid white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            border: 4px solid var(--color-mechaber);
             overflow: hidden;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             flex-shrink: 0;
+            margin-top: 50px;
         }
 
         .nigun-modal-mechaber-avatar:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         .nigun-modal-mechaber-avatar img {
@@ -910,18 +969,18 @@
             font-size: 0.8em;
             color: white;
             background: var(--color-mechaber);
-            padding: 6px 14px;
-            border-radius: 20px;
+            padding: 6px 16px;
+            border-radius: 0 0 12px 12px;
             box-shadow: 0 2px 8px rgba(196, 53, 168, 0.3);
             cursor: pointer;
-            transition: background 0.2s ease, transform 0.2s ease;
+            transition: background 0.2s ease;
             white-space: nowrap;
             text-decoration: none;
+            margin-top: -4px;
         }
 
         .nigun-modal-mechaber-name:hover {
             background: var(--color-mechaber-dark);
-            transform: scale(1.05);
         }
 
         @media (max-width: 500px) {
@@ -6036,6 +6095,76 @@
 
         .nigun-section-content {
             color: var(--text-dark);
+        }
+
+        /* Subtle info box with icon - centered */
+        .nigun-info-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            padding: 15px 20px;
+            background: var(--color-nigun-pale);
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .nigun-info-icon {
+            color: var(--color-nigun);
+            font-size: 0.9em;
+            font-weight: bold;
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-nigun-light);
+            border-radius: 50%;
+            font-style: normal;
+        }
+
+        .nigun-info-box .nigun-info-text {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Additions box - similar to info but different color */
+        .nigun-additions-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            padding: 15px 20px;
+            background: var(--color-piyut-pale);
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .nigun-additions-icon {
+            color: var(--color-piyut);
+            font-size: 0.9em;
+            font-weight: bold;
+            flex-shrink: 0;
+            width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-piyut-light);
+            border-radius: 50%;
+            font-style: normal;
+        }
+
+        .nigun-additions-box .nigun-additions-text {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
 
         .nigun-siman {
@@ -17336,27 +17465,8 @@
                     
                     <!-- New Hero Header for Modal -->
                     <div class="nigun-modal-hero">
+                        <button class="nigun-modal-close" onclick="navigateTo('nigunim')">&times;</button>
                         <h1 class="nigun-modal-hero-title">${song.name}</h1>
-                        
-                        <!-- Bottom bar with chatzer (right) and maure (center) -->
-                        <div class="nigun-modal-hero-bottom">
-                            ${chatzeros.length > 0 ? `
-                                <div class="nigun-modal-hero-chatzeros">
-                                    ${chatzeros.map(chatzer => {
-                const cInfo = chatzerosInfo[chatzer] || {};
-                const cId = cInfo.customId || chatzer;
-                return `<a class="chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
-            }).join('')}
-                                </div>
-                            ` : ''}
-                            ${song.maure ? `
-                                <div class="nigun-modal-hero-maure">
-                                    ${song.maure.split(',').map(m => m.trim()).filter(Boolean).map(m => `
-                                        <span class="maure-tag" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(m)}">${m}</span>
-                                    `).join('')}
-                                </div>
-                            ` : ''}
-                        </div>
                         
                         ${firstMechaber ? `
                             <a class="nigun-modal-mechaber-profile" href="#/mechabrim/${encodeURIComponent(firstMechaberId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(firstMechaber)}">
@@ -17371,74 +17481,94 @@
                         ` : ''}
                     </div>
 
+                    <!-- Tags bar below hero - personalities, chatzer, maure -->
+                    ${(() => {
+                    // Use personalities field (other people related to nigun), not mechaber
+                    const personalities = song.personalities ? song.personalities.split(',').map(m => m.trim()).filter(Boolean) : [];
+                    const hasContent = personalities.length > 0 || chatzeros.length > 0 || song.maure;
+                    if (!hasContent) return '';
+                    return `
+                        <div class="nigun-modal-hero-bottom">
+                            ${personalities.length > 0 ? `
+                                <div class="nigun-modal-hero-personalities">
+                                    ${personalities.map(p => {
+                        const pInfo = mechabrimInfo[p] || {};
+                        const pId = pInfo.customId || p;
+                        return `<a class="personality-tag" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(p)}">${p}</a>`;
+                    }).join('')}
+                                </div>
+                            ` : ''}
+                            ${(personalities.length > 0 && chatzeros.length > 0) ? `<div class="nigun-modal-divider"></div>` : ''}
+                            ${chatzeros.length > 0 ? `
+                                <div class="nigun-modal-hero-chatzeros">
+                                    ${chatzeros.map(chatzer => {
+                        const cInfo = chatzerosInfo[chatzer] || {};
+                        const cId = cInfo.customId || chatzer;
+                        return `<a class="chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
+                    }).join('')}
+                                </div>
+                            ` : ''}
+                            ${(chatzeros.length > 0 && song.maure) ? `<div class="nigun-modal-divider"></div>` : ''}
+                            ${song.maure ? `
+                                <div class="nigun-modal-hero-maure">
+                                    ${song.maure.split(',').map(m => m.trim()).filter(Boolean).map(m => `
+                                        <span class="maure-tag" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(m)}">${m}</span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                })()}
+
                     ${song.recordings && song.recordings.length > 0 ? `
                         <div class="nigun-recordings-list">
                             <div class="song-item-recordings" style="border-top: none; padding: 0; background: transparent;">
                                 ${song.recordings.map((rec, i) => {
-                        // Build tags like main page
-                        let recTags = [];
-                        if (rec.album) {
-                            rec.album.split(',').forEach(a => {
-                                const albumName = a.trim();
-                                if (albumName) {
-                                    recTags.push('<span class="nigun-tag-inline tag-album" data-action="detail" data-category="albums" data-name="' + escapeHtml(albumName) + '" style="cursor:pointer;" onclick="event.stopPropagation();">' + albumName + '</span>');
-                                }
-                            });
-                        }
-                        if (rec.personalities) {
-                            rec.personalities.split(',').forEach(p => {
-                                const name = p.trim();
-                                if (name) {
-                                    recTags.push('<span class="nigun-tag-inline tag-mechaber" data-action="detail" data-category="mechabrim" data-name="' + escapeHtml(name) + '" style="cursor:pointer;" onclick="event.stopPropagation();">' + name + '</span>');
-                                }
-                            });
-                        }
-
-                        // Determine display name
-                        const displayName = rec.details || ('רעקארדינג ' + (i + 1));
-                        const recRating = rec.rating ? '<span class="rec-rating-display">' + '★'.repeat(rec.rating) + '</span>' : '';
-                        const isActive = i === 0;
-
-                        // SVG play/pause button like main page
-                        const playBtn = '<button class="song-play-btn-new rec-play-btn" onclick="event.stopPropagation(); playNigunRecording(' + songIdx + ', ' + i + ', this)" data-song-idx="' + songIdx + '" data-rec-idx="' + i + '">' +
-                            '<span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>' +
-                            '<span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>' +
-                            '</button>';
-
-                        return '<div class="song-item-recording" onclick="event.stopPropagation(); playNigunRecording(' + songIdx + ', ' + i + ', this)" data-song-idx="' + songIdx + '" data-rec-idx="' + i + '" data-rating="' + (rec.rating || 0) + '">' +
-                            '<div class="song-item-rec-num">' + (i + 1) + '</div>' +
-                            '<div class="song-item-rec-info">' +
-                            '<div class="song-item-rec-name">' + displayName + '</div>' +
-                            (recTags.length > 0 ? '<div class="song-item-rec-tags">' + recTags.join('') + '</div>' : '') +
-                            '</div>' +
-                            recRating +
-                            playBtn +
-                            '</div>';
-                    }).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-
-                    ${song.personality ? `
-                        <div class="nigun-personality-section">
-                            <div class="nigun-personality-title">פערזענליכקייטן וואס האבן א שייכות מיט דעם ניגון</div>
-                            <div class="nigun-mechaber-grid">
-                                ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
-                        const pInfo = mechabrimInfo[personName];
-                        const pId = pInfo?.customId || personName;
-                        return `
-                                        <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(personName)}">
-                                            ${pInfo?.image
-                                ? `<img class="nigun-mechaber-image" src="${pInfo.image}" alt="${personName}">`
-                                : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
+                    // Build tags like main page
+                    let recTags = [];
+                    if (rec.album) {
+                        rec.album.split(',').forEach(a => {
+                            const albumName = a.trim();
+                            if (albumName) {
+                                recTags.push('<span class="nigun-tag-inline tag-album" data-action="detail" data-category="albums" data-name="' + escapeHtml(albumName) + '" style="cursor:pointer;" onclick="event.stopPropagation();">' + albumName + '</span>');
                             }
-                                            <div class="nigun-mechaber-name">${personName}</div>
-                                        </a>
-                                    `;
-                    }).join('')}
+                        });
+                    }
+                    if (rec.personalities) {
+                        rec.personalities.split(',').forEach(p => {
+                            const name = p.trim();
+                            if (name) {
+                                recTags.push('<span class="nigun-tag-inline tag-mechaber" data-action="detail" data-category="mechabrim" data-name="' + escapeHtml(name) + '" style="cursor:pointer;" onclick="event.stopPropagation();">' + name + '</span>');
+                            }
+                        });
+                    }
+
+                    // Determine display name
+                    const displayName = rec.details || ('רעקארדינג ' + (i + 1));
+                    const recRating = rec.rating ? '<span class="rec-rating-display">' + '★'.repeat(rec.rating) + '</span>' : '';
+                    const isActive = i === 0;
+
+                    // SVG play/pause button like main page
+                    const playBtn = '<button class="song-play-btn-new rec-play-btn" onclick="event.stopPropagation(); playNigunRecording(' + songIdx + ', ' + i + ', this)" data-song-idx="' + songIdx + '" data-rec-idx="' + i + '">' +
+                        '<span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>' +
+                        '<span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>' +
+                        '</button>';
+
+                    return '<div class="song-item-recording" onclick="event.stopPropagation(); playNigunRecording(' + songIdx + ', ' + i + ', this)" data-song-idx="' + songIdx + '" data-rec-idx="' + i + '" data-rating="' + (rec.rating || 0) + '">' +
+                        '<div class="song-item-rec-num">' + (i + 1) + '</div>' +
+                        '<div class="song-item-rec-info">' +
+                        '<div class="song-item-rec-name">' + displayName + '</div>' +
+                        (recTags.length > 0 ? '<div class="song-item-rec-tags">' + recTags.join('') + '</div>' : '') +
+                        '</div>' +
+                        recRating +
+                        playBtn +
+                        '</div>';
+                }).join('')}
                             </div>
                         </div>
                     ` : ''}
+
+
 
                     <!-- Compact Details Grid -->
                     ${(() => {
@@ -17516,11 +17646,9 @@
                 })()}
                     
                     ${song.info ? `
-                        <div class="nigun-section">
-                            <h3>אינפארמאציע</h3>
-                            <div class="nigun-section-content">
-                                <div class="nigun-info-text">${formatDescription(song.info)}</div>
-                            </div>
+                        <div class="nigun-info-box">
+                            <span class="nigun-info-icon">ℹ</span>
+                            <div class="nigun-info-text">${formatDescription(song.info)}</div>
                         </div>
                     ` : ''}
 
