@@ -21,56 +21,67 @@
     --theme-pale: var(--color-chatzer-pale);
     --theme-color: var(--color-chatzer);
     --theme-light: var(--color-chatzer-light);
+    --theme-dark: var(--color-chatzer-dark);
 }
 .theme-mechaber {
     --theme-pale: var(--color-mechaber-pale);
     --theme-color: var(--color-mechaber);
     --theme-light: var(--color-mechaber-light);
+    --theme-dark: var(--color-mechaber-dark);
 }
 .theme-verter {
     --theme-pale: var(--color-verter-pale);
     --theme-color: var(--color-verter);
     --theme-light: var(--color-verter-light);
+    --theme-dark: var(--color-verter-dark);
 }
 .theme-zman {
     --theme-pale: var(--color-zman-pale);
     --theme-color: var(--color-zman);
     --theme-light: var(--color-zman-light);
+    --theme-dark: var(--color-zman-dark);
 }
 .theme-collection {
     --theme-pale: var(--color-collection-pale);
     --theme-color: var(--color-collection);
     --theme-light: var(--color-collection-light);
+    --theme-dark: var(--color-collection-dark);
 }
 .theme-piyut {
     --theme-pale: var(--color-piyut-pale);
     --theme-color: var(--color-piyut);
     --theme-light: var(--color-piyut-light);
+    --theme-dark: var(--color-piyut-dark);
 }
 .theme-nigun {
     --theme-pale: var(--color-nigun-pale);
     --theme-color: var(--color-nigun);
     --theme-light: var(--color-nigun-light);
+    --theme-dark: var(--color-nigun-dark);
 }
 .theme-music {
     --theme-pale: var(--color-music-pale);
     --theme-color: var(--color-music);
     --theme-light: var(--color-music-light);
+    --theme-dark: var(--color-music-dark);
 }
 .theme-resource {
     --theme-pale: var(--color-resource-pale);
     --theme-color: var(--color-resource);
     --theme-light: var(--color-resource-light);
+    --theme-dark: var(--color-resource-dark);
 }
 .theme-document {
     --theme-pale: var(--color-document-pale);
     --theme-color: var(--color-document);
     --theme-light: var(--color-document-light);
+    --theme-dark: var(--color-document-dark);
 }
 .theme-album {
     --theme-pale: var(--color-album-pale);
     --theme-color: var(--color-album);
     --theme-light: var(--color-album-light);
+    --theme-dark: var(--color-album-dark);
 }
 
 /* Loading wave bar theming */
@@ -173,4 +184,19 @@
     background: var(--theme-pale);
     transform: scale(1.05);
     box-shadow: 0 2px 6px color-mix(in srgb, var(--theme-color) 20%, transparent);
+}
+
+/* ========================================
+   DETAIL PAGES - Consolidated
+   ======================================== */
+
+/* Detail category bar - uses theme color */
+.detail-page .detail-category-bar {
+    background: var(--theme-color);
+}
+
+/* Detail title - uses theme dark color */
+.detail-page .detail-title,
+.detail-page h1 {
+    color: var(--theme-dark);
 }

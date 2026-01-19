@@ -6274,21 +6274,9 @@
         }
 
         /* Category-themed detail pages */
-        .detail-page.theme-chatzer .detail-category-bar {
-            background: var(--color-chatzer);
-        }
 
-        .detail-page.theme-chatzer .detail-title {
-            color: var(--color-chatzer-dark);
-        }
 
-        .detail-page.theme-mechaber .detail-category-bar {
-            background: var(--color-mechaber);
-        }
 
-        .detail-page.theme-mechaber .detail-title {
-            color: var(--color-mechaber-dark);
-        }
 
         /* Mechaber formal name on profile (small, lighter) */
         .mechaber-formal {
@@ -6306,39 +6294,13 @@
             color: var(--color-mechaber-dark);
         }
 
-        .detail-page.theme-verter .detail-category-bar {
-            background: var(--color-verter);
-        }
 
-        .detail-page.theme-verter .detail-title {
-            color: var(--color-verter-dark);
-        }
 
-        .detail-page.theme-zman .detail-category-bar {
-            background: var(--color-zman);
-        }
 
-        .detail-page.theme-zman .detail-title,
-        .detail-page.theme-zman h1 {
-            color: var(--color-zman-dark);
-        }
 
-        .detail-page.theme-piyut .detail-category-bar {
-            background: #2e8b2e;
-        }
 
-        .detail-page.theme-piyut .detail-title,
-        .detail-page.theme-piyut h1 {
-            color: #1b5e20;
-        }
 
-        .detail-page.theme-collection .detail-category-bar {
-            background: var(--color-collection);
-        }
 
-        .detail-page.theme-collection .detail-title {
-            color: var(--color-collection-dark);
-        }
 
         /* Full-width detail page theme backgrounds */
         .detail-page.theme-chatzer,

@@ -298,28 +298,36 @@
         let documentsInfo = {};
         let albumsInfo = {};
 
-        // --- Helper: Generate tiny random loader HTML ---
-        function getTinyLoaderHTML() {
-            const notes = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
-            // Pick 3 random distinct notes
-            const shuffled = [...notes].sort(() => 0.5 - Math.random());
-            const selected = shuffled.slice(0, 3);
+        // Table configuration - consolidates all table metadata
+        const TABLE_CONFIGS = {
+            chatzeros: { id: CHATZEROS_TABLE_ID, store: () => chatzerosInfo, name: 'Chatzeros' },
+            mechabrim: { id: MECHABRIM_TABLE_ID, store: () => mechabrimInfo, name: 'Mechabrim' },
+            verter: { id: VERTER_TABLE_ID, store: () => verterInfo, name: 'Verter' },
+            zmanim: { id: ZMANIM_TABLE_ID, store: () => zmaninInfo, name: 'Zmanim' },
+            piyutim: { id: PIYUTIM_TABLE_ID, store: () => piyutimInfo, name: 'Piyutim' },
+            collections: { id: COLLECTIONS_TABLE_ID, store: () => collectionsInfo, name: 'Collections' },
+            resources: { id: RESOURCES_TABLE_ID, store: () => resourcesInfo, name: 'Resources' },
+            documents: { id: DOCUMENTS_TABLE_ID, store: () => documentsInfo, name: 'Documents' },
+            albums: { id: ALBUMS_TABLE_ID, store: () => albumsInfo, name: 'Albums' }
+        };
 
-            // Assign classes n1, n2, n3 for CSS-driven randomness
-            return `
-                <div class="loader-tiny">
-                    <span class="note n1">${selected[0]}</span>
-                    <span class="note n2">${selected[1]}</span>
-                    <span class="note n3">${selected[2]}</span>
-                </div>
-            `;
-        }
-
-        function getMediumLoaderHTML() {
+        // --- Helper: Generate loader HTML (consolidated) ---
+        function getLoaderHTML(size = 'medium') {
             const notes = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
             const shuffled = [...notes].sort(() => 0.5 - Math.random());
             const selected = shuffled.slice(0, 3);
 
+            if (size === 'tiny') {
+                return `
+                    <div class="loader-tiny">
+                        <span class="note n1">${selected[0]}</span>
+                        <span class="note n2">${selected[1]}</span>
+                        <span class="note n3">${selected[2]}</span>
+                    </div>
+                `;
+            }
+
+            // Medium loader
             return `
                 <div class="loader-medium">
                     <span class="note n1" style="font-size: 28px;">${selected[0]}</span>
@@ -327,6 +335,15 @@
                     <span class="note n3" style="font-size: 30px;">${selected[2]}</span>
                 </div>
             `;
+        }
+
+        // Backwards compatibility aliases
+        function getTinyLoaderHTML() {
+            return getLoaderHTML('tiny');
+        }
+
+        function getMediumLoaderHTML() {
+            return getLoaderHTML('medium');
         }
 
         // Active filters for all-songs view
@@ -976,42 +993,26 @@
             }
         }
 
-        // Fetch functions for each table
-        async function fetchChatzerosInfo() {
-            await fetchTableInfo(CHATZEROS_TABLE_ID, chatzerosInfo, 'Chatzeros');
+        // Consolidated fetch function - uses TABLE_CONFIGS
+        async function fetchTableData(tableKey) {
+            const config = TABLE_CONFIGS[tableKey];
+            if (!config) {
+                console.error(`Unknown table key: ${tableKey}`);
+                return;
+            }
+            await fetchTableInfo(config.id, config.store(), config.name);
         }
 
-        async function fetchMechabrimInfo() {
-            await fetchTableInfo(MECHABRIM_TABLE_ID, mechabrimInfo, 'Mechabrim');
-        }
-
-        async function fetchVerterInfo() {
-            await fetchTableInfo(VERTER_TABLE_ID, verterInfo, 'Verter');
-        }
-
-        async function fetchZmanimInfo() {
-            await fetchTableInfo(ZMANIM_TABLE_ID, zmaninInfo, 'Zmanim');
-        }
-
-        async function fetchPiyutimInfo() {
-            await fetchTableInfo(PIYUTIM_TABLE_ID, piyutimInfo, 'Piyutim');
-        }
-
-        async function fetchCollectionsInfo() {
-            await fetchTableInfo(COLLECTIONS_TABLE_ID, collectionsInfo, 'Collections');
-        }
-
-        async function fetchResourcesInfo() {
-            await fetchTableInfo(RESOURCES_TABLE_ID, resourcesInfo, 'Resources');
-        }
-
-        async function fetchDocumentsInfo() {
-            await fetchTableInfo(DOCUMENTS_TABLE_ID, documentsInfo, 'Documents');
-        }
-
-        async function fetchAlbumsInfo() {
-            await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
-        }
+        // Backwards compatibility wrappers (call consolidated function)
+        async function fetchChatzerosInfo() { await fetchTableData('chatzeros'); }
+        async function fetchMechabrimInfo() { await fetchTableData('mechabrim'); }
+        async function fetchVerterInfo() { await fetchTableData('verter'); }
+        async function fetchZmanimInfo() { await fetchTableData('zmanim'); }
+        async function fetchPiyutimInfo() { await fetchTableData('piyutim'); }
+        async function fetchCollectionsInfo() { await fetchTableData('collections'); }
+        async function fetchResourcesInfo() { await fetchTableData('resources'); }
+        async function fetchDocumentsInfo() { await fetchTableData('documents'); }
+        async function fetchAlbumsInfo() { await fetchTableData('albums'); }
 
         // Fetch statistics from STATS table (only row 1) - with caching
         async function fetchStatistics() {
