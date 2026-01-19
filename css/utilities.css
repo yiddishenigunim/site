@@ -224,3 +224,14 @@
 .detail-page .detail-action-btn.secondary:hover {
     background: color-mix(in srgb, var(--theme-pale) 70%, var(--theme-color));
 }
+
+/* ========================================
+   LAYOUT UTILITIES - Consolidated
+   ======================================== */
+
+/* Vertical list layout - used for songs lists, search results, etc */
+.list-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}

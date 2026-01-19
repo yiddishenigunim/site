@@ -4981,7 +4981,7 @@
                     
                     <div class="detail-songs-section">
                         <h3>${songs.length} ניגונים ${type === 'mechabrim' ? 'וואס ער האט מחבר געווען' : ''}</h3>
-                        <div class="detail-songs-list">
+                        <div class="list-layout">
                             ${(() => {
                     const playlistIndices = songs.map(song => allSongs.indexOf(song));
                     return songs.map((song, i) => {
@@ -5006,7 +5006,7 @@
                             return `
                                     <div class="detail-songs-section detail-related-songs">
                                         <h3>${relatedSongs.length} ניגונים וואס ער האט א שייכות</h3>
-                                        <div class="detail-songs-list">
+                                        <div class="list-layout">
                                             ${relatedSongs.map((song, i) => {
                                 const globalIdx = allSongs.indexOf(song);
                                 return renderSongItem(song, globalIdx, i + 1, playlistIndices);
@@ -8479,7 +8479,7 @@
                             <h3 style="color: var(--color-nigun);">🎵 ניגונים (${matchingSongs.length})</h3>
                             ${matchingSongs.length > 10 ? `<button class="see-all-btn" onclick="searchInSongs('${searchQuery.replace(/'/g, "\\'")}')">זע אלע ${matchingSongs.length} →</button>` : ''}
                         </div>
-                        <div class="search-songs-list">
+                        <div class="list-layout">
                             ${displaySongs.map((song, idx) => {
                     const globalIdx = allSongs.indexOf(song);
                     const hasAudio = !!song.audioUrl;

@@ -4259,19 +4259,9 @@
             text-decoration: underline;
         }
 
-        .search-results-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
 
-        .search-songs-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
 
-        .search-songs-list .song-item {
+        .list-layout .song-item {
             margin-bottom: 0;
         }
 
@@ -6398,11 +6388,6 @@
             box-shadow: var(--card-shadow);
         }
 
-        .detail-songs-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
 
         .detail-subtitle {
             font-size: 1.1em;
@@ -6827,11 +6812,6 @@
             border-bottom: 2px solid var(--primary-pale);
         }
 
-        .detail-songs-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
 
         @media (max-width: 768px) {
             .detail-header {
