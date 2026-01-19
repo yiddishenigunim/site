@@ -57,12 +57,6 @@
             --color-collection-dark: #8e0000;
             --color-collection-pale: #ffebee;
 
-            /* פיוטים - Green */
-            --color-piyut: #2e8b2e;
-            --color-piyut-light: #81c784;
-            --color-piyut-dark: #1b5e20;
-            --color-piyut-pale: #e8f5e9;
-
             /* ניגונים - Blue */
             --color-nigun: #4a7cc9;
             --color-nigun-light: #7aa3e0;
@@ -105,11 +99,6 @@
             --gradient-main-dark: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-chatzer-dark) 50%, var(--color-mechaber-dark) 100%);
             /* Combined pale color for home page background */
             --color-home-pale: color-mix(in srgb, var(--color-nigun-pale) 33%, color-mix(in srgb, var(--color-chatzer-pale) 50%, var(--color-mechaber-pale)));
-        }
-
-        /* Full page background color */
-        html {
-            background: #f8fafc;
         }
 
         /* Loading wave bar animation */
@@ -375,10 +364,6 @@
             background: linear-gradient(90deg, transparent 0%, var(--color-collection-light) 25%, var(--color-collection) 50%, var(--color-collection-light) 75%, transparent 100%);
         }
 
-        .page-theme-piyut .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-piyut-light) 25%, var(--color-piyut) 50%, var(--color-piyut-light) 75%, transparent 100%);
-        }
-
         .page-theme-resource .loading-wave-bar.active::before {
             background: linear-gradient(90deg, transparent 0%, var(--color-resource-light) 25%, var(--color-resource) 50%, var(--color-resource-light) 75%, transparent 100%);
         }
@@ -411,7 +396,7 @@
 
         body {
             font-family: 'Heebo', 'David Libre', sans-serif;
-            background: transparent;
+            background: var(--bg-cream);
             min-height: 100vh;
             direction: rtl;
             color: var(--text-dark);
@@ -421,13 +406,11 @@
 
         /* Header */
         .main-header {
-            background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(248, 250, 252, 0.85) 100%);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            background: white;
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .header-main {
@@ -436,9 +419,8 @@
             padding: 15px 20px;
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: space-between;
             gap: 20px;
-            position: relative;
         }
 
         .logo {
@@ -765,650 +747,134 @@
             }
         }
 
-        .global-search-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            background: var(--gradient-main);
-            border: none;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: 0 4px 15px rgba(156, 91, 181, 0.4);
-            margin-left: 12px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .global-search-btn::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.4), transparent);
-            transform: translateX(-100%) rotate(45deg);
-            transition: transform 0.4s ease;
-        }
-
-        .global-search-btn:hover {
-            transform: translateY(-2px) scale(1.1);
-            box-shadow: 0 8px 25px rgba(156, 91, 181, 0.6);
-        }
-
-        .global-search-btn:hover::before {
-            transform: translateX(100%) rotate(45deg);
-        }
-
-        .global-search-btn svg {
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
-        }
-
-        .global-search-btn:hover svg {
-            transform: scale(1.15) rotate(15deg);
-        }
-
-        .search-btn-text {
-            max-width: 0;
-            opacity: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            transition: all 0.4s ease;
-            font-weight: 700;
-            font-size: 0.95em;
-            margin-right: 0;
-        }
-
-        .global-search-btn:hover {
-            width: 95px;
-            /* Expand to show text */
-            border-radius: 30px;
-            /* Pill shape */
-            gap: 6px;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(156, 91, 181, 0.6);
-        }
-
-        .global-search-btn:hover .search-btn-text {
-            max-width: 50px;
-            opacity: 1;
-            margin-right: 4px;
-        }
-
-        /* Compact header buttons - gradient only */
         .stream-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 8px 14px;
-            background: var(--gradient-main);
-            border: none;
+            padding: 8px 18px;
+            background: linear-gradient(145deg, #1a3a5a, #0a2a4a);
+            border: 1px solid rgba(212, 175, 55, 0.4);
             border-radius: 20px;
             text-decoration: none;
-            font-size: 0.85em;
+            font-size: 0.9em;
             font-weight: 600;
-            color: white;
+            color: #f5e6c8;
             transition: all 0.3s ease;
-            box-shadow: 0 3px 12px rgba(156, 91, 181, 0.3);
-            white-space: nowrap;
-        }
-
-        .stream-btn::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            background: white;
-            border-radius: 50%;
-            animation: pulse-white 2s infinite;
-        }
-
-        @keyframes pulse-white {
-
-            0%,
-            100% {
-                opacity: 0.6;
-                transform: scale(0.9);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1.1);
-            }
+            margin-left: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
         }
 
         .stream-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(156, 91, 181, 0.5);
+            transform: scale(1.05);
+            border-color: #d4af37;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4), 0 0 15px rgba(212, 175, 55, 0.2);
+            background: linear-gradient(145deg, #2a4a6a, #1a3a5a);
         }
 
-        /* New swapped button styles */
-        .search-pill-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px 14px;
-            background: var(--gradient-main);
-            border: none;
-            border-radius: 20px;
-            font-family: inherit;
-            font-size: 0.85em;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 12px rgba(156, 91, 181, 0.3);
-            white-space: nowrap;
-        }
-
-        .search-pill-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(156, 91, 181, 0.5);
-        }
-
-        /* Search button with icon + text */
-        .search-btn-new {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px 14px;
-            background: var(--gradient-main);
-            border: none;
-            border-radius: 20px;
-            font-family: inherit;
-            font-size: 0.85em;
-            font-weight: 600;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 12px rgba(156, 91, 181, 0.3);
-            white-space: nowrap;
-        }
-
-        .search-icon-new {
-            width: 16px;
-            height: 16px;
-            fill: white;
-        }
-
-        .search-btn-new:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(156, 91, 181, 0.5);
-        }
-
-        /* Streaming ball button - expands on hover */
-        .stream-ball-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-width: 32px;
-            height: 32px;
-            padding: 0 10px;
-            background: transparent;
-            border: 2px solid #9c5bb5;
-            border-radius: 16px;
-            text-decoration: none;
-            color: #9c5bb5;
-            transition: all 0.3s ease;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .stream-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--gradient-main);
-            border-radius: 50%;
-            animation: pulse-dot 2s infinite;
-            flex-shrink: 0;
-        }
-
-        @keyframes pulse-dot {
-
-            0%,
-            100% {
-                opacity: 0.5;
-                transform: scale(0.9);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1.1);
-            }
-        }
-
-        .stream-text-new {
-            max-width: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            font-size: 0.8em;
-            font-weight: 600;
-            opacity: 0;
-            transition: all 0.3s ease;
-            background: var(--gradient-main);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stream-ball-btn:hover {
-            padding: 6px 12px;
-            gap: 5px;
-            background: rgba(156, 91, 181, 0.05);
-        }
-
-        .stream-ball-btn:hover .stream-text-new {
-            max-width: 80px;
-            opacity: 1;
-            margin-left: 4px;
-        }
-
-        .global-search-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
-            border-radius: 50%;
-            background: var(--gradient-main);
-            border: none;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 3px 12px rgba(156, 91, 181, 0.3);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .global-search-btn:hover {
-            transform: translateY(-2px) scale(1.1);
-            box-shadow: 0 6px 20px rgba(156, 91, 181, 0.5);
-        }
-
-        .search-btn-text {
-            display: none;
-            /* Hide text for compact design */
-        }
-
-        /* Navigation - Clean Layout, Individual Button Colors */
+        /* Navigation - Simple Box Buttons */
         .main-nav {
             display: flex;
-            gap: 16px;
+            gap: 5px;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            perspective: 800px;
-        }
-
-        .main-nav>* {
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* Tablecloth slide effect - corrected for divider at position 5 */
-        /* Nav order: 1=Nigunim, 2=Mechabrim, 3=Verter, 4=Zmanim, 5=Divider, 6=Docs */
-
-        /* When hovering Nigunim (1) - others slide right */
-        .main-nav>*:nth-child(1):hover~* {
-            transform: translateX(8px);
-        }
-
-        /* When hovering Mechabrim (2) */
-        .main-nav:has(*:nth-child(2):hover)>*:nth-child(1) {
-            transform: translateX(-6px);
-        }
-
-        .main-nav>*:nth-child(2):hover~* {
-            transform: translateX(6px);
-        }
-
-        /* When hovering Verter (3) */
-        .main-nav:has(*:nth-child(3):hover)>*:nth-child(1),
-        .main-nav:has(*:nth-child(3):hover)>*:nth-child(2) {
-            transform: translateX(-5px);
-        }
-
-        .main-nav>*:nth-child(3):hover~* {
-            transform: translateX(5px);
-        }
-
-        /* When hovering Zmanim (4) */
-        .main-nav:has(*:nth-child(4):hover)>*:nth-child(1),
-        .main-nav:has(*:nth-child(4):hover)>*:nth-child(2),
-        .main-nav:has(*:nth-child(4):hover)>*:nth-child(3) {
-            transform: translateX(-4px);
-        }
-
-        .main-nav>*:nth-child(4):hover~* {
-            transform: translateX(4px);
-        }
-
-        /* When hovering Docs (6) - all others slide left toward it */
-        .main-nav:has(*:nth-child(6):hover)>*:nth-child(1),
-        .main-nav:has(*:nth-child(6):hover)>*:nth-child(2),
-        .main-nav:has(*:nth-child(6):hover)>*:nth-child(3),
-        .main-nav:has(*:nth-child(6):hover)>*:nth-child(4),
-        .main-nav:has(*:nth-child(6):hover)>*:nth-child(5) {
-            transform: translateX(-8px);
-        }
-
-        .nav-btn {
-            padding: 12px 28px;
-            background: var(--color-nigun);
-            border: none;
-            border-radius: 30px;
-            font-size: 1.1em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            font-family: inherit;
-            color: white;
-            text-decoration: none;
-            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.35);
-            position: relative;
-            overflow: hidden;
-            letter-spacing: 0.5px;
-        }
-
-        /* Animated glow ring */
-        .nav-btn::before {
-            content: '';
-            position: absolute;
-            inset: -3px;
-            border-radius: 35px;
-            background: var(--color-nigun);
-            z-index: -1;
-            opacity: 0.5;
-            filter: blur(8px);
-            transition: all 0.4s ease;
-        }
-
-        /* Inner shine effect */
-        /* Inner shine effect - RTL direction, hover only */
-        .nav-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: none;
-        }
-
-        .nav-btn:hover::after {
-            left: -100%;
-            transition: left 0.5s ease;
-        }
-
-        .nav-btn:hover {
-            transform: translateY(3px) scale(1.08);
-            box-shadow: 0 8px 25px rgba(74, 124, 201, 0.5);
-        }
-
-        .nav-btn:hover::before {
-            opacity: 0.8;
-            filter: blur(12px);
         }
 
         .nav-dropdown {
             position: relative;
         }
 
-        /* Base dropdown button style */
         .nav-dropdown-btn {
-            padding: 10px 18px;
-            border: none;
-            border-radius: 25px;
-            font-size: 0.95em;
-            font-weight: 600;
+            padding: 8px 14px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 6px;
+            font-size: 0.9em;
+            font-weight: 500;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition-smooth);
             font-family: inherit;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
+            color: var(--text-dark);
             text-decoration: none;
-            position: relative;
-            z-index: 2;
+        }
+
+        .nav-dropdown-btn:hover {
+            border-color: #bbb;
+            background: #f5f5f5;
         }
 
         .nav-dropdown-btn .nav-arrow {
-            font-size: 1.1em;
-            opacity: 0.6;
-            transition: transform 0.3s ease;
-        }
-
-        .nav-dropdown:hover .nav-dropdown-btn .nav-arrow {
-            transform: rotate(180deg);
-        }
-
-        /* Each button with its own category color border */
-        .nav-dropdown-btn.nav-mechaber {
-            background: white;
-            color: var(--color-mechaber);
-            border: 2px solid var(--color-mechaber);
-            box-shadow: 0 2px 8px rgba(196, 53, 168, 0.2);
-        }
-
-        .nav-dropdown-btn.nav-mechaber:hover,
-        .nav-dropdown:hover .nav-dropdown-btn.nav-mechaber {
-            background: var(--color-mechaber-pale);
-            transform: translateY(3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(196, 53, 168, 0.4);
-        }
-
-        .nav-dropdown-btn.nav-verter {
-            background: white;
-            color: var(--color-verter);
-            border: 2px solid var(--color-verter);
-            box-shadow: 0 2px 8px rgba(107, 114, 128, 0.2);
-        }
-
-        .nav-dropdown-btn.nav-verter:hover,
-        .nav-dropdown:hover .nav-dropdown-btn.nav-verter {
-            background: var(--color-verter-pale);
-            transform: translateY(3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
-        }
-
-        .nav-dropdown-btn.nav-zman {
-            background: white;
-            color: var(--color-zman);
-            border: 2px solid var(--color-zman);
-            box-shadow: 0 2px 8px rgba(233, 106, 27, 0.2);
-        }
-
-        .nav-dropdown-btn.nav-zman:hover,
-        .nav-dropdown:hover .nav-dropdown-btn.nav-zman {
-            background: var(--color-zman-pale);
-            transform: translateY(3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(233, 106, 27, 0.4);
-        }
-
-        .nav-dropdown-btn.nav-docs {
-            background: white;
-            color: var(--color-document);
-            border: 2px solid var(--color-document);
-            box-shadow: 0 2px 8px rgba(0, 160, 176, 0.2);
-            border-radius: 10px;
-            padding: 6px 12px;
-            gap: 3px;
-            font-size: 0.82em;
-        }
-
-        .nav-dropdown-btn.nav-docs:hover,
-        .nav-dropdown:hover .nav-dropdown-btn.nav-docs {
-            background: var(--color-document-pale);
-            transform: translateY(3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 160, 176, 0.4);
+            font-size: 0.6em;
+            opacity: 0.5;
         }
 
         .nav-dropdown-content {
             display: none;
             position: absolute;
             top: 100%;
-            right: auto;
-            left: 50%;
-            transform: translateX(-50%);
-            background: transparent;
+            right: 0;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-top: 4px;
             min-width: 160px;
             z-index: 1000;
-            overflow: visible;
-            padding-top: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
-        @keyframes dropdownFadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(-8px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* Bridge between button and dropdown to prevent losing hover */
         .nav-dropdown-content::before {
             content: '';
             position: absolute;
-            top: 0;
-            right: -20px;
-            left: -20px;
-            height: 15px;
-            pointer-events: none;
+            top: -8px;
+            right: 0;
+            left: 0;
+            height: 10px;
         }
 
         .nav-dropdown-content .dropdown-inner {
-            background: transparent;
-            border-radius: 16px;
-            padding: 6px 0;
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
+            padding: 4px 0;
         }
 
-        @keyframes dropdownSlideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px) scale(0.95);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        /* Keep dropdown open and parent styled when hovering anywhere in the dropdown area */
         .nav-dropdown:hover .nav-dropdown-content,
-        .nav-dropdown:focus-within .nav-dropdown-content {
+        .nav-dropdown-content:hover {
             display: block;
         }
-
-        /* Parent button stays in hover state when dropdown is open */
-        /* Individual button hover styles handle the transform */
 
         .nav-dropdown-content.hiding {
             display: none !important;
         }
 
-        /* Beautiful dropdown items - each as separate white card */
+        /* Dropdown item colors - small color box */
         .nav-dropdown-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 16px;
-            margin: 0;
+            gap: 10px;
+            padding: 8px 14px;
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 0.9em;
-            font-weight: 500;
+            transition: var(--transition-smooth);
+            font-size: 0.85em;
             background: white;
             text-decoration: none;
-            color: var(--text-dark);
-            border-radius: 14px;
-            position: relative;
-            overflow: hidden;
-            opacity: 0;
-            animation: itemDropIn 0.35s ease-out forwards;
-            border: none;
-            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.12), 0 1px 4px rgba(0, 0, 0, 0.08);
-        }
-
-        /* Staggered animation delays - items come in one by one */
-        .nav-dropdown-item:nth-child(1) {
-            animation-delay: 0s;
-        }
-
-        .nav-dropdown-item:nth-child(2) {
-            animation-delay: 0.08s;
-        }
-
-        .nav-dropdown-item:nth-child(3) {
-            animation-delay: 0.16s;
-        }
-
-        .nav-dropdown-item:nth-child(4) {
-            animation-delay: 0.24s;
-        }
-
-        .nav-dropdown-item:nth-child(5) {
-            animation-delay: 0.32s;
-        }
-
-        .nav-dropdown-item:nth-child(6) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes itemDropIn {
-            from {
-                opacity: 0;
-                transform: translateY(-15px) scale(0.9);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            color: inherit;
         }
 
         .nav-dropdown-item:hover {
-            transform: translateX(-4px) scale(1.02);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background: #f5f5f5;
         }
 
-        /* Color indicator dot */
         .nav-dropdown-item::before {
             content: '';
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
+            width: 8px;
+            height: 8px;
+            border-radius: 2px;
             flex-shrink: 0;
-            transition: all 0.25s ease;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Stars need bigger size */
-        .nav-dropdown-item[data-dest="resources"]::before,
-        .nav-dropdown-item[data-dest="albums"]::before,
-        .nav-dropdown-item[data-dest="documents"]::before,
-        .nav-dropdown-item[data-dest="info"]::before {
-            width: 14px;
-            height: 14px;
-        }
-
-        .nav-dropdown-item:hover::before {
-            transform: scale(1.3);
         }
 
         .nav-dropdown-item[data-dest="home"]::before {
-            background: var(--color-nigun);
+            background: var(--gradient-main);
         }
 
         .nav-dropdown-item[data-dest="nigunim"]::before {
@@ -1425,63 +891,34 @@
 
         .nav-dropdown-item[data-dest="verter"]::before {
             background: var(--color-verter);
-            border-radius: 2px;
-            /* Square shape */
         }
 
         .nav-dropdown-item[data-dest="zmanim"]::before {
             background: var(--color-zman);
-            border-radius: 0;
-            clip-path: polygon(0 50%, 100% 0, 100% 100%);
-            /* Play triangle - RTL direction */
         }
 
         .nav-dropdown-item[data-dest="music"]::before {
             background: var(--color-music);
-            border-radius: 2px;
-            /* Square shape like verter */
         }
 
         .nav-dropdown-item[data-dest="collections"]::before {
             background: var(--color-collection);
-            border-radius: 0;
-            clip-path: polygon(0 50%, 100% 0, 100% 100%);
-            /* Play triangle - RTL direction */
-        }
-
-        .nav-dropdown-item[data-dest="piyutim"]::before {
-            background: var(--color-piyut);
-            border-radius: 0;
-            clip-path: polygon(0 50%, 100% 0, 100% 100%);
-            /* Play triangle - RTL direction */
         }
 
         .nav-dropdown-item[data-dest="resources"]::before {
             background: var(--color-resource);
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            /* Star */
-            border-radius: 0;
         }
 
         .nav-dropdown-item[data-dest="albums"]::before {
             background: var(--color-album);
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            /* Star */
-            border-radius: 0;
         }
 
         .nav-dropdown-item[data-dest="documents"]::before {
             background: var(--color-document);
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            /* Star */
-            border-radius: 0;
         }
 
         .nav-dropdown-item[data-dest="info"]::before {
             background: #999;
-            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
-            /* Star */
-            border-radius: 0;
         }
 
         /* Navigation items text colors on hover */
@@ -1518,11 +955,6 @@
         .nav-dropdown-item[data-dest="collections"]:hover {
             color: var(--color-collection-dark);
             background: var(--color-collection-pale);
-        }
-
-        .nav-dropdown-item[data-dest="piyutim"]:hover {
-            color: var(--color-piyut-dark);
-            background: var(--color-piyut-pale);
         }
 
         .nav-dropdown-item[data-dest="resources"]:hover {
@@ -2762,10 +2194,6 @@
             background: var(--color-collection);
         }
 
-        .page-theme-piyut .page-title-bar {
-            background: var(--color-piyut);
-        }
-
         .page-theme-nigun .page-title-bar {
             background: var(--color-nigun);
         }
@@ -2788,7 +2216,6 @@
         .page-theme-verter,
         .page-theme-zman,
         .page-theme-collection,
-        .page-theme-piyut,
         .page-theme-nigun,
         .page-theme-resource,
         .page-theme-document,
@@ -2803,47 +2230,43 @@
         }
 
         .page-theme-chatzer {
-            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .page-theme-mechaber {
-            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .page-theme-verter {
-            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .page-theme-zman {
-            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .page-theme-collection {
-            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-piyut {
-            background: linear-gradient(180deg, var(--color-piyut-pale) 0%, color-mix(in srgb, var(--color-piyut-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .page-theme-nigun {
-            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .page-theme-resource {
-            background: linear-gradient(180deg, var(--color-resource-pale) 0%, color-mix(in srgb, var(--color-resource-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-resource-pale) 0%, color-mix(in srgb, var(--color-resource-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .page-theme-document {
-            background: linear-gradient(180deg, var(--color-document-pale) 0%, color-mix(in srgb, var(--color-document-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-document-pale) 0%, color-mix(in srgb, var(--color-document-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .page-theme-album {
-            background: linear-gradient(180deg, var(--color-album-pale) 0%, color-mix(in srgb, var(--color-album-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-album-pale) 0%, color-mix(in srgb, var(--color-album-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .page-theme-music {
-            background: linear-gradient(180deg, var(--color-music-pale) 0%, color-mix(in srgb, var(--color-music-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-music-pale) 0%, color-mix(in srgb, var(--color-music-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         /* Center content within full-width themed pages */
@@ -3434,7 +2857,7 @@
 
         .pdf-popup-footer {
             padding: 10px 20px;
-            background: #f8fafc;
+            background: var(--bg-cream);
             display: flex;
             justify-content: center;
             gap: 10px;
@@ -4079,20 +3502,6 @@
             box-shadow: 0 0 15px rgba(76, 175, 80, 0.15);
         }
 
-        .page-theme-piyut .category-card {
-            background: var(--color-piyut-pale);
-            border-color: var(--color-piyut-light);
-        }
-
-        .page-theme-piyut .category-card::after {
-            border-color: var(--color-piyut);
-            box-shadow: 0 0 15px rgba(46, 139, 46, 0.15);
-        }
-
-        .page-theme-piyut .category-card-title {
-            color: var(--color-piyut);
-        }
-
         .category-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--card-hover-shadow);
@@ -4301,7 +3710,7 @@
             align-items: center;
             gap: 12px;
             padding: 12px 15px;
-            background: #f8fafc;
+            background: var(--bg-cream);
             border-radius: 12px;
             cursor: pointer;
             transition: var(--transition-smooth);
@@ -4888,7 +4297,7 @@
             padding-left: calc(50vw - 50%);
             padding-right: calc(50vw - 50%);
             min-height: calc(100vh - 180px);
-            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .nigun-detail-page>* {
@@ -6557,27 +5966,27 @@
         }
 
         .detail-page.theme-chatzer {
-            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .detail-page.theme-mechaber {
-            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .detail-page.theme-verter {
-            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .detail-page.theme-zman {
-            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .detail-page.theme-piyut {
-            background: linear-gradient(180deg, #e8f5e9 0%, color-mix(in srgb, #e8f5e9 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, #e8f5e9 0%, color-mix(in srgb, #e8f5e9 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         .detail-page.theme-collection {
-            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, var(--bg-cream)) 300px, var(--bg-cream) 100%);
         }
 
         /* Center content within full-width themed detail pages */
@@ -6920,7 +6329,7 @@
         }
 
         .detail-info-item {
-            background: #f8fafc;
+            background: var(--bg-cream);
             padding: 12px 15px;
             border-radius: 10px;
             border-right: 3px solid var(--primary);
@@ -6980,7 +6389,7 @@
         }
 
         .mechaber-card {
-            background: #f8fafc;
+            background: var(--bg-cream);
             border-radius: 12px;
             padding: 15px;
             text-align: center;
@@ -7075,7 +6484,7 @@
         }
 
         .verter-content {
-            background: linear-gradient(135deg, #f8fafc 0%, #fff 100%);
+            background: linear-gradient(135deg, var(--bg-cream) 0%, #fff 100%);
             padding: 25px;
             border-radius: 15px;
             border-right: 4px solid var(--accent-gold);
@@ -8573,7 +7982,7 @@
         }
 
         .nigun-modal-content {
-            background: #f8fafc;
+            background: var(--bg-cream);
             border-radius: 20px;
             max-width: 850px;
             width: 100%;
@@ -8790,11 +8199,11 @@
         }
 
         .hover-tooltip.tooltip-piyut .hover-tooltip-type {
-            background: var(--color-piyut);
+            background: #2e8b2e;
         }
 
         .hover-tooltip.tooltip-piyut .hover-tooltip-title {
-            color: var(--color-piyut-dark);
+            color: #1b5e20;
         }
 
         .hover-tooltip.tooltip-collection .hover-tooltip-type {
@@ -8853,7 +8262,7 @@
 
         .hover-tooltip-stats {
             padding: 10px 15px;
-            background: #f8fafc;
+            background: var(--bg-cream);
             border-top: 1px solid rgba(0, 0, 0, 0.05);
             font-size: 0.9em;
             color: var(--text-muted);
@@ -9154,45 +8563,24 @@
             padding: 20px;
             box-shadow: var(--card-shadow);
             position: sticky;
-            top: 90px;
-            min-height: calc(100vh - 100px);
-            max-height: calc(100vh - 100px);
+            top: 0;
+            max-height: 100vh;
             overflow-y: auto;
-            overflow-x: hidden;
-            scrollbar-width: thin;
-            scrollbar-color: rgba(74, 124, 201, 0.3) transparent;
-        }
-
-        .songs-sidebar::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .songs-sidebar::-webkit-scrollbar-track {
-            background: transparent;
-        }
-
-        .songs-sidebar::-webkit-scrollbar-thumb {
-            background: rgba(74, 124, 201, 0.3);
-            border-radius: 4px;
-        }
-
-        .songs-sidebar::-webkit-scrollbar-thumb:hover {
-            background: rgba(74, 124, 201, 0.5);
         }
 
         .sidebar-search-box {
             display: flex;
             position: relative;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
 
         .sidebar-search-input {
             flex: 1;
-            padding: 8px 12px;
-            padding-left: 35px;
+            padding: 12px 15px;
+            padding-left: 40px;
             border: 2px solid var(--color-nigun-pale);
-            border-radius: 8px;
-            font-size: 0.9em;
+            border-radius: 10px;
+            font-size: 0.95em;
             font-family: inherit;
             direction: rtl;
             transition: var(--transition-smooth);
@@ -9269,14 +8657,14 @@
 
         /* Sort toggle slider styles */
         .sidebar-sort-section {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         .sidebar-sort-label {
-            font-size: 0.8em;
+            font-size: 0.9em;
             font-weight: 600;
             color: var(--text-dark);
-            margin-bottom: 4px;
+            margin-bottom: 8px;
             display: block;
         }
 
@@ -9290,13 +8678,13 @@
 
         .sort-toggle-option {
             flex: 1;
-            padding: 6px 6px;
+            padding: 10px 8px;
             text-align: center;
-            font-size: 0.8em;
+            font-size: 0.85em;
             font-weight: 500;
             color: var(--text-dark);
             cursor: pointer;
-            border-radius: 6px;
+            border-radius: 8px;
             transition: var(--transition-smooth);
             z-index: 1;
             position: relative;
@@ -9328,21 +8716,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 4px;
+            gap: 8px;
+            padding: 12px 15px;
             background: var(--color-nigun-pale);
-            border-radius: 10px;
+            border-radius: 12px;
             direction: ltr;
             /* Stars fill left to right */
         }
 
         .quality-star {
-            font-size: 1.3em;
+            font-size: 2em;
             color: #ccc;
             cursor: pointer;
             transition: all 0.2s ease;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            padding: 4px 3px;
         }
 
         .quality-star.active {
@@ -9493,21 +8880,20 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            padding: 4px;
+            gap: 8px;
+            padding: 12px 15px;
             background: var(--color-nigun-pale);
-            border-radius: 10px;
+            border-radius: 12px;
             direction: ltr;
             /* Stars fill left to right */
         }
 
         .quality-star {
-            font-size: 1.6em;
+            font-size: 2em;
             color: #ccc;
             cursor: pointer;
             transition: all 0.2s ease;
             text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-            padding: 6px 4px;
         }
 
         .quality-star.active {
@@ -9598,15 +8984,16 @@
         }
 
         .sidebar-section {
-            margin-bottom: 6px;
+            margin-bottom: 15px;
         }
 
         .sidebar-section-title {
-            font-size: 0.8em;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1.1em;
             color: var(--text-dark);
-            margin-bottom: 4px;
-            display: block;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--color-nigun-pale);
         }
 
         .sidebar-collection-btn {
@@ -9628,9 +9015,8 @@
             color: white;
         }
 
-
         .sidebar-filter {
-            margin-bottom: 6px;
+            margin-bottom: 12px;
         }
 
         .sidebar-filter-dropdown {
@@ -9639,22 +9025,20 @@
 
         .sidebar-filter-btn {
             width: 100%;
-            padding: 8px 12px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.9) 100%);
-            border: 1px solid rgba(74, 124, 201, 0.15);
+            padding: 10px 15px;
+            background: white;
+            border: 2px solid #ddd;
             border-radius: 8px;
             font-family: inherit;
-            font-size: 0.85em;
+            font-size: 0.9em;
             cursor: pointer;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 6px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            gap: 8px;
+            transition: var(--transition-smooth);
             position: relative;
-            padding-right: 14px;
-            box-shadow: 0 2px 6px rgba(74, 124, 201, 0.06);
-            overflow: hidden;
+            padding-right: 20px;
         }
 
         .sidebar-filter-btn::before {
@@ -9664,120 +9048,73 @@
             top: 0;
             bottom: 0;
             width: 4px;
-            border-radius: 0 12px 12px 0;
-            transition: width 0.3s ease;
-        }
-
-        .sidebar-filter-btn::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(135deg, transparent 0%, rgba(74, 124, 201, 0.05) 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            pointer-events: none;
-        }
-
-        .sidebar-filter-btn:hover::after {
-            opacity: 1;
-        }
-
-        .sidebar-filter-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 16px rgba(74, 124, 201, 0.15);
-            border-color: rgba(74, 124, 201, 0.25);
-        }
-
-        .sidebar-filter-btn:hover::before {
-            width: 6px;
+            border-radius: 0 8px 8px 0;
         }
 
         /* Filter colors as right border */
         .sidebar-filter[data-filter="collection"] .sidebar-filter-btn::before {
-            background: linear-gradient(180deg, var(--color-collection) 0%, var(--color-collection-dark) 100%);
+            background: var(--color-collection);
         }
 
         .sidebar-filter[data-filter="chatzer"] .sidebar-filter-btn::before {
-            background: linear-gradient(180deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
+            background: var(--color-chatzer);
         }
 
         .sidebar-filter[data-filter="mechaber"] .sidebar-filter-btn::before {
-            background: linear-gradient(180deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
+            background: var(--color-mechaber);
         }
 
         .sidebar-filter[data-filter="verter"] .sidebar-filter-btn::before {
-            background: linear-gradient(180deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
+            background: var(--color-verter);
         }
 
         .sidebar-filter[data-filter="gezungen"] .sidebar-filter-btn::before {
-            background: linear-gradient(180deg, #2e8b2e 0%, #1e6b1e 100%);
+            background: #2e8b2e;
         }
 
         /* גרין - פיוטים */
         .sidebar-filter[data-filter="ritem"] .sidebar-filter-btn::before {
-            background: linear-gradient(180deg, var(--color-music) 0%, var(--color-music-dark) 100%);
+            background: var(--color-music);
         }
 
         .sidebar-filter[data-filter="scale"] .sidebar-filter-btn::before {
-            background: linear-gradient(180deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            background: var(--color-nigun);
         }
 
         .sidebar-filter-btn .sidebar-filter-label {
-            font-size: 0.9em;
+            font-size: 0.95em;
             font-weight: 600;
-            color: var(--color-nigun-dark);
+            color: var(--text-dark);
         }
 
         .sidebar-filter-btn .sidebar-filter-value {
             flex: 1;
             text-align: left;
-            color: var(--text-muted);
-            font-size: 0.85em;
+            color: var(--text-dark);
         }
 
-        .sidebar-filter-btn .dropdown-arrow {
-            color: var(--color-nigun);
-            font-size: 0.7em;
-            transition: transform 0.3s ease;
-        }
-
-        .sidebar-filter-btn.active .dropdown-arrow {
-            transform: rotate(180deg);
+        .sidebar-filter-btn:hover {
+            border-color: var(--color-nigun);
         }
 
         .sidebar-filter-btn.active {
             border-color: var(--color-nigun);
-            background: linear-gradient(135deg, var(--color-nigun-pale) 0%, rgba(227, 242, 253, 0.8) 100%);
-            box-shadow: 0 4px 16px rgba(74, 124, 201, 0.2);
+            background: var(--color-nigun-pale);
         }
 
         .sidebar-dropdown-content {
             display: none;
             position: absolute;
-            top: calc(100% + 4px);
+            top: 100%;
             right: 0;
             left: 0;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(74, 124, 201, 0.2);
-            border-radius: 12px;
-            max-height: 280px;
+            background: white;
+            border: 2px solid var(--color-nigun);
+            border-radius: 8px;
+            max-height: 250px;
             overflow-y: auto;
             z-index: 50;
-            box-shadow: 0 10px 40px rgba(74, 124, 201, 0.2);
-            animation: dropdownSlide 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes dropdownSlide {
-            from {
-                opacity: 0;
-                transform: translateY(-8px) scale(0.98);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
         }
 
         .sidebar-dropdown-content.show {
@@ -9785,55 +9122,45 @@
         }
 
         .dropdown-search-box {
-            padding: 10px;
-            border-bottom: 1px solid rgba(74, 124, 201, 0.1);
+            padding: 8px;
+            border-bottom: 1px solid #eee;
             position: sticky;
             top: 0;
-            background: linear-gradient(180deg, white 0%, rgba(255, 255, 255, 0.95) 100%);
-            backdrop-filter: blur(8px);
-            z-index: 1;
+            background: white;
         }
 
         .dropdown-search-input {
             width: 100%;
-            padding: 10px 14px;
-            border: 1px solid rgba(74, 124, 201, 0.2);
-            border-radius: 8px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
             font-size: 0.85em;
             font-family: inherit;
             direction: rtl;
-            background: rgba(248, 250, 252, 0.8);
-            transition: all 0.2s ease;
         }
 
         .dropdown-search-input:focus {
             outline: none;
             border-color: var(--color-nigun);
-            background: white;
-            box-shadow: 0 0 0 3px rgba(74, 124, 201, 0.1);
         }
 
         .dropdown-options {
-            max-height: 220px;
+            max-height: 200px;
             overflow-y: auto;
-            padding: 4px;
         }
 
         .sidebar-filter-option {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 10px 12px;
+            gap: 8px;
+            padding: 10px 15px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            font-size: 0.88em;
-            border-radius: 8px;
-            margin: 2px 0;
+            transition: var(--transition-smooth);
+            font-size: 0.9em;
         }
 
         .sidebar-filter-option:hover {
-            background: linear-gradient(135deg, var(--color-nigun-pale) 0%, rgba(227, 242, 253, 0.6) 100%);
-            transform: translateX(-2px);
+            background: var(--color-nigun-pale);
         }
 
         .sidebar-filter-option input {
@@ -9842,11 +9169,6 @@
             height: 16px;
             cursor: pointer;
             flex-shrink: 0;
-        }
-
-        .sidebar-filter-option input:checked+* {
-            color: var(--color-nigun-dark);
-            font-weight: 500;
         }
 
         /* Mobile responsive */
@@ -10205,7 +9527,6 @@
             padding: 40px;
             box-shadow: var(--card-shadow);
             line-height: 1.8;
-            margin-bottom: 25px;
         }
 
         .info-page-content p {
@@ -10258,37 +9579,6 @@
             color: white;
             border-color: var(--color-chatzer);
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-        }
-
-        .info-nav-item.info-nav-featured {
-            background: white;
-            border: 2px solid;
-            border-image: var(--gradient-main) 1;
-            border-radius: 10px;
-            font-weight: 700;
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.15);
-            position: relative;
-            margin: 0 8px;
-        }
-
-        .info-nav-item.info-nav-featured {
-            background: var(--gradient-main);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .info-nav-item.info-nav-featured:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.25);
-        }
-
-        .info-nav-item.info-nav-featured.active {
-            background: var(--gradient-main);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.3);
         }
 
         .info-nav-divider {
@@ -10651,409 +9941,6 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
         }
 
-        /* Contribute Page Styles */
-        .contribute-page {
-            background: var(--bg-color);
-        }
-
-        .contribute-hero {
-            background: var(--gradient-main);
-            padding: 60px 40px;
-            border-radius: 20px;
-            margin-bottom: 40px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .contribute-hero::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.3;
-        }
-
-        .contribute-hero-content {
-            position: relative;
-            z-index: 1;
-        }
-
-        .contribute-hero-title {
-            color: white;
-            font-size: 2.5em;
-            font-weight: 700;
-            margin-bottom: 15px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .contribute-hero-subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 1.2em;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-
-        .contribute-content {
-            padding: 30px 20px 20px 20px;
-        }
-
-        .contribute-intro {
-            text-align: center;
-            font-size: 1.1em;
-            color: var(--text-dark);
-            margin-bottom: 40px;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
-        .contribute-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 25px;
-            margin-bottom: 50px;
-        }
-
-        .contribute-card {
-            background: white;
-            border-radius: 16px;
-            padding: 30px;
-            text-align: center;
-            box-shadow: 0 4px 20px rgba(74, 124, 201, 0.1);
-            border: 1px solid rgba(74, 124, 201, 0.1);
-            transition: all 0.3s ease;
-        }
-
-        .contribute-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 40px rgba(74, 124, 201, 0.2);
-            border-color: var(--color-nigun);
-        }
-
-        .contribute-card-icon {
-            font-size: 3em;
-            margin-bottom: 15px;
-        }
-
-        .contribute-card-title {
-            color: var(--color-nigun-dark);
-            font-size: 1.3em;
-            font-weight: 600;
-            margin-bottom: 10px;
-        }
-
-        .contribute-card-text {
-            color: var(--text-muted);
-            font-size: 0.95em;
-            margin-bottom: 20px;
-            line-height: 1.6;
-        }
-
-        .contribute-card-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 10px;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 0.95em;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.3);
-        }
-
-        .contribute-card-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(74, 124, 201, 0.4);
-        }
-
-        .contribute-card-btn .btn-arrow {
-            transition: transform 0.3s ease;
-        }
-
-        .contribute-card-btn:hover .btn-arrow {
-            transform: translateX(-5px);
-        }
-
-        .contribute-contact {
-            text-align: center;
-            background: linear-gradient(135deg, rgba(74, 124, 201, 0.05) 0%, rgba(74, 124, 201, 0.1) 100%);
-            padding: 40px;
-            border-radius: 16px;
-            border: 1px solid rgba(74, 124, 201, 0.15);
-        }
-
-        .contribute-contact-title {
-            color: var(--text-dark);
-            font-size: 1.2em;
-            margin-bottom: 15px;
-        }
-
-        .contribute-email {
-            display: inline-block;
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            color: white;
-            padding: 15px 30px;
-            border-radius: 12px;
-            font-size: 1.1em;
-            text-decoration: none;
-            direction: ltr;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.3);
-        }
-
-        .contribute-email:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(74, 124, 201, 0.4);
-        }
-
-        /* Main Nigun Button - Largest */
-        .contribute-main-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            padding: 25px 40px;
-            border-radius: 16px;
-            text-decoration: none;
-            font-size: 1.4em;
-            font-weight: 600;
-            color: white;
-            margin-bottom: 30px;
-            transition: all 0.3s ease;
-        }
-
-        .contribute-main-btn .btn-external {
-            transition: transform 0.3s ease;
-            font-size: 1.2em;
-        }
-
-        .contribute-main-btn:hover .btn-external {
-            transform: translate(3px, -3px);
-        }
-
-        .contribute-btn-main-gradient {
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            box-shadow: 0 6px 25px rgba(74, 124, 201, 0.4);
-        }
-
-        .contribute-btn-main-gradient:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 10px 35px rgba(74, 124, 201, 0.5);
-        }
-
-        /* External arrow for all buttons */
-        .btn-external {
-            transition: transform 0.3s ease;
-            opacity: 0.9;
-        }
-
-        .contribute-btn:hover .btn-external {
-            transform: translate(3px, -3px);
-            opacity: 1;
-        }
-
-        /* Gezungen color for piyut */
-        .contribute-btn-gezungen {
-            background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
-            box-shadow: 0 4px 15px rgba(245, 124, 0, 0.3);
-        }
-
-        .contribute-btn-gezungen:hover {
-            box-shadow: 0 6px 25px rgba(245, 124, 0, 0.4);
-        }
-
-        /* Category Buttons Grid */
-        .contribute-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 15px;
-            margin-bottom: 40px;
-        }
-
-        .contribute-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            padding: 16px 20px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 500;
-            color: white;
-            transition: all 0.3s ease;
-            text-align: center;
-        }
-
-        .contribute-btn-icon {
-            font-size: 1.3em;
-        }
-
-        .contribute-btn-text {
-            text-align: center;
-        }
-
-        .contribute-btn .btn-arrow {
-            transition: transform 0.3s ease;
-            opacity: 0.8;
-        }
-
-        .contribute-btn:hover .btn-arrow {
-            transform: translateX(-5px);
-            opacity: 1;
-        }
-
-        .contribute-btn:hover {
-            transform: translateY(-3px);
-        }
-
-        /* Category-specific colors */
-        .contribute-btn-mechaber {
-            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
-            box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
-        }
-
-        .contribute-btn-mechaber:hover {
-            box-shadow: 0 6px 25px rgba(34, 197, 94, 0.4);
-        }
-
-        .contribute-btn-chatzer {
-            background: linear-gradient(135deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
-            box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
-        }
-
-        .contribute-btn-chatzer:hover {
-            box-shadow: 0 6px 25px rgba(139, 92, 246, 0.4);
-        }
-
-        .contribute-btn-verter {
-            background: linear-gradient(135deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
-            box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
-        }
-
-        .contribute-btn-verter:hover {
-            box-shadow: 0 6px 25px rgba(236, 72, 153, 0.4);
-        }
-
-        .contribute-btn-zman {
-            background: linear-gradient(135deg, var(--color-zman) 0%, var(--color-zman-dark) 100%);
-            box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
-        }
-
-        .contribute-btn-zman:hover {
-            box-shadow: 0 6px 25px rgba(249, 115, 22, 0.4);
-        }
-
-        .contribute-btn-piyut {
-            background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
-        }
-
-        .contribute-btn-piyut:hover {
-            box-shadow: 0 6px 25px rgba(99, 102, 241, 0.4);
-        }
-
-        .contribute-btn-collection {
-            background: linear-gradient(135deg, var(--color-collection) 0%, var(--color-collection-dark) 100%);
-            box-shadow: 0 4px 15px rgba(20, 184, 166, 0.3);
-        }
-
-        .contribute-btn-collection:hover {
-            box-shadow: 0 6px 25px rgba(20, 184, 166, 0.4);
-        }
-
-        /* Extra Section */
-        .contribute-extra-section {
-            margin-bottom: 40px;
-        }
-
-        .contribute-section-title {
-            color: var(--text-dark);
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .contribute-extra-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-        }
-
-        .contribute-btn-resource {
-            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-            box-shadow: 0 4px 15px rgba(14, 165, 233, 0.3);
-        }
-
-        .contribute-btn-resource:hover {
-            box-shadow: 0 6px 25px rgba(14, 165, 233, 0.4);
-        }
-
-        .contribute-btn-document {
-            background: linear-gradient(135deg, #64748b 0%, #475569 100%);
-            box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
-        }
-
-        .contribute-btn-document:hover {
-            box-shadow: 0 6px 25px rgba(100, 116, 139, 0.4);
-        }
-
-        .contribute-btn-album {
-            background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
-            box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3);
-        }
-
-        .contribute-btn-album:hover {
-            box-shadow: 0 6px 25px rgba(168, 85, 247, 0.4);
-        }
-
-        /* Terms Link */
-        .contribute-terms {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-        }
-
-        .contribute-terms-link {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-size: 0.9em;
-            transition: color 0.3s ease;
-        }
-
-        .contribute-terms-link:hover {
-            color: var(--color-nigun);
-        }
-
-        @media (max-width: 768px) {
-            .contribute-hero {
-                padding: 40px 20px;
-            }
-
-            .contribute-hero-title {
-                font-size: 1.8em;
-            }
-
-            .contribute-hero-subtitle {
-                font-size: 1em;
-            }
-
-            .contribute-cards {
-                grid-template-columns: 1fr;
-            }
-
-            .contribute-card {
-                padding: 25px;
-            }
-        }
-
         @media (max-width: 768px) {
             .goals-brick-row {
                 flex-direction: column;
@@ -11088,371 +9975,79 @@
                 </div>
             </a>
 
-            <!-- Removed nav wrapper, elements are now direct children for better centering -->
-            <div class="main-nav">
-                <!-- ניגונים - Standalone (no children) -->
-                <a class="nav-btn nav-nigunim" href="#/nigunim">ניגונים</a>
-
-                <!-- מחברים - with children: מחברים, חצרות -->
-                <div class="nav-dropdown">
-                    <a class="nav-dropdown-btn nav-mechaber" href="#/mechabrim">
-                        מחברים
-                        <span class="nav-arrow">▾</span>
-                    </a>
-                    <div class="nav-dropdown-content">
-                        <div class="dropdown-inner">
-                            <a class="nav-dropdown-item" data-dest="mechabrim" href="#/mechabrim">
-                                <span>מחברים</span>
-                            </a>
-                            <a class="nav-dropdown-item" data-dest="chatzeros" href="#/chatzeros">
-                                <span>חצרות</span>
-                            </a>
+            <nav class="header-nav">
+                <div class="main-nav">
+                    <!-- ניגונים -->
+                    <div class="nav-dropdown">
+                        <a class="nav-dropdown-btn nav-nigunim" href="#/nigunim">
+                            ניגונים
+                            <span class="nav-arrow">▼</span>
+                        </a>
+                        <div class="nav-dropdown-content">
+                            <div class="dropdown-inner">
+                                <a class="nav-dropdown-item" data-dest="nigunim" href="#/nigunim">
+                                    <span>אלע ניגונים</span>
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="mechabrim" href="#/mechabrim">
+                                    <span>מחברים</span>
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="chatzeros" href="#/chatzeros">
+                                    <span>חצרות</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- ווערטער - with children: ווערטער, ריטעם -->
-                <div class="nav-dropdown">
-                    <a class="nav-dropdown-btn nav-verter" href="#/verter">
-                        ווערטער
-                        <span class="nav-arrow">▾</span>
-                    </a>
-                    <div class="nav-dropdown-content">
-                        <div class="dropdown-inner">
-                            <a class="nav-dropdown-item" data-dest="verter" href="#/verter">
-                                <span>ווערטער</span>
-                            </a>
-                            <a class="nav-dropdown-item" data-dest="music" href="#/music">
-                                <span>ריטעם</span>
-                            </a>
+                    <!-- פאסיגע ניגונים -->
+                    <div class="nav-dropdown">
+                        <a class="nav-dropdown-btn nav-pasig" href="#/zmanim">
+                            פאסיגע ניגונים
+                            <span class="nav-arrow">▼</span>
+                        </a>
+                        <div class="nav-dropdown-content">
+                            <div class="dropdown-inner">
+                                <a class="nav-dropdown-item" data-dest="zmanim" href="#/zmanim">
+                                    <span>מועדים וזמנים</span>
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="collections" href="#/collections">
+                                    <span>קאלעקשאנס</span>
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="verter" href="#/verter">
+                                    <span>ווערטער</span>
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="music" href="#/music">
+                                    <span>ריטעם</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- זמנים - with children: מועדים וזמנים, קאלעקשאנס, פיוטים -->
-                <div class="nav-dropdown">
-                    <a class="nav-dropdown-btn nav-zman" href="#/zmanim">
-                        זמנים
-                        <span class="nav-arrow">▾</span>
-                    </a>
-                    <div class="nav-dropdown-content">
-                        <div class="dropdown-inner">
-                            <a class="nav-dropdown-item" data-dest="zmanim" href="#/zmanim">
-                                <span>מועדים וזמנים</span>
-                            </a>
-                            <a class="nav-dropdown-item" data-dest="collections" href="#/collections">
-                                <span>קאלעקשאנס</span>
-                            </a>
-                            <a class="nav-dropdown-item" data-dest="piyutim" href="#/piyutim">
-                                <span>פיוטים</span>
-                            </a>
+                    <!-- דאקומענטאציע -->
+                    <div class="nav-dropdown">
+                        <a class="nav-dropdown-btn nav-docs" href="#/documents">
+                            דאקומענטאציע
+                            <span class="nav-arrow">▼</span>
+                        </a>
+                        <div class="nav-dropdown-content">
+                            <div class="dropdown-inner">
+                                <a class="nav-dropdown-item" data-dest="resources" href="#/resources">
+                                    <span>רעסורסן</span>
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="albums" href="#/albums">
+                                    <span>אלבומס</span>
+                                </a>
+                                <a class="nav-dropdown-item" data-dest="documents" href="#/documents">
+                                    <span>דאקומענטן</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
+            </nav>
 
-                <!-- Divider -->
-                <div class="nav-divider"></div>
-
-                <style>
-                    .nav-divider {
-                        width: 4px;
-                        height: 4px;
-                        background: var(--gradient-main);
-                        margin: 0 6px;
-                        opacity: 0.6;
-                        border-radius: 50%;
-                    }
-                </style>
-
-                <!-- דאקומענטאציע - with children: רעסורסן, ארכיוון, אלבומס -->
-                <div class="nav-dropdown">
-                    <a class="nav-dropdown-btn nav-docs" href="#/resources">
-                        דאקומענטאציע
-                        <span class="nav-arrow">▾</span>
-                    </a>
-                    <div class="nav-dropdown-content">
-                        <div class="dropdown-inner">
-                            <a class="nav-dropdown-item" data-dest="resources" href="#/resources">
-                                <span>רעסורסן</span>
-                            </a>
-                            <a class="nav-dropdown-item" data-dest="documents" href="#/documents">
-                                <span>ארכיוון</span>
-                            </a>
-                            <a class="nav-dropdown-item" data-dest="albums" href="#/albums">
-                                <span>אלבומס</span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Right side buttons wrapper - matches logo width on left -->
-            <div class="header-right-buttons">
-                <!-- Combined Search + Add Button -->
-                <div class="header-combo-btn">
-                    <button class="combo-search" onclick="openSearchModal()">
-                        <svg class="combo-search-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path
-                                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
-                        </svg>
-                        <span class="combo-search-text">זוך</span>
-                    </button>
-                    <a href="#/contribute" class="combo-add">
-                        <span class="combo-add-icon">+</span>
-                        <span class="combo-add-text">לייג צו</span>
-                    </a>
-                </div>
-
-                <!-- Streaming Button - ball with blinking dot, expands on hover -->
-                <a href="https://stream.oitzerhanigunim.org/" target="_blank" class="stream-ball-btn">
-                    <span class="stream-dot"></span>
-                    <span class="stream-text-new">סטרימינג</span>
-                </a>
-            </div>
-        </div>
-
-        <style>
-            /* Sticky header with hide on scroll down, show on scroll up */
-            .main-header {
-                position: fixed;
-                top: 0;
-                left: 0;
-                right: 0;
-                z-index: 1000;
-                transition: transform 0.4s ease, opacity 0.4s ease;
-                background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(248, 250, 252, 0.85) 100%);
-                backdrop-filter: blur(16px);
-                -webkit-backdrop-filter: blur(16px);
-            }
-
-            .main-header.header-hidden {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-
-            /* Main content - offset for fixed header */
-            .main-content {
-                padding-top: 80px;
-            }
-
-            .header-main {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 30px;
-                width: 100%;
-                max-width: 1400px;
-                margin: 0 auto;
-                padding: 12px 30px;
-                position: relative;
-            }
-
-            .logo {
-                position: absolute;
-                right: 30px;
-                top: 50%;
-                transform: translateY(-50%);
-            }
-
-            .main-nav {
-                margin: 0;
-                /* Reset margins */
-            }
-
-            .global-search-btn {
-                margin-right: 0;
-            }
-
-            .header-right-buttons {
-                position: absolute;
-                left: 20px;
-                top: 50%;
-                transform: translateY(-50%);
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                z-index: 10;
-            }
-
-            /* Combined Search + Add Button */
-            .header-combo-btn {
-                display: flex;
-                align-items: stretch;
-                background: var(--gradient-main);
-                border-radius: 25px;
-                overflow: hidden;
-                box-shadow: 0 2px 12px rgba(139, 92, 246, 0.3);
-                height: 40px;
-                gap: 3px;
-                padding: 3px;
-            }
-
-            .combo-search {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 6px;
-                padding: 0 16px;
-                background: rgba(255, 255, 255, 0.15);
-                border: none;
-                border-radius: 22px;
-                cursor: pointer;
-                font-family: inherit;
-                font-size: 0.95em;
-                font-weight: 600;
-                color: white;
-                transition: all 0.4s ease;
-                flex: 3;
-                min-width: 60px;
-            }
-
-            .combo-search-icon {
-                width: 16px;
-                height: 16px;
-                fill: white;
-                opacity: 0;
-                max-width: 0;
-                transition: all 0.4s ease;
-            }
-
-            .combo-search-text {
-                transition: all 0.4s ease;
-            }
-
-            .combo-add {
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 6px;
-                padding: 0 12px;
-                background: rgba(255, 255, 255, 0.15);
-                border: none;
-                border-radius: 22px;
-                cursor: pointer;
-                text-decoration: none;
-                font-family: inherit;
-                font-size: 0.95em;
-                font-weight: 600;
-                color: white;
-                transition: all 0.4s ease;
-                flex: 1;
-                min-width: 36px;
-            }
-
-            .combo-add-icon {
-                font-size: 1.3em;
-                font-weight: 700;
-                color: white;
-                transition: all 0.4s ease;
-            }
-
-            .combo-add-text {
-                color: white;
-                opacity: 0;
-                max-width: 0;
-                overflow: hidden;
-                white-space: nowrap;
-                transition: all 0.4s ease;
-            }
-
-            /* Hover on Search - expands to show icon */
-            .header-combo-btn:hover .combo-search:hover {
-                flex: 10;
-                background: rgba(255, 255, 255, 0.25);
-            }
-
-            .header-combo-btn:hover .combo-search:hover .combo-search-icon {
-                opacity: 1;
-                max-width: 20px;
-            }
-
-            .header-combo-btn:hover .combo-search:hover~.combo-add {
-                flex: 0;
-                padding: 0;
-                min-width: 0;
-                opacity: 0;
-            }
-
-            /* Hover on Add - expands to show text */
-            .header-combo-btn:hover .combo-add:hover {
-                flex: 10;
-                padding: 0 16px;
-                background: rgba(255, 255, 255, 0.25);
-            }
-
-            .header-combo-btn:hover .combo-add:hover .combo-add-text {
-                opacity: 1;
-                max-width: 80px;
-            }
-
-            .header-combo-btn:has(.combo-add:hover) .combo-search {
-                flex: 0;
-                padding: 0;
-                min-width: 0;
-                opacity: 0;
-            }
-
-            /* Logo hover effect with fade both ways */
-            .logo {
-                transition: all 0.4s ease;
-            }
-
-            .logo-icon,
-            .logo-text {
-                transition: filter 0.4s ease, transform 0.4s ease;
-            }
-
-            .logo:hover {
-                transform: scale(1.05);
-            }
-
-            .logo:hover .logo-icon {
-                filter: drop-shadow(0 4px 12px rgba(156, 91, 181, 0.4));
-            }
-
-            .logo:hover .logo-text {
-                filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
-            }
-
-            /* Search button styled like logo */
-            .global-search-btn {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                background: transparent;
-                border: none;
-                cursor: pointer;
-                padding: 0;
-                transition: all 0.4s ease;
-            }
-
-            .search-icon {
-                width: 32px;
-                height: 32px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
-
-            .search-icon svg {
-                width: 100%;
-                height: 100%;
-                fill: url(#search-gradient);
-            }
-
-            .search-text {
-                font-size: 1.1em;
-                font-weight: 700;
-                background: var(--gradient-main);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
-                background-clip: text;
-            }
-
-            .global-search-btn:hover {
-                opacity: 0.8;
-            }
-        </style>
+            <button class="global-search-btn" onclick="openSearchModal()" title="זוך">🔍</button>
+            <a href="https://stream.oitzerhanigunim.org/" target="_blank" class="stream-btn"
+                title="סטרימינג">סטרימינג</a>
+            </nav>
         </div>
     </header>
 
@@ -11751,18 +10346,6 @@
             const clickedElement = e.target.closest('[data-tooltip-value]');
             if (clickedElement) {
                 forceHideTooltip();
-
-                // Check if it's a piyut tooltip click - navigate to piyut detail page
-                const tooltipType = clickedElement.getAttribute('data-tooltip-type');
-                const tooltipValue = clickedElement.getAttribute('data-tooltip-value');
-
-                if (tooltipType === 'zman' && tooltipValue && piyutimInfo[tooltipValue]) {
-                    // This is a piyut, navigate to piyutim detail page
-                    const piyutId = piyutimInfo[tooltipValue].customId || tooltipValue;
-                    e.preventDefault();
-                    e.stopPropagation();
-                    window.location.hash = `#/piyutim/${encodeURIComponent(piyutId)}`;
-                }
             }
         }, true);
 
@@ -12765,15 +11348,6 @@
                         fetchSongsInBackground();
                     }
                     break;
-                case 'piyutim':
-                    if (!loadedCategories.piyutim) {
-                        await fetchPiyutimInfo();
-                        loadedCategories.piyutim = true;
-                    }
-                    if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
-                    }
-                    break;
                 case 'resources':
                     if (!loadedCategories.resources) {
                         await fetchResourcesInfo();
@@ -13444,7 +12018,7 @@
         }
 
         // Info pages list for special transitions
-        const infoPages = ['about', 'instructions', 'stats', 'credits', 'thanks', 'terms', 'contribute'];
+        const infoPages = ['about', 'instructions', 'stats', 'credits', 'thanks', 'terms'];
 
         // Page order for determining navigation direction
         const pageOrder = ['home', 'songs', 'mechabrim', 'chatzeros', 'zmanim', 'collections', 'verter', 'music', 'resources', 'documents', 'albums'];
@@ -13541,7 +12115,6 @@
                 case 'verter': return loadedCategories.verter && Object.keys(verterInfo).length > 0;
                 case 'zmanim': return loadedCategories.zmanim && Object.keys(zmaninInfo).length > 0;
                 case 'collections': return loadedCategories.collections && Object.keys(collectionsInfo).length > 0;
-                case 'piyutim': return loadedCategories.piyutim && Object.keys(piyutimInfo).length > 0;
                 case 'resources': return loadedCategories.resources && Object.keys(resourcesInfo).length > 0;
                 case 'documents': return loadedCategories.documents && Object.keys(documentsInfo).length > 0;
                 case 'albums': return loadedCategories.albums && Object.keys(albumsInfo).length > 0;
@@ -13633,9 +12206,6 @@
                 case 'collections':
                     renderCollectionsPage(content);
                     break;
-                case 'piyutim':
-                    renderPiyutimPage(content);
-                    break;
                 case 'resources':
                     renderResourcesPage(content);
                     break;
@@ -13662,9 +12232,6 @@
                     break;
                 case 'terms':
                     renderTermsPage(content);
-                    break;
-                case 'contribute':
-                    renderContributePage(content);
                     break;
             }
         }
@@ -13879,7 +12446,6 @@
             const pages = [
                 { id: 'about', label: 'אונזער ציל' },
                 { id: 'instructions', label: 'אנווייזונגען' },
-                { id: 'contribute', label: 'לייג צו', featured: true },
                 { id: 'credits', label: 'קרעדיטס' },
                 { id: 'thanks', label: 'התודה והברכה' }
             ];
@@ -13887,7 +12453,7 @@
             return `
                 <nav class="info-nav">
                     ${pages.map((page, index) => `
-                        <a class="info-nav-item ${activePage === page.id ? 'active' : ''} ${page.featured ? 'info-nav-featured' : ''}"
+                        <a class="info-nav-item ${activePage === page.id ? 'active' : ''}"
                              href="#/${page.id}">
                             ${page.label}
                         </a>
@@ -14293,96 +12859,6 @@
             `;
         }
 
-        // Render Contribute Page (צולייגן אינפֿאָרמאַציע)
-        function renderContributePage(container) {
-            container.innerHTML = `
-                <div class="info-page contribute-page">
-                    ${getInfoNavHTML('contribute')}
-
-                    <div class="contribute-hero">
-                        <div class="contribute-hero-content">
-                            <h1 class="contribute-hero-title">ביישטייערט צום אוצר</h1>
-                            <p class="contribute-hero-subtitle">העלפט אונז פארגרעסערן און פארבעסערן דעם דאטאבעיס</p>
-                        </div>
-                    </div>
-
-                    <div class="info-page-content contribute-content">
-                        <!-- Main Nigun Button -->
-                        <a href="https://coda.io/form/_deegJpdfVC5" class="contribute-main-btn contribute-btn-main-gradient" target="_blank" rel="noopener">
-                            <span class="contribute-main-text">לייג צו / אפדעיט א <strong>ניגון</strong></span>
-                            <span class="btn-external">↗</span>
-                        </a>
-
-                        <!-- Category Buttons Grid -->
-                        <div class="contribute-grid">
-                            <a href="https://coda.io/form/_dpAUcVRsKjH" class="contribute-btn contribute-btn-mechaber" target="_blank" rel="noopener">
-                                <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>מחבר</strong></span>
-                                <span class="btn-external">↗</span>
-                            </a>
-                            
-                            <a href="https://coda.io/form/_dctTYOyS0RX" class="contribute-btn contribute-btn-chatzer" target="_blank" rel="noopener">
-                                <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>חצר</strong></span>
-                                <span class="btn-external">↗</span>
-                            </a>
-                            
-                            <a href="https://coda.io/form/_dgAvntb_zik" class="contribute-btn contribute-btn-verter" target="_blank" rel="noopener">
-                                <span class="contribute-btn-text">לייג צו / אפדעיט <strong>ווערטער</strong></span>
-                                <span class="btn-external">↗</span>
-                            </a>
-                            
-                            <a href="https://coda.io/form/_d5bHKMFR3lD" class="contribute-btn contribute-btn-zman" target="_blank" rel="noopener">
-                                <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>זמן</strong></span>
-                                <span class="btn-external">↗</span>
-                            </a>
-                            
-                            <a href="https://coda.io/form/_dZD54k66986" class="contribute-btn contribute-btn-gezungen" target="_blank" rel="noopener">
-                                <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>פיוט</strong></span>
-                                <span class="btn-external">↗</span>
-                            </a>
-                            
-                            <a href="https://coda.io/form/_d6Apy3XTmnZ" class="contribute-btn contribute-btn-collection" target="_blank" rel="noopener">
-                                <span class="contribute-btn-text">לייג צו / אפדעיט א <strong>קאלעקשן</strong></span>
-                                <span class="btn-external">↗</span>
-                            </a>
-                        </div>
-
-                        <!-- Extra Resources Section -->
-                        <div class="contribute-extra-section">
-                            <h3 class="contribute-section-title">לייג צו נאך רעסורן</h3>
-                            <div class="contribute-extra-grid">
-                                <a href="https://coda.io/form/_dMIXJIsbjLg" class="contribute-btn contribute-btn-resource" target="_blank" rel="noopener">
-                                    <span class="contribute-btn-text">לייג צו א <strong>רעסורס</strong></span>
-                                    <span class="btn-external">↗</span>
-                                </a>
-                                
-                                <a href="https://coda.io/form/_d9KgrPJTikk" class="contribute-btn contribute-btn-resource" target="_blank" rel="noopener">
-                                    <span class="contribute-btn-text">לייג צו א <strong>דאקומענט</strong></span>
-                                    <span class="btn-external">↗</span>
-                                </a>
-                                
-                                <a href="https://coda.io/form/_dVpYtnuj24f" class="contribute-btn contribute-btn-resource" target="_blank" rel="noopener">
-                                    <span class="contribute-btn-text">לייג צו אן <strong>אלבום</strong></span>
-                                    <span class="btn-external">↗</span>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Contact Section (outside white container) -->
-                    <div class="goals-contact">
-                        <div class="goals-contact-title">הערות והארות</div>
-                        <div class="goals-contact-text">פאר סיי וועלכע הערות אדער זיך צו פארבינדן מיט מערכת אידישע ניגונים</div>
-                        <a href="mailto:yiddishenigunim@gmail.com" class="goals-contact-email">yiddishenigunim@gmail.com</a>
-                    </div>
-
-                    <!-- Terms Link -->
-                    <div class="contribute-terms">
-                        <a href="#/terms" class="contribute-terms-link">Terms of Use</a>
-                    </div>
-                </div>
-            `;
-        }
-
         // Handle home search
         function handleHomeSearch(event) {
             if (event.key === 'Enter') {
@@ -14454,7 +12930,7 @@
                                 <input type="text"
                                        id="songsSearchInput"
                                        class="sidebar-search-input"
-                                       placeholder="זוך א ניגון..."
+                                       placeholder="זוכט א ניגון..."
                                        value="${searchQuery || ''}"
                                        onkeypress="if(event.key==='Enter')handleSongsSearch(this.value)">
                                 ${searchQuery ? '<button class="sidebar-search-clear" onclick="clearSearch()">×</button>' : ''}
@@ -14511,7 +12987,7 @@
                             </div>
 
                             <div class="sidebar-section">
-                                <div class="sidebar-section-title">פילטערס:</div>
+                                <div class="sidebar-section-title">פילטערס</div>
                             </div>
 
                             ${renderSidebarFilter('collection', 'קאלעקשאנס:', categories.collections)}
@@ -16030,10 +14506,10 @@
             console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
 
             // Valid pages (including info pages)
-            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'piyutim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'music', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats', 'contribute'];
+            const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'music', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
 
             // Info pages that don't need data loading
-            const infoPagesList = ['about', 'instructions', 'credits', 'thanks', 'terms', 'stats', 'contribute'];
+            const infoPagesList = ['about', 'instructions', 'credits', 'thanks', 'terms', 'stats'];
 
             if (validPages.includes(page)) {
                 const content = document.getElementById('mainContent');
@@ -16127,8 +14603,8 @@
                     renderCurrentPage();
                 } else if (idOrName) {
                     // Detail pages that need data loaded
-                    const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'piyutim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
-                    const dataPage = page === 'zman' ? 'zmanim' : (page === 'piyutim' ? 'piyutim' : (page === 'nigunim' ? 'songs' : page));
+                    const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
+                    const dataPage = page === 'zman' ? 'zmanim' : (page === 'nigunim' ? 'songs' : page);
 
                     // Show loading indicator and ensure data is loaded for detail pages
                     // For nigunim, need to check songsFullyLoaded, not just loadedCategories
@@ -16265,7 +14741,6 @@
                 case 'mechabrim': infoObj = mechabrimInfo; break;
                 case 'verter': infoObj = verterInfo; break;
                 case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
-                case 'piyutim': infoObj = piyutimInfo; break;
                 case 'collections': infoObj = collectionsInfo; break;
                 case 'albums': infoObj = albumsInfo; break;
                 case 'documents': infoObj = documentsInfo; break;
@@ -16294,7 +14769,6 @@
                 'mechabrim': 'mechabrim',
                 'verter': 'verter',
                 'zmanim': 'zmanim',
-                'piyutim': 'piyutim',
                 'collections': 'collections',
                 'albums': 'albums',
                 'documents': 'documents',
@@ -16387,11 +14861,6 @@
                     } else {
                         typeName = 'זמן';
                     }
-                    break;
-                case 'piyutim':
-                    infoObj = piyutimInfo;
-                    icon = '';
-                    typeName = 'פיוט';
                     break;
                 case 'collections':
                     infoObj = collectionsInfo;
@@ -17482,49 +15951,6 @@
 
             // Hide loading wave bar
             const loader = document.getElementById('collectionLoader');
-            if (loader) setTimeout(() => loader.classList.remove('active'), 500);
-        }
-
-        // Render piyutim page
-        function renderPiyutimPage(container) {
-            // Get all piyutim from piyutimInfo
-            const sortedPiyutim = Object.keys(piyutimInfo).sort((a, b) => a.localeCompare(b, 'he'));
-
-            container.innerHTML = `
-                <div class="page-theme-piyut">
-                    <div class="page-title">
-                        <div class="page-title-bar">פיוטים</div>
-                        <div class="page-title-content">
-                            <div class="subtitle"><span class="subtitle-count">0</span> פיוטים</div>
-                            <div class="loading-wave-bar active" id="piyutimLoader"></div>
-                        </div>
-                    </div>
-
-                    <div class="category-grid" id="piyutimGrid">
-                        ${sortedPiyutim.map(piyutName => {
-                const info = piyutimInfo[piyutName] || {};
-                const songCount = categories.zmanim[piyutName]?.length || 0;
-                const piyutId = info.customId || piyutName;
-                return `
-                            <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
-                                <div class="category-card-content">
-                                    <div class="category-card-info">
-                                        <div class="category-card-title">${piyutName}</div>
-                                        ${songCount > 0 ? `<div class="category-card-count">${songCount} ניגונים</div>` : ''}
-                                    </div>
-                                </div>
-                            </a>
-                        `;
-            }).join('')}
-                    </div>
-                </div>
-            `;
-
-            const countEl = container.querySelector('.subtitle-count');
-            if (countEl) animateCountUp(countEl, sortedPiyutim.length);
-
-            // Hide loading wave bar
-            const loader = document.getElementById('piyutimLoader');
             if (loader) setTimeout(() => loader.classList.remove('active'), 500);
         }
 
@@ -18671,21 +17097,20 @@
                     themeClass = 'tooltip-verter';
                     break;
                 case 'zman':
+                    categoryKey = 'zmanim';
                     // Check if it's a piyut or zman
                     if (piyutimInfo[value]) {
-                        categoryKey = 'piyutim';
                         typeName = 'פיוט';
                         extraInfo = piyutimInfo[value];
                         themeClass = 'tooltip-piyut';
                     } else {
-                        categoryKey = 'zmanim';
                         typeName = 'זמן';
                         extraInfo = zmaninInfo[value];
                         themeClass = 'tooltip-zman';
                     }
                     break;
                 case 'piyut':
-                    categoryKey = 'piyutim';
+                    categoryKey = 'zmanim';
                     typeName = 'פיוט';
                     extraInfo = piyutimInfo[value];
                     themeClass = 'tooltip-piyut';
@@ -20720,43 +19145,6 @@
         setTimeout(() => {
             initTypingForInput('homeSearchInput');
         }, 500);
-
-        // Header hide on scroll down, show on scroll up
-        (function () {
-            const header = document.querySelector('.main-header');
-            if (!header) return;
-
-            let lastScrollY = window.scrollY;
-            let ticking = false;
-
-            function updateHeader() {
-                const currentScrollY = window.scrollY;
-
-                // Only hide if scrolled past 100px
-                if (currentScrollY > 100) {
-                    if (currentScrollY > lastScrollY) {
-                        // Scrolling down - hide header
-                        header.classList.add('header-hidden');
-                    } else {
-                        // Scrolling up - show header
-                        header.classList.remove('header-hidden');
-                    }
-                } else {
-                    // At top - always show header
-                    header.classList.remove('header-hidden');
-                }
-
-                lastScrollY = currentScrollY;
-                ticking = false;
-            }
-
-            window.addEventListener('scroll', function () {
-                if (!ticking) {
-                    window.requestAnimationFrame(updateHeader);
-                    ticking = true;
-                }
-            }, { passive: true });
-        })();
     </script>
 </body>
 
