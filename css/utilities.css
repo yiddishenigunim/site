@@ -1,0 +1,176 @@
+/**
+ * Utility Classes - Consolidated theming system
+ * Replaces 18+ individual classes with 3 reusable utilities
+ */
+
+/* ========================================
+   PAGE THEMES - Consolidated
+   ======================================== */
+
+/* Base page theme class - works with any theme color */
+.page-theme {
+    background: linear-gradient(180deg,
+        var(--theme-pale, var(--color-home-pale)) 0%,
+        color-mix(in srgb, var(--theme-pale, var(--color-home-pale)) 30%, #f8fafc) 300px,
+        #f8fafc 100%
+    );
+}
+
+/* Theme color definitions - just set the variable */
+.theme-chatzer {
+    --theme-pale: var(--color-chatzer-pale);
+    --theme-color: var(--color-chatzer);
+    --theme-light: var(--color-chatzer-light);
+}
+.theme-mechaber {
+    --theme-pale: var(--color-mechaber-pale);
+    --theme-color: var(--color-mechaber);
+    --theme-light: var(--color-mechaber-light);
+}
+.theme-verter {
+    --theme-pale: var(--color-verter-pale);
+    --theme-color: var(--color-verter);
+    --theme-light: var(--color-verter-light);
+}
+.theme-zman {
+    --theme-pale: var(--color-zman-pale);
+    --theme-color: var(--color-zman);
+    --theme-light: var(--color-zman-light);
+}
+.theme-collection {
+    --theme-pale: var(--color-collection-pale);
+    --theme-color: var(--color-collection);
+    --theme-light: var(--color-collection-light);
+}
+.theme-piyut {
+    --theme-pale: var(--color-piyut-pale);
+    --theme-color: var(--color-piyut);
+    --theme-light: var(--color-piyut-light);
+}
+.theme-nigun {
+    --theme-pale: var(--color-nigun-pale);
+    --theme-color: var(--color-nigun);
+    --theme-light: var(--color-nigun-light);
+}
+.theme-music {
+    --theme-pale: var(--color-music-pale);
+    --theme-color: var(--color-music);
+    --theme-light: var(--color-music-light);
+}
+.theme-resource {
+    --theme-pale: var(--color-resource-pale);
+    --theme-color: var(--color-resource);
+    --theme-light: var(--color-resource-light);
+}
+.theme-document {
+    --theme-pale: var(--color-document-pale);
+    --theme-color: var(--color-document);
+    --theme-light: var(--color-document-light);
+}
+.theme-album {
+    --theme-pale: var(--color-album-pale);
+    --theme-color: var(--color-album);
+    --theme-light: var(--color-album-light);
+}
+
+/* Loading wave bar theming */
+.page-theme .loading-wave-bar.active::before {
+    background: linear-gradient(90deg,
+        transparent 0%,
+        var(--theme-light) 25%,
+        var(--theme-color) 50%,
+        var(--theme-light) 75%,
+        transparent 100%
+    );
+}
+
+/* Page title bar theming */
+.page-theme .page-title-bar {
+    background: var(--theme-color);
+}
+
+/* ========================================
+   NAV DROPDOWN BUTTONS - Consolidated
+   ======================================== */
+
+/* Base nav button style - works with any theme color */
+/* Use with two classes: nav-dropdown-btn theme-{name} */
+.nav-dropdown-btn.theme-chatzer,
+.nav-dropdown-btn.theme-mechaber,
+.nav-dropdown-btn.theme-verter,
+.nav-dropdown-btn.theme-zman,
+.nav-dropdown-btn.theme-document,
+.nav-dropdown-btn.theme-collection,
+.nav-dropdown-btn.theme-piyut,
+.nav-dropdown-btn.theme-nigun,
+.nav-dropdown-btn.theme-music,
+.nav-dropdown-btn.theme-resource,
+.nav-dropdown-btn.theme-album {
+    background: white;
+    color: var(--theme-color);
+    border: 2px solid var(--theme-color);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--theme-color) 20%, transparent);
+}
+
+.nav-dropdown:hover .nav-dropdown-btn.theme-chatzer,
+.nav-dropdown:hover .nav-dropdown-btn.theme-mechaber,
+.nav-dropdown:hover .nav-dropdown-btn.theme-verter,
+.nav-dropdown:hover .nav-dropdown-btn.theme-zman,
+.nav-dropdown:hover .nav-dropdown-btn.theme-document,
+.nav-dropdown:hover .nav-dropdown-btn.theme-collection,
+.nav-dropdown:hover .nav-dropdown-btn.theme-piyut,
+.nav-dropdown:hover .nav-dropdown-btn.theme-nigun,
+.nav-dropdown:hover .nav-dropdown-btn.theme-music,
+.nav-dropdown:hover .nav-dropdown-btn.theme-resource,
+.nav-dropdown:hover .nav-dropdown-btn.theme-album {
+    background: var(--theme-pale);
+    transform: translateY(3px) scale(1.05);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--theme-color) 40%, transparent);
+}
+
+/* ========================================
+   CARD TAGS - Consolidated
+   ======================================== */
+
+/* Base tag style - works with any theme color */
+.card-tag {
+    display: inline-block;
+    background: var(--theme-color);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 12px;
+    font-size: 0.75em;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+}
+
+.card-tag:hover {
+    transform: scale(1.05);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--theme-color) 30%, transparent);
+}
+
+/* ========================================
+   CARD DISPLAYS - Consolidated
+   ======================================== */
+
+.card-display {
+    display: inline-block;
+    background: white;
+    color: var(--theme-color);
+    border: 1.5px solid var(--theme-color);
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.7em;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+
+.card-display:hover {
+    background: var(--theme-pale);
+    transform: scale(1.05);
+    box-shadow: 0 2px 6px color-mix(in srgb, var(--theme-color) 20%, transparent);
+}

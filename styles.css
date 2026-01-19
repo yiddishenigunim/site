@@ -341,48 +341,7 @@
             }
         }
 
-        /* Category-themed loading wave bars */
-        .page-theme-chatzer .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-chatzer-light) 25%, var(--color-chatzer) 50%, var(--color-chatzer-light) 75%, transparent 100%);
-        }
-
-        .page-theme-mechaber .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-mechaber-light) 25%, var(--color-mechaber) 50%, var(--color-mechaber-light) 75%, transparent 100%);
-        }
-
-        .page-theme-verter .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-verter-light) 25%, var(--color-verter) 50%, var(--color-verter-light) 75%, transparent 100%);
-        }
-
-        .page-theme-zman .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-zman-light) 25%, var(--color-zman) 50%, var(--color-zman-light) 75%, transparent 100%);
-        }
-
-        .page-theme-collection .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-collection-light) 25%, var(--color-collection) 50%, var(--color-collection-light) 75%, transparent 100%);
-        }
-
-        .page-theme-piyut .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-piyut-light) 25%, var(--color-piyut) 50%, var(--color-piyut-light) 75%, transparent 100%);
-        }
-
-        .page-theme-resource .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-resource-light) 25%, var(--color-resource) 50%, var(--color-resource-light) 75%, transparent 100%);
-        }
-
-        .page-theme-document .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-document-light) 25%, var(--color-document) 50%, var(--color-document-light) 75%, transparent 100%);
-        }
-
-        .page-theme-album .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-album-light) 25%, var(--color-album) 50%, var(--color-album-light) 75%, transparent 100%);
-        }
-
-        .page-theme-music .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-music-light) 25%, var(--color-music) 50%, var(--color-music-light) 75%, transparent 100%);
-        }
-
-        .subtitle {
+        /* Category-themed loading wave bars */.subtitle {
             transition: opacity 0.3s ease-out;
         }
 
@@ -1173,68 +1132,11 @@
             transform: rotate(180deg);
         }
 
-        /* Each button with its own category color border */
-        .nav-dropdown-btn.nav-mechaber {
-            background: white;
-            color: var(--color-mechaber);
-            border: 2px solid var(--color-mechaber);
-            box-shadow: 0 2px 8px rgba(196, 53, 168, 0.2);
-        }
-
-        .nav-dropdown-btn.nav-mechaber:hover,
-        .nav-dropdown:hover .nav-dropdown-btn.nav-mechaber {
-            background: var(--color-mechaber-pale);
-            transform: translateY(3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(196, 53, 168, 0.4);
-        }
-
-        .nav-dropdown-btn.nav-verter {
-            background: white;
-            color: var(--color-verter);
-            border: 2px solid var(--color-verter);
-            box-shadow: 0 2px 8px rgba(107, 114, 128, 0.2);
-        }
-
-        .nav-dropdown-btn.nav-verter:hover,
-        .nav-dropdown:hover .nav-dropdown-btn.nav-verter {
-            background: var(--color-verter-pale);
-            transform: translateY(3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.4);
-        }
-
-        .nav-dropdown-btn.nav-zman {
-            background: white;
-            color: var(--color-zman);
-            border: 2px solid var(--color-zman);
-            box-shadow: 0 2px 8px rgba(233, 106, 27, 0.2);
-        }
-
-        .nav-dropdown-btn.nav-zman:hover,
-        .nav-dropdown:hover .nav-dropdown-btn.nav-zman {
-            background: var(--color-zman-pale);
-            transform: translateY(3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(233, 106, 27, 0.4);
-        }
-
-        .nav-dropdown-btn.nav-docs {
-            background: white;
-            color: var(--color-document);
-            border: 2px solid var(--color-document);
-            box-shadow: 0 2px 8px rgba(0, 160, 176, 0.2);
-            border-radius: 10px;
-            padding: 6px 12px;
-            gap: 3px;
-            font-size: 0.82em;
-        }
-
-        .nav-dropdown-btn.nav-docs:hover,
-        .nav-dropdown:hover .nav-dropdown-btn.nav-docs {
-            background: var(--color-document-pale);
-            transform: translateY(3px) scale(1.05);
-            box-shadow: 0 6px 20px rgba(0, 160, 176, 0.4);
-        }
-
-        .nav-dropdown-content {
+        /* Each button with its own category color border */.nav-dropdown-btn.nav-mechaber:hover,
+        .nav-dropdown:hover.nav-dropdown-btn.nav-verter:hover,
+        .nav-dropdown:hover.nav-dropdown-btn.nav-zman:hover,
+        .nav-dropdown:hover.nav-dropdown-btn.nav-docs:hover,
+        .nav-dropdown:hover.nav-dropdown-content {
             display: none;
             position: absolute;
             top: 100%;
@@ -2281,8 +2183,6 @@
             transform: scale(1.03);
         }
 
-
-
         .home-stats-link:hover .home-stats-link-line {
             background: var(--color-mechaber);
         }
@@ -2294,7 +2194,6 @@
         .home-stats-link:hover .home-stats-link-line.left {
             background: var(--color-mechaber);
         }
-
 
         .home-section-title {
             text-align: center;
@@ -2728,48 +2627,7 @@
             }
         }
 
-        /* Category-themed page titles */
-        .page-theme-chatzer .page-title-bar {
-            background: var(--color-chatzer);
-        }
-
-        .page-theme-mechaber .page-title-bar {
-            background: var(--color-mechaber);
-        }
-
-        .page-theme-verter .page-title-bar {
-            background: var(--color-verter);
-        }
-
-        .page-theme-zman .page-title-bar {
-            background: var(--color-zman);
-        }
-
-        .page-theme-collection .page-title-bar {
-            background: var(--color-collection);
-        }
-
-        .page-theme-piyut .page-title-bar {
-            background: var(--color-piyut);
-        }
-
-        .page-theme-nigun .page-title-bar {
-            background: var(--color-nigun);
-        }
-
-        .page-theme-resource .page-title-bar {
-            background: var(--color-resource);
-        }
-
-        .page-theme-document .page-title-bar {
-            background: var(--color-document);
-        }
-
-        .page-theme-album .page-title-bar {
-            background: var(--color-album);
-        }
-
-        /* Full-width page theme backgrounds */
+        /* Category-themed page titles *//* Full-width page theme backgrounds */
         .page-theme-chatzer,
         .page-theme-mechaber,
         .page-theme-verter,
@@ -2787,53 +2645,7 @@
             padding-left: calc(50vw - 50%);
             padding-right: calc(50vw - 50%);
             min-height: calc(100vh - 180px);
-        }
-
-        .page-theme-chatzer {
-            background: linear-gradient(180deg, var(--color-chatzer-pale) 0%, color-mix(in srgb, var(--color-chatzer-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-mechaber {
-            background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-verter {
-            background: linear-gradient(180deg, var(--color-verter-pale) 0%, color-mix(in srgb, var(--color-verter-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-zman {
-            background: linear-gradient(180deg, var(--color-zman-pale) 0%, color-mix(in srgb, var(--color-zman-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-collection {
-            background: linear-gradient(180deg, var(--color-collection-pale) 0%, color-mix(in srgb, var(--color-collection-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-piyut {
-            background: linear-gradient(180deg, var(--color-piyut-pale) 0%, color-mix(in srgb, var(--color-piyut-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-nigun {
-            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-resource {
-            background: linear-gradient(180deg, var(--color-resource-pale) 0%, color-mix(in srgb, var(--color-resource-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-document {
-            background: linear-gradient(180deg, var(--color-document-pale) 0%, color-mix(in srgb, var(--color-document-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-album {
-            background: linear-gradient(180deg, var(--color-album-pale) 0%, color-mix(in srgb, var(--color-album-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        .page-theme-music {
-            background: linear-gradient(180deg, var(--color-music-pale) 0%, color-mix(in srgb, var(--color-music-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
-        }
-
-        /* Center content within full-width themed pages */
+        }/* Center content within full-width themed pages */
         .page-theme-chatzer>*,
         .page-theme-mechaber>*,
         .page-theme-verter>*,
@@ -7926,7 +7738,6 @@
             color: rgba(255, 255, 255, 0.9);
         }
 
-
         .songs-card {
             background: white;
             border-radius: 16px;
@@ -9615,7 +9426,6 @@
             color: white;
         }
 
-
         .sidebar-filter {
             margin-bottom: 6px;
         }
@@ -9940,8 +9750,6 @@
             background: #e74c3c;
             color: white;
         }
-
-
 
         .filters-row {
             display: flex;

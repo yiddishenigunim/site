@@ -1768,17 +1768,18 @@
         // Navigation - with lazy loading
         // Generate skeleton loader HTML for a page
         function getSkeletonForPage(page) {
+            // Using consolidated utility classes: 'page-theme theme-{name}'
             const pageThemes = {
-                'songs': 'page-theme-nigun',
-                'chatzeros': 'page-theme-chatzer',
-                'mechabrim': 'page-theme-mechaber',
-                'verter': 'page-theme-verter',
-                'zmanim': 'page-theme-zman',
-                'collections': 'page-theme-collection',
-                'resources': 'page-theme-resource',
-                'documents': 'page-theme-document',
-                'albums': 'page-theme-album',
-                'music': 'page-theme-music'
+                'songs': 'page-theme theme-nigun',
+                'chatzeros': 'page-theme theme-chatzer',
+                'mechabrim': 'page-theme theme-mechaber',
+                'verter': 'page-theme theme-verter',
+                'zmanim': 'page-theme theme-zman',
+                'collections': 'page-theme theme-collection',
+                'resources': 'page-theme theme-resource',
+                'documents': 'page-theme theme-document',
+                'albums': 'page-theme theme-album',
+                'music': 'page-theme theme-music'
             };
 
             // Page titles and subtitles for real headers
@@ -1795,7 +1796,7 @@
                 'music': { title: 'מוזיק', subtitle: 'מוזיק', countLabel: 'מוזיק' }
             };
 
-            const themeClass = pageThemes[page] || 'page-theme-nigun';
+            const themeClass = pageThemes[page] || 'page-theme theme-nigun';
             const pageInfo = pageTitles[page] || { title: '', subtitle: '', countLabel: '' };
 
             // Songs page has a different layout with sidebar
@@ -2834,7 +2835,7 @@
             };
 
             container.innerHTML = `
-                <div class="page-theme-nigun">
+                <div class="page-theme theme-nigun">
                     <div class="page-title">
                         <div class="page-title-bar">ניגונים</div>
                         <div class="page-title-content">
@@ -5269,7 +5270,7 @@
 
             // Build HTML
             let html = `
-                <div class="page-theme-zman">
+                <div class="page-theme theme-zman">
                     <div class="page-title">
                         <div class="page-title-bar">זמנים</div>
                         <div class="page-title-content">
@@ -5846,7 +5847,7 @@
             const sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
 
             container.innerHTML = `
-                <div class="page-theme-collection">
+                <div class="page-theme theme-collection">
                     <div class="page-title">
                         <div class="page-title-bar">קאלעקשאנס</div>
                         <div class="page-title-content">
@@ -5905,7 +5906,7 @@
             const sortedPiyutim = Object.keys(piyutimInfo).sort((a, b) => a.localeCompare(b, 'he'));
 
             container.innerHTML = `
-                <div class="page-theme-piyut">
+                <div class="page-theme theme-piyut">
                     <div class="page-title">
                         <div class="page-title-bar">פיוטים</div>
                         <div class="page-title-content">
@@ -5967,7 +5968,7 @@
             });
 
             container.innerHTML = `
-                <div class="page-theme-music">
+                <div class="page-theme theme-music">
                     <div class="page-title">
                         <div class="page-title-bar" style="background: var(--color-music);">מוזיק</div>
                         <div class="page-title-content">
@@ -6280,11 +6281,11 @@
             let infoObj = {};
             let themeClass = '';
             switch (categoryKey) {
-                case 'chatzeros': infoObj = chatzerosInfo; themeClass = 'page-theme-chatzer'; break;
-                case 'mechabrim': infoObj = mechabrimInfo; themeClass = 'page-theme-mechaber'; break;
-                case 'verter': infoObj = verterInfo; themeClass = 'page-theme-verter'; break;
-                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); themeClass = 'page-theme-zman'; break;
-                case 'collections': infoObj = collectionsInfo; themeClass = 'page-theme-collection'; break;
+                case 'chatzeros': infoObj = chatzerosInfo; themeClass = 'page-theme theme-chatzer'; break;
+                case 'mechabrim': infoObj = mechabrimInfo; themeClass = 'page-theme theme-mechaber'; break;
+                case 'verter': infoObj = verterInfo; themeClass = 'page-theme theme-verter'; break;
+                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); themeClass = 'page-theme theme-zman'; break;
+                case 'collections': infoObj = collectionsInfo; themeClass = 'page-theme theme-collection'; break;
             }
 
             // Check if we're coming from skeleton (skeleton-grid exists)
@@ -6375,11 +6376,11 @@
             let infoObj = {};
             let themeClass = '';
             switch (categoryKey) {
-                case 'chatzeros': infoObj = chatzerosInfo; themeClass = 'page-theme-chatzer'; break;
-                case 'mechabrim': infoObj = mechabrimInfo; themeClass = 'page-theme-mechaber'; break;
-                case 'verter': infoObj = verterInfo; themeClass = 'page-theme-verter'; break;
-                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); themeClass = 'page-theme-zman'; break;
-                case 'collections': infoObj = collectionsInfo; themeClass = 'page-theme-collection'; break;
+                case 'chatzeros': infoObj = chatzerosInfo; themeClass = 'page-theme theme-chatzer'; break;
+                case 'mechabrim': infoObj = mechabrimInfo; themeClass = 'page-theme theme-mechaber'; break;
+                case 'verter': infoObj = verterInfo; themeClass = 'page-theme theme-verter'; break;
+                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); themeClass = 'page-theme theme-zman'; break;
+                case 'collections': infoObj = collectionsInfo; themeClass = 'page-theme theme-collection'; break;
             }
 
             container.innerHTML = `
@@ -6492,7 +6493,7 @@
             });
 
             let html = `
-                <div class="page-theme-resource">
+                <div class="page-theme theme-resource">
                     <div class="page-title">
                         <div class="page-title-bar">רעסורסן</div>
                         <div class="page-title-content">
@@ -6591,7 +6592,7 @@
             });
 
             let html = `
-                <div class="page-theme-document">
+                <div class="page-theme theme-document">
                     <div class="page-title">
                         <div class="page-title-bar">דאקומענטן</div>
                         <div class="page-title-content">
@@ -6704,7 +6705,7 @@
             });
 
             let html = `
-                <div class="page-theme-album">
+                <div class="page-theme theme-album">
                     <div class="page-title">
                         <div class="page-title-bar">אלבומס</div>
                         <div class="page-title-content">
@@ -6801,7 +6802,7 @@
             );
 
             container.innerHTML = `
-                <div class="detail-page page-theme-album">
+                <div class="detail-page page-theme theme-album">
                     <button class="back-button" onclick="navigateTo('albums')">
                         → אלבומס בלאט
                     </button>
@@ -6881,7 +6882,7 @@
             );
 
             container.innerHTML = `
-                <div class="detail-page page-theme-document">
+                <div class="detail-page page-theme theme-document">
                     <button class="back-button" onclick="navigateTo('documents')">
                         → דאקומענטן בלאט
                     </button>
@@ -6969,7 +6970,7 @@
             );
 
             container.innerHTML = `
-                <div class="detail-page page-theme-resource">
+                <div class="detail-page page-theme theme-resource">
                     <button class="back-button" onclick="navigateTo('resources')">
                         → רעסורסן בלאט
                     </button>
@@ -8402,7 +8403,7 @@
             // Show loading state
             const content = document.getElementById('mainContent');
             content.innerHTML = `
-                <div class="page-theme-nigun">
+                <div class="page-theme theme-nigun">
                     <div class="page-title">
                         <div class="page-title-bar">זוכט "${term}"...</div>
                         <div class="page-title-content">
@@ -8437,7 +8438,7 @@
             // Show loading state
             const content = document.getElementById('mainContent');
             content.innerHTML = `
-                <div class="page-theme-nigun">
+                <div class="page-theme theme-nigun">
                     <div class="page-title">
                         <div class="page-title-bar">זוכט "${term}"...</div>
                     </div>
@@ -8585,7 +8586,7 @@
                 matchingScale.length + matchingRitem.length + matchingGezungen.length;
 
             let html = `
-                <div class="page-theme-nigun">
+                <div class="page-theme theme-nigun">
                     <div class="page-title">
                         <div class="page-title-bar">רעזולטאטן פאר "${searchQuery}"</div>
                         <div class="page-title-content">
