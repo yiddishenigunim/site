@@ -9,11 +9,24 @@
 
 /* Base page theme class - works with any theme color */
 .page-theme {
+    position: relative;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
+    padding-left: calc(50vw - 50%);
+    padding-right: calc(50vw - 50%);
+    min-height: calc(100vh - 180px);
     background: linear-gradient(180deg,
         var(--theme-pale, var(--color-home-pale)) 0%,
         color-mix(in srgb, var(--theme-pale, var(--color-home-pale)) 30%, #f8fafc) 300px,
         #f8fafc 100%
     );
+}
+
+/* Center content within full-width themed pages */
+.page-theme > * {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 /* Theme color definitions - just set the variable */
@@ -264,4 +277,33 @@
 
 .category-group-header.themed .category-group-title {
     color: var(--theme-dark);
+}
+
+/* ========================================
+   CATEGORY CARDS - Consolidated
+   ======================================== */
+
+/* Category cards within themed pages - uses theme colors */
+.page-theme .category-card {
+    background: var(--theme-pale);
+    border-color: var(--theme-light);
+}
+
+.page-theme .category-card::after {
+    border-color: var(--theme-color);
+    box-shadow: 0 0 15px color-mix(in srgb, var(--theme-color) 15%, transparent);
+}
+
+.page-theme .category-card-title {
+    color: var(--theme-color);
+}
+
+/* ========================================
+   SKELETON LOADING - Consolidated
+   ======================================== */
+
+/* Skeleton cards within themed pages - uses theme pale color */
+.page-theme .skeleton-card,
+.page-theme .skeleton-song-row {
+    background: color-mix(in srgb, var(--theme-pale) 70%, white);
 }

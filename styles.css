@@ -2627,40 +2627,6 @@
             }
         }
 
-        /* Category-themed page titles *//* Full-width page theme backgrounds */
-        .page-theme-chatzer,
-        .page-theme-mechaber,
-        .page-theme-verter,
-        .page-theme-zman,
-        .page-theme-collection,
-        .page-theme-piyut,
-        .page-theme-nigun,
-        .page-theme-resource,
-        .page-theme-document,
-        .page-theme-album,
-        .page-theme-music {
-            position: relative;
-            margin-left: calc(-50vw + 50%);
-            margin-right: calc(-50vw + 50%);
-            padding-left: calc(50vw - 50%);
-            padding-right: calc(50vw - 50%);
-            min-height: calc(100vh - 180px);
-        }/* Center content within full-width themed pages */
-        .page-theme-chatzer>*,
-        .page-theme-mechaber>*,
-        .page-theme-verter>*,
-        .page-theme-zman>*,
-        .page-theme-collection>*,
-        .page-theme-nigun>*,
-        .page-theme-resource>*,
-        .page-theme-document>*,
-        .page-theme-album>*,
-        .page-theme-music>* {
-            max-width: 1200px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-
         /* Resources Page */
         .category-group {
             margin-bottom: 30px;
@@ -3801,70 +3767,6 @@
 
         /* Remove old hover border change - handled by ::after now */
 
-        .page-theme-chatzer .category-card {
-            background: var(--color-chatzer-pale);
-            border-color: var(--color-chatzer-light);
-        }
-
-        .page-theme-chatzer .category-card::after {
-            border-color: var(--color-chatzer);
-            box-shadow: 0 0 15px rgba(156, 91, 181, 0.15);
-        }
-
-        .page-theme-mechaber .category-card {
-            background: var(--color-mechaber-pale);
-            border-color: var(--color-mechaber-light);
-        }
-
-        .page-theme-mechaber .category-card::after {
-            border-color: var(--color-mechaber);
-            box-shadow: 0 0 15px rgba(239, 83, 80, 0.15);
-        }
-
-        .page-theme-verter .category-card {
-            background: var(--color-verter-pale);
-            border-color: var(--color-verter-light);
-        }
-
-        .page-theme-verter .category-card::after {
-            border-color: var(--color-verter);
-            box-shadow: 0 0 15px rgba(255, 167, 38, 0.15);
-        }
-
-        .page-theme-zman .category-card {
-            background: var(--color-zman-pale);
-            border-color: var(--color-zman-light);
-        }
-
-        .page-theme-zman .category-card::after {
-            border-color: var(--color-zman);
-            box-shadow: 0 0 15px rgba(66, 165, 245, 0.15);
-        }
-
-        .page-theme-collection .category-card {
-            background: var(--color-collection-pale);
-            border-color: var(--color-collection-light);
-        }
-
-        .page-theme-collection .category-card::after {
-            border-color: var(--color-collection);
-            box-shadow: 0 0 15px rgba(76, 175, 80, 0.15);
-        }
-
-        .page-theme-piyut .category-card {
-            background: var(--color-piyut-pale);
-            border-color: var(--color-piyut-light);
-        }
-
-        .page-theme-piyut .category-card::after {
-            border-color: var(--color-piyut);
-            box-shadow: 0 0 15px rgba(46, 139, 46, 0.15);
-        }
-
-        .page-theme-piyut .category-card-title {
-            color: var(--color-piyut);
-        }
-
         .category-card:hover {
             transform: translateY(-5px);
             box-shadow: var(--card-hover-shadow);
@@ -3902,7 +3804,7 @@
         }
 
         /* Round images for mechabrim cards */
-        .page-theme-mechaber .card-image {
+        .page-theme.theme-mechaber .card-image {
             border-radius: 50%;
         }
 
@@ -4542,7 +4444,7 @@
         }
 
         /* Show card icon for mechabrim as circular placeholder */
-        .page-theme-mechaber .card-icon {
+        .page-theme.theme-mechaber .card-icon {
             display: flex;
             width: 80px;
             height: 80px;
@@ -4553,7 +4455,7 @@
             flex-shrink: 0;
         }
 
-        .page-theme-mechaber .card-icon .mechaber-icon {
+        .page-theme.theme-mechaber .card-icon .mechaber-icon {
             width: 37px;
             height: 55px;
             background-color: var(--color-mechaber);
@@ -4562,8 +4464,8 @@
         }
 
         /* Hide icon when image loads successfully (inline style override) */
-        .page-theme-mechaber .card-icon[style*="display:none"],
-        .page-theme-mechaber .card-icon[style*="display: none"] {
+        .page-theme.theme-mechaber .card-icon[style*="display:none"],
+        .page-theme.theme-mechaber .card-icon[style*="display: none"] {
             display: none !important;
         }
 
@@ -4627,15 +4529,15 @@
         }
 
         /* Detail pages with page-theme classes need full-width override */
-        .detail-page.page-theme-album,
-        .detail-page.page-theme-document,
-        .detail-page.page-theme-resource {
+        .detail-page.page-theme.theme-album,
+        .detail-page.page-theme.theme-document,
+        .detail-page.page-theme.theme-resource {
             max-width: none;
         }
 
-        .detail-page.page-theme-album>*,
-        .detail-page.page-theme-document>*,
-        .detail-page.page-theme-resource>* {
+        .detail-page.page-theme.theme-album>*,
+        .detail-page.page-theme.theme-document>*,
+        .detail-page.page-theme.theme-resource>* {
             max-width: 900px;
             margin-left: auto;
             margin-right: auto;
@@ -8635,43 +8537,6 @@
         }
 
         /* Theme-specific skeleton colors */
-        .page-theme-chatzer .skeleton-card {
-            background: color-mix(in srgb, var(--color-chatzer-pale) 70%, white);
-        }
-
-        .page-theme-mechaber .skeleton-card {
-            background: color-mix(in srgb, var(--color-mechaber-pale) 70%, white);
-        }
-
-        .page-theme-verter .skeleton-card {
-            background: color-mix(in srgb, var(--color-verter-pale) 70%, white);
-        }
-
-        .page-theme-zman .skeleton-card {
-            background: color-mix(in srgb, var(--color-zman-pale) 70%, white);
-        }
-
-        .page-theme-collection .skeleton-card {
-            background: color-mix(in srgb, var(--color-collection-pale) 70%, white);
-        }
-
-        .page-theme-nigun .skeleton-card,
-        .page-theme-nigun .skeleton-song-row {
-            background: color-mix(in srgb, var(--color-nigun-pale) 70%, white);
-        }
-
-        .page-theme-resource .skeleton-card {
-            background: color-mix(in srgb, var(--color-resource-pale) 70%, white);
-        }
-
-        .page-theme-document .skeleton-card {
-            background: color-mix(in srgb, var(--color-document-pale) 70%, white);
-        }
-
-        .page-theme-album .skeleton-card {
-            background: color-mix(in srgb, var(--color-album-pale) 70%, white);
-        }
-
         .skeleton-songs-layout {
             display: flex;
             gap: 20px;
