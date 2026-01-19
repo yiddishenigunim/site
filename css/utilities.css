@@ -400,3 +400,30 @@
     transform: translateY(-5px);
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.1);
 }
+
+/* ========================================
+   LINK CARDS - Consolidated
+   ======================================== */
+
+/* Home page link cards with theme colors */
+/* Use with classes: home-link-card link-themed theme-{name} */
+.home-link-card.link-themed .home-link-title {
+    color: var(--theme-dark);
+}
+
+.home-link-card.link-themed:hover {
+    border-color: var(--theme-color);
+    background: var(--theme-pale);
+}
+
+/* ========================================
+   CARD HEADERS - Consolidated
+   ======================================== */
+
+/* Themed card headers with gradient backgrounds */
+/* For resource, document, and album cards */
+.page-theme.theme-resource .resource-card-header,
+.page-theme.theme-document .document-card-header,
+.page-theme.theme-album .album-card-header {
+    background: linear-gradient(135deg, var(--theme-color) 0%, var(--theme-light) 100%);
+}

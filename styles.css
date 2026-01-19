@@ -2134,88 +2134,6 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
         }
 
-        /* Category-colored link cards on home page */
-        .home-link-card.link-nigun .home-link-title {
-            color: var(--color-nigun-dark);
-        }
-
-        .home-link-card.link-nigun:hover {
-            border-color: var(--color-nigun);
-            background: var(--color-nigun-pale);
-        }
-
-        .home-link-card.link-chatzer .home-link-title {
-            color: var(--color-chatzer-dark);
-        }
-
-        .home-link-card.link-chatzer:hover {
-            border-color: var(--color-chatzer);
-            background: var(--color-chatzer-pale);
-        }
-
-        .home-link-card.link-mechaber .home-link-title {
-            color: var(--color-mechaber-dark);
-        }
-
-        .home-link-card.link-mechaber:hover {
-            border-color: var(--color-mechaber);
-            background: var(--color-mechaber-pale);
-        }
-
-        .home-link-card.link-verter .home-link-title {
-            color: var(--color-verter-dark);
-        }
-
-        .home-link-card.link-verter:hover {
-            border-color: var(--color-verter);
-            background: var(--color-verter-pale);
-        }
-
-        .home-link-card.link-zman .home-link-title {
-            color: var(--color-zman-dark);
-        }
-
-        .home-link-card.link-zman:hover {
-            border-color: var(--color-zman);
-            background: var(--color-zman-pale);
-        }
-
-        .home-link-card.link-collection .home-link-title {
-            color: var(--color-collection-dark);
-        }
-
-        .home-link-card.link-collection:hover {
-            border-color: var(--color-collection);
-            background: var(--color-collection-pale);
-        }
-
-        .home-link-card.link-resource .home-link-title {
-            color: var(--color-resource-dark);
-        }
-
-        .home-link-card.link-resource:hover {
-            border-color: var(--color-resource);
-            background: var(--color-resource-pale);
-        }
-
-        .home-link-card.link-document .home-link-title {
-            color: var(--color-document-dark);
-        }
-
-        .home-link-card.link-document:hover {
-            border-color: var(--color-document);
-            background: var(--color-document-pale);
-        }
-
-        .home-link-card.link-album .home-link-title {
-            color: var(--color-album-dark);
-        }
-
-        .home-link-card.link-album:hover {
-            border-color: var(--color-album);
-            background: var(--color-album-pale);
-        }
-
         .home-link-icon {
             font-size: 2.5em;
             width: 60px;
@@ -2594,7 +2512,6 @@
         }
 
         .resource-card-header {
-            background: linear-gradient(135deg, var(--color-resource) 0%, var(--color-resource-light) 100%);
             padding: 12px;
             display: flex;
             align-items: center;
@@ -2695,7 +2612,6 @@
         }
 
         .document-card-header {
-            background: linear-gradient(135deg, var(--color-document) 0%, var(--color-document-light) 100%);
             padding: 12px;
             display: flex;
             align-items: center;
@@ -2969,7 +2885,6 @@
         }
 
         .album-card-header {
-            background: linear-gradient(135deg, var(--color-album) 0%, var(--color-album-light) 100%);
             padding: 10px 15px;
             text-align: center;
         }
