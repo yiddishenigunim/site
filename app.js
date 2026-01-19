@@ -2087,25 +2087,25 @@
                         </a>
                         <div class="home-stats-right">
                             <div class="home-stats-row">
-                                <a class="home-stat-card stat-mechaber" href="#/mechabrim">
+                                <a class="home-stat-card stat-themed theme-mechaber" href="#/mechabrim">
                                     <div class="home-stat-number">${totalMechabrim}</div>
                                     <div class="home-stat-label">מחברים</div>
                                 </a>
-                                <a class="home-stat-card stat-chatzer" href="#/chatzeros">
+                                <a class="home-stat-card stat-themed theme-chatzer" href="#/chatzeros">
                                     <div class="home-stat-number">${totalChatzeros}</div>
                                     <div class="home-stat-label">חצרות</div>
                                 </a>
                             </div>
                             <div class="home-stats-row">
-                                <a class="home-stat-card stat-verter" href="#/verter">
+                                <a class="home-stat-card stat-themed theme-verter" href="#/verter">
                                     <div class="home-stat-number">${totalVerter}</div>
                                     <div class="home-stat-label">ווערטער</div>
                                 </a>
-                                <a class="home-stat-card stat-zman" href="#/zmanim">
+                                <a class="home-stat-card stat-themed theme-zman" href="#/zmanim">
                                     <div class="home-stat-number">${totalZmanim}</div>
                                     <div class="home-stat-label">זמנים</div>
                                 </a>
-                                <a class="home-stat-card stat-collection" href="#/collections">
+                                <a class="home-stat-card stat-themed theme-collection" href="#/collections">
                                     <div class="home-stat-number">${totalCollections}</div>
                                     <div class="home-stat-label">קאלעקשאנס</div>
                                 </a>
