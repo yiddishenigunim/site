@@ -311,6 +311,21 @@
             albums: { id: ALBUMS_TABLE_ID, store: () => albumsInfo, name: 'Albums' }
         };
 
+        // Page data requirements - what data each page needs loaded
+        const PAGE_DATA_REQUIREMENTS = {
+            songs: { primary: null, needsSongs: 'wait' }, // Special case: load songs directly
+            chatzeros: { primary: 'chatzeros', needsSongs: 'background' },
+            mechabrim: { primary: 'mechabrim', needsSongs: 'background' },
+            verter: { primary: 'verter', needsSongs: 'background' },
+            zmanim: { primary: 'zmanim', additional: ['piyutim'], needsSongs: 'background' },
+            collections: { primary: 'collections', needsSongs: 'background' },
+            piyutim: { primary: 'piyutim', needsSongs: 'background' },
+            resources: { primary: 'resources', needsSongs: false },
+            documents: { primary: 'documents', needsSongs: false },
+            albums: { primary: 'albums', needsSongs: false },
+            search: { primary: null, loadAll: ['chatzeros', 'mechabrim', 'verter', 'albums', 'zmanim', 'piyutim', 'collections'] }
+        };
+
         // --- Helper: Generate loader HTML (consolidated) ---
         function getLoaderHTML(size = 'medium') {
             const notes = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
@@ -1119,120 +1134,61 @@
         }
 
         // Ensure required data is loaded for a specific page
+        // Consolidated data loading using PAGE_DATA_REQUIREMENTS
         async function ensureDataForPage(page, waitForAll = false) {
-            switch (page) {
-                case 'songs':
-                    if (!loadedCategories.songs) {
-                        await fetchSongsInBackground();
+            const requirements = PAGE_DATA_REQUIREMENTS[page];
+            if (!requirements) return; // Unknown page
+
+            // Special case: songs page
+            if (page === 'songs') {
+                if (!loadedCategories.songs) {
+                    await fetchSongsInBackground();
+                }
+                if (waitForAll && !songsFullyLoaded) {
+                    await fetchSongsInBackground();
+                }
+                return;
+            }
+
+            // Special case: search - load all data
+            if (requirements.loadAll) {
+                const promises = [];
+                requirements.loadAll.forEach(key => {
+                    if (!loadedCategories[key]) {
+                        promises.push(fetchTableData(key).then(() => loadedCategories[key] = true));
                     }
-                    // For detail pages, wait for ALL songs to be loaded, not just first batch
-                    if (waitForAll && !songsFullyLoaded) {
-                        await fetchSongsInBackground();
+                });
+                if (!loadedCategories.songs) {
+                    promises.push(fetchSongsInBackground());
+                }
+                await Promise.all(promises);
+                return;
+            }
+
+            // Standard case: load primary data
+            if (requirements.primary) {
+                const key = requirements.primary;
+                if (!loadedCategories[key]) {
+                    await fetchTableData(key);
+                    loadedCategories[key] = true;
+                }
+            }
+
+            // Load additional data if specified
+            if (requirements.additional) {
+                for (const key of requirements.additional) {
+                    if (!loadedCategories[key]) {
+                        await fetchTableData(key);
+                        loadedCategories[key] = true;
                     }
-                    break;
-                case 'chatzeros':
-                    if (!loadedCategories.chatzeros) {
-                        await fetchChatzerosInfo();
-                        loadedCategories.chatzeros = true;
-                    }
-                    // Also need songs for counts
-                    if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
-                    }
-                    break;
-                case 'mechabrim':
-                    if (!loadedCategories.mechabrim) {
-                        await fetchMechabrimInfo();
-                        loadedCategories.mechabrim = true;
-                    }
-                    if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
-                    }
-                    break;
-                case 'verter':
-                    if (!loadedCategories.verter) {
-                        await fetchVerterInfo();
-                        loadedCategories.verter = true;
-                    }
-                    if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
-                    }
-                    break;
-                case 'zmanim':
-                    if (!loadedCategories.zmanim) {
-                        await fetchZmanimInfo();
-                        loadedCategories.zmanim = true;
-                    }
-                    if (!loadedCategories.piyutim) {
-                        await fetchPiyutimInfo();
-                        loadedCategories.piyutim = true;
-                    }
-                    if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
-                    }
-                    break;
-                case 'collections':
-                    if (!loadedCategories.collections) {
-                        await fetchCollectionsInfo();
-                        loadedCategories.collections = true;
-                    }
-                    if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
-                    }
-                    break;
-                case 'piyutim':
-                    if (!loadedCategories.piyutim) {
-                        await fetchPiyutimInfo();
-                        loadedCategories.piyutim = true;
-                    }
-                    if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
-                    }
-                    break;
-                case 'resources':
-                    if (!loadedCategories.resources) {
-                        await fetchResourcesInfo();
-                        loadedCategories.resources = true;
-                    }
-                    break;
-                case 'documents':
-                    if (!loadedCategories.documents) {
-                        await fetchDocumentsInfo();
-                        loadedCategories.documents = true;
-                    }
-                    break;
-                case 'albums':
-                    if (!loadedCategories.albums) {
-                        await fetchAlbumsInfo();
-                        loadedCategories.albums = true;
-                    }
-                    break;
-                case 'search':
-                    // For search, we need ALL data loaded
-                    const searchPromises = [];
-                    if (!loadedCategories.chatzeros) {
-                        searchPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
-                    }
-                    if (!loadedCategories.mechabrim) {
-                        searchPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
-                    }
-                    if (!loadedCategories.verter) {
-                        searchPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
-                    }
-                    if (!loadedCategories.zmanim) {
-                        searchPromises.push(fetchZmanimInfo().then(() => loadedCategories.zmanim = true));
-                    }
-                    if (!loadedCategories.collections) {
-                        searchPromises.push(fetchCollectionsInfo().then(() => loadedCategories.collections = true));
-                    }
-                    if (!loadedCategories.albums) {
-                        searchPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
-                    }
-                    if (!loadedCategories.songs) {
-                        searchPromises.push(fetchSongsInBackground());
-                    }
-                    await Promise.all(searchPromises);
-                    break;
+                }
+            }
+
+            // Load songs in background if needed
+            if (requirements.needsSongs === 'background' && !loadedCategories.songs) {
+                fetchSongsInBackground(); // Don't await - load in background
+            } else if (requirements.needsSongs === 'wait' && !loadedCategories.songs) {
+                await fetchSongsInBackground();
             }
         }
 
@@ -6369,111 +6325,6 @@
         }
 
         // OLD CODE BELOW - keeping structure for reference
-        function renderCategoryPage_OLD(container, categoryKey, title, icon, subtitle) {
-            const data = categories[categoryKey];
-            const sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
-
-            // Get the right info object and theme class for this category
-            let infoObj = {};
-            let themeClass = '';
-            switch (categoryKey) {
-                case 'chatzeros': infoObj = chatzerosInfo; themeClass = 'page-theme theme-chatzer'; break;
-                case 'mechabrim': infoObj = mechabrimInfo; themeClass = 'page-theme theme-mechaber'; break;
-                case 'verter': infoObj = verterInfo; themeClass = 'page-theme theme-verter'; break;
-                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); themeClass = 'page-theme theme-zman'; break;
-                case 'collections': infoObj = collectionsInfo; themeClass = 'page-theme theme-collection'; break;
-            }
-
-            container.innerHTML = `
-                <div class="${themeClass}">
-                    <div class="page-title">
-                        <div class="page-title-bar">${title}</div>
-                        <div class="page-title-content">
-                            <div class="subtitle">${subtitle} • ${sortedKeys.length} קאטעגאריעס</div>
-                        </div>
-                    </div>
-
-                    <div class="category-grid" id="categoryGrid">
-                        ${sortedKeys.map(key => {
-                const info = infoObj[key] || {};
-                const hasImage = !!info.image;
-                const songCount = data[key].length;
-                const itemId = info.customId || key;
-
-                // Only show chatzer tags for mechabrim
-                const chatzeros = (categoryKey === 'mechabrim' && info.chatzer)
-                    ? info.chatzer.split(',').map(c => c.trim()).filter(Boolean)
-                    : [];
-
-                // Count mechabrim for chatzeros
-                let mechabrimCount = 0;
-                if (categoryKey === 'chatzeros') {
-                    mechabrimCount = Object.entries(mechabrimInfo)
-                        .filter(([mechName, mechInfo]) => {
-                            if (!mechInfo.chatzer) return false;
-                            const mechChatzeros = mechInfo.chatzer.split(',').map(c => c.trim());
-                            return mechChatzeros.includes(key);
-                        }).length;
-                }
-
-                return `
-                            <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
-                                <div class="card-header">
-                                    ${hasImage ? `
-                                        <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                                        <div class="card-icon" style="display:none;">${icon}</div>
-                                    ` : `
-                                        <div class="card-icon">${icon}</div>
-                                    `}
-                                    <div class="card-header-text">
-                                        ${(() => {
-                        if (categoryKey === 'mechabrim') {
-                            // Build full name like tooltip does
-                            const nameParts = [info.title, info.firstName, info.lastName, info.suffix].filter(Boolean);
-                            const fullName = nameParts.length > 0 ? nameParts.join(' ') : key;
-
-                            // Build full dates
-                            const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
-                            const deathParts = [info.deathDay, info.deathMonth, info.deathYear].filter(Boolean);
-                            const birthDate = birthParts.join(' ');
-                            const deathDate = deathParts.join(' ');
-                            const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
-
-                            return `
-                                                    <div class="card-title">${fullName}</div>
-                                                    ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
-                                                `;
-                        } else {
-                            return `<div class="card-title">${key}</div>`;
-                        }
-                    })()}
-                                        ${chatzeros.length > 0 ? `
-                                            <div class="card-tags" onclick="event.stopPropagation();">
-                                                ${chatzeros.map(chatzer => `
-                                                    <span class="card-chatzer-tag"
-                                                          data-action="filter"
-                                                          data-page="chatzeros"
-                                                          data-filter-key="chatzer"
-                                                          data-value="${escapeHtml(chatzer)}"
-                                                          data-tooltip-value="${escapeHtml(chatzer)}"
-                                                          data-tooltip-type="chatzer">${chatzer}</span>
-                                                `).join('')}
-                                            </div>
-                                        ` : ''}
-                                        <div class="card-stats">
-                                            ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${mechabrimCount} מחברים</span>` : ''}
-                                            <span class="card-stat">${songCount} ניגונים</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </a>
-                        `}).join('')}
-                    </div>
-                </div>
-            `;
-        }
-
-        // Render resources page
         function renderResourcesPage(container) {
             const allKeys = Object.keys(resourcesInfo);
 
