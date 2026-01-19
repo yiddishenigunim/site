@@ -12714,6 +12714,25 @@
                     if (waitForAll && !songsFullyLoaded) {
                         await fetchSongsInBackground();
                     }
+                    // For nigun detail pages, also ensure related data is loaded (for links)
+                    if (waitForAll) {
+                        const relatedDataPromises = [];
+                        if (!loadedCategories.chatzeros) {
+                            relatedDataPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
+                        }
+                        if (!loadedCategories.mechabrim) {
+                            relatedDataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
+                        }
+                        if (!loadedCategories.verter) {
+                            relatedDataPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
+                        }
+                        if (!loadedCategories.albums) {
+                            relatedDataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
+                        }
+                        if (relatedDataPromises.length > 0) {
+                            await Promise.all(relatedDataPromises);
+                        }
+                    }
                     break;
                 case 'chatzeros':
                     if (!loadedCategories.chatzeros) {
@@ -12979,8 +12998,9 @@
                             }
 
                             // Update category page incrementally as songs load
+                            // Only update if we're on a category page, not on a detail page
                             const categoryPagesForUpdate = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections'];
-                            if (categoryPagesForUpdate.includes(currentPageView)) {
+                            if (categoryPagesForUpdate.includes(currentPageView) && !currentDetailView) {
                                 buildCategoryIndices();
                                 updateCategoryPageCards();
                             }
@@ -13001,8 +13021,9 @@
                     buildCategoryIndices();
 
                     // Update category page if user is viewing one (categories grew as songs loaded)
+                    // Only update if we're on a category page, not on a detail page
                     const categoryPagesList = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections'];
-                    if (categoryPagesList.includes(currentPageView)) {
+                    if (categoryPagesList.includes(currentPageView) && !currentDetailView) {
                         // Final update with all categories
                         updateCategoryPageCards();
                         // Make sure wave bar is hidden now that all songs are loaded
@@ -16082,9 +16103,10 @@
                 }
 
                 // Track if we're showing skeleton (data isn't loaded yet)
-                const hadSkeleton = targetPage !== 'home' && !isDataLoadedForPage(targetPage);
+                // IMPORTANT: Don't show category skeleton for detail pages (when idOrName exists)
+                const hadSkeleton = targetPage !== 'home' && !isDataLoadedForPage(targetPage) && !idOrName;
 
-                // Show skeleton loader if data not loaded
+                // Show skeleton loader if data not loaded (category pages only, not detail pages)
                 // For songs: don't await, let background fetch populate the grid
                 if (hadSkeleton) {
                     if (targetPage === 'songs') {
@@ -16130,9 +16152,23 @@
                     const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'piyutim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
                     const dataPage = page === 'zman' ? 'zmanim' : (page === 'piyutim' ? 'piyutim' : (page === 'nigunim' ? 'songs' : page));
 
+                    // IMPORTANT: Set currentDetailView FIRST before loading data
+                    // This prevents updateCategoryPageCards from running during fetchSongsInBackground
+                    const tempItemName = idOrName; // Use idOrName as temporary name
+                    if (page === 'zman') {
+                        currentPageView = 'zmanim';
+                        currentDetailView = { type: 'zman', name: tempItemName, id: null };
+                    } else if (page === 'nigunim') {
+                        currentPageView = 'songs';
+                        currentDetailView = { type: 'nigunim', name: tempItemName, id: null };
+                    } else {
+                        currentPageView = page;
+                        currentDetailView = { type: page, name: tempItemName, id: null };
+                    }
+
                     // Show loading indicator and ensure data is loaded for detail pages
-                    // For nigunim, need to check songsFullyLoaded, not just loadedCategories
-                    const needsLoading = page === 'nigunim' ? !songsFullyLoaded : !isDataLoadedForPage(dataPage);
+                    // Check if data is loaded for the page, and for nigunim, also check if all songs are fully loaded
+                    const needsLoading = !isDataLoadedForPage(dataPage) || (page === 'nigunim' && !songsFullyLoaded);
                     if (detailPages.includes(page) && needsLoading) {
                         if (content) {
                             content.innerHTML = `
@@ -16149,7 +16185,7 @@
                         await ensureDataForPage(dataPage, page === 'nigunim');
                     }
 
-                    // Find item by ID or name
+                    // Find item by ID or name (now that data is loaded)
                     const item = findItemByIdOrName(page, idOrName);
                     console.log('Found item:', item);
 
@@ -16164,19 +16200,10 @@
                     const itemId = item?.id || idOrName;
                     const itemCustomId = item?.customId;
 
-                    // Navigate to detail page
-                    if (page === 'zman') {
-                        // Zman detail page (shows piyutim and collections for a zman)
-                        currentPageView = 'zmanim';
-                        currentDetailView = { type: 'zman', name: itemName, id: itemId, customId: itemCustomId };
-                    } else if (page === 'nigunim') {
-                        // Nigun detail page (nigunim/1 format)
-                        currentPageView = 'songs';
-                        currentDetailView = { type: 'nigunim', name: itemName, id: itemId, customId: itemCustomId };
-                    } else {
-                        currentPageView = page;
-                        currentDetailView = { type: page, name: itemName, id: itemId, customId: itemCustomId };
-                    }
+                    // Update currentDetailView with the actual item details
+                    currentDetailView.name = itemName;
+                    currentDetailView.id = itemId;
+                    currentDetailView.customId = itemCustomId;
 
                     // Update nav buttons
                     document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -16305,7 +16332,8 @@
         }
 
         // Render detail page for a specific item
-        async function renderDetailPage() {
+        // All required data is loaded BEFORE this function is called (in handleURLChange/navigateToDetail)
+        function renderDetailPage() {
             console.log('renderDetailPage called, currentDetailView:', currentDetailView);
             const { type, name } = currentDetailView;
             const container = document.getElementById('mainContent');
@@ -16317,24 +16345,8 @@
             }
 
             // Handle nigun detail page separately
+            // Related data is already loaded by ensureDataForPage('songs', true) in handleURLChange
             if (type === 'nigunim') {
-                // Wait for related data to load so links have proper IDs
-                const dataPromises = [];
-                if (!loadedCategories.chatzeros) {
-                    dataPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
-                }
-                if (!loadedCategories.mechabrim) {
-                    dataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
-                }
-                if (!loadedCategories.verter) {
-                    dataPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
-                }
-                if (!loadedCategories.albums) {
-                    dataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
-                }
-                if (dataPromises.length > 0) {
-                    await Promise.all(dataPromises);
-                }
                 renderNigunDetailPage(container, name);
                 return;
             }
