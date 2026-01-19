@@ -3058,7 +3058,6 @@
         .collection-icon {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, var(--color-collection) 0%, var(--color-collection-light) 100%);
             border-radius: 10px;
             display: flex;
             align-items: center;

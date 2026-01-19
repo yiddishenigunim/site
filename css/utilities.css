@@ -427,3 +427,8 @@
 .page-theme.theme-album .album-card-header {
     background: linear-gradient(135deg, var(--theme-color) 0%, var(--theme-light) 100%);
 }
+
+/* Collection icon with themed gradient */
+.page-theme.theme-collection .collection-icon {
+    background: linear-gradient(135deg, var(--theme-color) 0%, var(--theme-light) 100%);
+}
