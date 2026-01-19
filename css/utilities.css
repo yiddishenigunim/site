@@ -307,3 +307,71 @@
 .page-theme .skeleton-song-row {
     background: color-mix(in srgb, var(--theme-pale) 70%, white);
 }
+
+/* ========================================
+   THEMED CARDS - Consolidated
+   ======================================== */
+
+/* Base themed card structure - used for resource-card, document-card, album-card */
+/* Use with class combinations: {type}-card where type is resource/document/album */
+.resource-card,
+.document-card,
+.album-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: var(--card-shadow);
+    transition: var(--transition-smooth);
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+.resource-card > :first-child,
+.document-card > :first-child,
+.album-card > :first-child {
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+}
+
+.resource-card > :last-child,
+.document-card > :last-child,
+.album-card > :last-child {
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+}
+
+/* Hover effect pseudo-element */
+.page-theme.theme-resource .resource-card::after,
+.page-theme.theme-document .document-card::after,
+.page-theme.theme-album .album-card::after {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: -6px;
+    right: -6px;
+    bottom: -6px;
+    border-radius: 16px;
+    border: 2px solid var(--theme-color);
+    opacity: 0;
+    transition: opacity 0.2s ease, top 0s 0.2s, bottom 0s 0.2s, left 0s 0.2s, right 0s 0.2s;
+    pointer-events: none;
+    box-sizing: border-box;
+    box-shadow: 0 0 15px color-mix(in srgb, var(--theme-color) 15%, transparent);
+}
+
+.page-theme.theme-resource .resource-card:hover::after,
+.page-theme.theme-document .document-card:hover::after,
+.page-theme.theme-album .album-card:hover::after {
+    opacity: 1;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.resource-card:hover,
+.album-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
