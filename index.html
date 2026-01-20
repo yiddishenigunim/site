@@ -5951,6 +5951,16 @@
             justify-content: center;
             align-items: center;
             overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nigun-detail-box[data-action] {
+            cursor: pointer;
+        }
+
+        .nigun-detail-box[data-action]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         /* Siman gets special full-width treatment */
@@ -6077,8 +6087,12 @@
             align-items: center;
             justify-content: center;
             padding: 24px 8px 8px 8px;
-            font-size: 0.9em;
+            font-size: 0.92em;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.5;
             width: 100%;
+            word-break: break-word;
         }
 
         .nigun-detail-box-content .nigun-tag-inline {
@@ -18167,51 +18181,39 @@
                             <div class="nigun-details-grid">
                                 <div class="nigun-details-row">
                                     ${song.verter ? song.verter.split(',').map(v => v.trim()).filter(Boolean).map(v => `
-                                        <div class="nigun-detail-box box-verter">
+                                        <div class="nigun-detail-box box-verter" data-action="detail" data-category="verter" data-name="${escapeHtml(v)}" data-tooltip-value="${escapeHtml(v)}" data-tooltip-type="verter">
                                             <div class="nigun-detail-box-header">ווערטער</div>
-                                            <div class="nigun-detail-box-content">
-                                                <span class="nigun-tag-inline tag-verter" data-action="detail" data-category="verter" data-name="${escapeHtml(v)}" data-tooltip-value="${escapeHtml(v)}" data-tooltip-type="verter">${v}</span>
-                                            </div>
+                                            <div class="nigun-detail-box-content">${v}</div>
                                         </div>
                                     `).join('') : ''}
                                     ${song.ritem ? `
                                         <div class="nigun-detail-box box-ritem">
                                             <div class="nigun-detail-box-header">ריטעם</div>
-                                            <div class="nigun-detail-box-content">
-                                                <span class="nigun-tag-inline tag-ritem">${song.ritem}</span>
-                                            </div>
+                                            <div class="nigun-detail-box-content">${song.ritem}</div>
                                         </div>
                                     ` : ''}
                                     ${song.scale ? `
                                         <div class="nigun-detail-box box-scale">
                                             <div class="nigun-detail-box-header">סקעיל</div>
-                                            <div class="nigun-detail-box-content">
-                                                <span class="nigun-tag-inline tag-scale">${song.scale}</span>
-                                            </div>
+                                            <div class="nigun-detail-box-content">${song.scale}</div>
                                         </div>
                                     ` : ''}
                                     ${song.pasigOif ? song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
-                                        <div class="nigun-detail-box box-pasig">
+                                        <div class="nigun-detail-box box-pasig" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(p)}" data-tooltip-value="${escapeHtml(p)}" data-tooltip-type="zman">
                                             <div class="nigun-detail-box-header">פאסיג אויף</div>
-                                            <div class="nigun-detail-box-content">
-                                                <span class="nigun-tag-inline tag-piyut" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(p)}" data-tooltip-value="${escapeHtml(p)}" data-tooltip-type="zman">${p}</span>
-                                            </div>
+                                            <div class="nigun-detail-box-content">${p}</div>
                                         </div>
                                     `).join('') : ''}
                                     ${song.collections ? song.collections.split(',').map(col => col.trim()).filter(Boolean).map(col => `
-                                        <div class="nigun-detail-box box-collections">
+                                        <div class="nigun-detail-box box-collections" data-action="detail" data-category="collections" data-name="${escapeHtml(col)}" data-tooltip-value="${escapeHtml(col)}" data-tooltip-type="collection">
                                             <div class="nigun-detail-box-header">קאלעקשאנס</div>
-                                            <div class="nigun-detail-box-content">
-                                                <span class="nigun-tag-inline tag-collection" data-action="detail" data-category="collections" data-name="${escapeHtml(col)}" data-tooltip-value="${escapeHtml(col)}" data-tooltip-type="collection">${col}</span>
-                                            </div>
+                                            <div class="nigun-detail-box-content">${col}</div>
                                         </div>
                                     `).join('') : ''}
                                     ${song.resources ? song.resources.split(',').map(r => r.trim()).filter(Boolean).map(r => `
-                                        <div class="nigun-detail-box box-resources">
+                                        <div class="nigun-detail-box box-resources" data-action="detail" data-category="resources" data-name="${escapeHtml(r)}" style="cursor:pointer;">
                                             <div class="nigun-detail-box-header">רעסורסן</div>
-                                            <div class="nigun-detail-box-content">
-                                                <span class="nigun-tag-inline tag-resource" data-action="detail" data-category="resources" data-name="${escapeHtml(r)}" style="cursor:pointer;">${r}</span>
-                                            </div>
+                                            <div class="nigun-detail-box-content">${r}</div>
                                         </div>
                                     `).join('') : ''}
                                 </div>
