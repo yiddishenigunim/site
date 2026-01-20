@@ -1071,6 +1071,14 @@
             color: var(--color-mechaber);
         }
 
+        .nigun-modal-mechaber-avatar .placeholder .mechaber-icon {
+            width: 28px;
+            height: 41px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+        }
+
         .nigun-modal-mechaber-name {
             font-weight: 600;
             font-size: 0.85em;
@@ -17586,7 +17594,7 @@
                                 <div class="nigun-modal-mechaber-avatar">
                                     ${firstMechaberInfo?.image
                         ? `<img src="${firstMechaberInfo.image}" alt="${firstMechaber}">`
-                        : `<div class="placeholder">♪</div>`
+                        : `<div class="placeholder"><div class="mechaber-icon"></div></div>`
                     }
                                 </div>
                                 <span class="nigun-modal-mechaber-name">${firstMechaber}</span>
