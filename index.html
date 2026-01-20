@@ -12244,16 +12244,12 @@
                 transition: filter 0.4s ease, transform 0.4s ease;
             }
 
-            .logo:hover {
-                transform: scale(1.05);
-            }
-
             .logo:hover .logo-icon {
-                filter: drop-shadow(0 4px 12px rgba(156, 91, 181, 0.4));
+                filter: drop-shadow(0 2px 8px rgba(156, 91, 181, 0.3));
             }
 
             .logo:hover .logo-text {
-                filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.15));
+                filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.1));
             }
 
             /* Search button styled like logo */
@@ -14351,12 +14347,19 @@
                 await ensureDataForPage(internalPage);
             }
 
-            renderCurrentPage();
+            // Capture and consume the skipNextAnimation flag BEFORE rendering
+            // so both page animations and render animations can be skipped
+            const isReturningFromChild = skipNextAnimation;
+            skipNextAnimation = false; // Reset before rendering
+
+            renderCurrentPage(isReturningFromChild);
 
             // Determine enter animation class
             // Skip animation if we showed skeleton (header is already visible)
             let enterClass;
-            if (hadSkeleton) {
+            if (isReturningFromChild) {
+                enterClass = null; // Returning from child detail - skip animation
+            } else if (hadSkeleton) {
                 enterClass = null; // Coming from skeleton - no page animation needed
             } else if (isHomePage) {
                 enterClass = null; // Home page uses its own stagger animation, skip page transition
@@ -14441,7 +14444,7 @@
         });
 
         // Render current page
-        function renderCurrentPage() {
+        function renderCurrentPage(skipAnimation = false) {
             // Check if we're in a detail view
             if (currentDetailView) {
                 renderDetailPage();
@@ -14452,43 +14455,43 @@
 
             switch (currentPageView) {
                 case 'home':
-                    renderHomePage(content);
+                    renderHomePage(content, skipAnimation);
                     break;
                 case 'search':
                     renderSearchResultsPage(content);
                     break;
                 case 'songs':
-                    renderAllSongsPage(content);
+                    renderAllSongsPage(content, skipAnimation);
                     break;
                 case 'chatzeros':
-                    renderCategoryPage(content, 'chatzeros', 'חצרות', '', 'אלע חסידישע חצרות און זייערע ניגונים');
+                    renderCategoryPage(content, 'chatzeros', 'חצרות', '', 'אלע חסידישע חצרות און זייערע ניגונים', skipAnimation);
                     break;
                 case 'mechabrim':
-                    renderCategoryPage(content, 'mechabrim', 'מחברים', '<div class="mechaber-icon"></div>', 'די מחברים פון די ניגונים');
+                    renderCategoryPage(content, 'mechabrim', 'מחברים', '<div class="mechaber-icon"></div>', 'די מחברים פון די ניגונים', skipAnimation);
                     break;
                 case 'verter':
-                    renderCategoryPage(content, 'verter', 'ווערטער', '', 'ניגונים לויט די ווערטער');
+                    renderCategoryPage(content, 'verter', 'ווערטער', '', 'ניגונים לויט די ווערטער', skipAnimation);
                     break;
                 case 'zmanim':
-                    renderZmanimPage(content);
+                    renderZmanimPage(content, skipAnimation);
                     break;
                 case 'music':
                     renderMusicPage(content);
                     break;
                 case 'collections':
-                    renderCollectionsPage(content);
+                    renderCollectionsPage(content, skipAnimation);
                     break;
                 case 'piyutim':
-                    renderPiyutimPage(content);
+                    renderPiyutimPage(content, skipAnimation);
                     break;
                 case 'resources':
-                    renderResourcesPage(content);
+                    renderResourcesPage(content, skipAnimation);
                     break;
                 case 'documents':
-                    renderDocumentsPage(content);
+                    renderDocumentsPage(content, skipAnimation);
                     break;
                 case 'albums':
-                    renderAlbumsPage(content);
+                    renderAlbumsPage(content, skipAnimation);
                     break;
                 case 'about':
                     renderAboutPage(content);
@@ -14515,7 +14518,7 @@
         }
 
         // Render home page
-        function renderHomePage(container) {
+        function renderHomePage(container, skipAnimation = false) {
             // Use cached stats from the stats table (fast, no counting needed)
             const totalSongs = cachedStats.niggunim || 0;
             const totalChatzeros = cachedStats.chatzeros || 0;
@@ -14614,61 +14617,70 @@
                 </div>
             `;
 
-            // Apply staggered animations to all home page elements
-            requestAnimationFrame(() => {
-                const elements = container.querySelectorAll(
-                    '.home-hero, .home-search-section, .home-stat-hero, .home-stat-card, .home-stats-link, .home-section-title, .home-link-card, .home-section, .home-about-section, .home-terms-link'
-                );
+            // Apply staggered animations to all home page elements (skip if returning from child detail)
+            if (!skipAnimation) {
+                requestAnimationFrame(() => {
+                    const elements = container.querySelectorAll(
+                        '.home-hero, .home-search-section, .home-stat-hero, .home-stat-card, .home-stats-link, .home-section-title, .home-link-card, .home-section, .home-about-section, .home-terms-link'
+                    );
 
-                elements.forEach((el, i) => {
-                    // Start with opacity 0 (handled by class, but ensure immediate effect)
-                    // el.style.opacity = '0'; // Not strictly needed if class is added immediately, but safer?
-                    // actually the class .stagger-fade-up has opacity: 0.
+                    elements.forEach((el, i) => {
+                        // delay
+                        el.style.animationDelay = `${i * 0.08}s`;
+                        el.classList.add('stagger-fade-up');
 
-                    // delay
-                    el.style.animationDelay = `${i * 0.08}s`;
-                    el.classList.add('stagger-fade-up');
+                        // Remove animation class after it's done to allow hover transforms to work cleanly
+                        el.addEventListener('animationend', () => {
+                            el.classList.remove('stagger-fade-up');
+                            // Ensure final state is visible and clean for interactions
+                            el.style.opacity = '1';
+                            el.style.transform = '';
+                            el.style.animationDelay = '';
+                        }, { once: true });
+                    });
 
-                    // Remove animation class after it's done to allow hover transforms to work cleanly
-                    el.addEventListener('animationend', () => {
-                        el.classList.remove('stagger-fade-up');
-                        // Ensure final state is visible and clean for interactions
+                    // Animate count-up for stat numbers
+                    const statNumbers = container.querySelectorAll('.home-stat-number');
+                    statNumbers.forEach((el, i) => {
+                        const finalValue = parseInt(el.textContent) || 0;
+                        if (finalValue > 0) {
+                            el.textContent = '0';
+                            el.classList.add('number-animate');
+                            el.style.animationDelay = `${i * 0.08}s`;
+
+                            // Count up animation
+                            setTimeout(() => {
+                                const duration = 600;
+                                const startTime = performance.now();
+                                const animate = (currentTime) => {
+                                    const elapsed = currentTime - startTime;
+                                    const progress = Math.min(elapsed / duration, 1);
+                                    // Easing function for smooth count
+                                    const eased = 1 - Math.pow(1 - progress, 3);
+                                    el.textContent = Math.floor(eased * finalValue);
+                                    if (progress < 1) {
+                                        requestAnimationFrame(animate);
+                                    } else {
+                                        el.textContent = finalValue;
+                                    }
+                                };
+                                requestAnimationFrame(animate);
+                            }, i * 80 + 200);
+                        }
+                    });
+                });
+            } else {
+                // When skipping animation, just make sure elements are visible
+                requestAnimationFrame(() => {
+                    const elements = container.querySelectorAll(
+                        '.home-hero, .home-search-section, .home-stat-hero, .home-stat-card, .home-stats-link, .home-section-title, .home-link-card, .home-section, .home-about-section, .home-terms-link'
+                    );
+                    elements.forEach((el) => {
                         el.style.opacity = '1';
                         el.style.transform = '';
-                        el.style.animationDelay = '';
-                    }, { once: true });
+                    });
                 });
-
-                // Animate count-up for stat numbers
-                const statNumbers = container.querySelectorAll('.home-stat-number');
-                statNumbers.forEach((el, i) => {
-                    const finalValue = parseInt(el.textContent) || 0;
-                    if (finalValue > 0) {
-                        el.textContent = '0';
-                        el.classList.add('number-animate');
-                        el.style.animationDelay = `${i * 0.08}s`;
-
-                        // Count up animation
-                        setTimeout(() => {
-                            const duration = 600;
-                            const startTime = performance.now();
-                            const animate = (currentTime) => {
-                                const elapsed = currentTime - startTime;
-                                const progress = Math.min(elapsed / duration, 1);
-                                // Easing function for smooth count
-                                const eased = 1 - Math.pow(1 - progress, 3);
-                                el.textContent = Math.floor(eased * finalValue);
-                                if (progress < 1) {
-                                    requestAnimationFrame(animate);
-                                } else {
-                                    el.textContent = finalValue;
-                                }
-                            };
-                            requestAnimationFrame(animate);
-                        }, i * 80 + 200);
-                    }
-                });
-            });
+            }
 
             // Generate floating musical notes (Starfield / Warp Effect)
             const musicContainer = document.getElementById('heroMusicalBg');
@@ -15251,118 +15263,8 @@
             }
         }
 
-        // Get the HTML for songs page filters
-        function getSongsFiltersHTML() {
-            return `
-                <!-- Sort Filter -->
-                <div class="detail-filter-dropdown">
-                    <div class="detail-filter-current">
-                        <span class="filter-icon">⇅</span>
-                        <span class="filter-label">${
-                            currentSortOrder === 'random' ? 'שאָפל' :
-                            currentSortOrder === 'alphabetical' ? 'א"ב' :
-                            'לעצט צוגעלייגט'
-                        }</span>
-                    </div>
-                    <div class="detail-filter-options">
-                        <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
-                             onclick="changeSortOrder('random');">
-                            שאָפל
-                        </div>
-                        <div class="detail-filter-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
-                             onclick="changeSortOrder('alphabetical');">
-                            א"ב
-                        </div>
-                        <div class="detail-filter-option ${currentSortOrder === 'recent' ? 'active' : ''}"
-                             onclick="changeSortOrder('recent');">
-                            לעצט צוגעלייגט
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Display Mode Filter -->
-                <div class="detail-filter-dropdown">
-                    <div class="detail-filter-current">
-                        <span class="filter-icon">👁</span>
-                        <span class="filter-label">${
-                            currentDisplayMode === 'minimal' ? 'קעפל' :
-                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                            'אלעס'
-                        }</span>
-                    </div>
-                    <div class="detail-filter-options">
-                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
-                             onclick="changeDisplayMode('minimal');">
-                            קעפל
-                        </div>
-                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
-                             onclick="changeDisplayMode('recordings');">
-                            רעקארדירונגען
-                        </div>
-                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
-                             onclick="changeDisplayMode('full');">
-                            אלעס
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Quality Filter -->
-                <div class="detail-filter-dropdown detail-filter-quality">
-                    <div class="detail-filter-current quality-filter-spread">
-                        <span class="filter-label-left">
-                            <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
-                            </svg>
-                        </span>
-                        <span class="filter-stars-right">${
-                            minQualityRating === 0 ? '' :
-                            minQualityRating === 1 ? '★' :
-                            minQualityRating === 2 ? '★★' :
-                            minQualityRating === 3 ? '★★★' :
-                            minQualityRating === 4 ? '★★★★' :
-                            '★★★★★'
-                        }</span>
-                    </div>
-                    <div class="detail-filter-options">
-                        <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
-                             onclick="setMinQualityRating(0);">
-                            אלע
-                        </div>
-                        <div class="detail-filter-option ${minQualityRating === 1 ? 'active' : ''}"
-                             onclick="setMinQualityRating(1);">
-                            ★ א מענטש זינגט פאר זיך
-                        </div>
-                        <div class="detail-filter-option ${minQualityRating === 2 ? 'active' : ''}"
-                             onclick="setMinQualityRating(2);">
-                            ★★ אראפגעזינגען אן מוזיק
-                        </div>
-                        <div class="detail-filter-option ${minQualityRating === 3 ? 'active' : ''}"
-                             onclick="setMinQualityRating(3);">
-                            ★★★ אלטע מוזיק
-                        </div>
-                        <div class="detail-filter-option ${minQualityRating === 4 ? 'active' : ''}"
-                             onclick="setMinQualityRating(4);">
-                            ★★★★ שיין און ניי
-                        </div>
-                        <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
-                             onclick="setMinQualityRating(5);">
-                            ★★★★★ שיין, ניי און געשמאק
-                        </div>
-                    </div>
-                </div>
-            `;
-        }
-
-        // Update songs filters UI only (without re-rendering the whole page)
-        function updateSongsFiltersUI() {
-            const filtersContainer = document.querySelector('.songs-card .detail-filters-group');
-            if (filtersContainer) {
-                filtersContainer.innerHTML = getSongsFiltersHTML();
-            }
-        }
-
         // Render all songs page
-        function renderAllSongsPage(container) {
+        function renderAllSongsPage(container, skipAnimation = false) {
             // NOTE: Always build full page structure so songsGrid exists
             // If no songs yet, grid will show skeleton rows inside it
 
@@ -15371,7 +15273,8 @@
                 currentIndex: 0,
                 batchSize: 50,
                 isLoading: false,
-                isInitialLoad: true
+                isInitialLoad: true,
+                skipAnimation: skipAnimation // Pass through to song animation logic
             };
 
             container.innerHTML = `
@@ -15389,9 +15292,98 @@
                             <div class="songs-card">
                                 <div style="padding: 15px 20px 10px 20px; display: flex; justify-content: flex-end;">
                                     <div class="detail-filters-group">
-                                        ${getSongsFiltersHTML()}
+                                            <!-- Sort Filter -->
+                                            <div class="detail-filter-dropdown">
+                                                <div class="detail-filter-current">
+                                                    <span class="filter-icon">⇅</span>
+                                                    <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
+                    currentSortOrder === 'alphabetical' ? 'א"ב' :
+                        'לעצט צוגעלייגט'
+                }</span>
+                                                </div>
+                                                <div class="detail-filter-options">
+                                                    <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
+                                                         onclick="changeSortOrder('random');">
+                                                        שאָפל
+                                                    </div>
+                                                    <div class="detail-filter-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
+                                                         onclick="changeSortOrder('alphabetical');">
+                                                        א"ב
+                                                    </div>
+                                                    <div class="detail-filter-option ${currentSortOrder === 'recent' ? 'active' : ''}"
+                                                         onclick="changeSortOrder('recent');">
+                                                        לעצט צוגעלייגט
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Display Mode Filter -->
+                                            <div class="detail-filter-dropdown">
+                                                <div class="detail-filter-current">
+                                                    <span class="filter-icon">👁</span>
+                                                    <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                        'אלעס'
+                }</span>
+                                                </div>
+                                                <div class="detail-filter-options">
+                                                    <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
+                                                         onclick="changeDisplayMode('minimal');">
+                                                        קעפל
+                                                    </div>
+                                                    <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
+                                                         onclick="changeDisplayMode('recordings');">
+                                                        רעקארדירונגען
+                                                    </div>
+                                                    <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
+                                                         onclick="changeDisplayMode('full');">
+                                                        אלעס
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Quality Filter -->
+                                            <div class="detail-filter-dropdown detail-filter-quality">
+                                                <div class="detail-filter-current quality-filter-spread">
+                                                    <span class="filter-label-left">${minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
+                }</span>
+                                                    <span class="filter-stars-right">${minQualityRating === 0 ? '' :
+                    minQualityRating === 1 ? '★' :
+                        minQualityRating === 2 ? '★★' :
+                            minQualityRating === 3 ? '★★★' :
+                                minQualityRating === 4 ? '★★★★' :
+                                    '★★★★★'
+                }</span>
+                                                </div>
+                                                <div class="detail-filter-options">
+                                                    <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
+                                                         onclick="setMinQualityRating(0);">
+                                                        אלע
+                                                    </div>
+                                                    <div class="detail-filter-option ${minQualityRating === 1 ? 'active' : ''}"
+                                                         onclick="setMinQualityRating(1);">
+                                                        ★ א מענטש זינגט פאר זיך
+                                                    </div>
+                                                    <div class="detail-filter-option ${minQualityRating === 2 ? 'active' : ''}"
+                                                         onclick="setMinQualityRating(2);">
+                                                        ★★ אראפגעזינגען אן מוזיק
+                                                    </div>
+                                                    <div class="detail-filter-option ${minQualityRating === 3 ? 'active' : ''}"
+                                                         onclick="setMinQualityRating(3);">
+                                                        ★★★ אלטע מוזיק
+                                                    </div>
+                                                    <div class="detail-filter-option ${minQualityRating === 4 ? 'active' : ''}"
+                                                         onclick="setMinQualityRating(4);">
+                                                        ★★★★ שיין און ניי
+                                                    </div>
+                                                    <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
+                                                         onclick="setMinQualityRating(5);">
+                                                        ★★★★★ שיין, ניי און געשמאק
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
 
                                 <div class="all-songs-grid" id="songsGrid">
                                     ${filteredSongs.length === 0 && !songsFullyLoaded ? `
@@ -15530,7 +15522,8 @@
             }
 
             // Animation for first batch - same pop-in style as FLIP new elements
-            if (songsLazyState.isInitialLoad && existingCount === 0) {
+            // Skip animation if returning from child detail page
+            if (songsLazyState.isInitialLoad && existingCount === 0 && !songsLazyState.skipAnimation) {
                 const newItems = Array.from(grid.children);
                 newItems.forEach((item, i) => {
                     // Start hidden with scale - same as FLIP
@@ -15736,7 +15729,6 @@
             // Update display with animation
             if (currentPageView === 'songs') {
                 updateSongsListWithAnimation();
-                updateSongsFiltersUI();
             } else {
                 renderCurrentPage();
             }
@@ -15876,7 +15868,6 @@
             // Update display with animation
             if (currentPageView === 'songs') {
                 updateSongsListWithAnimation();
-                updateSongsFiltersUI();
             } else {
                 renderCurrentPage();
             }
@@ -15897,7 +15888,6 @@
             // Re-render songs list
             if (currentPageView === 'songs') {
                 updateSongsListWithAnimation();
-                updateSongsFiltersUI();
             }
         }
 
@@ -16887,6 +16877,7 @@
 
         // Current detail view
         let currentDetailView = null; // { type: 'mechaber', name: 'xxx' }
+        let skipNextAnimation = false; // Skip animation when returning from child detail page
 
         // URL Routing
         function updateURL() {
@@ -16993,13 +16984,26 @@
                 const isHomePage = page === 'home';
                 const isInfoPage = infoPagesList.includes(page);
 
+                // Detect if we're returning FROM a child detail page TO parent list page
+                // This happens when:
+                // 1. currentDetailView is set (for category detail pages like mechabrim/chatzeros)
+                // 2. OR nigunModalOpen is true (for nigun modal overlay)
+                // AND we're navigating to a page without an ID (list page)
+                const wasInDetailView = currentDetailView !== null;
+                const wasInNigunModal = typeof nigunModalOpen !== 'undefined' && nigunModalOpen;
+                const goingToListPage = !idOrName; // No ID means going to list, not to another detail
+                const isReturningFromChild = (wasInDetailView || wasInNigunModal) && goingToListPage;
+                console.log('🔍 Animation skip check:', { wasInDetailView, wasInNigunModal, goingToListPage, isReturningFromChild, currentDetailView, idOrName, page });
+
                 // Map to internal page name for direction calculation
                 const targetPage = page === 'nigunim' ? 'songs' : (page === 'zman' ? 'zmanim' : page);
                 const direction = getNavigationDirection(previousPage, targetPage);
 
                 // Determine exit animation class
                 let exitClass;
-                if (wasHomePage) {
+                if (isReturningFromChild) {
+                    exitClass = null; // Skip exit animation when returning from child detail
+                } else if (wasHomePage) {
                     exitClass = 'page-exit-home';
                 } else if (wasInfoPage) {
                     exitClass = 'page-exit-info';
@@ -17008,7 +17012,7 @@
                 }
 
                 // Apply exit animation (only if there's existing content)
-                if (content && content.children.length > 0 && previousPage !== targetPage) {
+                if (content && content.children.length > 0 && previousPage !== targetPage && exitClass) {
                     content.classList.add(exitClass);
                     await new Promise(r => setTimeout(r, wasInfoPage ? 150 : 200));
                     content.classList.remove(exitClass);
@@ -17148,7 +17152,7 @@
                         btn.classList.toggle('active', btn.dataset.page === page);
                     });
 
-                    renderCurrentPage();
+                    renderCurrentPage(isReturningFromChild);
                 }
 
                 // Determine enter animation class
@@ -17157,7 +17161,9 @@
                 const isCategoryPage = categoryPages.includes(targetPage);
 
                 let enterClass;
-                if (hadSkeleton) {
+                if (isReturningFromChild) {
+                    enterClass = null; // Skip enter animation when returning from child detail
+                } else if (hadSkeleton) {
                     enterClass = null; // Coming from skeleton - no page animation needed
                 } else if (isHomePage) {
                     enterClass = null; // Home page uses its own stagger animation
@@ -17184,6 +17190,21 @@
         // Listen to hash changes (from anchor link clicks)
         window.addEventListener('hashchange', function () {
             hideAllDropdowns();
+
+            // Check if we're currently in a child state (detail view or modal)
+            // and set the skip flag BEFORE navigation clears these states
+            const newHash = window.location.hash || '#/home';
+            const newParts = newHash.substring(2).split('/');
+            const newPage = newParts[0] || 'home';
+            const newIdOrName = newParts[1] ? decodeURIComponent(newParts[1]) : null;
+            const goingToListPage = !newIdOrName;
+
+            // If we're leaving a child state (detail view or modal) to go to a list page, skip animations
+            if ((currentDetailView !== null || nigunModalOpen) && goingToListPage) {
+                console.log('🚀 Setting skipNextAnimation from hashchange (leaving child state)');
+                skipNextAnimation = true;
+            }
+
             handleURLChange();
         });
 
@@ -17237,6 +17258,7 @@
         function goBackFromDetail() {
             const page = currentDetailView?.type || 'home';
             currentDetailView = null;
+            skipNextAnimation = true; // Skip animation on parent page when returning from child
 
             // Map category key to page name
             const pageMap = {
@@ -17567,11 +17589,10 @@
                                 <div class="detail-filter-dropdown">
                                     <div class="detail-filter-current">
                                         <span class="filter-icon">⇅</span>
-                                        <span class="filter-label">${
-                                            currentSortOrder === 'random' ? 'שאָפל' :
-                                            currentSortOrder === 'alphabetical' ? 'א"ב' :
-                                            'לעצט צוגעלייגט'
-                                        }</span>
+                                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
+                    currentSortOrder === 'alphabetical' ? 'א"ב' :
+                        'לעצט צוגעלייגט'
+                }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
@@ -17593,11 +17614,10 @@
                                 <div class="detail-filter-dropdown">
                                     <div class="detail-filter-current">
                                         <span class="filter-icon">👁</span>
-                                        <span class="filter-label">${
-                                            currentDisplayMode === 'minimal' ? 'קעפל' :
-                                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                                            'אלעס'
-                                        }</span>
+                                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                        'אלעס'
+                }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
@@ -17623,14 +17643,13 @@
                                                 <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
                                             </svg>
                                         </span>
-                                        <span class="filter-stars-right">${
-                                            minQualityRating === 0 ? '' :
-                                            minQualityRating === 1 ? '★' :
-                                            minQualityRating === 2 ? '★★' :
-                                            minQualityRating === 3 ? '★★★' :
-                                            minQualityRating === 4 ? '★★★★' :
-                                            '★★★★★'
-                                        }</span>
+                                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
+                    minQualityRating === 1 ? '★' :
+                        minQualityRating === 2 ? '★★' :
+                            minQualityRating === 3 ? '★★★' :
+                                minQualityRating === 4 ? '★★★★' :
+                                    '★★★★★'
+                }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
@@ -17694,11 +17713,10 @@
                                                 <div class="detail-filter-dropdown">
                                                     <div class="detail-filter-current">
                                                         <span class="filter-icon">⇅</span>
-                                                        <span class="filter-label">${
-                                                            currentSortOrder === 'random' ? 'שאָפל' :
-                                                            currentSortOrder === 'alphabetical' ? 'א"ב' :
-                                                            'לעצט צוגעלייגט'
-                                                        }</span>
+                                                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
+                                    currentSortOrder === 'alphabetical' ? 'א"ב' :
+                                        'לעצט צוגעלייגט'
+                                }</span>
                                                     </div>
                                                     <div class="detail-filter-options">
                                                         <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
@@ -17720,11 +17738,10 @@
                                                 <div class="detail-filter-dropdown">
                                                     <div class="detail-filter-current">
                                                         <span class="filter-icon">👁</span>
-                                                        <span class="filter-label">${
-                                                            currentDisplayMode === 'minimal' ? 'קעפל' :
-                                                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                                                            'אלעס'
-                                                        }</span>
+                                                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                                        'אלעס'
+                                }</span>
                                                     </div>
                                                     <div class="detail-filter-options">
                                                         <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
@@ -17750,14 +17767,13 @@
                                                                 <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
                                                             </svg>
                                                         </span>
-                                                        <span class="filter-stars-right">${
-                                                            minQualityRating === 0 ? '' :
-                                                            minQualityRating === 1 ? '★' :
-                                                            minQualityRating === 2 ? '★★' :
-                                                            minQualityRating === 3 ? '★★★' :
-                                                            minQualityRating === 4 ? '★★★★' :
-                                                            '★★★★★'
-                                                        }</span>
+                                                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
+                                    minQualityRating === 1 ? '★' :
+                                        minQualityRating === 2 ? '★★' :
+                                            minQualityRating === 3 ? '★★★' :
+                                                minQualityRating === 4 ? '★★★★' :
+                                                    '★★★★★'
+                                }</span>
                                                     </div>
                                                     <div class="detail-filter-options">
                                                         <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
@@ -17790,9 +17806,9 @@
                                         </div>
                                         <div class="detail-songs-list">
                                             ${relatedSongs.map((song, i) => {
-                                const globalIdx = allSongs.indexOf(song);
-                                return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                            }).join('')}
+                                    const globalIdx = allSongs.indexOf(song);
+                                    return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                                }).join('')}
                                         </div>
                                     </div>
                                 `;
@@ -18952,16 +18968,24 @@
             categoryLazyState.currentIndex = endIndex;
             categoryLazyState.isLoading = false;
 
-            // Apply animations to newly added cards
+            // Apply animations to newly added cards (skip on initial load if returning from child detail)
             requestAnimationFrame(() => {
                 const newCards = Array.from(grid.children).slice(existingCount);
+                const shouldSkipAnimation = categoryLazyState.isInitialLoad && categoryLazyState.skipAnimation;
+
                 newCards.forEach((card, i) => {
-                    card.style.animationDelay = `${i * 0.04}s`;
-                    // Use card-stagger for initial load, pop-in for subsequent loads
-                    if (categoryLazyState.isInitialLoad) {
-                        card.classList.add('card-stagger');
+                    if (shouldSkipAnimation) {
+                        // Skip animation - just make cards visible immediately
+                        card.style.opacity = '1';
+                        card.style.transform = '';
                     } else {
-                        card.classList.add('item-pop-in');
+                        card.style.animationDelay = `${i * 0.04}s`;
+                        // Use card-stagger for initial load, pop-in for subsequent loads
+                        if (categoryLazyState.isInitialLoad) {
+                            card.classList.add('card-stagger');
+                        } else {
+                            card.classList.add('item-pop-in');
+                        }
                     }
                 });
                 // Mark initial load as complete after first batch
@@ -18981,7 +19005,7 @@
         }
 
         // Render category page with lazy loading
-        function renderCategoryPage(container, categoryKey, title, icon, subtitle) {
+        function renderCategoryPage(container, categoryKey, title, icon, subtitle, skipAnimation = false) {
             const data = categories[categoryKey];
             const sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
 
@@ -18991,7 +19015,8 @@
                 batchSize: 50,
                 allKeys: sortedKeys,
                 isLoading: false,
-                isInitialLoad: true
+                isInitialLoad: true,
+                skipAnimation: skipAnimation // Pass through to card animation logic
             };
 
             // Get the right info object and theme class for this category
@@ -20069,7 +20094,7 @@
                         <div class="song-number">${displayNum}</div>
                         <div class="song-info">
                             <div class="song-name">${song.name}</div>
-                            <div class="song-meta">${metaParts.join(' • ')}</div>
+                            <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                         </div>
                         ${waveAnimation}
                         ${playBtnHtml}
@@ -20142,7 +20167,7 @@
                             <div class="song-number">${displayNum}</div>
                             <div class="song-info">
                                 <div class="song-name">${song.name}</div>
-                                <div class="song-meta">${metaParts.join(' • ')}</div>
+                                <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                             </div>
                             ${waveAnimation}
                         </div>
@@ -20305,7 +20330,7 @@
                             <div class="song-number">${displayNum}</div>
                             <div class="song-info">
                                 <div class="song-name">${song.name}</div>
-                                <div class="song-meta">${metaParts.join(' • ')}</div>
+                                <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                             </div>
                             ${waveAnimation}
                         </div>
@@ -20321,7 +20346,7 @@
                     <div class="song-number">${displayNum}</div>
                     <div class="song-info">
                         <div class="song-name">${song.name}</div>
-                        <div class="song-meta">${metaParts.join(' • ')}</div>
+                        <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                     </div>
                     ${waveAnimation}
                     ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
@@ -20556,7 +20581,7 @@
             if (song.category) {
                 metaParts.push(createPlayerMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
             }
-            document.getElementById('playerSongMeta').innerHTML = metaParts.join(' • ');
+            document.getElementById('playerSongMeta').innerHTML = metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>');
 
             // Collection link
             if (song.collections) {
@@ -21052,6 +21077,11 @@
         function closeNigunModal() {
             if (!nigunModalOpen) return;
 
+            // Set skip animation flag BEFORE changing any state
+            // This ensures animations are skipped when returning to the parent page
+            skipNextAnimation = true;
+            console.log('🚀 Setting skipNextAnimation from closeNigunModal');
+
             nigunModalOpen = false;
             currentNigunModalIdx = null;
 
@@ -21083,6 +21113,18 @@
                     window.scrollTo(0, savedScrollPosition);
                 }
                 return;
+            }
+
+            // Check if we're leaving a detail view to go to a list page
+            // Set the skip flag BEFORE handleURLChange clears the state
+            const newHash = window.location.hash || '#/home';
+            const newParts = newHash.substring(2).split('/');
+            const newIdOrName = newParts[1] ? decodeURIComponent(newParts[1]) : null;
+            const goingToListPage = !newIdOrName;
+
+            if (currentDetailView !== null && goingToListPage) {
+                console.log('🚀 Setting skipNextAnimation from popstate (leaving detail view)');
+                skipNextAnimation = true;
             }
 
             // Otherwise handle normal URL changes
@@ -21404,11 +21446,10 @@
                                 <div class="detail-filter-dropdown">
                                     <div class="detail-filter-current">
                                         <span class="filter-icon">⇅</span>
-                                        <span class="filter-label">${
-                                            currentSortOrder === 'random' ? 'שאָפל' :
-                                            currentSortOrder === 'alphabetical' ? 'א"ב' :
-                                            'לעצט צוגעלייגט'
-                                        }</span>
+                                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
+                        currentSortOrder === 'alphabetical' ? 'א"ב' :
+                            'לעצט צוגעלייגט'
+                    }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
@@ -21430,11 +21471,10 @@
                                 <div class="detail-filter-dropdown">
                                     <div class="detail-filter-current">
                                         <span class="filter-icon">👁</span>
-                                        <span class="filter-label">${
-                                            currentDisplayMode === 'minimal' ? 'קעפל' :
-                                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                                            'אלעס'
-                                        }</span>
+                                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                        currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                            'אלעס'
+                    }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
@@ -21455,17 +21495,15 @@
                                 <!-- Quality Filter -->
                                 <div class="detail-filter-dropdown detail-filter-quality">
                                     <div class="detail-filter-current quality-filter-spread">
-                                        <span class="filter-label-left">${
-                                            minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
-                                        }</span>
-                                        <span class="filter-stars-right">${
-                                            minQualityRating === 0 ? '' :
-                                            minQualityRating === 1 ? '★' :
-                                            minQualityRating === 2 ? '★★' :
-                                            minQualityRating === 3 ? '★★★' :
-                                            minQualityRating === 4 ? '★★★★' :
-                                            '★★★★★'
-                                        }</span>
+                                        <span class="filter-label-left">${minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
+                    }</span>
+                                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
+                        minQualityRating === 1 ? '★' :
+                            minQualityRating === 2 ? '★★' :
+                                minQualityRating === 3 ? '★★★' :
+                                    minQualityRating === 4 ? '★★★★' :
+                                        '★★★★★'
+                    }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
@@ -21498,12 +21536,12 @@
                         </div>
                         <div class="search-songs-list">
                             ${(() => {
-                    const playlistIndices = displaySongs.map(song => allSongs.indexOf(song));
-                    return displaySongs.map((song, i) => {
-                        const globalIdx = allSongs.indexOf(song);
-                        return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                    }).join('');
-                })()}
+                        const playlistIndices = displaySongs.map(song => allSongs.indexOf(song));
+                        return displaySongs.map((song, i) => {
+                            const globalIdx = allSongs.indexOf(song);
+                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                        }).join('');
+                    })()}
                         </div>
                     </div>
                 `;
