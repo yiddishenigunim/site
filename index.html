@@ -6735,10 +6735,11 @@
 
         /* Rating description text under stars */
         .player-rating-description {
-            font-size: 0.75em;
-            color: #666;
-            font-weight: 500;
+            font-size: 0.8em;
+            color: #555;
+            font-weight: 600;
             white-space: nowrap;
+            line-height: 1.2;
         }
 
         /* Rating prompt message */
@@ -12598,7 +12599,7 @@
                     <span class="player-rating-description" id="playerRatingDescription"></span>
                 </div>
                 <div class="player-rating-prompt" id="playerRatingPrompt" style="display: none;">
-                    זאל אויספילן דעם פעלד
+                    👆 קליק אהער צו רעיטן
                 </div>
             </div>
         </div>
@@ -22117,30 +22118,19 @@
                 }
             }
 
-            // Add hover preview
+            // Add click handler to open modal
             const stars = starsContainer.querySelectorAll('.player-rating-star');
-            stars.forEach((star, idx) => {
-                star.addEventListener('mouseenter', () => {
-                    // Show preview of what rating would be
-                    stars.forEach((s, i) => {
-                        if (i <= idx) {
-                            s.classList.add('hover-preview');
-                        } else {
-                            s.classList.remove('hover-preview');
-                        }
-                    });
-                });
-
+            stars.forEach((star) => {
                 star.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const newRating = parseInt(star.dataset.rating, 10);
-                    submitRating(newRating);
+                    openRatingModal();
                 });
             });
 
-            starsContainer.addEventListener('mouseleave', () => {
-                stars.forEach(s => s.classList.remove('hover-preview'));
-            });
+            // Make the whole rating container clickable to open modal
+            playerRating.onclick = (e) => {
+                openRatingModal();
+            };
 
             // Start tracking playback time for rating prompt if no rating
             if (!rating || rating === 0) {
@@ -22232,10 +22222,10 @@
             stopPlaybackTimer();
             hasShownRatingPrompt = false;
 
-            // Set timer for 30 seconds
+            // Set timer for 10 seconds
             playbackTimer = setTimeout(() => {
                 showRatingPrompt();
-            }, 30000);
+            }, 10000);
         }
 
         // Stop playback timer
