@@ -112,6 +112,24 @@
             background: #f8fafc;
         }
 
+        /* Global rule: Remove underlines from all links and buttons */
+        a,
+        button,
+        .nigun-tag,
+        .chatzer-tag,
+        .nigun-tag-inline,
+        .nigun-modal-mechaber-name,
+        .nigun-modal-mechaber-profile,
+        .nigun-mechaber-card,
+        .nigun-mechaber-name {
+            text-decoration: none !important;
+        }
+
+        a:hover,
+        button:hover {
+            text-decoration: none !important;
+        }
+
         /* Loading wave bar animation */
         .loading-wave-bar {
             position: absolute;
@@ -729,13 +747,50 @@
         .nigun-modal-close:hover {
             background: var(--color-nigun);
             color: white;
-            transform: scale(1.1);
         }
 
         .nigun-modal-body {
             flex: 1;
             overflow-y: auto;
             padding: 20px;
+        }
+
+        /* Custom scrollbar - hidden by default, visible on scroll */
+        .nigun-modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .nigun-modal-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .nigun-modal-body::-webkit-scrollbar-thumb {
+            background: rgba(100, 100, 100, 0.3);
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .nigun-modal-body::-webkit-scrollbar-thumb:hover {
+            background: rgba(100, 100, 100, 0.5);
+        }
+
+        .nigun-modal-body::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* Scrollbar fade effect */
+        .nigun-modal-body {
+            scrollbar-width: thin;
+            scrollbar-color: transparent transparent;
+            transition: scrollbar-color 0.3s ease;
+        }
+
+        .nigun-modal-body.is-scrolling {
+            scrollbar-color: rgba(100, 100, 100, 0.4) transparent;
+        }
+
+        .nigun-modal-body.is-scrolling::-webkit-scrollbar-thumb {
+            background: rgba(100, 100, 100, 0.4);
         }
 
         .nigun-modal-body .detail-page {
@@ -747,11 +802,264 @@
         }
 
         .nigun-modal-body .detail-header {
-            margin-bottom: 20px;
+            display: none;
         }
 
         .nigun-modal-body .detail-category-bar {
             display: none;
+        }
+
+        /* New Nigun Modal Hero Header */
+        .nigun-modal-hero {
+            position: relative;
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            padding: 45px 25px 40px 160px;
+            text-align: center;
+            margin: -20px -20px 25px -20px;
+            border-radius: 0 0 20px 20px;
+            min-height: 100px;
+        }
+
+        .nigun-modal-hero-title {
+            font-size: 2em;
+            font-weight: 700;
+            color: white;
+            margin: 0 auto;
+            font-family: 'Heebo', sans-serif;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            line-height: 1.3;
+            text-align: center;
+            max-width: calc(100% - 50px);
+        }
+
+        /* Close button - simple X at top right */
+        .nigun-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: none;
+            border: none;
+            font-size: 1.8em;
+            color: var(--color-nigun-dark);
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            opacity: 0.7;
+            transition: opacity 0.2s ease;
+            z-index: 20;
+        }
+
+        .nigun-modal-close:hover {
+            opacity: 1;
+            transform: none;
+        }
+
+        /* Tags bar - below hero, centered */
+        .nigun-modal-hero-bottom {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            padding: 4px 20px;
+            margin-top: -10px;
+            flex-wrap: wrap;
+        }
+
+        /* Personalities tags */
+        .nigun-modal-hero-personalities {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .personality-tag {
+            background: var(--color-mechaber);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(196, 53, 168, 0.3);
+        }
+
+        .personality-tag:hover {
+            background: var(--color-mechaber-dark);
+            transform: scale(1.05);
+        }
+
+        /* Chatzer tags */
+        .nigun-modal-hero-chatzeros {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nigun-modal-hero-chatzeros .chatzer-tag {
+            background: var(--color-chatzer);
+            color: white;
+            border: none;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(156, 91, 181, 0.3);
+        }
+
+        .nigun-modal-hero-chatzeros .chatzer-tag:hover {
+            background: var(--color-chatzer-dark);
+            transform: scale(1.05);
+        }
+
+        /* Ball divider between chatzer and maure */
+        .nigun-modal-divider {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--color-nigun);
+        }
+
+        /* Maure (gezungen oif) tags */
+        .nigun-modal-hero-maure {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .maure-tag {
+            background: var(--color-piyut);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+        }
+
+        .maure-tag:hover {
+            background: var(--color-piyut-dark);
+            transform: scale(1.05);
+        }
+
+        /* Mechaber profile - one unified box */
+        .nigun-modal-mechaber-profile {
+            position: absolute;
+            top: 0;
+            left: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            z-index: 15;
+            text-decoration: none;
+            background: var(--color-mechaber);
+            padding: 20px 12px 0 12px;
+            border-radius: 0 0 12px 12px;
+        }
+
+        /* When no mechaber, center the title fully */
+        .nigun-modal-hero.no-mechaber {
+            padding-left: 25px;
+        }
+
+        .nigun-modal-mechaber-avatar {
+            width: 75px;
+            height: 75px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            border: 3px solid white;
+            overflow: hidden;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            flex-shrink: 0;
+            margin: 0 -8px;
+        }
+
+        .nigun-modal-mechaber-avatar:hover {
+            transform: scale(1.08);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .nigun-modal-mechaber-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .nigun-modal-mechaber-avatar .placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-mechaber-pale) 0%, var(--color-mechaber-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2em;
+            color: var(--color-mechaber);
+        }
+
+        .nigun-modal-mechaber-avatar .placeholder .mechaber-icon {
+            width: 28px;
+            height: 41px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+        }
+
+        .nigun-modal-mechaber-name {
+            font-weight: 600;
+            font-size: 0.75em;
+            color: white;
+            padding: 6px 5px 10px 5px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            white-space: nowrap;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .nigun-modal-mechaber-name:hover {
+            opacity: 0.85;
+        }
+
+        @media (max-width: 500px) {
+            .nigun-modal-hero {
+                padding: 30px 15px 30px 15px;
+                margin-bottom: 50px;
+            }
+
+            .nigun-modal-hero-title {
+                font-size: 1.4em;
+            }
+
+            .nigun-modal-hero-chatzeros {
+                right: 15px;
+                bottom: -12px;
+            }
+
+            .nigun-modal-mechaber-profile {
+                left: 5px;
+                bottom: -45px;
+            }
+
+            .nigun-modal-mechaber-avatar {
+                width: 55px;
+                height: 55px;
+            }
+
+            .nigun-modal-mechaber-avatar .placeholder .mechaber-icon {
+                width: 21px;
+                height: 30px;
+            }
+
+            .nigun-modal-mechaber-name {
+                font-size: 0.7em;
+                padding: 4px 10px;
+            }
         }
 
         @media (max-width: 600px) {
@@ -5539,11 +5847,171 @@
         }
 
         .nigun-details-card {
-            background: white;
-            border-radius: 15px;
-            padding: 20px 25px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 20px;
+            display: none;
+            /* Hide old card layout */
+        }
+
+        /* New Compact Details Grid */
+        .nigun-details-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px 25px;
+            margin-bottom: 30px;
+            margin-top: 25px;
+            justify-content: center;
+            padding-top: 15px;
+        }
+
+        /* Row grouping for specific items */
+        .nigun-details-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .nigun-detail-box {
+            flex: 1 1 120px;
+            min-width: 100px;
+            max-width: 180px;
+            min-height: 70px;
+            position: relative;
+            border-radius: 14px;
+            padding: 25px 12px 15px 12px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            background: var(--color-nigun-pale);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Boxes with multiple items can grow wider */
+        .nigun-detail-box.box-verter,
+        .nigun-detail-box.box-collections,
+        .nigun-detail-box.box-pasig {
+            flex: 2 1 200px;
+            max-width: 320px;
+        }
+
+        /* Category-specific backgrounds */
+        .nigun-detail-box.box-verter {
+            background: var(--color-verter-pale);
+        }
+
+        .nigun-detail-box.box-scale {
+            background: var(--color-zman-pale);
+        }
+
+        .nigun-detail-box.box-ritem {
+            background: var(--color-zman-pale);
+        }
+
+        .nigun-detail-box.box-maure {
+            background: var(--color-piyut-pale);
+        }
+
+        .nigun-detail-box.box-pasig {
+            background: var(--color-piyut-pale);
+        }
+
+        .nigun-detail-box.box-collections {
+            background: var(--color-collection-pale);
+        }
+
+        .nigun-detail-box.box-albums {
+            background: var(--color-album-pale);
+        }
+
+        .nigun-detail-box.box-documents {
+            background: var(--color-nigun-pale);
+        }
+
+        .nigun-detail-box.box-resources {
+            background: var(--color-nigun-pale);
+        }
+
+        .nigun-detail-box-header {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #f8fafc;
+            color: var(--color-nigun-dark);
+            padding: 2px 12px;
+            font-size: 0.78em;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        /* Category-specific header text colors */
+        .nigun-detail-box.box-verter .nigun-detail-box-header {
+            color: var(--color-verter-dark);
+        }
+
+        .nigun-detail-box.box-scale .nigun-detail-box-header {
+            color: var(--color-zman-dark);
+        }
+
+        .nigun-detail-box.box-ritem .nigun-detail-box-header {
+            color: var(--color-zman-dark);
+        }
+
+        .nigun-detail-box.box-maure .nigun-detail-box-header {
+            color: var(--color-piyut-dark);
+        }
+
+        .nigun-detail-box.box-pasig .nigun-detail-box-header {
+            color: var(--color-piyut-dark);
+        }
+
+        .nigun-detail-box.box-collections .nigun-detail-box-header {
+            color: var(--color-collection-dark);
+        }
+
+        .nigun-detail-box.box-albums .nigun-detail-box-header {
+            color: var(--color-album-dark);
+        }
+
+        .nigun-detail-box.box-documents .nigun-detail-box-header {
+            color: var(--color-nigun-dark);
+        }
+
+        .nigun-detail-box.box-resources .nigun-detail-box-header {
+            color: var(--color-nigun-dark);
+        }
+
+        .nigun-detail-box-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+        }
+
+        .nigun-detail-box-content .nigun-tag-inline {
+            margin: 0;
+        }
+
+        .nigun-detail-box-text {
+            font-size: 0.9em;
+            color: var(--text-dark);
+            line-height: 1.4;
+        }
+
+        @media (max-width: 500px) {
+            .nigun-details-grid {
+                gap: 18px 12px;
+            }
+
+            .nigun-detail-box {
+                flex: 0 0 120px;
+                width: 120px;
+                padding: 20px 10px 12px 10px;
+            }
         }
 
         .nigun-detail-row {
@@ -5675,6 +6143,88 @@
 
         .nigun-section-content {
             color: var(--text-dark);
+        }
+
+        /* Subtle info box with icon - centered */
+        .nigun-info-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            padding: 15px 20px;
+            background: var(--color-nigun-pale);
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        .nigun-info-icon {
+            color: var(--color-nigun);
+            font-size: 1em;
+            font-weight: bold;
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-nigun-light);
+            border-radius: 50%;
+            font-style: normal;
+            margin-top: -29px;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nigun-info-box .nigun-info-text {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Additions box - similar to info but different color */
+        .nigun-additions-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            padding: 20px 20px 15px 20px;
+            background: var(--color-piyut-pale);
+            border-radius: 12px;
+            margin: 25px auto 20px auto;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .nigun-additions-icon {
+            color: var(--color-piyut);
+            font-size: 1.1em;
+            font-weight: bold;
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-piyut-light);
+            border-radius: 50%;
+            font-style: normal;
+            margin-top: -34px;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nigun-additions-box .nigun-additions-text {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .nigun-additions-content {
+            width: 100%;
+            text-align: right;
         }
 
         .nigun-siman {
@@ -7680,8 +8230,23 @@
             transition: var(--transition-smooth);
         }
 
+        /* Recording items in modal get white background - narrower */
+        .nigun-recordings-list .song-item-recording {
+            background: white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+            margin: 6px auto;
+            border-radius: 12px;
+            padding: 10px 14px;
+            max-width: 550px;
+        }
+
         .song-item-recording:hover {
             background: var(--color-nigun-pale);
+        }
+
+        .nigun-recordings-list .song-item-recording:hover {
+            background: var(--color-nigun-pale);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         }
 
         .song-item-rec-num {
@@ -16948,207 +17513,202 @@
             if (song.maure) musicTags.push({ value: song.maure, type: 'maure', icon: '' });
             if (song.collections) musicTags.push({ value: song.collections, type: 'collection', icon: '' });
 
+            // Get first mechaber for the hero profile
+            const firstMechaber = song.mechaber ? song.mechaber.split(',')[0].trim() : null;
+            const firstMechaberInfo = firstMechaber ? mechabrimInfo[firstMechaber] : null;
+            const firstMechaberId = firstMechaberInfo?.customId || firstMechaber;
+
             container.innerHTML = `
                 <div class="detail-page nigun-detail-page">
                     <button class="back-button" onclick="navigateTo('nigunim')">
-                        → ניגונים בלאט
                     </button>
                     
-                    <div class="detail-header">
-                        <div class="detail-category-bar" style="background: var(--color-nigun);">ניגון</div>
-                        <div class="detail-header-content no-image">
-                            <div class="detail-header-text">
-                                <h1 class="detail-title" style="color: var(--color-nigun-dark);">${song.name}</h1>
-                                ${chatzeros.length > 0 ? `
-                                    <div class="nigun-chatzer-tags">
-                                        ${chatzeros.map(chatzer => {
-                const cInfo = chatzerosInfo[chatzer] || {};
-                const cId = cInfo.customId || chatzer;
-                return `<a class="nigun-tag chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
-            }).join('')}
+                    <!-- New Hero Header for Modal -->
+                    <div class="nigun-modal-hero${firstMechaber ? '' : ' no-mechaber'}">
+                        <button class="nigun-modal-close" onclick="event.stopPropagation(); closeNigunModal()">×</button>
+                        <h1 class="nigun-modal-hero-title">${song.name}</h1>
+                        
+                        ${firstMechaber ? `
+                            <a class="nigun-modal-mechaber-profile" href="#/mechabrim/${encodeURIComponent(firstMechaberId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(firstMechaber)}">
+                                <div class="nigun-modal-mechaber-avatar">
+                                    ${firstMechaberInfo?.image
+                        ? `<img src="${firstMechaberInfo.image}" alt="${firstMechaber}">`
+                        : `<div class="placeholder"><div class="mechaber-icon"></div></div>`
+                    }
+                                </div>
+                                <span class="nigun-modal-mechaber-name">${firstMechaber}</span>
+                            </a>
+                        ` : ''}
+                    </div>
+
+                    <!-- Tags bar below hero - personalities, chatzer, maure -->
+                    ${(() => {
+                    // Use personalities field (other people related to nigun), not mechaber
+                    const personalities = song.personalities ? song.personalities.split(',').map(m => m.trim()).filter(Boolean) : [];
+                    const hasContent = personalities.length > 0 || chatzeros.length > 0 || song.maure;
+                    if (!hasContent) return '';
+                    return `
+                        <div class="nigun-modal-hero-bottom">
+                            ${personalities.length > 0 ? `
+                                <div class="nigun-modal-hero-personalities">
+                                    ${personalities.map(p => {
+                        const pInfo = mechabrimInfo[p] || {};
+                        const pId = pInfo.customId || p;
+                        return `<a class="personality-tag" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(p)}">${p}</a>`;
+                    }).join('')}
+                                </div>
+                            ` : ''}
+                            ${(personalities.length > 0 && chatzeros.length > 0) ? `<div class="nigun-modal-divider"></div>` : ''}
+                            ${chatzeros.length > 0 ? `
+                                <div class="nigun-modal-hero-chatzeros">
+                                    ${chatzeros.map(chatzer => {
+                        const cInfo = chatzerosInfo[chatzer] || {};
+                        const cId = cInfo.customId || chatzer;
+                        return `<a class="chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}">${chatzer}</a>`;
+                    }).join('')}
+                                </div>
+                            ` : ''}
+                            ${(chatzeros.length > 0 && song.maure) ? `<div class="nigun-modal-divider"></div>` : ''}
+                            ${song.maure ? `
+                                <div class="nigun-modal-hero-maure">
+                                    ${song.maure.split(',').map(m => m.trim()).filter(Boolean).map(m => `
+                                        <span class="maure-tag" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(m)}">${m}</span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    `;
+                })()}
+
+                    ${song.recordings && song.recordings.length > 0 ? `
+                        <div class="nigun-recordings-list">
+                            <div class="song-item-recordings" style="border-top: none; padding: 0; background: transparent;">
+                                ${song.recordings.map((rec, i) => {
+                    // Build tags like main page
+                    let recTags = [];
+                    if (rec.album) {
+                        rec.album.split(',').forEach(a => {
+                            const albumName = a.trim();
+                            if (albumName) {
+                                recTags.push('<span class="nigun-tag-inline tag-album" data-action="detail" data-category="albums" data-name="' + escapeHtml(albumName) + '" style="cursor:pointer;" onclick="event.stopPropagation();">' + albumName + '</span>');
+                            }
+                        });
+                    }
+                    if (rec.personalities) {
+                        rec.personalities.split(',').forEach(p => {
+                            const name = p.trim();
+                            if (name) {
+                                recTags.push('<span class="nigun-tag-inline tag-mechaber" data-action="detail" data-category="mechabrim" data-name="' + escapeHtml(name) + '" style="cursor:pointer;" onclick="event.stopPropagation();">' + name + '</span>');
+                            }
+                        });
+                    }
+
+                    // Determine display name
+                    const displayName = rec.details || ('רעקארדינג ' + (i + 1));
+                    const recRating = rec.rating ? '<span class="rec-rating-display">' + '★'.repeat(rec.rating) + '</span>' : '';
+                    const isActive = i === 0;
+
+                    // SVG play/pause button like main page
+                    const playBtn = '<button class="song-play-btn-new rec-play-btn" onclick="event.stopPropagation(); playNigunRecording(' + songIdx + ', ' + i + ', this)" data-song-idx="' + songIdx + '" data-rec-idx="' + i + '">' +
+                        '<span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>' +
+                        '<span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>' +
+                        '</button>';
+
+                    return '<div class="song-item-recording" onclick="event.stopPropagation(); playNigunRecording(' + songIdx + ', ' + i + ', this)" data-song-idx="' + songIdx + '" data-rec-idx="' + i + '" data-rating="' + (rec.rating || 0) + '">' +
+                        '<div class="song-item-rec-num">' + (i + 1) + '</div>' +
+                        '<div class="song-item-rec-info">' +
+                        '<div class="song-item-rec-name">' + displayName + '</div>' +
+                        (recTags.length > 0 ? '<div class="song-item-rec-tags">' + recTags.join('') + '</div>' : '') +
+                        '</div>' +
+                        recRating +
+                        playBtn +
+                        '</div>';
+                }).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+
+
+                    <!-- Compact Details Grid -->
+                    ${(() => {
+                    // Check if we have first row items (siman, verter, ritem, scale)
+                    const hasFirstRow = song.siman || song.verter || song.ritem || song.scale;
+
+                    return `<div class="nigun-details-grid">
+                            ${hasFirstRow ? `<div class="nigun-details-row">
+                                ${song.siman ? `
+                                    <div class="nigun-detail-box">
+                                        <div class="nigun-detail-box-header">סימן</div>
+                                        <div class="nigun-detail-box-content">
+                                            <span class="nigun-detail-box-text">${formatDescription(song.siman)}</span>
+                                        </div>
                                     </div>
                                 ` : ''}
-                            </div>
-                        </div>
-                    </div>
-                    
-                    ${song.mechaber ? `
-                        <div class="nigun-mechaber-section">
-                            <div class="nigun-mechaber-title">מחבר הניגון</div>
-                            <div class="nigun-mechaber-grid">
-                                ${song.mechaber.split(',').map(m => m.trim()).filter(Boolean).map(mName => {
-                const mInfo = mechabrimInfo[mName];
-                const mId = mInfo?.customId || mName;
-                return `
-                                        <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(mId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mName)}">
-                                            ${mInfo?.image
-                        ? `<img class="nigun-mechaber-image" src="${mInfo.image}" alt="${mName}">`
-                        : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
-                    }
-                                            <div class="nigun-mechaber-name">${mName}</div>
-                                        </a>
-                                    `;
-            }).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-
-                    ${song.personality ? `
-                        <div class="nigun-personality-section">
-                            <div class="nigun-personality-title">פערזענליכקייטן וואס האבן א שייכות מיט דעם ניגון</div>
-                            <div class="nigun-mechaber-grid">
-                                ${song.personality.split(',').map(p => p.trim()).filter(Boolean).map(personName => {
-                const pInfo = mechabrimInfo[personName];
-                const pId = pInfo?.customId || personName;
-                return `
-                                        <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(personName)}">
-                                            ${pInfo?.image
-                        ? `<img class="nigun-mechaber-image" src="${pInfo.image}" alt="${personName}">`
-                        : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
-                    }
-                                            <div class="nigun-mechaber-name">${personName}</div>
-                                        </a>
-                                    `;
-            }).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
-
-                    <div class="nigun-details-card">
-                        ${song.siman ? `
-                            <div class="nigun-detail-row">
-                                <span class="nigun-detail-label">סימן:</span>
-                                <span class="nigun-detail-value">${formatDescription(song.siman)}</span>
-                            </div>
-                        ` : ''}
-                        ${song.verter ? `
-                            <div class="nigun-detail-row">
-                                <span class="nigun-detail-label">ווערטער:</span>
-                                <span class="nigun-detail-value nigun-tags-row">
-                                    ${song.verter.split(',').map(v => v.trim()).filter(Boolean).map(v => `
-                                        <span class="nigun-tag-inline tag-verter"
-                                              data-action="detail"
-                                              data-category="verter"
-                                              data-name="${escapeHtml(v)}"
-                                              data-tooltip-value="${escapeHtml(v)}"
-                                              data-tooltip-type="verter">${v}</span>
-                                    `).join('')}
-                                </span>
-                            </div>
-                        ` : ''}
-                        ${song.scale ? `
-                            <div class="nigun-detail-row">
-                                <span class="nigun-detail-label">סקעיל:</span>
-                                <span class="nigun-detail-value">
-                                    <span class="nigun-tag-inline tag-scale">${song.scale}</span>
-                                </span>
-                            </div>
-                        ` : ''}
-                        ${song.ritem ? `
-                            <div class="nigun-detail-row">
-                                <span class="nigun-detail-label">ריטעם:</span>
-                                <span class="nigun-detail-value">
-                                    <span class="nigun-tag-inline tag-ritem">${song.ritem}</span>
-                                </span>
-                            </div>
-                        ` : ''}
-                        ${song.maure ? `
-                            <div class="nigun-detail-row">
-                                <span class="nigun-detail-label">ווערט געזונגען בחצה"ק אויף:    </span>
-                                <span class="nigun-detail-value nigun-tags-row">
-                                    ${song.maure.split(',').map(m => m.trim()).filter(Boolean).map(m => `
-                                        <span class="nigun-tag-inline tag-piyut"
-                                              data-action="filter"
-                                              data-page="nigunim"
-                                              data-filter-key="zman"
-                                              data-value="${escapeHtml(m)}"
-                                              data-tooltip-value="${escapeHtml(m)}"
-                                              data-tooltip-type="zman">${m}</span>
-                                    `).join('')}
-                                </span>
-                            </div>
-                        ` : ''}
-                        ${song.pasigOif ? `
-                            <div class="nigun-detail-row">
-                                <span class="nigun-detail-label">איז פאסיג צו זינגען אויף:    </span>
-                                <span class="nigun-detail-value nigun-tags-row">
-                                    ${song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
-                                        <span class="nigun-tag-inline tag-piyut"
-                                              data-action="filter"
-                                              data-page="nigunim"
-                                              data-filter-key="zman"
-                                              data-value="${escapeHtml(p)}"
-                                              data-tooltip-value="${escapeHtml(p)}"
-                                              data-tooltip-type="zman">${p}</span>
-                                    `).join('')}
-                                </span>
-                            </div>
-                        ` : ''}
-                        ${song.collections ? `
-                            <div class="nigun-detail-row">
-                                <span class="nigun-detail-label">קאלעקשאן:</span>
-                                <span class="nigun-detail-value nigun-tags-row">
-                                    ${song.collections.split(',').map(col => col.trim()).filter(Boolean).map(col => `
-                                        <span class="nigun-tag-inline tag-collection"
-                                              data-action="detail"
-                                              data-category="collections"
-                                              data-name="${escapeHtml(col)}"
-                                              data-tooltip-value="${escapeHtml(col)}"
-                                              data-tooltip-type="collection">${col}</span>
-                                    `).join('')}
-                                </span>
-                            </div>
-                        ` : ''}
-                        ${song.albums ? `
-                            <div class="nigun-detail-row">
-                                <span class="nigun-detail-label">אלבומס:</span>
-                                <span class="nigun-detail-value nigun-tags-row">
-                                    ${song.albums.split(',').map(a => a.trim()).filter(Boolean).map(a => `
-                                        <span class="nigun-tag-inline tag-album"
-                                              data-action="detail"
-                                              data-category="albums"
-                                              data-name="${escapeHtml(a)}"
-                                              style="cursor:pointer;">${a}</span>
-                                    `).join('')}
-                                </span>
-                            </div>
-                        ` : ''}
-                        ${song.documents ? `
-                            <div class="nigun-detail-row">
-                                <span class="nigun-detail-label">דאקומענטן:</span>
-                                <span class="nigun-detail-value nigun-tags-row">
-                                    ${song.documents.split(',').map(d => d.trim()).filter(Boolean).map(d => `
-                                        <span class="nigun-tag-inline tag-document"
-                                              data-action="detail"
-                                              data-category="documents"
-                                              data-name="${escapeHtml(d)}"
-                                              style="cursor:pointer;">${d}</span>
-                                    `).join('')}
-                                </span>
-                            </div>
-                        ` : ''}
-                        ${song.resources ? `
-                            <div class="nigun-detail-row">
-                                <span class="nigun-detail-label">רעסורסן:</span>
-                                <span class="nigun-detail-value nigun-tags-row">
-                                    ${song.resources.split(',').map(r => r.trim()).filter(Boolean).map(r => `
-                                        <span class="nigun-tag-inline tag-resource"
-                                              data-action="detail"
-                                              data-category="resources"
-                                              data-name="${escapeHtml(r)}"
-                                              style="cursor:pointer;">${r}</span>
-                                    `).join('')}
-                                </span>
-                            </div>
-                        ` : ''}
-                    </div>
+                                ${song.verter ? `
+                                    <div class="nigun-detail-box box-verter">
+                                        <div class="nigun-detail-box-header">ווערטער</div>
+                                        <div class="nigun-detail-box-content">
+                                            ${song.verter.split(',').map(v => v.trim()).filter(Boolean).map(v => `
+                                                <span class="nigun-tag-inline tag-verter" data-action="detail" data-category="verter" data-name="${escapeHtml(v)}" data-tooltip-value="${escapeHtml(v)}" data-tooltip-type="verter">${v}</span>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                ${song.ritem ? `
+                                    <div class="nigun-detail-box box-ritem">
+                                        <div class="nigun-detail-box-header">ריטעם</div>
+                                        <div class="nigun-detail-box-content">
+                                            <span class="nigun-tag-inline tag-ritem">${song.ritem}</span>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                                ${song.scale ? `
+                                    <div class="nigun-detail-box box-scale">
+                                        <div class="nigun-detail-box-header">סקעיל</div>
+                                        <div class="nigun-detail-box-content">
+                                            <span class="nigun-tag-inline tag-scale">${song.scale}</span>
+                                        </div>
+                                    </div>
+                                ` : ''}
+                            </div>` : ''}
+                            ${song.pasigOif ? `
+                                <div class="nigun-detail-box box-pasig">
+                                    <div class="nigun-detail-box-header">פאסיג אויף</div>
+                                    <div class="nigun-detail-box-content">
+                                        ${song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
+                                            <span class="nigun-tag-inline tag-piyut" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(p)}" data-tooltip-value="${escapeHtml(p)}" data-tooltip-type="zman">${p}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            ${song.collections ? `
+                                <div class="nigun-detail-box box-collections">
+                                    <div class="nigun-detail-box-header">קאלעקשאנס</div>
+                                    <div class="nigun-detail-box-content">
+                                        ${song.collections.split(',').map(col => col.trim()).filter(Boolean).map(col => `
+                                            <span class="nigun-tag-inline tag-collection" data-action="detail" data-category="collections" data-name="${escapeHtml(col)}" data-tooltip-value="${escapeHtml(col)}" data-tooltip-type="collection">${col}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            ${song.resources ? `
+                                <div class="nigun-detail-box box-resources">
+                                    <div class="nigun-detail-box-header">רעסורסן</div>
+                                    <div class="nigun-detail-box-content">
+                                        ${song.resources.split(',').map(r => r.trim()).filter(Boolean).map(r => `
+                                            <span class="nigun-tag-inline tag-resource" data-action="detail" data-category="resources" data-name="${escapeHtml(r)}" style="cursor:pointer;">${r}</span>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>`;
+                })()}
                     
                     ${song.info ? `
-                        <div class="nigun-section">
-                            <h3>אינפארמאציע</h3>
-                            <div class="nigun-section-content">
-                                <div class="nigun-info-text">${formatDescription(song.info)}</div>
-                            </div>
+                        <div class="nigun-info-box">
+                            <span class="nigun-info-icon">ℹ</span>
+                            <div class="nigun-info-text">${formatDescription(song.info)}</div>
                         </div>
                     ` : ''}
                     
@@ -17160,45 +17720,13 @@
                             </div>
                         </div>
                     ` : ''}
-                    
-                    ${song.recordings && song.recordings.length > 0 ? `
-                        <div class="nigun-section nigun-recordings-section">
-                            <h3>רעקארדינגס (${song.recordings.length})</h3>
-                            <div class="nigun-recordings-list">
-                                ${song.recordings.map((rec, i) => {
-                // Build meta parts with colored tags like songs page
-                let metaHtml = '';
-                if (rec.personalities) {
-                    metaHtml += rec.personalities.split(',').map(p => '<span class="mechaber-tag song-meta-tag">' + p.trim() + '</span>').join(' ');
-                }
-                if (rec.album) {
-                    if (metaHtml) metaHtml += ' ';
-                    metaHtml += rec.album.split(',').map(a => '<span class="album-tag song-meta-tag">' + a.trim() + '</span>').join(' ');
-                }
-
-                // Determine display name: details, or personalities, or album, or "רעקארדינג X"
-                const displayName = rec.details || rec.personalities || rec.album || ('רעקארדינג ' + (i + 1));
-                const nameClass = (!rec.details && !rec.personalities && !rec.album) ? 'nigun-recording-name default-name' : 'nigun-recording-name';
-
-                return '<div class="nigun-recording-item ' + (i === 0 ? 'active' : '') + '" onclick="playNigunRecording(' + songIdx + ', ' + i + ', this)" data-recording-idx="' + i + '" data-rating="' + (rec.rating || 0) + '">' +
-                    '<div class="nigun-recording-number">' + (i + 1) + '</div>' +
-                    '<div class="nigun-recording-info">' +
-                    '<div class="' + nameClass + '">' + displayName + '</div>' +
-                    (metaHtml ? '<div class="nigun-recording-meta">' + metaHtml + '</div>' : '') +
-                    '</div>' +
-                    '<button class="nigun-recording-play-btn">▶</button>' +
-                    '</div>';
-            }).join('')}
-                            </div>
-                        </div>
-                    ` : ''}
 
                     ${(song.otherMedia && (song.otherMedia.text || song.otherMedia.audio.length > 0 || song.otherMedia.images.length > 0 || song.otherMedia.videos.length > 0 || song.otherMedia.pdfs.length > 0 || song.otherMedia.files.length > 0)) ? `
-                        <div class="nigun-section nigun-other-media-section">
-                            <h3>צוגאבן</h3>
-                            <div class="nigun-other-media-content">
+                        <div class="nigun-additions-box">
+                            <span class="nigun-additions-icon">+</span>
+                            <div class="nigun-additions-content">
                                 ${song.otherMedia.text ? `
-                                    <div class="nigun-other-media-text">${formatDescription(song.otherMedia.text)}</div>
+                                    <div class="nigun-additions-text">${formatDescription(song.otherMedia.text)}</div>
                                 ` : ''}
 
                                 ${song.otherMedia.audio.length > 0 ? `
@@ -17260,6 +17788,28 @@
                             </div>
                         </div>
                     ` : ''}
+
+                    ${song.albums ? `
+                        <div class="nigun-info-box" style="background: var(--color-album-pale);">
+                            <span class="nigun-info-icon" style="background: var(--color-album-light); color: var(--color-album);">💿</span>
+                            <div class="nigun-info-text" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+                                ${song.albums.split(',').map(a => a.trim()).filter(Boolean).map(a => `
+                                    <span class="nigun-tag-inline tag-album" data-action="detail" data-category="albums" data-name="${escapeHtml(a)}" style="cursor:pointer;">${a}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+
+                    ${song.documents ? `
+                        <div class="nigun-info-box" style="background: var(--color-document-pale);">
+                            <span class="nigun-info-icon" style="background: var(--color-document-light); color: var(--color-document);">📄</span>
+                            <div class="nigun-info-text" style="display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;">
+                                ${song.documents.split(',').map(d => d.trim()).filter(Boolean).map(d => `
+                                    <span class="nigun-tag-inline tag-document" data-action="detail" data-category="documents" data-name="${escapeHtml(d)}" style="cursor:pointer;">${d}</span>
+                                `).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
                 </div>
             `;
         }
@@ -17317,12 +17867,7 @@
             // Update rating display in player
             updatePlayerRating(recording.rating);
 
-            // Update active state in UI (for nigun detail modal)
-            document.querySelectorAll('.nigun-recording-item').forEach((item, i) => {
-                item.classList.toggle('active', i === recordingIdx);
-            });
-
-            // Update active recording state in song list (recordings mode)
+            // Update active recording state in song list and modal (now both use same classes)
             document.querySelectorAll('.song-item-recording').forEach(rec => {
                 rec.classList.remove('active-recording');
             });
@@ -20202,22 +20747,7 @@
                         <div class="search-songs-list">
                             ${displaySongs.map((song, idx) => {
                     const globalIdx = allSongs.indexOf(song);
-                    const hasAudio = !!song.audioUrl;
-                    // No longer need to escape - using data attributes now
-                    // Build meta with entity-specific colored links
-                    const metaParts = [];
-                    if (song.mechaber) metaParts.push(createMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
-                    if (song.category) metaParts.push(createMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
-                    return `
-                                    <div class="song-item ${!hasAudio ? 'no-audio' : ''}" onclick="${hasAudio ? `playSong(${globalIdx})` : `showSongDetails(${globalIdx})`}">
-                                        <div class="song-number">${idx + 1}</div>
-                                        <div class="song-info">
-                                            <div class="song-name">${song.name}</div>
-                                            <div class="song-meta">${metaParts.join(' • ')}</div>
-                                        </div>
-                                        <button class="song-details-btn" onclick="event.stopPropagation(); showSongDetails(${globalIdx});">דעטאלן</button>
-                                    </div>
-                                `;
+                    return renderSongItem(song, globalIdx, idx + 1);
                 }).join('')}
                         </div>
                     </div>
