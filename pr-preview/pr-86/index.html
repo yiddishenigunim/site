@@ -1002,14 +1002,6 @@
             color: var(--color-mechaber);
         }
 
-        .nigun-modal-mechaber-avatar .placeholder .mechaber-icon {
-            width: 28px;
-            height: 41px;
-            background-color: var(--color-mechaber);
-            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
-            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
-        }
-
         .nigun-modal-mechaber-name {
             font-weight: 600;
             font-size: 0.75em;
@@ -1049,11 +1041,6 @@
             .nigun-modal-mechaber-avatar {
                 width: 55px;
                 height: 55px;
-            }
-
-            .nigun-modal-mechaber-avatar .placeholder .mechaber-icon {
-                width: 21px;
-                height: 30px;
             }
 
             .nigun-modal-mechaber-name {
@@ -17533,7 +17520,7 @@
                                 <div class="nigun-modal-mechaber-avatar">
                                     ${firstMechaberInfo?.image
                         ? `<img src="${firstMechaberInfo.image}" alt="${firstMechaber}">`
-                        : `<div class="placeholder"><div class="mechaber-icon"></div></div>`
+                        : `<div class="placeholder">♪</div>`
                     }
                                 </div>
                                 <span class="nigun-modal-mechaber-name">${firstMechaber}</span>
@@ -20747,7 +20734,22 @@
                         <div class="search-songs-list">
                             ${displaySongs.map((song, idx) => {
                     const globalIdx = allSongs.indexOf(song);
-                    return renderSongItem(song, globalIdx, idx + 1);
+                    const hasAudio = !!song.audioUrl;
+                    // No longer need to escape - using data attributes now
+                    // Build meta with entity-specific colored links
+                    const metaParts = [];
+                    if (song.mechaber) metaParts.push(createMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
+                    if (song.category) metaParts.push(createMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
+                    return `
+                                    <div class="song-item ${!hasAudio ? 'no-audio' : ''}" onclick="${hasAudio ? `playSong(${globalIdx})` : `showSongDetails(${globalIdx})`}">
+                                        <div class="song-number">${idx + 1}</div>
+                                        <div class="song-info">
+                                            <div class="song-name">${song.name}</div>
+                                            <div class="song-meta">${metaParts.join(' • ')}</div>
+                                        </div>
+                                        <button class="song-details-btn" onclick="event.stopPropagation(); showSongDetails(${globalIdx});">דעטאלן</button>
+                                    </div>
+                                `;
                 }).join('')}
                         </div>
                     </div>
