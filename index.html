@@ -20734,22 +20734,7 @@
                         <div class="search-songs-list">
                             ${displaySongs.map((song, idx) => {
                     const globalIdx = allSongs.indexOf(song);
-                    const hasAudio = !!song.audioUrl;
-                    // No longer need to escape - using data attributes now
-                    // Build meta with entity-specific colored links
-                    const metaParts = [];
-                    if (song.mechaber) metaParts.push(createMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
-                    if (song.category) metaParts.push(createMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
-                    return `
-                                    <div class="song-item ${!hasAudio ? 'no-audio' : ''}" onclick="${hasAudio ? `playSong(${globalIdx})` : `showSongDetails(${globalIdx})`}">
-                                        <div class="song-number">${idx + 1}</div>
-                                        <div class="song-info">
-                                            <div class="song-name">${song.name}</div>
-                                            <div class="song-meta">${metaParts.join(' • ')}</div>
-                                        </div>
-                                        <button class="song-details-btn" onclick="event.stopPropagation(); showSongDetails(${globalIdx});">דעטאלן</button>
-                                    </div>
-                                `;
+                    return renderSongItem(song, globalIdx, idx + 1);
                 }).join('')}
                         </div>
                     </div>
