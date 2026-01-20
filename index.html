@@ -8537,10 +8537,61 @@
             height: 12px !important;
         }
 
+        /* Expand/collapse button for headers-only mode */
+        .song-expand-btn {
+            width: 32px;
+            height: 32px;
+            background: var(--color-nigun);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(74, 124, 201, 0.3);
+        }
+
+        .song-expand-btn:hover {
+            background: var(--color-nigun-dark);
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(74, 124, 201, 0.5);
+        }
+
+        /* Headers-only mode - compact layout */
+        .song-item-header-only {
+            padding: 10px 14px;
+        }
+
+        .song-item-header-only .song-info {
+            cursor: pointer;
+        }
+
+        .song-item-header-only .song-name {
+            margin-bottom: 0;
+        }
+
+        /* Headers-only expanded mode - show full content */
+        .song-item-header-only.song-item-expanded {
+            flex-direction: column;
+            align-items: stretch;
+            padding: 0;
+        }
+
+        .song-item-header-only .song-item-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+        }
+
         /* ===== ACTIVE NIGUN & RECORDING COLOR SCHEME =====
          * Color hierarchy (darkest to lightest):
          * 1. Active nigun header: var(--color-nigun-dark) #2d5aa0
-         * 2. Active nigun body: var(--color-nigun) #4a7cc9  
+         * 2. Active nigun body: var(--color-nigun) #4a7cc9
          * 3. Recordings container: var(--color-nigun-light) with transparency
          * 4. Active recording: White with blue glow
          */
@@ -8936,9 +8987,31 @@
         /* Active state for expanded items */
         .song-item-expanded.active .song-item-recordings,
         .song-item-full.active .song-full-details,
-        .song-item-full.active .song-full-recordings {
+        .song-item-full.active .song-full-recordings,
+        .song-item-header-only.active .song-full-details,
+        .song-item-header-only.active .song-full-recordings {
             background: rgba(255, 255, 255, 0.1);
             border-top-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Active state for headers-only mode */
+        .song-item-header-only.active .song-item-header {
+            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-nigun) 100%);
+        }
+
+        .song-item-header-only.active .song-expand-btn {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        .song-item-header-only.active .song-expand-btn:hover {
+            background: white;
+            color: var(--color-nigun);
+        }
+
+        .song-item-header-only.active .song-full-label,
+        .song-item-header-only.active .song-full-rec-title {
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .song-item-expanded.active .song-item-recording:hover,
@@ -12958,12 +13031,13 @@
         let searchQuery = ''; // Search query for songs
 
         let currentSortOrder = 'random'; // Sort order: 'random', 'alphabetical', 'recent'
-        let currentDisplayMode = 'minimal'; // Display mode: 'minimal', 'recordings', 'full'
+        let currentDisplayMode = 'minimal'; // Display mode: 'minimal', 'recordings', 'full', 'headersOnly'
         let minQualityRating = 0; // Minimum quality rating (0-5, 0 = all)
         let recordingsCollapsed = false; // Collapse recordings in full mode (show only first)
         let songsFullyLoaded = false; // Track if ALL songs are loaded from API (not just first batch)
         let seenSongIds = new Set(); // Track song IDs from previous batches for FLIP animation
         let isFlipping = false; // Block loadMoreSongs during FLIP animation
+        let expandedSongIdx = null; // Track which song is expanded in headersOnly mode
 
         // Category data
         let categories = {
@@ -15543,6 +15617,7 @@
                         <span class="filter-label">${
                             currentDisplayMode === 'minimal' ? 'קעפל' :
                             currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                            currentDisplayMode === 'headersOnly' ? 'בלויז כותרות' :
                             'אלעס'
                         }</span>
                     </div>
@@ -15550,6 +15625,10 @@
                         <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
                              onclick="changeDisplayMode('minimal');">
                             קעפל
+                        </div>
+                        <div class="detail-filter-option ${currentDisplayMode === 'headersOnly' ? 'active' : ''}"
+                             onclick="changeDisplayMode('headersOnly');">
+                            בלויז כותרות
                         </div>
                         <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
                              onclick="changeDisplayMode('recordings');">
@@ -16134,6 +16213,9 @@
         function changeDisplayMode(mode) {
             currentDisplayMode = mode;
 
+            // Reset expanded song when changing modes
+            expandedSongIdx = null;
+
             // Update toggle UI
             updateDisplayToggleSlider(mode);
 
@@ -16143,6 +16225,26 @@
                 updateSongsFiltersUI();
             } else {
                 renderCurrentPage();
+            }
+        }
+
+        // Toggle expand/collapse for a single song in headersOnly mode
+        function toggleSongExpand(songIdx, event) {
+            if (event) {
+                event.stopPropagation(); // Prevent song details modal from opening
+            }
+
+            // If clicking the same song, collapse it
+            if (expandedSongIdx === songIdx) {
+                expandedSongIdx = null;
+            } else {
+                // Expand this song (collapse any other)
+                expandedSongIdx = songIdx;
+            }
+
+            // Re-render the songs list
+            if (currentPageView === 'songs') {
+                updateSongsListWithAnimation();
             }
         }
 
@@ -20410,6 +20512,176 @@
                             </div>
                             ${waveAnimation}
                         </div>
+                        ${recordingsHtml}
+                    </div>
+                `;
+            }
+
+            // === HEADERS ONLY MODE - show compact headers with expand button ===
+            if (displayMode === 'headersOnly') {
+                const isExpanded = expandedSongIdx === globalIdx;
+                const expandIcon = isExpanded ? '▼' : '◀';
+
+                // If not expanded, show compact header only
+                if (!isExpanded) {
+                    return `
+                        <div class="song-item song-item-header-only ${isActive ? 'active' : ''}" data-song-idx="${globalIdx}">
+                            <div class="song-number">${displayNum}</div>
+                            <div class="song-info" onclick="${clickAction}">
+                                <div class="song-name">${song.name}</div>
+                            </div>
+                            <button class="song-expand-btn" onclick="toggleSongExpand(${globalIdx}, event)" title="עקספענדן">
+                                ${expandIcon}
+                            </button>
+                        </div>
+                    `;
+                }
+
+                // If expanded, show full details (similar to full mode)
+                let extraInfo = [];
+
+                // Meta info (mechaber/chatzer)
+                if (metaParts.length > 0) {
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">דעטאלן:</span><div class="song-full-tags">${metaParts.join(' • ')}</div></div>`);
+                }
+
+                // Verter (lyrics)
+                if (song.verter) {
+                    const verterTags = song.verter.split(',').map(v => v.trim()).filter(Boolean).map(v => `
+                        <span class="nigun-tag-inline tag-verter"
+                              data-action="detail"
+                              data-category="verter"
+                              data-name="${escapeHtml(v)}"
+                              onclick="event.stopPropagation();">${v}</span>
+                    `).join('');
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">ווערטער:</span><div class="song-full-tags">${verterTags}</div></div>`);
+                }
+
+                // Collections
+                if (song.collections) {
+                    const collectionTags = song.collections.split(',').map(c => c.trim()).filter(Boolean).map(c => `
+                        <span class="nigun-tag-inline tag-collection"
+                              data-action="detail"
+                              data-category="collections"
+                              data-name="${escapeHtml(c)}"
+                              onclick="event.stopPropagation();">${c}</span>
+                    `).join('');
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">קאלעקשאנס:</span><div class="song-full-tags">${collectionTags}</div></div>`);
+                }
+
+                // Pasig Oif (suitable for)
+                if (song.pasigOif) {
+                    const pasigTags = song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
+                        <span class="nigun-tag-inline tag-piyut"
+                              data-action="filter"
+                              data-page="nigunim"
+                              data-filter-key="zman"
+                              data-value="${escapeHtml(p)}"
+                              onclick="event.stopPropagation();">${p}</span>
+                    `).join('');
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">פאסיג אויף:</span><div class="song-full-tags">${pasigTags}</div></div>`);
+                }
+
+                // Scale
+                if (song.scale) {
+                    const scaleTags = song.scale.split(',').map(s => s.trim()).filter(Boolean).map(s => `
+                        <span class="nigun-tag-inline tag-scale"
+                              data-action="filter"
+                              data-page="nigunim"
+                              data-filter-key="scale"
+                              data-value="${escapeHtml(s)}"
+                              onclick="event.stopPropagation();">${s}</span>
+                    `).join('');
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סקעיל:</span><div class="song-full-tags">${scaleTags}</div></div>`);
+                }
+
+                // Ritem
+                if (song.ritem) {
+                    const ritemTags = song.ritem.split(',').map(r => r.trim()).filter(Boolean).map(r => `
+                        <span class="nigun-tag-inline tag-ritem"
+                              data-action="filter"
+                              data-page="nigunim"
+                              data-filter-key="ritem"
+                              data-value="${escapeHtml(r)}"
+                              onclick="event.stopPropagation();">${r}</span>
+                    `).join('');
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">ריטעם:</span><div class="song-full-tags">${ritemTags}</div></div>`);
+                }
+
+                // Siman
+                if (song.siman) {
+                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סימן:</span><span class="nigun-tag-inline tag-siman">${formatDescription(song.siman)}</span></div>`);
+                }
+
+                // Recordings section
+                let recordingsHtml = '';
+                if (song.recordings && song.recordings.length > 0) {
+                    recordingsHtml = `
+                        <div class="song-full-recordings">
+                            <div class="song-full-rec-title">רעקארדירונגען (${song.recordings.length})</div>
+                            ${song.recordings.map((rec, i) => {
+                        const playlistParam = playlistIndices ? `, [${playlistIndices.join(',')}]` : '';
+                        const recPlayAction = `playNigunRecording(${globalIdx}, ${i}, this${playlistParam})`;
+                        const recMeetsQuality = recordingMeetsQuality(rec);
+                        const isRecActive = isActive && currentRecordingIndex === i;
+                        const recPlayBtn = recMeetsQuality
+                            ? `<button class="song-play-btn-new rec-play-btn ${isRecActive && !audioPlayer.paused ? 'playing' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
+                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>
+                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                            </button>`
+                            : `<span class="song-play-btn-new song-btn-low-quality rec-play-btn" title="קוואליטעט נידעריג"><span class="low-quality-icon">☆</span></span>`;
+
+                        // Build info tags
+                        let recTags = [];
+                        if (rec.album) {
+                            recTags.push(`<span class="nigun-tag-inline tag-album"
+                                data-action="detail"
+                                data-category="albums"
+                                data-name="${escapeHtml(rec.album)}"
+                                onclick="event.stopPropagation();">${rec.album}</span>`);
+                        }
+                        if (rec.personalities) {
+                            rec.personalities.split(',').forEach(p => {
+                                const name = p.trim();
+                                if (name) {
+                                    recTags.push(`<span class="nigun-tag-inline tag-mechaber"
+                                        data-action="detail"
+                                        data-category="mechabrim"
+                                        data-name="${escapeHtml(name)}"
+                                        onclick="event.stopPropagation();">${name}</span>`);
+                                }
+                            });
+                        }
+                        const displayName = rec.details || ('רעקארדינג ' + (i + 1));
+                        const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
+                        return `
+                                    <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
+                                        <div class="song-item-rec-num">${i + 1}</div>
+                                        <div class="song-item-rec-info">
+                                            <div class="song-item-rec-name">${displayName}</div>
+                                            ${recTags.length > 0 ? `<div class="song-item-rec-tags">${recTags.join('')}</div>` : ''}
+                                        </div>
+                                        ${recRating}
+                                        ${recPlayBtn}
+                                    </div>
+                                `;
+                    }).join('')}
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="song-item song-item-header-only song-item-expanded ${isActive ? 'active' : ''}" data-song-idx="${globalIdx}">
+                        <div class="song-item-header">
+                            <div class="song-number">${displayNum}</div>
+                            <div class="song-info" onclick="${clickAction}">
+                                <div class="song-name">${song.name}</div>
+                            </div>
+                            <button class="song-expand-btn" onclick="toggleSongExpand(${globalIdx}, event)" title="פארמאכן">
+                                ${expandIcon}
+                            </button>
+                        </div>
+                        ${extraInfo.length > 0 ? `<div class="song-full-details">${extraInfo.join('')}</div>` : ''}
                         ${recordingsHtml}
                     </div>
                 `;
