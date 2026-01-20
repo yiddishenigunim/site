@@ -9502,11 +9502,14 @@
             pointer-events: none;
             opacity: 0;
             transform: translateY(10px);
-            transition: opacity 0.2s, transform 0.2s;
+            transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
             max-width: 280px;
             min-width: 200px;
             direction: rtl;
             overflow: hidden;
+            text-decoration: none;
+            display: block;
+            color: inherit;
         }
 
         .hover-tooltip-type {
@@ -9574,6 +9577,12 @@
         .hover-tooltip.show {
             opacity: 1;
             transform: translateY(0);
+            pointer-events: auto;
+            cursor: pointer;
+        }
+
+        .hover-tooltip:hover {
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.25);
         }
 
         .hover-tooltip-header {
@@ -12300,7 +12309,7 @@
     </div>
 
     <!-- Hover Tooltip -->
-    <div class="hover-tooltip" id="hoverTooltip">
+    <a class="hover-tooltip" id="hoverTooltip" href="#" data-tooltip-category="" data-tooltip-id="">
         <div class="hover-tooltip-type" id="tooltipType">חצר</div>
         <div class="hover-tooltip-header">
             <img class="hover-tooltip-image" id="tooltipImage" src="" alt="" style="display: none;">
@@ -12310,7 +12319,7 @@
             </div>
         </div>
         <div class="hover-tooltip-stats" id="tooltipStats"></div>
-    </div>
+    </a>
 
     <!-- Song Details Modal -->
     <div class="modal" id="songModal">
@@ -19777,6 +19786,45 @@
             tooltip.style.left = `${Math.min(x + 15, window.innerWidth - 300)}px`;
             tooltip.style.top = `${Math.min(y + 15, window.innerHeight - 200)}px`;
 
+            // Set the tooltip link based on category and value
+            let tooltipHref = '#';
+            let tooltipCategory = categoryKey;
+            let tooltipId = value;
+
+            // Get customId if available
+            if (extraInfo && extraInfo.customId) {
+                tooltipId = extraInfo.customId;
+            }
+
+            switch (fieldType) {
+                case 'mechaber':
+                    tooltipHref = `#/mechabrim/${encodeURIComponent(tooltipId)}`;
+                    break;
+                case 'chatzer':
+                    tooltipHref = `#/chatzeros/${encodeURIComponent(tooltipId)}`;
+                    break;
+                case 'verter':
+                    tooltipHref = `#/verter/${encodeURIComponent(tooltipId)}`;
+                    break;
+                case 'zman':
+                    if (piyutimInfo[value]) {
+                        tooltipHref = `#/piyutim/${encodeURIComponent(tooltipId)}`;
+                    } else {
+                        tooltipHref = `#/zman/${encodeURIComponent(tooltipId)}`;
+                    }
+                    break;
+                case 'piyut':
+                    tooltipHref = `#/piyutim/${encodeURIComponent(tooltipId)}`;
+                    break;
+                case 'collection':
+                    tooltipHref = `#/collections/${encodeURIComponent(tooltipId)}`;
+                    break;
+            }
+
+            tooltip.href = tooltipHref;
+            tooltip.dataset.tooltipCategory = tooltipCategory;
+            tooltip.dataset.tooltipId = tooltipId;
+
             tooltip.classList.add('show');
         }
 
@@ -19792,6 +19840,26 @@
             clearTimeout(showTooltipTimeout);
             hoverTooltip.classList.remove('show');
         }
+
+        // Keep tooltip visible when hovering over the tooltip itself
+        hoverTooltip.addEventListener('mouseenter', () => {
+            clearTimeout(tooltipTimeout);
+            clearTimeout(showTooltipTimeout);
+        });
+
+        hoverTooltip.addEventListener('mouseleave', () => {
+            hideTooltip();
+        });
+
+        // Handle tooltip click - navigate to detail page
+        hoverTooltip.addEventListener('click', (e) => {
+            e.preventDefault();
+            const href = hoverTooltip.href;
+            if (href && href !== '#' && href !== window.location.href) {
+                forceHideTooltip();
+                window.location.hash = href.split('#')[1] || '';
+            }
+        });
 
         // Create meta links for song items (handles multiple comma-separated values)
         // Uses pill button styling with category colors and data attributes for event delegation
