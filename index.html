@@ -7637,6 +7637,100 @@
             border-bottom: 2px solid var(--primary-pale);
         }
 
+        /* Detail Section Header with Sort Dropdown */
+        .detail-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0;
+        }
+
+        .detail-section-header h3 {
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        /* Compact Sort Dropdown */
+        .detail-sort-dropdown {
+            position: relative;
+            margin-top: 5px;
+        }
+
+        .detail-sort-current {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: var(--color-nigun-pale);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 0.85em;
+            font-weight: 500;
+            color: var(--color-nigun-dark);
+            white-space: nowrap;
+        }
+
+        .detail-sort-current:hover {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .detail-sort-current .sort-icon {
+            font-size: 1.1em;
+            font-weight: bold;
+        }
+
+        .detail-sort-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 6px;
+            min-width: 160px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .detail-sort-dropdown:hover .detail-sort-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .detail-sort-option {
+            padding: 10px 14px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition-smooth);
+            font-size: 0.9em;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-sort-option:hover {
+            background: var(--color-nigun-pale);
+            color: var(--color-nigun-dark);
+        }
+
+        .detail-sort-option.active {
+            background: var(--color-nigun);
+            color: white;
+            font-weight: 600;
+        }
+
+        .detail-sort-option .sort-icon {
+            font-size: 1.1em;
+        }
+
         .detail-songs-list {
             display: flex;
             flex-direction: column;
@@ -15381,6 +15475,41 @@
             }
         }
 
+        // Update detail view when sort changes (called from detail-songs-section)
+        function updateDetailView() {
+            if (currentDetailView) {
+                renderDetailPage();
+            }
+        }
+
+        // Sort a song array based on currentSortOrder (helper for detail views)
+        function sortSongsByOrder(songs) {
+            const sorted = [...songs]; // Create a copy to avoid mutating original
+            switch (currentSortOrder) {
+                case 'alphabetical':
+                    sorted.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'he'));
+                    break;
+                case 'recent':
+                    sorted.sort((a, b) => {
+                        const dateA = a.zugeleigt || '';
+                        const dateB = b.zugeleigt || '';
+                        if (!dateA && !dateB) return (a.name || '').localeCompare(b.name || '', 'he');
+                        if (!dateA) return 1;
+                        if (!dateB) return -1;
+                        return dateB.localeCompare(dateA);
+                    });
+                    break;
+                case 'random':
+                    // Fisher-Yates shuffle
+                    for (let i = sorted.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [sorted[i], sorted[j]] = [sorted[j], sorted[i]];
+                    }
+                    break;
+            }
+            return sorted;
+        }
+
         // Update sort toggle slider position dynamically
         function updateSortToggleSlider(order) {
             const toggle = document.getElementById('sortToggle');
@@ -16969,7 +17098,9 @@
 
             const info = infoObj[name] || {};
             const songIndices = categories[type]?.[name] || [];
-            const songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
+            let songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
+            // Apply current sort order to songs
+            songs = sortSongsByOrder(songs);
 
             // Only show chatzer tags for mechabrim
             const chatzeros = (type === 'mechabrim' && info.chatzer)
@@ -17160,7 +17291,33 @@
                     ` : ''}
                     
                     <div class="detail-songs-section">
-                        <h3>${songs.length} ניגונים ${type === 'mechabrim' ? 'וואס ער האט מחבר געווען' : ''}</h3>
+                        <div class="detail-section-header">
+                            <h3>${songs.length} ניגונים ${type === 'mechabrim' ? 'וואס ער האט מחבר געווען' : ''}</h3>
+                            <div class="detail-sort-dropdown">
+                                <div class="detail-sort-current">
+                                    <span class="sort-icon">⇅</span>
+                                    <span class="sort-label">${
+                                        currentSortOrder === 'random' ? 'שאָפל' :
+                                        currentSortOrder === 'alphabetical' ? 'א"ב' :
+                                        'לעצט צוגעלייגט'
+                                    }</span>
+                                </div>
+                                <div class="detail-sort-options">
+                                    <div class="detail-sort-option ${currentSortOrder === 'random' ? 'active' : ''}"
+                                         onclick="changeSortOrder('random'); updateDetailView();">
+                                        <span class="sort-icon">⇅</span> שאָפל
+                                    </div>
+                                    <div class="detail-sort-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
+                                         onclick="changeSortOrder('alphabetical'); updateDetailView();">
+                                        <span class="sort-icon">⇅</span> א"ב
+                                    </div>
+                                    <div class="detail-sort-option ${currentSortOrder === 'recent' ? 'active' : ''}"
+                                         onclick="changeSortOrder('recent'); updateDetailView();">
+                                        <span class="sort-icon">⇅</span> לעצט צוגעלייגט
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="detail-songs-list">
                             ${(() => {
                     const playlistIndices = songs.map(song => allSongs.indexOf(song));
@@ -17175,17 +17332,45 @@
                     ${(() => {
                     // For mechabrim, show songs where they have a שייכות (personality)
                     if (type === 'mechabrim') {
-                        const relatedSongs = allSongs.filter(song => {
+                        let relatedSongs = allSongs.filter(song => {
                             if (!song.personality) return false;
                             const personalities = song.personality.split(',').map(p => p.trim());
                             return personalities.includes(name);
                         });
+                        // Apply current sort order to related songs
+                        relatedSongs = sortSongsByOrder(relatedSongs);
 
                         if (relatedSongs.length > 0) {
                             const playlistIndices = relatedSongs.map(song => allSongs.indexOf(song));
                             return `
                                     <div class="detail-songs-section detail-related-songs">
-                                        <h3>${relatedSongs.length} ניגונים וואס ער האט א שייכות</h3>
+                                        <div class="detail-section-header">
+                                            <h3>${relatedSongs.length} ניגונים וואס ער האט א שייכות</h3>
+                                            <div class="detail-sort-dropdown">
+                                                <div class="detail-sort-current">
+                                                    <span class="sort-icon">⇅</span>
+                                                    <span class="sort-label">${
+                                                        currentSortOrder === 'random' ? 'שאָפל' :
+                                                        currentSortOrder === 'alphabetical' ? 'א"ב' :
+                                                        'לעצט צוגעלייגט'
+                                                    }</span>
+                                                </div>
+                                                <div class="detail-sort-options">
+                                                    <div class="detail-sort-option ${currentSortOrder === 'random' ? 'active' : ''}"
+                                                         onclick="changeSortOrder('random'); updateDetailView();">
+                                                        <span class="sort-icon">⇅</span> שאָפל
+                                                    </div>
+                                                    <div class="detail-sort-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
+                                                         onclick="changeSortOrder('alphabetical'); updateDetailView();">
+                                                        <span class="sort-icon">⇅</span> א"ב
+                                                    </div>
+                                                    <div class="detail-sort-option ${currentSortOrder === 'recent' ? 'active' : ''}"
+                                                         onclick="changeSortOrder('recent'); updateDetailView();">
+                                                        <span class="sort-icon">⇅</span> לעצט צוגעלייגט
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="detail-songs-list">
                                             ${relatedSongs.map((song, i) => {
                                 const globalIdx = allSongs.indexOf(song);
