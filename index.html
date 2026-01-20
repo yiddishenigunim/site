@@ -17405,8 +17405,8 @@
             const verterMakor = (type === 'verter' && info.makor) ? info.makor : '';
             const verterMarehMakom = (type === 'verter' && info.marehMakom) ? info.marehMakom : '';
 
-            // For piyutim (in zmanim category), get zman
-            const piyutZman = (type === 'zmanim' && piyutimInfo[name]?.zman) ? piyutimInfo[name].zman : '';
+            // For piyutim (in zmanim category or piyutim page), get zman
+            const piyutZman = ((type === 'zmanim' || type === 'piyutim') && piyutimInfo[name]?.zman) ? piyutimInfo[name].zman : '';
 
             // Map type to theme class - check if piyut
             const isPiyut = type === 'zmanim' && piyutimInfo[name];
@@ -17415,6 +17415,7 @@
                 'mechabrim': 'theme-mechaber',
                 'verter': 'theme-verter',
                 'zmanim': isPiyut ? 'theme-piyut' : 'theme-zman',
+                'piyutim': 'theme-piyut',
                 'collections': 'theme-collection'
             };
             const themeClass = themeMap[type] || '';
