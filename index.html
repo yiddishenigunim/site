@@ -12689,6 +12689,8 @@
             zmanim: {},
             collections: {}
         };
+        // Piyutim uses the same data as zmanim (piyutim are stored in zmanim category)
+        categories.piyutim = categories.zmanim;
 
         // Extended info for all categories (from separate tables)
         let chatzerosInfo = {};
@@ -18451,6 +18453,11 @@
             const piyutim = zmanData.piyutim || [];
             const collections = zmanData.collections || [];
 
+            // Get songs directly tagged with this zman (not through piyutim)
+            const songIndices = categories.zmanim[zmanName] || [];
+            let songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
+            songs = sortSongsByOrder(songs);
+
             let html = `
                 <div class="detail-page theme-zman">
                     <button class="back-button" onclick="navigateTo('zmanim')">
@@ -18516,6 +18523,122 @@
                                         </div>
                                     </a>
                                 `;
+                }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Songs section (if zman has direct songs, not through piyutim)
+            if (songs.length > 0) {
+                const playlistIndices = songs.map(song => allSongs.indexOf(song));
+                html += `
+                    <div class="detail-songs-section">
+                        <div class="detail-section-header">
+                            <h3>${songs.length} ניגונים</h3>
+                            <div class="detail-filters-group">
+                                <!-- Sort Filter -->
+                                <div class="detail-filter-dropdown">
+                                    <div class="detail-filter-current">
+                                        <span class="filter-icon">⇅</span>
+                                        <span class="filter-label">${
+                                            currentSortOrder === 'random' ? 'שאָפל' :
+                                            currentSortOrder === 'alphabetical' ? 'א"ב' :
+                                            'לעצט צוגעלייגט'
+                                        }</span>
+                                    </div>
+                                    <div class="detail-filter-options">
+                                        <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
+                                             onclick="changeSortOrder('random'); window.location.reload();">
+                                            שאָפל
+                                        </div>
+                                        <div class="detail-filter-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
+                                             onclick="changeSortOrder('alphabetical'); window.location.reload();">
+                                            א"ב
+                                        </div>
+                                        <div class="detail-filter-option ${currentSortOrder === 'recent' ? 'active' : ''}"
+                                             onclick="changeSortOrder('recent'); window.location.reload();">
+                                            לעצט צוגעלייגט
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Display Mode Filter -->
+                                <div class="detail-filter-dropdown">
+                                    <div class="detail-filter-current">
+                                        <span class="filter-icon">👁</span>
+                                        <span class="filter-label">${
+                                            currentDisplayMode === 'minimal' ? 'קעפל' :
+                                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                                            'אלעס'
+                                        }</span>
+                                    </div>
+                                    <div class="detail-filter-options">
+                                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
+                                             onclick="changeDisplayMode('minimal'); window.location.reload();">
+                                            קעפל
+                                        </div>
+                                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
+                                             onclick="changeDisplayMode('recordings'); window.location.reload();">
+                                            רעקארדירונגען
+                                        </div>
+                                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
+                                             onclick="changeDisplayMode('full'); window.location.reload();">
+                                            אלעס
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Quality Filter -->
+                                <div class="detail-filter-dropdown detail-filter-quality">
+                                    <div class="detail-filter-current quality-filter-spread">
+                                        <span class="filter-label-left">
+                                            <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
+                                            </svg>
+                                        </span>
+                                        <span class="filter-stars-right">${
+                                            minQualityRating === 0 ? '' :
+                                            minQualityRating === 1 ? '★' :
+                                            minQualityRating === 2 ? '★★' :
+                                            minQualityRating === 3 ? '★★★' :
+                                            minQualityRating === 4 ? '★★★★' :
+                                            '★★★★★'
+                                        }</span>
+                                    </div>
+                                    <div class="detail-filter-options">
+                                        <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(0); window.location.reload();">
+                                            אלע
+                                        </div>
+                                        <div class="detail-filter-option ${minQualityRating === 1 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(1); window.location.reload();">
+                                            ★ א מענטש זינגט פאר זיך
+                                        </div>
+                                        <div class="detail-filter-option ${minQualityRating === 2 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(2); window.location.reload();">
+                                            ★★ אראפגעזינגען אן מוזיק
+                                        </div>
+                                        <div class="detail-filter-option ${minQualityRating === 3 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(3); window.location.reload();">
+                                            ★★★ אלטע מוזיק
+                                        </div>
+                                        <div class="detail-filter-option ${minQualityRating === 4 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(4); window.location.reload();">
+                                            ★★★★ שיין און ניי
+                                        </div>
+                                        <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(5); window.location.reload();">
+                                            ★★★★★ שיין, ניי און געשמאק
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="detail-songs-list">
+                            ${songs.map((song, i) => {
+                    const globalIdx = allSongs.indexOf(song);
+                    return renderSongItem(song, globalIdx, i + 1, playlistIndices);
                 }).join('')}
                         </div>
                     </div>
@@ -18588,45 +18711,7 @@
 
         // Render piyutim page
         function renderPiyutimPage(container) {
-            // Get all piyutim from piyutimInfo
-            const sortedPiyutim = Object.keys(piyutimInfo).sort((a, b) => a.localeCompare(b, 'he'));
-
-            container.innerHTML = `
-                <div class="page-theme-piyut">
-                    <div class="page-title">
-                        <div class="page-title-bar">פיוטים</div>
-                        <div class="page-title-content">
-                            <div class="subtitle"><span class="subtitle-count">0</span> פיוטים</div>
-                            <div class="loading-wave-bar active" id="piyutimLoader"></div>
-                        </div>
-                    </div>
-
-                    <div class="category-grid" id="piyutimGrid">
-                        ${sortedPiyutim.map(piyutName => {
-                const info = piyutimInfo[piyutName] || {};
-                const songCount = categories.zmanim[piyutName]?.length || 0;
-                const piyutId = info.customId || piyutName;
-                return `
-                            <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
-                                <div class="category-card-content">
-                                    <div class="category-card-info">
-                                        <div class="category-card-title">${piyutName}</div>
-                                        ${songCount > 0 ? `<div class="category-card-count">${songCount} ניגונים</div>` : ''}
-                                    </div>
-                                </div>
-                            </a>
-                        `;
-            }).join('')}
-                    </div>
-                </div>
-            `;
-
-            const countEl = container.querySelector('.subtitle-count');
-            if (countEl) animateCountUp(countEl, sortedPiyutim.length);
-
-            // Hide loading wave bar
-            const loader = document.getElementById('piyutimLoader');
-            if (loader) setTimeout(() => loader.classList.remove('active'), 500);
+            renderCategoryPage(container, 'piyutim', 'פיוטים', '', 'אלע פיוטים און זייערע ניגונים');
         }
 
         // Render music page (scale & rhythm)
@@ -18864,6 +18949,7 @@
                 case 'mechabrim': infoObj = mechabrimInfo; icon = '✍️'; break;
                 case 'verter': infoObj = verterInfo; icon = '📝'; break;
                 case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); icon = '📅'; break;
+                case 'piyutim': infoObj = piyutimInfo; icon = '📜'; break;
                 case 'collections': infoObj = collectionsInfo; icon = '📚'; break;
             }
 
@@ -18971,6 +19057,7 @@
                 case 'mechabrim': infoObj = mechabrimInfo; themeClass = 'page-theme-mechaber'; break;
                 case 'verter': infoObj = verterInfo; themeClass = 'page-theme-verter'; break;
                 case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); themeClass = 'page-theme-zman'; break;
+                case 'piyutim': infoObj = piyutimInfo; themeClass = 'page-theme-piyut'; break;
                 case 'collections': infoObj = collectionsInfo; themeClass = 'page-theme-collection'; break;
             }
 
@@ -19066,6 +19153,7 @@
                 case 'mechabrim': infoObj = mechabrimInfo; themeClass = 'page-theme-mechaber'; break;
                 case 'verter': infoObj = verterInfo; themeClass = 'page-theme-verter'; break;
                 case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); themeClass = 'page-theme-zman'; break;
+                case 'piyutim': infoObj = piyutimInfo; themeClass = 'page-theme-piyut'; break;
                 case 'collections': infoObj = collectionsInfo; themeClass = 'page-theme-collection'; break;
             }
 
