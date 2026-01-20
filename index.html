@@ -7741,6 +7741,28 @@
             font-weight: 600;
         }
 
+        /* Quality Filter Spread Layout */
+        .quality-filter-spread {
+            justify-content: space-between;
+            min-width: 120px;
+            gap: 12px;
+        }
+
+        .filter-label-left {
+            font-size: 0.9em;
+        }
+
+        .filter-stars-right {
+            font-size: 1em;
+            color: var(--color-nigun);
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .detail-filter-current.quality-filter-spread:hover .filter-stars-right {
+            color: white;
+        }
+
         /* Responsive adjustments for filters */
         @media (max-width: 768px) {
             .detail-section-header {
@@ -17370,15 +17392,17 @@
                                 </div>
 
                                 <!-- Quality Filter -->
-                                <div class="detail-filter-dropdown">
-                                    <div class="detail-filter-current">
-                                        <span class="filter-icon">★</span>
-                                        <span class="filter-label">${
-                                            minQualityRating === 0 ? 'אלע' :
-                                            minQualityRating === 1 ? '★+' :
-                                            minQualityRating === 2 ? '★★+' :
-                                            minQualityRating === 3 ? '★★★+' :
-                                            minQualityRating === 4 ? '★★★★+' :
+                                <div class="detail-filter-dropdown detail-filter-quality">
+                                    <div class="detail-filter-current quality-filter-spread">
+                                        <span class="filter-label-left">${
+                                            minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
+                                        }</span>
+                                        <span class="filter-stars-right">${
+                                            minQualityRating === 0 ? '' :
+                                            minQualityRating === 1 ? '★' :
+                                            minQualityRating === 2 ? '★★' :
+                                            minQualityRating === 3 ? '★★★' :
+                                            minQualityRating === 4 ? '★★★★' :
                                             '★★★★★'
                                         }</span>
                                     </div>
@@ -17493,15 +17517,17 @@
                                                 </div>
 
                                                 <!-- Quality Filter -->
-                                                <div class="detail-filter-dropdown">
-                                                    <div class="detail-filter-current">
-                                                        <span class="filter-icon">★</span>
-                                                        <span class="filter-label">${
-                                                            minQualityRating === 0 ? 'אלע' :
-                                                            minQualityRating === 1 ? '★+' :
-                                                            minQualityRating === 2 ? '★★+' :
-                                                            minQualityRating === 3 ? '★★★+' :
-                                                            minQualityRating === 4 ? '★★★★+' :
+                                                <div class="detail-filter-dropdown detail-filter-quality">
+                                                    <div class="detail-filter-current quality-filter-spread">
+                                                        <span class="filter-label-left">${
+                                                            minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
+                                                        }</span>
+                                                        <span class="filter-stars-right">${
+                                                            minQualityRating === 0 ? '' :
+                                                            minQualityRating === 1 ? '★' :
+                                                            minQualityRating === 2 ? '★★' :
+                                                            minQualityRating === 3 ? '★★★' :
+                                                            minQualityRating === 4 ? '★★★★' :
                                                             '★★★★★'
                                                         }</span>
                                                     </div>
