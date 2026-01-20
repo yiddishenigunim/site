@@ -15505,6 +15505,14 @@
             songsLazyState.currentIndex = endIndex;
             songsLazyState.isLoading = false;
 
+            // Update active song highlight after rendering
+            if (songsLazyState.isInitialLoad) {
+                // Use setTimeout to ensure DOM is ready
+                setTimeout(() => {
+                    updateActiveSongInList();
+                }, 0);
+            }
+
             // Animation for scroll-loaded items (slide up one after another)
             if (animate && existingCount > 0) {
                 const newItems = Array.from(grid.children).slice(existingCount);
