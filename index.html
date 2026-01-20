@@ -6031,23 +6031,41 @@
 
         .nigun-tag-inline {
             display: inline-block;
-            padding: 4px 12px;
-            border-radius: 15px;
-            font-size: 0.9em;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.95em;
+            font-weight: 500;
             cursor: pointer;
             transition: var(--transition-smooth);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+        }
+
+        .nigun-tag-inline:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
         }
 
         .nigun-tag-inline.tag-scale {
             background: var(--color-music);
             color: white;
-            cursor: default;
+            cursor: pointer;
+        }
+
+        .nigun-tag-inline.tag-scale:hover {
+            background: var(--color-music-dark);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .nigun-tag-inline.tag-ritem {
             background: var(--color-music);
             color: white;
-            cursor: default;
+            cursor: pointer;
+        }
+
+        .nigun-tag-inline.tag-ritem:hover {
+            background: var(--color-music-dark);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .nigun-tag-inline.tag-zman {
@@ -6057,7 +6075,7 @@
 
         .nigun-tag-inline.tag-zman:hover {
             background: var(--color-zman-dark);
-            transform: scale(1.05);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .nigun-tag-inline.tag-piyut {
@@ -6067,7 +6085,7 @@
 
         .nigun-tag-inline.tag-piyut:hover {
             background: #1b5e20;
-            transform: scale(1.05);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .nigun-tag-inline.tag-collection {
@@ -6077,7 +6095,7 @@
 
         .nigun-tag-inline.tag-collection:hover {
             background: var(--color-collection-dark);
-            transform: scale(1.05);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .nigun-tag-inline.tag-album {
@@ -6087,7 +6105,7 @@
 
         .nigun-tag-inline.tag-album:hover {
             background: var(--color-album-dark);
-            transform: scale(1.05);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .nigun-tag-inline.tag-document {
@@ -6097,7 +6115,7 @@
 
         .nigun-tag-inline.tag-document:hover {
             background: var(--color-document-dark);
-            transform: scale(1.05);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .nigun-tag-inline.tag-resource {
@@ -6107,7 +6125,7 @@
 
         .nigun-tag-inline.tag-resource:hover {
             background: var(--color-resource-dark);
-            transform: scale(1.05);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .nigun-tag-inline.tag-verter {
@@ -6117,7 +6135,7 @@
 
         .nigun-tag-inline.tag-verter:hover {
             background: var(--color-verter-dark);
-            transform: scale(1.05);
+            transform: translateY(-2px) scale(1.02);
         }
 
         .nigun-section h3 {
@@ -16822,6 +16840,8 @@
                 case 'albums': infoObj = albumsInfo; break;
                 case 'documents': infoObj = documentsInfo; break;
                 case 'resources': infoObj = resourcesInfo; break;
+                case 'ritem': infoObj = {}; break;
+                case 'scale': infoObj = {}; break;
             }
 
             // Get customId and rowId from the loaded data
@@ -16850,7 +16870,9 @@
                 'collections': 'collections',
                 'albums': 'albums',
                 'documents': 'documents',
-                'resources': 'resources'
+                'resources': 'resources',
+                'ritem': 'nigunim',
+                'scale': 'nigunim'
             };
 
             navigateTo(pageMap[page] || 'home');
@@ -16965,6 +16987,16 @@
                     icon = '';
                     typeName = 'רעסורס';
                     break;
+                case 'ritem':
+                    infoObj = {};
+                    icon = '🎵';
+                    typeName = 'ריטעם';
+                    break;
+                case 'scale':
+                    infoObj = {};
+                    icon = '🎼';
+                    typeName = 'סקעיל';
+                    break;
             }
 
             const info = infoObj[name] || {};
@@ -17063,7 +17095,9 @@
                 'mechabrim': 'theme-mechaber',
                 'verter': 'theme-verter',
                 'zmanim': isPiyut ? 'theme-piyut' : 'theme-zman',
-                'collections': 'theme-collection'
+                'collections': 'theme-collection',
+                'ritem': 'theme-zman',
+                'scale': 'theme-zman'
             };
             const themeClass = themeMap[type] || '';
 
@@ -17559,7 +17593,7 @@
                             ${song.maure ? `
                                 <div class="nigun-modal-hero-maure">
                                     ${song.maure.split(',').map(m => m.trim()).filter(Boolean).map(m => `
-                                        <span class="maure-tag" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(m)}">${m}</span>
+                                        <span class="maure-tag" data-action="zman-detail" data-name="${escapeHtml(m)}">${m}</span>
                                     `).join('')}
                                 </div>
                             ` : ''}
@@ -17646,7 +17680,7 @@
                                     <div class="nigun-detail-box box-ritem">
                                         <div class="nigun-detail-box-header">ריטעם</div>
                                         <div class="nigun-detail-box-content">
-                                            <span class="nigun-tag-inline tag-ritem">${song.ritem}</span>
+                                            <span class="nigun-tag-inline tag-ritem" data-action="detail" data-category="ritem" data-name="${escapeHtml(song.ritem)}">${song.ritem}</span>
                                         </div>
                                     </div>
                                 ` : ''}
@@ -17654,7 +17688,7 @@
                                     <div class="nigun-detail-box box-scale">
                                         <div class="nigun-detail-box-header">סקעיל</div>
                                         <div class="nigun-detail-box-content">
-                                            <span class="nigun-tag-inline tag-scale">${song.scale}</span>
+                                            <span class="nigun-tag-inline tag-scale" data-action="detail" data-category="scale" data-name="${escapeHtml(song.scale)}">${song.scale}</span>
                                         </div>
                                     </div>
                                 ` : ''}
@@ -17664,7 +17698,7 @@
                                     <div class="nigun-detail-box-header">פאסיג אויף</div>
                                     <div class="nigun-detail-box-content">
                                         ${song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
-                                            <span class="nigun-tag-inline tag-piyut" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(p)}" data-tooltip-value="${escapeHtml(p)}" data-tooltip-type="zman">${p}</span>
+                                            <span class="nigun-tag-inline tag-piyut" data-action="zman-detail" data-name="${escapeHtml(p)}" data-tooltip-value="${escapeHtml(p)}" data-tooltip-type="zman">${p}</span>
                                         `).join('')}
                                     </div>
                                 </div>
