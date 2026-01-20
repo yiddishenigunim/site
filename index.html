@@ -20581,6 +20581,12 @@
         function updatePlayerUI(song) {
             document.getElementById('playerSongName').textContent = song.name;
 
+            // Update the floating button song name if player is minimized
+            const playerSection = document.querySelector('.player-section');
+            if (playerSection.classList.contains('player-minimized')) {
+                document.getElementById('showBtnSongName').textContent = song.name || 'ווייז פלעיער';
+            }
+
             // Create meta with links - using entity-specific colors
             let metaParts = [];
             if (song.mechaber) {
