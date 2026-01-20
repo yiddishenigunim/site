@@ -12598,7 +12598,10 @@
                 const tooltipType = clickedElement.getAttribute('data-tooltip-type');
                 const tooltipValue = clickedElement.getAttribute('data-tooltip-value');
 
-                if (tooltipType === 'zman' && tooltipValue && piyutimInfo[tooltipValue]) {
+                // Maure tags should filter by zman, not navigate to piyutim
+                const isMaureTag = clickedElement.classList.contains('maure-tag');
+
+                if (tooltipType === 'zman' && tooltipValue && piyutimInfo[tooltipValue] && !isMaureTag) {
                     // This is a piyut, navigate to piyutim detail page
                     const piyutId = piyutimInfo[tooltipValue].customId || tooltipValue;
                     e.preventDefault();
