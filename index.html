@@ -12932,10 +12932,7 @@
                 const tooltipType = clickedElement.getAttribute('data-tooltip-type');
                 const tooltipValue = clickedElement.getAttribute('data-tooltip-value');
 
-                // Maure tags should filter by zman, not navigate to piyutim
-                const isMaureTag = clickedElement.classList.contains('maure-tag');
-
-                if (tooltipType === 'zman' && tooltipValue && piyutimInfo[tooltipValue] && !isMaureTag) {
+                if (tooltipType === 'zman' && tooltipValue && piyutimInfo[tooltipValue]) {
                     // This is a piyut, navigate to piyutim detail page
                     const piyutId = piyutimInfo[tooltipValue].customId || tooltipValue;
                     e.preventDefault();
@@ -17264,7 +17261,8 @@
                 case 'mechabrim': infoObj = mechabrimInfo; break;
                 case 'verter': infoObj = verterInfo; break;
                 case 'zmanim':
-                case 'zman': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
+                case 'zman': infoObj = zmaninInfo; break;
+                case 'piyutim': infoObj = piyutimInfo; break;
                 case 'collections': infoObj = collectionsInfo; break;
                 case 'albums': infoObj = albumsInfo; break;
                 case 'documents': infoObj = documentsInfo; break;
@@ -17556,7 +17554,7 @@
                 case 'chatzeros': infoObj = chatzerosInfo; break;
                 case 'mechabrim': infoObj = mechabrimInfo; break;
                 case 'verter': infoObj = verterInfo; break;
-                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
+                case 'zmanim': infoObj = zmaninInfo; break;
                 case 'piyutim': infoObj = piyutimInfo; break;
                 case 'collections': infoObj = collectionsInfo; break;
                 case 'albums': infoObj = albumsInfo; break;
@@ -17671,14 +17669,9 @@
                     typeName = 'ווערטער';
                     break;
                 case 'zmanim':
-                    infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
+                    infoObj = zmaninInfo;
                     icon = '';
-                    // Check if this is a piyut or a zman
-                    if (piyutimInfo[name]) {
-                        typeName = 'פיוט';
-                    } else {
-                        typeName = 'זמן';
-                    }
+                    typeName = 'זמן';
                     break;
                 case 'piyutim':
                     infoObj = piyutimInfo;
@@ -17795,16 +17788,16 @@
             const verterMakor = (type === 'verter' && info.makor) ? info.makor : '';
             const verterMarehMakom = (type === 'verter' && info.marehMakom) ? info.marehMakom : '';
 
-            // For piyutim (in zmanim category), get zman
-            const piyutZman = (type === 'zmanim' && piyutimInfo[name]?.zman) ? piyutimInfo[name].zman : '';
+            // For piyutim, get zman
+            const piyutZman = (type === 'piyutim' && piyutimInfo[name]?.zman) ? piyutimInfo[name].zman : '';
 
-            // Map type to theme class - check if piyut
-            const isPiyut = type === 'zmanim' && piyutimInfo[name];
+            // Map type to theme class
             const themeMap = {
                 'chatzeros': 'theme-chatzer',
                 'mechabrim': 'theme-mechaber',
                 'verter': 'theme-verter',
-                'zmanim': isPiyut ? 'theme-piyut' : 'theme-zman',
+                'zmanim': 'theme-zman',
+                'piyutim': 'theme-piyut',
                 'collections': 'theme-collection'
             };
             const themeClass = themeMap[type] || '';
@@ -18402,12 +18395,16 @@
 
         // Navigate to zman detail page
         function navigateToZmanDetail(name) {
-            const infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
-            const id = infoObj[name]?.rowId;
-            const customId = infoObj[name]?.customId;
-            currentDetailView = { type: 'zman', name: name, id: id, customId: customId };
-            updateURL();
-            renderCurrentPage();
+            // Check if this is a piyut or a zman
+            if (piyutimInfo[name]) {
+                // This is a piyut, navigate to piyutim detail page
+                const piyutId = piyutimInfo[name].customId || name;
+                window.location.hash = `#/piyutim/${encodeURIComponent(piyutId)}`;
+            } else if (zmaninInfo[name]) {
+                // This is a zman, navigate to zman detail page
+                const zmanId = zmaninInfo[name].customId || name;
+                window.location.hash = `#/zman/${encodeURIComponent(zmanId)}`;
+            }
         }
 
         // Render nigun detail page
@@ -18881,7 +18878,7 @@
                     const piyutInfo = piyutimInfo[piyutName] || {};
                     const piyutId = piyutInfo.customId || piyutName;
                     return `
-                                    <a class="zman-item-card" href="#/zmanim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
+                                    <a class="zman-item-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${piyutName}</div>
