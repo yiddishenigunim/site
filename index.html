@@ -7829,6 +7829,14 @@
 
         .filter-label-left {
             font-size: 0.9em;
+            display: flex;
+            align-items: center;
+        }
+
+        .audio-icon {
+            width: 20px;
+            height: 20px;
+            display: inline-block;
         }
 
         .filter-stars-right {
@@ -17478,9 +17486,11 @@
                                 <!-- Quality Filter -->
                                 <div class="detail-filter-dropdown detail-filter-quality">
                                     <div class="detail-filter-current quality-filter-spread">
-                                        <span class="filter-label-left">${
-                                            minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
-                                        }</span>
+                                        <span class="filter-label-left">
+                                            <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
+                                            </svg>
+                                        </span>
                                         <span class="filter-stars-right">${
                                             minQualityRating === 0 ? '' :
                                             minQualityRating === 1 ? '★' :
@@ -17603,9 +17613,11 @@
                                                 <!-- Quality Filter -->
                                                 <div class="detail-filter-dropdown detail-filter-quality">
                                                     <div class="detail-filter-current quality-filter-spread">
-                                                        <span class="filter-label-left">${
-                                                            minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
-                                                        }</span>
+                                                        <span class="filter-label-left">
+                                                            <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
+                                                                <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
+                                                            </svg>
+                                                        </span>
                                                         <span class="filter-stars-right">${
                                                             minQualityRating === 0 ? '' :
                                                             minQualityRating === 1 ? '★' :
