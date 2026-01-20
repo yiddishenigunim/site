@@ -7650,6 +7650,145 @@
             border-bottom: 2px solid var(--primary-pale);
         }
 
+        /* Detail Section Header with Filters */
+        .detail-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 0;
+            gap: 15px;
+        }
+
+        .detail-section-header h3 {
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        /* Filters Group Container */
+        .detail-filters-group {
+            display: flex;
+            gap: 8px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        /* Individual Filter Dropdown */
+        .detail-filter-dropdown {
+            position: relative;
+        }
+
+        .detail-filter-current {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 6px 10px;
+            background: var(--color-nigun-pale);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 0.8em;
+            font-weight: 500;
+            color: var(--color-nigun-dark);
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+
+        .detail-filter-current:hover {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .detail-filter-current .filter-icon {
+            font-size: 1em;
+            line-height: 1;
+        }
+
+        .detail-filter-current .filter-label {
+            font-size: 0.95em;
+        }
+
+        .detail-filter-options {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 6px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 4px;
+            min-width: 180px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 100;
+        }
+
+        .detail-filter-dropdown:hover .detail-filter-options {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .detail-filter-option {
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 6px;
+            transition: var(--transition-smooth);
+            font-size: 0.85em;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .detail-filter-option:hover {
+            background: var(--color-nigun-pale);
+            color: var(--color-nigun-dark);
+        }
+
+        .detail-filter-option.active {
+            background: var(--color-nigun);
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Quality Filter Spread Layout */
+        .quality-filter-spread {
+            justify-content: space-between;
+            min-width: 120px;
+            gap: 12px;
+        }
+
+        .filter-label-left {
+            font-size: 0.9em;
+        }
+
+        .filter-stars-right {
+            font-size: 1em;
+            color: var(--color-nigun);
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+
+        .detail-filter-current.quality-filter-spread:hover .filter-stars-right {
+            color: white;
+        }
+
+        /* Responsive adjustments for filters */
+        @media (max-width: 768px) {
+            .detail-section-header {
+                flex-direction: column;
+                gap: 12px;
+            }
+
+            .detail-filters-group {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
         .detail-songs-list {
             display: flex;
             flex-direction: column;
@@ -15394,6 +15533,41 @@
             }
         }
 
+        // Update detail view when sort changes (called from detail-songs-section)
+        function updateDetailView() {
+            if (currentDetailView) {
+                renderDetailPage();
+            }
+        }
+
+        // Sort a song array based on currentSortOrder (helper for detail views)
+        function sortSongsByOrder(songs) {
+            const sorted = [...songs]; // Create a copy to avoid mutating original
+            switch (currentSortOrder) {
+                case 'alphabetical':
+                    sorted.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'he'));
+                    break;
+                case 'recent':
+                    sorted.sort((a, b) => {
+                        const dateA = a.zugeleigt || '';
+                        const dateB = b.zugeleigt || '';
+                        if (!dateA && !dateB) return (a.name || '').localeCompare(b.name || '', 'he');
+                        if (!dateA) return 1;
+                        if (!dateB) return -1;
+                        return dateB.localeCompare(dateA);
+                    });
+                    break;
+                case 'random':
+                    // Fisher-Yates shuffle
+                    for (let i = sorted.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [sorted[i], sorted[j]] = [sorted[j], sorted[i]];
+                    }
+                    break;
+            }
+            return sorted;
+        }
+
         // Update sort toggle slider position dynamically
         function updateSortToggleSlider(order) {
             const toggle = document.getElementById('sortToggle');
@@ -16982,7 +17156,9 @@
 
             const info = infoObj[name] || {};
             const songIndices = categories[type]?.[name] || [];
-            const songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
+            let songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
+            // Apply current sort order to songs
+            songs = sortSongsByOrder(songs);
 
             // Only show chatzer tags for mechabrim
             const chatzeros = (type === 'mechabrim' && info.chatzer)
@@ -17173,7 +17349,105 @@
                     ` : ''}
                     
                     <div class="detail-songs-section">
-                        <h3>${songs.length} ניגונים ${type === 'mechabrim' ? 'וואס ער האט מחבר געווען' : ''}</h3>
+                        <div class="detail-section-header">
+                            <h3>${songs.length} ניגונים ${type === 'mechabrim' ? 'וואס ער האט מחבר געווען' : ''}</h3>
+                            <div class="detail-filters-group">
+                                <!-- Sort Filter -->
+                                <div class="detail-filter-dropdown">
+                                    <div class="detail-filter-current">
+                                        <span class="filter-icon">⇅</span>
+                                        <span class="filter-label">${
+                                            currentSortOrder === 'random' ? 'שאָפל' :
+                                            currentSortOrder === 'alphabetical' ? 'א"ב' :
+                                            'לעצט צוגעלייגט'
+                                        }</span>
+                                    </div>
+                                    <div class="detail-filter-options">
+                                        <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
+                                             onclick="changeSortOrder('random'); updateDetailView();">
+                                            שאָפל
+                                        </div>
+                                        <div class="detail-filter-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
+                                             onclick="changeSortOrder('alphabetical'); updateDetailView();">
+                                            א"ב
+                                        </div>
+                                        <div class="detail-filter-option ${currentSortOrder === 'recent' ? 'active' : ''}"
+                                             onclick="changeSortOrder('recent'); updateDetailView();">
+                                            לעצט צוגעלייגט
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Display Mode Filter -->
+                                <div class="detail-filter-dropdown">
+                                    <div class="detail-filter-current">
+                                        <span class="filter-icon">👁</span>
+                                        <span class="filter-label">${
+                                            currentDisplayMode === 'minimal' ? 'קעפל' :
+                                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                                            'אלעס'
+                                        }</span>
+                                    </div>
+                                    <div class="detail-filter-options">
+                                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
+                                             onclick="changeDisplayMode('minimal'); updateDetailView();">
+                                            קעפל
+                                        </div>
+                                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
+                                             onclick="changeDisplayMode('recordings'); updateDetailView();">
+                                            רעקארדירונגען
+                                        </div>
+                                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
+                                             onclick="changeDisplayMode('full'); updateDetailView();">
+                                            אלעס
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Quality Filter -->
+                                <div class="detail-filter-dropdown detail-filter-quality">
+                                    <div class="detail-filter-current quality-filter-spread">
+                                        <span class="filter-label-left">${
+                                            minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
+                                        }</span>
+                                        <span class="filter-stars-right">${
+                                            minQualityRating === 0 ? '' :
+                                            minQualityRating === 1 ? '★' :
+                                            minQualityRating === 2 ? '★★' :
+                                            minQualityRating === 3 ? '★★★' :
+                                            minQualityRating === 4 ? '★★★★' :
+                                            '★★★★★'
+                                        }</span>
+                                    </div>
+                                    <div class="detail-filter-options">
+                                        <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(0); updateDetailView();">
+                                            אלע
+                                        </div>
+                                        <div class="detail-filter-option ${minQualityRating === 1 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(1); updateDetailView();">
+                                            ★ א מענטש זינגט פאר זיך
+                                        </div>
+                                        <div class="detail-filter-option ${minQualityRating === 2 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(2); updateDetailView();">
+                                            ★★ אראפגעזינגען אן מוזיק
+                                        </div>
+                                        <div class="detail-filter-option ${minQualityRating === 3 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(3); updateDetailView();">
+                                            ★★★ אלטע מוזיק
+                                        </div>
+                                        <div class="detail-filter-option ${minQualityRating === 4 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(4); updateDetailView();">
+                                            ★★★★ שיין און ניי
+                                        </div>
+                                        <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
+                                             onclick="setMinQualityRating(5); updateDetailView();">
+                                            ★★★★★ שיין, ניי און געשמאק
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="detail-songs-list">
                             ${(() => {
                     const playlistIndices = songs.map(song => allSongs.indexOf(song));
@@ -17188,17 +17462,117 @@
                     ${(() => {
                     // For mechabrim, show songs where they have a שייכות (personality)
                     if (type === 'mechabrim') {
-                        const relatedSongs = allSongs.filter(song => {
+                        let relatedSongs = allSongs.filter(song => {
                             if (!song.personality) return false;
                             const personalities = song.personality.split(',').map(p => p.trim());
                             return personalities.includes(name);
                         });
+                        // Apply current sort order to related songs
+                        relatedSongs = sortSongsByOrder(relatedSongs);
 
                         if (relatedSongs.length > 0) {
                             const playlistIndices = relatedSongs.map(song => allSongs.indexOf(song));
                             return `
                                     <div class="detail-songs-section detail-related-songs">
-                                        <h3>${relatedSongs.length} ניגונים וואס ער האט א שייכות</h3>
+                                        <div class="detail-section-header">
+                                            <h3>${relatedSongs.length} ניגונים וואס ער האט א שייכות</h3>
+                                            <div class="detail-filters-group">
+                                                <!-- Sort Filter -->
+                                                <div class="detail-filter-dropdown">
+                                                    <div class="detail-filter-current">
+                                                        <span class="filter-icon">⇅</span>
+                                                        <span class="filter-label">${
+                                                            currentSortOrder === 'random' ? 'שאָפל' :
+                                                            currentSortOrder === 'alphabetical' ? 'א"ב' :
+                                                            'לעצט צוגעלייגט'
+                                                        }</span>
+                                                    </div>
+                                                    <div class="detail-filter-options">
+                                                        <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
+                                                             onclick="changeSortOrder('random'); updateDetailView();">
+                                                            שאָפל
+                                                        </div>
+                                                        <div class="detail-filter-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
+                                                             onclick="changeSortOrder('alphabetical'); updateDetailView();">
+                                                            א"ב
+                                                        </div>
+                                                        <div class="detail-filter-option ${currentSortOrder === 'recent' ? 'active' : ''}"
+                                                             onclick="changeSortOrder('recent'); updateDetailView();">
+                                                            לעצט צוגעלייגט
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Display Mode Filter -->
+                                                <div class="detail-filter-dropdown">
+                                                    <div class="detail-filter-current">
+                                                        <span class="filter-icon">👁</span>
+                                                        <span class="filter-label">${
+                                                            currentDisplayMode === 'minimal' ? 'קעפל' :
+                                                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                                                            'אלעס'
+                                                        }</span>
+                                                    </div>
+                                                    <div class="detail-filter-options">
+                                                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
+                                                             onclick="changeDisplayMode('minimal'); updateDetailView();">
+                                                            קעפל
+                                                        </div>
+                                                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
+                                                             onclick="changeDisplayMode('recordings'); updateDetailView();">
+                                                            רעקארדירונגען
+                                                        </div>
+                                                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
+                                                             onclick="changeDisplayMode('full'); updateDetailView();">
+                                                            אלעס
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Quality Filter -->
+                                                <div class="detail-filter-dropdown detail-filter-quality">
+                                                    <div class="detail-filter-current quality-filter-spread">
+                                                        <span class="filter-label-left">${
+                                                            minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
+                                                        }</span>
+                                                        <span class="filter-stars-right">${
+                                                            minQualityRating === 0 ? '' :
+                                                            minQualityRating === 1 ? '★' :
+                                                            minQualityRating === 2 ? '★★' :
+                                                            minQualityRating === 3 ? '★★★' :
+                                                            minQualityRating === 4 ? '★★★★' :
+                                                            '★★★★★'
+                                                        }</span>
+                                                    </div>
+                                                    <div class="detail-filter-options">
+                                                        <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(0); updateDetailView();">
+                                                            אלע
+                                                        </div>
+                                                        <div class="detail-filter-option ${minQualityRating === 1 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(1); updateDetailView();">
+                                                            ★ א מענטש זינגט פאר זיך
+                                                        </div>
+                                                        <div class="detail-filter-option ${minQualityRating === 2 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(2); updateDetailView();">
+                                                            ★★ אראפגעזינגען אן מוזיק
+                                                        </div>
+                                                        <div class="detail-filter-option ${minQualityRating === 3 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(3); updateDetailView();">
+                                                            ★★★ אלטע מוזיק
+                                                        </div>
+                                                        <div class="detail-filter-option ${minQualityRating === 4 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(4); updateDetailView();">
+                                                            ★★★★ שיין און ניי
+                                                        </div>
+                                                        <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(5); updateDetailView();">
+                                                            ★★★★★ שיין, ניי און געשמאק
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="detail-songs-list">
                                             ${relatedSongs.map((song, i) => {
                                 const globalIdx = allSongs.indexOf(song);
