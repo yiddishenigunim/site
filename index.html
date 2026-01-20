@@ -15207,9 +15207,8 @@
                     <div class="songs-page-layout">
                         <div class="songs-main-content">
                             <div class="songs-card">
-                                <div class="detail-songs-section" style="margin: 0; padding: 20px 20px 0 20px;">
-                                    <div class="detail-section-header" style="padding: 0;">
-                                        <div class="detail-filters-group">
+                                <div style="padding: 20px 20px 0 20px; display: flex; justify-content: flex-start; margin-bottom: 10px;">
+                                    <div class="detail-filters-group">
                                             <!-- Sort Filter -->
                                             <div class="detail-filter-dropdown">
                                                 <div class="detail-filter-current">
@@ -15306,7 +15305,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
 
                                 <div class="all-songs-grid" id="songsGrid">
                                     ${filteredSongs.length === 0 && !songsFullyLoaded ? `
