@@ -5938,28 +5938,70 @@
         }
 
         .nigun-detail-box {
-            flex: 1 1 120px;
-            min-width: 100px;
-            max-width: 180px;
-            min-height: 70px;
+            flex: 0 0 auto;
+            min-width: 90px;
+            max-width: 160px;
+            min-height: 60px;
             position: relative;
-            border-radius: 14px;
-            padding: 25px 12px 15px 12px;
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+            border-radius: 12px;
+            padding: 8px 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
             text-align: center;
             background: var(--color-nigun-pale);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            overflow: hidden;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
 
-        /* Boxes with multiple items can grow wider */
-        .nigun-detail-box.box-verter,
-        .nigun-detail-box.box-collections,
-        .nigun-detail-box.box-pasig {
-            flex: 2 1 200px;
-            max-width: 320px;
+        .nigun-detail-box[data-action] {
+            cursor: pointer;
+        }
+
+        .nigun-detail-box[data-action]:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Siman box - styled like info-box */
+        .nigun-detail-siman-bar {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            padding: 15px 20px;
+            background: var(--color-nigun-pale);
+            border-radius: 12px;
+            margin: 20px auto;
+            max-width: 600px;
+            border: 1.5px solid var(--color-nigun-dark);
+        }
+
+        .nigun-detail-siman-label {
+            color: var(--color-nigun);
+            font-size: 1em;
+            font-weight: bold;
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-nigun-light);
+            border-radius: 50%;
+            font-style: normal;
+            margin-top: -29px;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .nigun-detail-siman-text {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            line-height: 1.6;
         }
 
         /* Category-specific backgrounds */
@@ -6001,82 +6043,99 @@
 
         .nigun-detail-box-header {
             position: absolute;
-            top: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #f8fafc;
-            color: var(--color-nigun-dark);
-            padding: 2px 12px;
-            font-size: 0.78em;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--color-nigun-dark);
+            color: white;
+            padding: 4px 8px;
+            font-size: 0.7em;
             font-weight: 700;
             white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            border-radius: 12px 12px 0 0;
         }
 
-        /* Category-specific header text colors */
+        /* Category-specific header backgrounds */
         .nigun-detail-box.box-verter .nigun-detail-box-header {
-            color: var(--color-verter-dark);
+            background: var(--color-verter-dark);
         }
 
         .nigun-detail-box.box-scale .nigun-detail-box-header {
-            color: var(--color-zman-dark);
+            background: var(--color-zman-dark);
         }
 
         .nigun-detail-box.box-ritem .nigun-detail-box-header {
-            color: var(--color-zman-dark);
+            background: var(--color-zman-dark);
         }
 
         .nigun-detail-box.box-maure .nigun-detail-box-header {
-            color: var(--color-piyut-dark);
+            background: var(--color-piyut-dark);
         }
 
         .nigun-detail-box.box-pasig .nigun-detail-box-header {
-            color: var(--color-piyut-dark);
+            background: var(--color-piyut-dark);
         }
 
         .nigun-detail-box.box-collections .nigun-detail-box-header {
-            color: var(--color-collection-dark);
+            background: var(--color-collection-dark);
         }
 
         .nigun-detail-box.box-albums .nigun-detail-box-header {
-            color: var(--color-album-dark);
+            background: var(--color-album-dark);
         }
 
         .nigun-detail-box.box-documents .nigun-detail-box-header {
-            color: var(--color-nigun-dark);
+            background: var(--color-nigun-dark);
         }
 
         .nigun-detail-box.box-resources .nigun-detail-box-header {
-            color: var(--color-nigun-dark);
+            background: var(--color-nigun-dark);
         }
 
         .nigun-detail-box-content {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 4px;
             align-items: center;
             justify-content: center;
-            padding: 8px;
+            padding: 24px 8px 8px 8px;
+            font-size: 0.92em;
+            font-weight: 600;
+            color: var(--text-dark);
+            line-height: 1.5;
+            width: 100%;
+            word-break: break-word;
         }
 
         .nigun-detail-box-content .nigun-tag-inline {
             margin: 0;
+            font-size: 0.85em;
         }
 
         .nigun-detail-box-text {
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: var(--text-dark);
             line-height: 1.4;
+            word-break: break-word;
         }
 
         @media (max-width: 500px) {
             .nigun-details-grid {
-                gap: 18px 12px;
+                gap: 12px 8px;
             }
 
             .nigun-detail-box {
-                flex: 0 0 120px;
-                width: 120px;
-                padding: 20px 10px 12px 10px;
+                flex: 0 0 auto;
+                min-width: 85px;
+                max-width: 140px;
+                padding: 6px 8px;
+            }
+
+            .nigun-detail-siman-bar {
+                padding: 10px 12px;
+                font-size: 0.9em;
             }
         }
 
@@ -18120,6 +18179,17 @@
                     `;
                 })()}
 
+                    ${song.siman ? `
+                        <div class="nigun-detail-siman-bar">
+                            <span class="nigun-detail-siman-label">
+                                <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                                    <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6A4.997 4.997 0 0 1 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"/>
+                                </svg>
+                            </span>
+                            <span class="nigun-detail-siman-text">${formatDescription(song.siman)}</span>
+                        </div>
+                    ` : ''}
+
                     ${song.recordings && song.recordings.length > 0 ? `
                         <div class="nigun-recordings-list">
                             <div class="song-item-recordings" style="border-top: none; padding: 0; background: transparent;">
@@ -18172,77 +18242,50 @@
 
                     <!-- Compact Details Grid -->
                     ${(() => {
-                    // Check if we have first row items (siman, verter, ritem, scale)
-                    const hasFirstRow = song.siman || song.verter || song.ritem || song.scale;
+                    // Check if we have any items to display
+                    const hasAnyItems = song.verter || song.ritem || song.scale || song.pasigOif || song.collections || song.resources;
+                    if (!hasAnyItems) return '';
 
                     return `<div class="nigun-details-grid">
-                            ${hasFirstRow ? `<div class="nigun-details-row">
-                                ${song.siman ? `
-                                    <div class="nigun-detail-box">
-                                        <div class="nigun-detail-box-header">סימן</div>
-                                        <div class="nigun-detail-box-content">
-                                            <span class="nigun-detail-box-text">${formatDescription(song.siman)}</span>
+                                <div class="nigun-details-row">
+                                    ${song.verter ? song.verter.split(',').map(v => v.trim()).filter(Boolean).map(v => `
+                                        <div class="nigun-detail-box box-verter" data-action="detail" data-category="verter" data-name="${escapeHtml(v)}" data-tooltip-value="${escapeHtml(v)}" data-tooltip-type="verter">
+                                            <div class="nigun-detail-box-header">ווערטער</div>
+                                            <div class="nigun-detail-box-content">${v}</div>
                                         </div>
-                                    </div>
-                                ` : ''}
-                                ${song.verter ? `
-                                    <div class="nigun-detail-box box-verter">
-                                        <div class="nigun-detail-box-header">ווערטער</div>
-                                        <div class="nigun-detail-box-content">
-                                            ${song.verter.split(',').map(v => v.trim()).filter(Boolean).map(v => `
-                                                <span class="nigun-tag-inline tag-verter" data-action="detail" data-category="verter" data-name="${escapeHtml(v)}" data-tooltip-value="${escapeHtml(v)}" data-tooltip-type="verter">${v}</span>
-                                            `).join('')}
+                                    `).join('') : ''}
+                                    ${song.ritem ? `
+                                        <div class="nigun-detail-box box-ritem">
+                                            <div class="nigun-detail-box-header">ריטעם</div>
+                                            <div class="nigun-detail-box-content">${song.ritem}</div>
                                         </div>
-                                    </div>
-                                ` : ''}
-                                ${song.ritem ? `
-                                    <div class="nigun-detail-box box-ritem">
-                                        <div class="nigun-detail-box-header">ריטעם</div>
-                                        <div class="nigun-detail-box-content">
-                                            <span class="nigun-tag-inline tag-ritem">${song.ritem}</span>
+                                    ` : ''}
+                                    ${song.scale ? `
+                                        <div class="nigun-detail-box box-scale">
+                                            <div class="nigun-detail-box-header">סקעיל</div>
+                                            <div class="nigun-detail-box-content">${song.scale}</div>
                                         </div>
-                                    </div>
-                                ` : ''}
-                                ${song.scale ? `
-                                    <div class="nigun-detail-box box-scale">
-                                        <div class="nigun-detail-box-header">סקעיל</div>
-                                        <div class="nigun-detail-box-content">
-                                            <span class="nigun-tag-inline tag-scale">${song.scale}</span>
+                                    ` : ''}
+                                    ${song.pasigOif ? song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
+                                        <div class="nigun-detail-box box-pasig" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(p)}" data-tooltip-value="${escapeHtml(p)}" data-tooltip-type="zman">
+                                            <div class="nigun-detail-box-header">פאסיג אויף</div>
+                                            <div class="nigun-detail-box-content">${p}</div>
                                         </div>
-                                    </div>
-                                ` : ''}
-                            </div>` : ''}
-                            ${song.pasigOif ? `
-                                <div class="nigun-detail-box box-pasig">
-                                    <div class="nigun-detail-box-header">פאסיג אויף</div>
-                                    <div class="nigun-detail-box-content">
-                                        ${song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
-                                            <span class="nigun-tag-inline tag-piyut" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(p)}" data-tooltip-value="${escapeHtml(p)}" data-tooltip-type="zman">${p}</span>
-                                        `).join('')}
-                                    </div>
+                                    `).join('') : ''}
+                                    ${song.collections ? song.collections.split(',').map(col => col.trim()).filter(Boolean).map(col => `
+                                        <div class="nigun-detail-box box-collections" data-action="detail" data-category="collections" data-name="${escapeHtml(col)}" data-tooltip-value="${escapeHtml(col)}" data-tooltip-type="collection">
+                                            <div class="nigun-detail-box-header">קאלעקשאנס</div>
+                                            <div class="nigun-detail-box-content">${col}</div>
+                                        </div>
+                                    `).join('') : ''}
+                                    ${song.resources ? song.resources.split(',').map(r => r.trim()).filter(Boolean).map(r => `
+                                        <div class="nigun-detail-box box-resources" data-action="detail" data-category="resources" data-name="${escapeHtml(r)}" style="cursor:pointer;">
+                                            <div class="nigun-detail-box-header">רעסורסן</div>
+                                            <div class="nigun-detail-box-content">${r}</div>
+                                        </div>
+                                    `).join('') : ''}
                                 </div>
-                            ` : ''}
-                            ${song.collections ? `
-                                <div class="nigun-detail-box box-collections">
-                                    <div class="nigun-detail-box-header">קאלעקשאנס</div>
-                                    <div class="nigun-detail-box-content">
-                                        ${song.collections.split(',').map(col => col.trim()).filter(Boolean).map(col => `
-                                            <span class="nigun-tag-inline tag-collection" data-action="detail" data-category="collections" data-name="${escapeHtml(col)}" data-tooltip-value="${escapeHtml(col)}" data-tooltip-type="collection">${col}</span>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            ` : ''}
-                            ${song.resources ? `
-                                <div class="nigun-detail-box box-resources">
-                                    <div class="nigun-detail-box-header">רעסורסן</div>
-                                    <div class="nigun-detail-box-content">
-                                        ${song.resources.split(',').map(r => r.trim()).filter(Boolean).map(r => `
-                                            <span class="nigun-tag-inline tag-resource" data-action="detail" data-category="resources" data-name="${escapeHtml(r)}" style="cursor:pointer;">${r}</span>
-                                        `).join('')}
-                                    </div>
-                                </div>
-                            ` : ''}
-                        </div>`;
+                            </div>`;
                 })()}
                     
                     ${song.info ? `
