@@ -6948,6 +6948,76 @@
             }
         }
 
+        /* Thank You Notification */
+        .thank-you-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.7);
+            background: white;
+            padding: 30px 50px;
+            border-radius: 20px;
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            z-index: 10001;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border: 3px solid var(--color-nigun);
+        }
+
+        .thank-you-notification.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .thank-you-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .thank-you-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-chatzer) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .thank-you-text {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--text-dark);
+            white-space: nowrap;
+        }
+
+        @media (max-width: 768px) {
+            .thank-you-notification {
+                padding: 25px 35px;
+            }
+
+            .thank-you-content {
+                gap: 15px;
+            }
+
+            .thank-you-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.6em;
+            }
+
+            .thank-you-text {
+                font-size: 1.2em;
+            }
+        }
+
         /* Images section */
         .nigun-images-section {
             clear: both;
@@ -12659,12 +12729,20 @@
     <div class="rating-modal-overlay" id="ratingModalOverlay" onclick="if(event.target === this) closeRatingModal()">
         <div class="rating-modal-content">
             <button class="rating-modal-close" onclick="event.stopPropagation(); closeRatingModal()">×</button>
-            <div class="rating-modal-header">
+            <div class="rating-modal-header" id="ratingModalHeader">
                 ביטע וועל אויס דעם קוואליטעט פון דעם רעקארדינג
             </div>
             <div class="rating-modal-options" id="ratingModalOptions">
                 <!-- Rating options will be populated by JavaScript -->
             </div>
+        </div>
+    </div>
+
+    <!-- Thank You Notification -->
+    <div class="thank-you-notification" id="thankYouNotification">
+        <div class="thank-you-content">
+            <div class="thank-you-icon">✓</div>
+            <div class="thank-you-text">א דאנק פאר'ן רעיטן!</div>
         </div>
     </div>
 
@@ -22205,6 +22283,9 @@
                 // Update the display
                 updatePlayerRating(newRating);
 
+                // Show thank you notification
+                showThankYouNotification();
+
             } catch (error) {
                 console.error('Error submitting rating:', error);
                 alert('פאלגענדער באריכטונג געשלאגן. ביטע פריווט נאכאמאל.');
@@ -22274,7 +22355,32 @@
         function openRatingModal() {
             const modal = document.getElementById('ratingModalOverlay');
             const optionsContainer = document.getElementById('ratingModalOptions');
+            const headerContainer = document.getElementById('ratingModalHeader');
             if (!modal || !optionsContainer) return;
+
+            // Get current nigun and recording info
+            let headerText = 'ביטע וועל אויס דעם קוואליטעט פון דעם רעקארדינג';
+            if (currentPlayingRecordingInfo) {
+                const { songIdx, recordingIdx } = currentPlayingRecordingInfo;
+                const song = allSongs[songIdx];
+                if (song) {
+                    const nigunName = song.name || 'ניגון';
+                    const recording = song.recordings && song.recordings[recordingIdx];
+                    const recordingInfo = recording ? recording.displayName : '';
+
+                    // Build header with nigun name and recording info
+                    headerText = `<div style="font-size: 0.9em; margin-bottom: 8px; color: var(--color-nigun); font-weight: 800;">${nigunName}</div>`;
+                    if (recordingInfo) {
+                        headerText += `<div style="font-size: 0.8em; margin-bottom: 12px; color: #666; font-weight: 500;">${recordingInfo}</div>`;
+                    }
+                    headerText += '<div style="font-size: 0.85em; font-weight: 600;">ביטע וועל אויס דעם קוואליטעט פון דעם רעקארדינג</div>';
+                }
+            }
+
+            // Update header
+            if (headerContainer) {
+                headerContainer.innerHTML = headerText;
+            }
 
             // Populate rating options
             let optionsHtml = '';
@@ -22328,6 +22434,20 @@
                 modal.classList.remove('active');
                 document.body.style.overflow = '';
             }
+        }
+
+        // Show thank you notification
+        function showThankYouNotification() {
+            const notification = document.getElementById('thankYouNotification');
+            if (!notification) return;
+
+            // Show notification
+            notification.classList.add('show');
+
+            // Auto-hide after 2.5 seconds
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 2500);
         }
 
         // Note: animateCards disabled for songs page to prevent unwanted animations
