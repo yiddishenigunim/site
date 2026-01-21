@@ -7755,6 +7755,13 @@
             font-style: italic;
         }
 
+        .detail-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
         .detail-chatzer-badge {
             display: inline-block;
             background: var(--color-chatzer);
@@ -7779,18 +7786,18 @@
         }
 
         .detail-zman-badge {
-            background: var(--primary-pale);
-            color: var(--primary-deep);
-            padding: 5px 12px;
-            border-radius: 15px;
+            background: var(--color-zman);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
             font-size: 0.85em;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition-smooth);
         }
 
         .detail-zman-badge:hover {
-            background: var(--gradient-main);
-            color: white;
+            background: var(--color-zman-dark);
             transform: scale(1.05);
         }
 
@@ -17869,8 +17876,13 @@
                                     </div>
                                 ` : ''}
                                 ${piyutZman ? `
-                                    <div class="detail-subtitle">
-                                        <span class="detail-zman-text">${piyutZman}</span>
+                                    <div class="detail-badges">
+                                        <span class="detail-zman-badge"
+                                              data-action="zman-detail"
+                                              data-name="${escapeHtml(piyutZman)}"
+                                              data-tooltip-value="${escapeHtml(piyutZman)}"
+                                              data-tooltip-type="zman"
+                                              style="cursor:pointer;">${piyutZman}</span>
                                     </div>
                                 ` : ''}
                                 ${(type === 'collections' && info.zmanim && info.zmanim.length > 0) ? `
