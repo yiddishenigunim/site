@@ -17701,7 +17701,9 @@
             }
 
             const info = infoObj[name] || {};
-            const songIndices = categories[type]?.[name] || [];
+            // For piyutim, songs are stored in categories.zmanim, not categories.piyutim
+            const categoryKey = type === 'piyutim' ? 'zmanim' : type;
+            const songIndices = categories[categoryKey]?.[name] || [];
             let songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
             // Apply current sort order to songs
             songs = sortSongsByOrder(songs);
