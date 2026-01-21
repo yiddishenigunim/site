@@ -1138,6 +1138,330 @@
             }
         }
 
+        /* Generic Detail Modal Overlay - matches nigun modal */
+        .detail-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            backdrop-filter: blur(6px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 20px 20px 120px 20px;
+            overflow-y: auto;
+        }
+
+        .detail-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .detail-modal-content {
+            background: white;
+            border-radius: 20px;
+            max-width: 850px;
+            width: 100%;
+            height: 80vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            position: relative;
+            transform: scale(0.9) translateY(30px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
+            border: 3px solid var(--color-mechaber);
+            padding-bottom: 150px;
+        }
+
+        .detail-modal-overlay.active .detail-modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Theme-specific border colors */
+        .detail-modal-content.theme-mechaber {
+            border-color: var(--color-mechaber);
+        }
+
+        .detail-modal-content.theme-chatzer {
+            border-color: var(--color-chatzer);
+        }
+
+        .detail-modal-content.theme-verter {
+            border-color: var(--color-verter);
+        }
+
+        .detail-modal-content.theme-zman {
+            border-color: var(--color-zman);
+        }
+
+        .detail-modal-content.theme-collection {
+            border-color: var(--color-collection);
+        }
+
+        .detail-modal-content.theme-album {
+            border-color: var(--color-album);
+        }
+
+        .detail-modal-content.theme-document {
+            border-color: var(--color-document);
+        }
+
+        .detail-modal-content.theme-resource {
+            border-color: var(--color-resource);
+        }
+
+        /* Minimal scrollbar for detail modal - matches nigun modal */
+        .detail-modal-content::-webkit-scrollbar {
+            width: 8px;
+            margin-right: -10px;
+        }
+
+        .detail-modal-content::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .detail-modal-content::-webkit-scrollbar-thumb {
+            background: var(--color-mechaber);
+            border-radius: 10px;
+        }
+
+        .detail-modal-content::-webkit-scrollbar-thumb:hover {
+            background: var(--color-mechaber-dark);
+        }
+
+        .detail-modal-content::-webkit-scrollbar-button {
+            display: none;
+        }
+
+        /* Firefox scrollbar */
+        .detail-modal-content {
+            scrollbar-width: thin;
+            scrollbar-color: var(--color-mechaber) transparent;
+        }
+
+        /* Theme-specific scrollbar colors */
+        .detail-modal-content.theme-chatzer {
+            scrollbar-color: var(--color-chatzer) transparent;
+        }
+
+        .detail-modal-content.theme-chatzer::-webkit-scrollbar-thumb {
+            background: var(--color-chatzer);
+        }
+
+        .detail-modal-content.theme-chatzer::-webkit-scrollbar-thumb:hover {
+            background: var(--color-chatzer-dark);
+        }
+
+        .detail-modal-content.theme-verter {
+            scrollbar-color: var(--color-verter) transparent;
+        }
+
+        .detail-modal-content.theme-verter::-webkit-scrollbar-thumb {
+            background: var(--color-verter);
+        }
+
+        .detail-modal-content.theme-verter::-webkit-scrollbar-thumb:hover {
+            background: var(--color-verter-dark);
+        }
+
+        .detail-modal-content.theme-zman {
+            scrollbar-color: var(--color-zman) transparent;
+        }
+
+        .detail-modal-content.theme-zman::-webkit-scrollbar-thumb {
+            background: var(--color-zman);
+        }
+
+        .detail-modal-content.theme-zman::-webkit-scrollbar-thumb:hover {
+            background: var(--color-zman-dark);
+        }
+
+        /* Close button - matches nigun modal */
+        .detail-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5em;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 20;
+        }
+
+        .detail-modal-close:hover {
+            background: #f0f0f0;
+            color: #333;
+        }
+
+        /* Generic Modal Hero Header - matches nigun modal hero */
+        .modal-hero {
+            position: relative;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
+            padding: 45px 25px 40px 25px;
+            text-align: center;
+            margin: -20px -20px 25px -20px;
+            border-radius: 0 0 20px 20px;
+            min-height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-hero-title {
+            font-size: 2em;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            font-family: 'Heebo', sans-serif;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            line-height: 1.3;
+            text-align: center;
+            word-wrap: break-word;
+        }
+
+        /* Theme-specific hero colors */
+        .modal-hero.theme-mechaber {
+            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
+        }
+
+        .modal-hero.theme-chatzer {
+            background: linear-gradient(135deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
+        }
+
+        .modal-hero.theme-verter {
+            background: linear-gradient(135deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
+        }
+
+        .modal-hero.theme-zman {
+            background: linear-gradient(135deg, var(--color-zman) 0%, var(--color-zman-dark) 100%);
+        }
+
+        .modal-hero.theme-collection {
+            background: linear-gradient(135deg, var(--color-collection) 0%, var(--color-collection-dark) 100%);
+        }
+
+        .modal-hero.theme-album {
+            background: linear-gradient(135deg, var(--color-album) 0%, var(--color-album-dark) 100%);
+        }
+
+        .modal-hero.theme-document {
+            background: linear-gradient(135deg, var(--color-document) 0%, var(--color-document-dark) 100%);
+        }
+
+        .modal-hero.theme-resource {
+            background: linear-gradient(135deg, var(--color-resource) 0%, var(--color-resource-dark) 100%);
+        }
+
+        @media (max-width: 500px) {
+            .modal-hero {
+                padding: 30px 15px 30px 15px;
+            }
+
+            .modal-hero-title {
+                font-size: 1.4em;
+            }
+        }
+
+        /* Modal body content - below hero */
+        .modal-body-content {
+            padding: 20px;
+        }
+
+        .modal-body-content .detail-page {
+            padding: 0 !important;
+        }
+
+        /* Hide back button in modal context */
+        #detailModalBody .back-button {
+            display: none !important;
+        }
+
+        #detailModalBody {
+            padding: 20px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        #detailModalBody .detail-page {
+            padding: 0 !important;
+            margin: 0 !important;
+            max-width: 100% !important;
+            width: 100% !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box !important;
+        }
+
+        #detailModalBody .detail-header {
+            margin: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        #detailModalBody .detail-category-bar {
+            max-width: 100% !important;
+        }
+
+        #detailModalBody .detail-header-content {
+            max-width: 100% !important;
+            flex-wrap: wrap;
+        }
+
+        #detailModalBody .detail-title {
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+
+        #detailModalBody .detail-description-section,
+        #detailModalBody .detail-songs-section {
+            padding: 20px !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        #detailModalBody .detail-sections {
+            padding: 0 !important;
+            max-width: 100% !important;
+        }
+
+        /* Ensure all content respects container width */
+        #detailModalBody * {
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        /* Fix image sizing in modal */
+        #detailModalBody .detail-image {
+            max-width: 150px !important;
+            height: auto !important;
+        }
+
+        @media (max-width: 600px) {
+            .detail-modal-content {
+                height: 90vh;
+                border-radius: 16px;
+            }
+        }
+
         .global-search-btn {
             display: flex;
             align-items: center;
@@ -6772,9 +7096,12 @@
         }
 
         @keyframes ratingPromptBounce {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0);
             }
+
             50% {
                 transform: translateY(-3px);
             }
@@ -12707,6 +13034,14 @@
         </div>
     </div>
 
+    <!-- Generic Detail Modal Overlay (for mechabrim, chatzeros, etc.) -->
+    <div class="detail-modal-overlay" id="detailModalOverlay" onclick="if(event.target === this) closeDetailModal()">
+        <div class="detail-modal-content">
+            <button class="detail-modal-close" onclick="event.stopPropagation(); closeDetailModal()">×</button>
+            <div id="detailModalBody"></div>
+        </div>
+    </div>
+
     <!-- PDF Popup -->
     <div class="pdf-popup-overlay" id="pdfPopup" onclick="closePdfPopup(event)">
         <div class="pdf-popup" onclick="event.stopPropagation()">
@@ -12730,7 +13065,7 @@
         <div class="rating-modal-content">
             <button class="rating-modal-close" onclick="event.stopPropagation(); closeRatingModal()">×</button>
             <div class="rating-modal-header" id="ratingModalHeader">
-                ביטע וועל אויס דעם קוואליטעט פון דעם רעקארדינג
+                ביטע וועל אויס די קוואליטעט פון דעם רעקארדינג
             </div>
             <div class="rating-modal-options" id="ratingModalOptions">
                 <!-- Rating options will be populated by JavaScript -->
@@ -12742,7 +13077,7 @@
     <div class="thank-you-notification" id="thankYouNotification">
         <div class="thank-you-content">
             <div class="thank-you-icon">✓</div>
-            <div class="thank-you-text">א דאנק פאר'ן רעיטן!</div>
+            <div class="thank-you-text">א דאנק!</div>
         </div>
     </div>
 
@@ -15592,11 +15927,10 @@
                 <div class="detail-filter-dropdown">
                     <div class="detail-filter-current">
                         <span class="filter-icon">⇅</span>
-                        <span class="filter-label">${
-                            currentSortOrder === 'random' ? 'שאָפל' :
-                            currentSortOrder === 'alphabetical' ? 'א"ב' :
-                            'לעצט צוגעלייגט'
-                        }</span>
+                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
+                    currentSortOrder === 'alphabetical' ? 'א"ב' :
+                        'לעצט צוגעלייגט'
+                }</span>
                     </div>
                     <div class="detail-filter-options">
                         <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
@@ -15618,11 +15952,10 @@
                 <div class="detail-filter-dropdown">
                     <div class="detail-filter-current">
                         <span class="filter-icon">👁</span>
-                        <span class="filter-label">${
-                            currentDisplayMode === 'minimal' ? 'קעפל' :
-                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                            'אלעס'
-                        }</span>
+                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                        'אלעס'
+                }</span>
                     </div>
                     <div class="detail-filter-options">
                         <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
@@ -15648,14 +15981,13 @@
                                 <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
                             </svg>
                         </span>
-                        <span class="filter-stars-right">${
-                            minQualityRating === 0 ? '' :
-                            minQualityRating === 1 ? '★' :
-                            minQualityRating === 2 ? '★★' :
+                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
+                    minQualityRating === 1 ? '★' :
+                        minQualityRating === 2 ? '★★' :
                             minQualityRating === 3 ? '★★★' :
-                            minQualityRating === 4 ? '★★★★' :
-                            '★★★★★'
-                        }</span>
+                                minQualityRating === 4 ? '★★★★' :
+                                    '★★★★★'
+                }</span>
                     </div>
                     <div class="detail-filter-options">
                         <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
@@ -17529,24 +17861,12 @@
             handleURLChange();
         });
 
-        // Navigate to detail page
+        // Navigate to detail page - opens in modal popup
         async function navigateToDetail(categoryKey, name, id = null) {
-            const content = document.getElementById('mainContent');
             const dataPage = categoryKey === 'zman' ? 'zmanim' : categoryKey;
 
-            // Show loading indicator if data not loaded yet
+            // Ensure data is loaded first
             if (!isDataLoadedForPage(dataPage)) {
-                if (content) {
-                    content.innerHTML = `
-                        <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
-                            <div class="loading-wave-bar"></div>
-                            <div style="display: flex; flex-direction: column; align-items: center; gap: 16px;">
-                                ${getMediumLoaderHTML()}
-                                <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאודינג ${name}...</p>
-                            </div>
-                        </div>
-                    `;
-                }
                 await ensureDataForPage(dataPage);
             }
 
@@ -17564,15 +17884,8 @@
                 case 'resources': infoObj = resourcesInfo; break;
             }
 
-            // Get customId and rowId from the loaded data
-            const itemInfo = infoObj[name];
-            const customId = itemInfo?.customId;
-            const rowId = itemInfo?.rowId || id;
-
-            currentDetailView = { type: categoryKey, name: name, id: rowId, customId: customId };
-            updateURL();
-            renderDetailPage();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            // Open in modal popup
+            openDetailModal(categoryKey, name);
         }
 
         // Go back from detail page
@@ -17909,11 +18222,10 @@
                                 <div class="detail-filter-dropdown">
                                     <div class="detail-filter-current">
                                         <span class="filter-icon">⇅</span>
-                                        <span class="filter-label">${
-                                            currentSortOrder === 'random' ? 'שאָפל' :
-                                            currentSortOrder === 'alphabetical' ? 'א"ב' :
-                                            'לעצט צוגעלייגט'
-                                        }</span>
+                                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
+                    currentSortOrder === 'alphabetical' ? 'א"ב' :
+                        'לעצט צוגעלייגט'
+                }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
@@ -17935,11 +18247,10 @@
                                 <div class="detail-filter-dropdown">
                                     <div class="detail-filter-current">
                                         <span class="filter-icon">👁</span>
-                                        <span class="filter-label">${
-                                            currentDisplayMode === 'minimal' ? 'קעפל' :
-                                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                                            'אלעס'
-                                        }</span>
+                                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                        'אלעס'
+                }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
@@ -17965,14 +18276,13 @@
                                                 <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
                                             </svg>
                                         </span>
-                                        <span class="filter-stars-right">${
-                                            minQualityRating === 0 ? '' :
-                                            minQualityRating === 1 ? '★' :
-                                            minQualityRating === 2 ? '★★' :
-                                            minQualityRating === 3 ? '★★★' :
-                                            minQualityRating === 4 ? '★★★★' :
-                                            '★★★★★'
-                                        }</span>
+                                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
+                    minQualityRating === 1 ? '★' :
+                        minQualityRating === 2 ? '★★' :
+                            minQualityRating === 3 ? '★★★' :
+                                minQualityRating === 4 ? '★★★★' :
+                                    '★★★★★'
+                }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
@@ -18036,11 +18346,10 @@
                                                 <div class="detail-filter-dropdown">
                                                     <div class="detail-filter-current">
                                                         <span class="filter-icon">⇅</span>
-                                                        <span class="filter-label">${
-                                                            currentSortOrder === 'random' ? 'שאָפל' :
-                                                            currentSortOrder === 'alphabetical' ? 'א"ב' :
-                                                            'לעצט צוגעלייגט'
-                                                        }</span>
+                                                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
+                                    currentSortOrder === 'alphabetical' ? 'א"ב' :
+                                        'לעצט צוגעלייגט'
+                                }</span>
                                                     </div>
                                                     <div class="detail-filter-options">
                                                         <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
@@ -18062,11 +18371,10 @@
                                                 <div class="detail-filter-dropdown">
                                                     <div class="detail-filter-current">
                                                         <span class="filter-icon">👁</span>
-                                                        <span class="filter-label">${
-                                                            currentDisplayMode === 'minimal' ? 'קעפל' :
-                                                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                                                            'אלעס'
-                                                        }</span>
+                                                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                                        'אלעס'
+                                }</span>
                                                     </div>
                                                     <div class="detail-filter-options">
                                                         <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
@@ -18092,14 +18400,13 @@
                                                                 <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
                                                             </svg>
                                                         </span>
-                                                        <span class="filter-stars-right">${
-                                                            minQualityRating === 0 ? '' :
-                                                            minQualityRating === 1 ? '★' :
-                                                            minQualityRating === 2 ? '★★' :
-                                                            minQualityRating === 3 ? '★★★' :
-                                                            minQualityRating === 4 ? '★★★★' :
-                                                            '★★★★★'
-                                                        }</span>
+                                                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
+                                    minQualityRating === 1 ? '★' :
+                                        minQualityRating === 2 ? '★★' :
+                                            minQualityRating === 3 ? '★★★' :
+                                                minQualityRating === 4 ? '★★★★' :
+                                                    '★★★★★'
+                                }</span>
                                                     </div>
                                                     <div class="detail-filter-options">
                                                         <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
@@ -18132,9 +18439,9 @@
                                         </div>
                                         <div class="detail-songs-list">
                                             ${relatedSongs.map((song, i) => {
-                                const globalIdx = allSongs.indexOf(song);
-                                return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                            }).join('')}
+                                    const globalIdx = allSongs.indexOf(song);
+                                    return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                                }).join('')}
                                         </div>
                                     </div>
                                 `;
@@ -20411,7 +20718,7 @@
                         <div class="song-number">${displayNum}</div>
                         <div class="song-info">
                             <div class="song-name">${song.name}</div>
-                            <div class="song-meta">${metaParts.join(' • ')}</div>
+                            <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                         </div>
                         ${waveAnimation}
                         ${playBtnHtml}
@@ -20484,7 +20791,7 @@
                             <div class="song-number">${displayNum}</div>
                             <div class="song-info">
                                 <div class="song-name">${song.name}</div>
-                                <div class="song-meta">${metaParts.join(' • ')}</div>
+                                <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                             </div>
                             ${waveAnimation}
                         </div>
@@ -20647,7 +20954,7 @@
                             <div class="song-number">${displayNum}</div>
                             <div class="song-info">
                                 <div class="song-name">${song.name}</div>
-                                <div class="song-meta">${metaParts.join(' • ')}</div>
+                                <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                             </div>
                             ${waveAnimation}
                         </div>
@@ -20663,7 +20970,7 @@
                     <div class="song-number">${displayNum}</div>
                     <div class="song-info">
                         <div class="song-name">${song.name}</div>
-                        <div class="song-meta">${metaParts.join(' • ')}</div>
+                        <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                     </div>
                     ${waveAnimation}
                     ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
@@ -20904,7 +21211,7 @@
             if (song.category) {
                 metaParts.push(createPlayerMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
             }
-            document.getElementById('playerSongMeta').innerHTML = metaParts.join(' • ');
+            document.getElementById('playerSongMeta').innerHTML = metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>');
 
             // Collection link
             if (song.collections) {
@@ -21416,15 +21723,215 @@
             history.back();
         }
 
+        // Generic detail modal state
+        let detailModalOpen = false;
+        let currentDetailModalType = null;
+        let currentDetailModalName = null;
+
+        // Open generic detail modal
+        function openDetailModal(type, name) {
+            // Save current scroll position
+            savedScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            detailModalOpen = true;
+            currentDetailModalType = type;
+            currentDetailModalName = name;
+
+            // Get theme class and title for this type
+            const themeMap = {
+                'mechabrim': 'theme-mechaber',
+                'chatzeros': 'theme-chatzer',
+                'verter': 'theme-verter',
+                'zmanim': 'theme-zman',
+                'piyutim': 'theme-zman',
+                'collections': 'theme-collection',
+                'albums': 'theme-album',
+                'documents': 'theme-document',
+                'resources': 'theme-resource'
+            };
+            const titleMap = {
+                'mechabrim': 'מחבר',
+                'chatzeros': 'חצר',
+                'verter': 'ווערטער',
+                'zmanim': 'זמן',
+                'piyutim': 'פיוט',
+                'collections': 'קאלעקשאן',
+                'albums': 'אלבום',
+                'documents': 'דאקומענט',
+                'resources': 'רעסורס'
+            };
+            const themeClass = themeMap[type] || '';
+            const categoryTitle = titleMap[type] || 'דעטאלן';
+
+            // Update URL
+            const itemId = getDetailItemId(type, name);
+            const hash = `#/${type}/${encodeURIComponent(itemId)}`;
+            history.pushState({ detailModal: true, scrollPos: savedScrollPosition, type: type, name: name }, '', hash);
+
+            // Set modal title
+            const modalTitle = document.getElementById('detailModalTitle');
+            if (modalTitle) {
+                modalTitle.textContent = name;
+            }
+
+            // Render content in modal
+            const modalBody = document.getElementById('detailModalBody');
+            const modalContent = document.querySelector('.detail-modal-content');
+
+            // Apply theme class
+            modalContent.className = 'detail-modal-content ' + themeClass;
+
+            renderDetailInModal(modalBody, type, name);
+
+            // Show overlay
+            const overlay = document.getElementById('detailModalOverlay');
+            overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Get item ID for URL
+        function getDetailItemId(type, name) {
+            const infoMap = {
+                'mechabrim': mechabrimInfo,
+                'chatzeros': chatzerosInfo,
+                'verter': verterInfo,
+                'zmanim': Object.assign({}, zmaninInfo, piyutimInfo),
+                'piyutim': piyutimInfo,
+                'collections': collectionsInfo,
+                'albums': albumsInfo,
+                'documents': documentsInfo,
+                'resources': resourcesInfo
+            };
+            const info = infoMap[type]?.[name] || {};
+            return info.customId || name;
+        }
+
+        // Render detail content in modal
+        async function renderDetailInModal(container, type, name) {
+            // Show loading state
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><p>טוען...</p></div>';
+
+            // Get theme class for hero
+            const themeMap = {
+                'mechabrim': 'theme-mechaber',
+                'chatzeros': 'theme-chatzer',
+                'verter': 'theme-verter',
+                'zmanim': 'theme-zman',
+                'piyutim': 'theme-zman',
+                'collections': 'theme-collection',
+                'albums': 'theme-album',
+                'documents': 'theme-document',
+                'resources': 'theme-resource'
+            };
+            const themeClass = themeMap[type] || '';
+
+            // Generate hero header
+            const heroHTML = `
+                <div class="modal-hero ${themeClass}">
+                    <h1 class="modal-hero-title">${name}</h1>
+                </div>
+            `;
+
+            // Create a temporary container for the body content
+            const tempContainer = document.createElement('div');
+            const mainContent = document.getElementById('mainContent');
+            const savedMainHTML = mainContent.innerHTML;
+
+            // Call the appropriate render function
+            switch (type) {
+                case 'mechabrim':
+                case 'chatzeros':
+                case 'verter':
+                case 'collections':
+                    // Set currentDetailView for the render function
+                    currentDetailView = { type, name };
+                    await renderDetailPage();
+                    // Get the rendered content
+                    tempContainer.innerHTML = mainContent.innerHTML;
+                    // Restore mainContent
+                    mainContent.innerHTML = savedMainHTML;
+                    break;
+                case 'zmanim':
+                case 'piyutim':
+                    currentDetailView = { type: 'zman', name };
+                    await renderDetailPage();
+                    tempContainer.innerHTML = mainContent.innerHTML;
+                    mainContent.innerHTML = savedMainHTML;
+                    break;
+                case 'albums':
+                    renderAlbumDetailPage(tempContainer, name);
+                    break;
+                case 'documents':
+                    renderDocumentDetailPage(tempContainer, name);
+                    break;
+                case 'resources':
+                    renderResourceDetailPage(tempContainer, name);
+                    break;
+                default:
+                    tempContainer.innerHTML = '<p>סארט נישט געפונען</p>';
+            }
+
+            // Remove the detail-header from the copied content (we're using modal-hero instead)
+            const detailHeader = tempContainer.querySelector('.detail-header');
+            if (detailHeader) {
+                detailHeader.remove();
+            }
+
+            // Also remove back button if present
+            const backBtn = tempContainer.querySelector('.back-button');
+            if (backBtn) {
+                backBtn.remove();
+            }
+
+            // Combine hero + body content
+            container.innerHTML = heroHTML + `<div class="modal-body-content">${tempContainer.innerHTML}</div>`;
+
+            // Clear the currentDetailView since we don't actually want to navigate
+            currentDetailView = null;
+        }
+
+        // Close generic detail modal
+        function closeDetailModal() {
+            if (!detailModalOpen) return;
+
+            detailModalOpen = false;
+            currentDetailModalType = null;
+            currentDetailModalName = null;
+
+            const overlay = document.getElementById('detailModalOverlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+
+            history.back();
+        }
+
         // Handle browser back/forward for nigun modal
         window.addEventListener('popstate', (e) => {
-            // Check if we're closing the modal
+            // Check if we're closing the nigun modal
             if (nigunModalOpen) {
                 // Close modal without triggering another history change
                 nigunModalOpen = false;
                 currentNigunModalIdx = null;
 
                 const overlay = document.getElementById('nigunModalOverlay');
+                overlay.classList.remove('active');
+                document.body.style.overflow = '';
+
+                // Restore scroll position
+                if (e.state && e.state.scrollPos !== undefined) {
+                    window.scrollTo(0, e.state.scrollPos);
+                } else {
+                    window.scrollTo(0, savedScrollPosition);
+                }
+                return;
+            }
+
+            // Check if we're closing the detail modal
+            if (detailModalOpen) {
+                detailModalOpen = false;
+                currentDetailModalType = null;
+                currentDetailModalName = null;
+
+                const overlay = document.getElementById('detailModalOverlay');
                 overlay.classList.remove('active');
                 document.body.style.overflow = '';
 
@@ -21458,10 +21965,14 @@
             if (e.target.id === 'songModal') closeModal();
         });
 
-        // Close nigun modal with Escape key
+        // Close modals with Escape key
         document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && nigunModalOpen) {
-                closeNigunModal();
+            if (e.key === 'Escape') {
+                if (nigunModalOpen) {
+                    closeNigunModal();
+                } else if (detailModalOpen) {
+                    closeDetailModal();
+                }
             }
         });
 
@@ -21756,11 +22267,10 @@
                                 <div class="detail-filter-dropdown">
                                     <div class="detail-filter-current">
                                         <span class="filter-icon">⇅</span>
-                                        <span class="filter-label">${
-                                            currentSortOrder === 'random' ? 'שאָפל' :
-                                            currentSortOrder === 'alphabetical' ? 'א"ב' :
-                                            'לעצט צוגעלייגט'
-                                        }</span>
+                                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
+                        currentSortOrder === 'alphabetical' ? 'א"ב' :
+                            'לעצט צוגעלייגט'
+                    }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
@@ -21782,11 +22292,10 @@
                                 <div class="detail-filter-dropdown">
                                     <div class="detail-filter-current">
                                         <span class="filter-icon">👁</span>
-                                        <span class="filter-label">${
-                                            currentDisplayMode === 'minimal' ? 'קעפל' :
-                                            currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                                            'אלעס'
-                                        }</span>
+                                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                        currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                            'אלעס'
+                    }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
@@ -21807,17 +22316,15 @@
                                 <!-- Quality Filter -->
                                 <div class="detail-filter-dropdown detail-filter-quality">
                                     <div class="detail-filter-current quality-filter-spread">
-                                        <span class="filter-label-left">${
-                                            minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
-                                        }</span>
-                                        <span class="filter-stars-right">${
-                                            minQualityRating === 0 ? '' :
-                                            minQualityRating === 1 ? '★' :
-                                            minQualityRating === 2 ? '★★' :
-                                            minQualityRating === 3 ? '★★★' :
-                                            minQualityRating === 4 ? '★★★★' :
-                                            '★★★★★'
-                                        }</span>
+                                        <span class="filter-label-left">${minQualityRating === 0 ? 'אלע' : 'קוואליטעט'
+                    }</span>
+                                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
+                        minQualityRating === 1 ? '★' :
+                            minQualityRating === 2 ? '★★' :
+                                minQualityRating === 3 ? '★★★' :
+                                    minQualityRating === 4 ? '★★★★' :
+                                        '★★★★★'
+                    }</span>
                                     </div>
                                     <div class="detail-filter-options">
                                         <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
@@ -21850,12 +22357,12 @@
                         </div>
                         <div class="search-songs-list">
                             ${(() => {
-                    const playlistIndices = displaySongs.map(song => allSongs.indexOf(song));
-                    return displaySongs.map((song, i) => {
-                        const globalIdx = allSongs.indexOf(song);
-                        return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                    }).join('');
-                })()}
+                        const playlistIndices = displaySongs.map(song => allSongs.indexOf(song));
+                        return displaySongs.map((song, i) => {
+                            const globalIdx = allSongs.indexOf(song);
+                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                        }).join('');
+                    })()}
                         </div>
                     </div>
                 `;
