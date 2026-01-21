@@ -5400,6 +5400,14 @@
             background: var(--color-document-pale);
         }
 
+        .search-result-card.result-piyut .result-name {
+            color: var(--color-piyut-dark);
+        }
+
+        .search-result-card.result-piyut:hover {
+            background: var(--color-piyut-pale);
+        }
+
         .search-result-card.result-album .result-name {
             color: var(--color-album-dark);
         }
@@ -5486,6 +5494,11 @@
         .search-result-card.result-document::after {
             border-color: var(--color-document);
             box-shadow: 0 0 10px rgba(96, 125, 139, 0.15);
+        }
+
+        .search-result-card.result-piyut::after {
+            border-color: var(--color-piyut);
+            box-shadow: 0 0 10px rgba(46, 139, 46, 0.15);
         }
 
         .search-result-card.result-album::after {
@@ -22355,6 +22368,18 @@
                 return searchInInfo(albumsInfo?.[name], term);
             });
 
+            // Search in documents (name and all info)
+            const matchingDocuments = Object.keys(documentsInfo || {}).filter(name => {
+                if (name.toLowerCase().includes(term)) return true;
+                return searchInInfo(documentsInfo?.[name], term);
+            });
+
+            // Search in piyutim (name and all info)
+            const matchingPiyutim = Object.keys(piyutimInfo || {}).filter(name => {
+                if (name.toLowerCase().includes(term)) return true;
+                return searchInInfo(piyutimInfo?.[name], term);
+            });
+
             // Search in scale
             const matchingScale = Object.keys(categories.scale || {}).filter(name =>
                 name.toLowerCase().includes(term)
@@ -22373,6 +22398,7 @@
             const totalResults = matchingSongs.length + matchingChatzeros.length +
                 matchingMechabrim.length + matchingCollections.length +
                 matchingVerter.length + matchingZmanim.length + matchingAlbums.length +
+                matchingDocuments.length + matchingPiyutim.length +
                 matchingScale.length + matchingRitem.length + matchingGezungen.length;
 
             let html = `
@@ -22629,6 +22655,49 @@
                                     <div class="result-name">${name}</div>
                                 </div>
                             `).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Piyutim section
+            if (matchingPiyutim.length > 0) {
+                html += `
+                    <div class="search-section">
+                        <div class="search-section-header">
+                            <h3 style="color: var(--color-piyut);">📜 פיוטים (${matchingPiyutim.length})</h3>
+                        </div>
+                        <div class="search-results-grid">
+                            ${matchingPiyutim.map(name => {
+                    const piyutData = piyutimInfo[name];
+                    const piyutId = piyutData?.customId || piyutData?.rowId || name;
+                    return `
+                                <div class="search-result-card result-piyut" data-action="detail" data-category="piyutim" data-name="${escapeHtml(name)}" style="border-right-color: var(--color-piyut);">
+                                    <div class="result-name">${name}</div>
+                                    <div class="result-count">${piyutData?.songs?.length || 0} ניגונים</div>
+                                </div>
+                            `}).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Documents section
+            if (matchingDocuments.length > 0) {
+                html += `
+                    <div class="search-section">
+                        <div class="search-section-header">
+                            <h3 style="color: var(--color-document);">📄 דאקומענטן (${matchingDocuments.length})</h3>
+                        </div>
+                        <div class="search-results-grid">
+                            ${matchingDocuments.map(name => {
+                    const documentData = documentsInfo[name];
+                    return `
+                                <div class="search-result-card result-document" data-action="detail" data-category="documents" data-name="${escapeHtml(name)}" style="border-right-color: var(--color-document);">
+                                    <div class="result-name">${name}</div>
+                                    <div class="result-count">${documentData?.songs?.length || 0} ניגונים</div>
+                                </div>
+                            `}).join('')}
                         </div>
                     </div>
                 `;
