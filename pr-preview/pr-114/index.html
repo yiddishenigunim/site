@@ -1315,7 +1315,7 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
             padding: 45px 25px 40px 25px;
             text-align: center;
-            margin: -20px -20px 25px -20px;
+            margin: 0 60px 25px 60px;
             border-radius: 0 0 20px 20px;
             min-height: 100px;
             display: flex;
@@ -1378,7 +1378,6 @@
             }
         }
 
-        /* Modal body content - below hero */
         .modal-body-content {
             padding: 20px;
         }
@@ -1393,54 +1392,18 @@
         }
 
         #detailModalBody {
-            padding: 20px;
-            width: 100%;
-            max-width: 100%;
-            box-sizing: border-box;
+            padding: 0;
             overflow-x: hidden;
         }
 
+        /* Reset detail-page viewport-based calculations inside modal */
         #detailModalBody .detail-page {
-            padding: 0 !important;
-            margin: 0 !important;
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
             max-width: 100% !important;
             width: 100% !important;
-            overflow-x: hidden !important;
-            box-sizing: border-box !important;
-        }
-
-        #detailModalBody .detail-header {
-            margin: 0 !important;
-            border-radius: 0 !important;
-            box-shadow: none !important;
-            max-width: 100% !important;
-            width: 100% !important;
-        }
-
-        #detailModalBody .detail-category-bar {
-            max-width: 100% !important;
-        }
-
-        #detailModalBody .detail-header-content {
-            max-width: 100% !important;
-            flex-wrap: wrap;
-        }
-
-        #detailModalBody .detail-title {
-            word-wrap: break-word !important;
-            overflow-wrap: break-word !important;
-        }
-
-        #detailModalBody .detail-description-section,
-        #detailModalBody .detail-songs-section {
-            padding: 20px !important;
-            max-width: 100% !important;
-            box-sizing: border-box !important;
-        }
-
-        #detailModalBody .detail-sections {
-            padding: 0 !important;
-            max-width: 100% !important;
         }
 
         /* Ensure all content respects container width */
@@ -1453,6 +1416,43 @@
         #detailModalBody .detail-image {
             max-width: 150px !important;
             height: auto !important;
+        }
+
+        /* Style detail-description-section in modal like nigun-additions-box */
+        #detailModalBody .detail-description-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            padding: 20px 20px 15px 20px;
+            background: var(--color-mechaber-pale);
+            border-radius: 12px;
+            margin: 25px auto 20px auto;
+            max-width: 600px;
+            position: relative;
+            border: 1.5px solid var(--color-mechaber-dark);
+            box-shadow: none;
+        }
+
+        #detailModalBody .detail-description-section h3 {
+            color: var(--color-mechaber);
+            font-size: 1em;
+            font-weight: bold;
+            width: fit-content;
+            padding: 4px 12px;
+            background: var(--color-mechaber-light);
+            border-radius: 20px;
+            margin: -34px 0 8px 0;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        #detailModalBody .detail-description-section .detail-description-content {
+            font-size: 0.9em;
+            color: var(--text-dark);
+            line-height: 1.6;
+            text-align: right;
         }
 
         @media (max-width: 600px) {
