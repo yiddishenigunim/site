@@ -13114,7 +13114,7 @@
         // ========================================
         // CACHE MANAGER - Minimize API calls
         // ========================================
-        const CACHE_VERSION = 'v10'; // Increment when data structure changes
+        const CACHE_VERSION = 'v11'; // Increment when data structure changes
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
         const CacheManager = {
@@ -13530,9 +13530,9 @@
                                     if (colNameLower === 'קאלעקשנס' || colNameLower.includes('קאלעקשן')) {
                                         info.collections = relatedNames;
                                     }
-                                    // Store zman for piyutim (take first if multiple)
+                                    // Store zmanim for piyutim (all of them)
                                     if (colNameLower === 'זמן' || colNameLower === 'zman') {
-                                        info.zman = relatedNames[0]; // Take first zman
+                                        info.zmanim = relatedNames; // Store all zmanim
                                     }
                                     // Store zmanim list for collections (plural)
                                     if (colNameLower === 'זמנים') {
@@ -13565,7 +13565,7 @@
                                     }
                                     // Handle zman lookup field for piyutim
                                     if (colNameLower === 'זמן' || colNameLower === 'zman') {
-                                        info.zman = relatedName;
+                                        info.zmanim = [relatedName]; // Store as array for consistency
                                     }
                                 }
                                 return;
@@ -17819,8 +17819,8 @@
             const verterMakor = (type === 'verter' && info.makor) ? info.makor : '';
             const verterMarehMakom = (type === 'verter' && info.marehMakom) ? info.marehMakom : '';
 
-            // For piyutim, get zman
-            const piyutZman = (type === 'piyutim' && piyutimInfo[name]?.zman) ? piyutimInfo[name].zman : '';
+            // For piyutim, get zmanim (array)
+            const piyutZmanim = (type === 'piyutim' && piyutimInfo[name]?.zmanim) ? piyutimInfo[name].zmanim : [];
 
             // Map type to theme class
             const themeMap = {
@@ -17875,14 +17875,16 @@
                                         ${verterMarehMakom ? `<span class="detail-mareh-text">${verterMarehMakom}</span>` : ''}
                                     </div>
                                 ` : ''}
-                                ${piyutZman ? `
+                                ${piyutZmanim.length > 0 ? `
                                     <div class="detail-badges">
-                                        <span class="detail-zman-badge"
-                                              data-action="zman-detail"
-                                              data-name="${escapeHtml(piyutZman)}"
-                                              data-tooltip-value="${escapeHtml(piyutZman)}"
-                                              data-tooltip-type="zman"
-                                              style="cursor:pointer;">${piyutZman}</span>
+                                        ${piyutZmanim.map(zman => `
+                                            <span class="detail-zman-badge"
+                                                  data-action="zman-detail"
+                                                  data-name="${escapeHtml(zman)}"
+                                                  data-tooltip-value="${escapeHtml(zman)}"
+                                                  data-tooltip-type="zman"
+                                                  style="cursor:pointer;">${zman}</span>
+                                        `).join('')}
                                     </div>
                                 ` : ''}
                                 ${(type === 'collections' && info.zmanim && info.zmanim.length > 0) ? `
@@ -19026,7 +19028,7 @@
                         return false;
                     }).length;
                     const piyutId = info.customId || piyutName;
-                    const zman = info.zman || '';
+                    const zmanim = info.zmanim || [];
 
                     return `
                         <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
@@ -19034,13 +19036,15 @@
                                 <div class="card-icon"></div>
                                 <div class="card-header-text">
                                     <div class="card-title">${piyutName}</div>
-                                    ${zman ? `
+                                    ${zmanim.length > 0 ? `
                                         <div class="card-tags" onclick="event.stopPropagation();">
-                                            <span class="card-zman-tag"
-                                                  data-action="zman-detail"
-                                                  data-name="${escapeHtml(zman)}"
-                                                  data-tooltip-value="${escapeHtml(zman)}"
-                                                  data-tooltip-type="zman">${zman}</span>
+                                            ${zmanim.map(zman => `
+                                                <span class="card-zman-tag"
+                                                      data-action="zman-detail"
+                                                      data-name="${escapeHtml(zman)}"
+                                                      data-tooltip-value="${escapeHtml(zman)}"
+                                                      data-tooltip-type="zman">${zman}</span>
+                                            `).join('')}
                                         </div>
                                     ` : ''}
                                     <div class="card-stats">
@@ -19082,7 +19086,7 @@
                         return false;
                     }).length;
                     const piyutId = info.customId || piyutName;
-                    const zman = info.zman || '';
+                    const zmanim = info.zmanim || [];
 
                     return `
                                 <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
@@ -19090,13 +19094,15 @@
                                         <div class="card-icon"></div>
                                         <div class="card-header-text">
                                             <div class="card-title">${piyutName}</div>
-                                            ${zman ? `
+                                            ${zmanim.length > 0 ? `
                                                 <div class="card-tags" onclick="event.stopPropagation();">
-                                                    <span class="card-zman-tag"
-                                                          data-action="zman-detail"
-                                                          data-name="${escapeHtml(zman)}"
-                                                          data-tooltip-value="${escapeHtml(zman)}"
-                                                          data-tooltip-type="zman">${zman}</span>
+                                                    ${zmanim.map(zman => `
+                                                        <span class="card-zman-tag"
+                                                              data-action="zman-detail"
+                                                              data-name="${escapeHtml(zman)}"
+                                                              data-tooltip-value="${escapeHtml(zman)}"
+                                                              data-tooltip-type="zman">${zman}</span>
+                                                    `).join('')}
                                                 </div>
                                             ` : ''}
                                             <div class="card-stats">
