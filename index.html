@@ -2477,6 +2477,10 @@
             animation: itemPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
+        .card-stagger {
+            animation: itemPopIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
         /* Make song items and category cards animate their position smoothly */
         .all-songs-grid .song-item,
         .category-grid .category-card {
@@ -4751,10 +4755,6 @@
         .page-theme-mechaber .category-grid {
             grid-template-columns: repeat(auto-fill, 320px);
             justify-content: center;
-        }
-
-        .page-theme-mechaber .category-card {
-            width: 320px;
         }
 
         /* Mechaber text wrapping to prevent overflow */
