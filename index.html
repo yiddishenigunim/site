@@ -13898,7 +13898,7 @@
                     }
                     // Also need songs for counts
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'mechabrim':
@@ -13907,7 +13907,7 @@
                         loadedCategories.mechabrim = true;
                     }
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'verter':
@@ -13916,7 +13916,7 @@
                         loadedCategories.verter = true;
                     }
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'zmanim':
@@ -13929,7 +13929,7 @@
                         loadedCategories.piyutim = true;
                     }
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'collections':
@@ -13938,7 +13938,7 @@
                         loadedCategories.collections = true;
                     }
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'piyutim':
@@ -13947,7 +13947,7 @@
                         loadedCategories.piyutim = true;
                     }
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'resources':
