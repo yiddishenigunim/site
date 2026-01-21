@@ -1335,6 +1335,45 @@
             word-wrap: break-word;
         }
 
+        /* Profile avatar in modal hero */
+        .modal-hero-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            border: 4px solid white;
+            overflow: hidden;
+            flex-shrink: 0;
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .modal-hero-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .modal-hero-avatar .placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-mechaber-pale) 0%, var(--color-mechaber-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-hero-avatar .placeholder .mechaber-icon {
+            width: 28px;
+            height: 41px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+        }
+
         /* Theme-specific hero colors */
         .modal-hero.theme-mechaber {
             background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
@@ -1380,6 +1419,7 @@
 
         .modal-body-content {
             padding: 20px;
+            background: white;
         }
 
         .modal-body-content .detail-page {
@@ -1436,16 +1476,28 @@
         }
 
         #detailModalBody .detail-description-section h3 {
-            color: var(--color-mechaber);
-            font-size: 1em;
-            font-weight: bold;
-            width: fit-content;
-            padding: 4px 12px;
-            background: var(--color-mechaber-light);
-            border-radius: 20px;
-            margin: -34px 0 8px 0;
+            font-size: 0;
+            color: transparent;
+            width: 32px;
+            height: 32px;
+            padding: 0;
+            background: var(--color-mechaber);
+            border-radius: 50%;
+            margin: -36px 0 10px 0;
             border: 3px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: none;
+        }
+
+        #detailModalBody .detail-description-section h3::before {
+            content: "i";
+            font-size: 1.1rem;
+            font-weight: bold;
+            font-style: italic;
+            color: white;
         }
 
         #detailModalBody .detail-description-section .detail-description-content {
@@ -14689,7 +14741,7 @@
                     category: extractText(values['c-u0H9G6FHoJ']), // חצר
                     verter: extractText(values['c-KAWfVfB4jq']),
                     mechaber: extractText(values['c-ujrTHeCJGo']),
-                    personality: personalityNames, // פערזענליכקייט
+                    personalities: personalityNames, // פערזענליכקייט
                     scale: extractText(values['c-wQZrHPVWog']),
                     ritem: extractText(values['c-OmWEZXO7Ys']),
                     gezungen: extractText(values['c-kiHIam57Z0']),
@@ -17996,6 +18048,34 @@
             // Apply current sort order to songs
             songs = sortSongsByOrder(songs);
 
+            // For mechabrim: find songs where name appears in personalities field
+            let personalitySongs = [];
+            let personalityRecordings = [];
+            if (type === 'mechabrim') {
+                // Songs where mechaber is in personalities field (but not already in mechaber field)
+                const songIndicesSet = new Set(songIndices);
+                personalitySongs = allSongs.filter((song, idx) => {
+                    if (songIndicesSet.has(idx)) return false; // Exclude already-shown mechaber songs
+                    if (!song.personalities) return false;
+                    return song.personalities.split(',').map(p => p.trim()).includes(name);
+                });
+                personalitySongs = sortSongsByOrder(personalitySongs);
+
+                // Recordings where mechaber is in personalities field
+                allSongs.forEach((song, songIdx) => {
+                    if (song.recordings && Array.isArray(song.recordings)) {
+                        song.recordings.forEach((rec, recIdx) => {
+                            if (rec.personalities) {
+                                const recPersonalities = rec.personalities.split(',').map(p => p.trim());
+                                if (recPersonalities.includes(name)) {
+                                    personalityRecordings.push({ song, songIdx, recording: rec, recIdx });
+                                }
+                            }
+                        });
+                    }
+                });
+            }
+
             // Only show chatzer tags for mechabrim
             const chatzeros = (type === 'mechabrim' && info.chatzer)
                 ? info.chatzer.split(',').map(c => c.trim()).filter(Boolean)
@@ -18296,126 +18376,41 @@
                     
                     ${(() => {
                     // For mechabrim, show songs where they have a שייכות (personality)
-                    if (type === 'mechabrim') {
-                        let relatedSongs = allSongs.filter(song => {
-                            if (!song.personality) return false;
-                            const personalities = song.personality.split(',').map(p => p.trim());
-                            return personalities.includes(name);
-                        });
-                        // Apply current sort order to related songs
-                        relatedSongs = sortSongsByOrder(relatedSongs);
-
-                        if (relatedSongs.length > 0) {
-                            const playlistIndices = relatedSongs.map(song => allSongs.indexOf(song));
-                            return `
-                                    <div class="detail-songs-section detail-related-songs">
-                                        <div class="detail-section-header">
-                                            <h3>${relatedSongs.length} ניגונים וואס ער האט א שייכות</h3>
-                                            <div class="detail-filters-group">
-                                                <!-- Sort Filter -->
-                                                <div class="detail-filter-dropdown">
-                                                    <div class="detail-filter-current">
-                                                        <span class="filter-icon">⇅</span>
-                                                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
-                                    currentSortOrder === 'alphabetical' ? 'א"ב' :
-                                        'לעצט צוגעלייגט'
-                                }</span>
-                                                    </div>
-                                                    <div class="detail-filter-options">
-                                                        <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
-                                                             onclick="changeSortOrder('random'); updateDetailView();">
-                                                            שאָפל
-                                                        </div>
-                                                        <div class="detail-filter-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
-                                                             onclick="changeSortOrder('alphabetical'); updateDetailView();">
-                                                            א"ב
-                                                        </div>
-                                                        <div class="detail-filter-option ${currentSortOrder === 'recent' ? 'active' : ''}"
-                                                             onclick="changeSortOrder('recent'); updateDetailView();">
-                                                            לעצט צוגעלייגט
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Display Mode Filter -->
-                                                <div class="detail-filter-dropdown">
-                                                    <div class="detail-filter-current">
-                                                        <span class="filter-icon">👁</span>
-                                                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
-                                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                                        'אלעס'
-                                }</span>
-                                                    </div>
-                                                    <div class="detail-filter-options">
-                                                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
-                                                             onclick="changeDisplayMode('minimal'); updateDetailView();">
-                                                            קעפל
-                                                        </div>
-                                                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
-                                                             onclick="changeDisplayMode('recordings'); updateDetailView();">
-                                                            רעקארדירונגען
-                                                        </div>
-                                                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
-                                                             onclick="changeDisplayMode('full'); updateDetailView();">
-                                                            אלעס
-                                                        </div>
-                                                    </div>
-                                                </div>
-
-                                                <!-- Quality Filter -->
-                                                <div class="detail-filter-dropdown detail-filter-quality">
-                                                    <div class="detail-filter-current quality-filter-spread">
-                                                        <span class="filter-label-left">
-                                                            <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
-                                                                <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
-                                                            </svg>
-                                                        </span>
-                                                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
-                                    minQualityRating === 1 ? '★' :
-                                        minQualityRating === 2 ? '★★' :
-                                            minQualityRating === 3 ? '★★★' :
-                                                minQualityRating === 4 ? '★★★★' :
-                                                    '★★★★★'
-                                }</span>
-                                                    </div>
-                                                    <div class="detail-filter-options">
-                                                        <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
-                                                             onclick="setMinQualityRating(0); updateDetailView();">
-                                                            אלע
-                                                        </div>
-                                                        <div class="detail-filter-option ${minQualityRating === 1 ? 'active' : ''}"
-                                                             onclick="setMinQualityRating(1); updateDetailView();">
-                                                            ★ א מענטש זינגט פאר זיך
-                                                        </div>
-                                                        <div class="detail-filter-option ${minQualityRating === 2 ? 'active' : ''}"
-                                                             onclick="setMinQualityRating(2); updateDetailView();">
-                                                            ★★ אראפגעזינגען אן מוזיק
-                                                        </div>
-                                                        <div class="detail-filter-option ${minQualityRating === 3 ? 'active' : ''}"
-                                                             onclick="setMinQualityRating(3); updateDetailView();">
-                                                            ★★★ אלטע מוזיק
-                                                        </div>
-                                                        <div class="detail-filter-option ${minQualityRating === 4 ? 'active' : ''}"
-                                                             onclick="setMinQualityRating(4); updateDetailView();">
-                                                            ★★★★ שיין און ניי
-                                                        </div>
-                                                        <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
-                                                             onclick="setMinQualityRating(5); updateDetailView();">
-                                                            ★★★★★ שיין, ניי און געשמאק
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="detail-songs-list">
-                                            ${relatedSongs.map((song, i) => {
-                                    const globalIdx = allSongs.indexOf(song);
-                                    return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                                }).join('')}
-                                        </div>
+                    if (type === 'mechabrim' && personalitySongs.length > 0) {
+                        const playlistIndices = personalitySongs.map(song => allSongs.indexOf(song));
+                        return `
+                                <div class="detail-songs-section detail-related-songs">
+                                    <div class="detail-section-header">
+                                        <h3>${personalitySongs.length} ניגונים מיט וועלכע ער האט געהאט א שייכות</h3>
                                     </div>
-                                `;
-                        }
+                                    <div class="detail-songs-list">
+                                        ${personalitySongs.map((song, i) => {
+                            const globalIdx = allSongs.indexOf(song);
+                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                        }).join('')}
+                                    </div>
+                                </div>
+                            `;
+                    }
+                    return '';
+                })()}
+                    
+                    ${(() => {
+                    // For mechabrim, show recordings where they appear in personalities
+                    if (type === 'mechabrim' && personalityRecordings.length > 0) {
+                        return `
+                                <div class="detail-songs-section detail-related-recordings">
+                                    <div class="detail-section-header">
+                                        <h3>${personalityRecordings.length} רעקארדינגס</h3>
+                                    </div>
+                                    <div class="detail-songs-list">
+                                        ${personalityRecordings.map((item, i) => {
+                            const { song, songIdx } = item;
+                            return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx));
+                        }).join('')}
+                                    </div>
+                                </div>
+                            `;
                     }
                     return '';
                 })()}
@@ -19602,7 +19597,52 @@
         // Render category page with lazy loading
         function renderCategoryPage(container, categoryKey, title, icon, subtitle) {
             const data = categories[categoryKey];
-            const sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
+
+            // Sort keys - for mechabrim, sort by birthYear; otherwise alphabetically
+            let sortedKeys;
+            if (categoryKey === 'mechabrim') {
+                // Helper to parse Hebrew year to numeric value
+                const parseHebrewYear = (yearStr) => {
+                    if (!yearStr) return 9999;
+                    // Hebrew letter values
+                    const hebrewValues = {
+                        'א': 1, 'ב': 2, 'ג': 3, 'ד': 4, 'ה': 5, 'ו': 6, 'ז': 7, 'ח': 8, 'ט': 9,
+                        'י': 10, 'כ': 20, 'ך': 20, 'ל': 30, 'מ': 40, 'ם': 40, 'נ': 50, 'ן': 50,
+                        'ס': 60, 'ע': 70, 'פ': 80, 'ף': 80, 'צ': 90, 'ץ': 90,
+                        'ק': 100, 'ר': 200, 'ש': 300, 'ת': 400
+                    };
+                    // Sum all Hebrew letter values
+                    let total = 0;
+                    for (const char of yearStr) {
+                        if (hebrewValues[char]) {
+                            total += hebrewValues[char];
+                        }
+                    }
+                    // Only consider it a valid year if >= 500 (like תק"_ = 5500+)
+                    // This excludes month names (אב=3, אייר=221, ניסן=170, etc.)
+                    return total >= 500 ? total : 9999;
+                };
+
+                // Sort by birthYear, fallback to deathYear-70, empty dates at end
+                sortedKeys = Object.keys(data).sort((a, b) => {
+                    const infoA = mechabrimInfo[a] || {};
+                    const infoB = mechabrimInfo[b] || {};
+                    // Get birth year, or estimate from death year - 70
+                    let yearA = parseHebrewYear(infoA.birthYear);
+                    if (yearA === 9999 && infoA.deathYear) {
+                        const deathA = parseHebrewYear(infoA.deathYear);
+                        if (deathA !== 9999) yearA = deathA - 70;
+                    }
+                    let yearB = parseHebrewYear(infoB.birthYear);
+                    if (yearB === 9999 && infoB.deathYear) {
+                        const deathB = parseHebrewYear(infoB.deathYear);
+                        if (deathB !== 9999) yearB = deathB - 70;
+                    }
+                    return yearA - yearB;
+                });
+            } else {
+                sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
+            }
 
             // Reset lazy loading state
             categoryLazyState = {
@@ -21794,9 +21834,27 @@
             };
             const themeClass = themeMap[type] || '';
 
+            // Get info for profile image (for mechabrim type)
+            let profileImageHTML = '';
+            if (type === 'mechabrim') {
+                const info = mechabrimInfo[name] || {};
+                if (info.image) {
+                    profileImageHTML = `
+                        <div class="modal-hero-avatar">
+                            <img src="${info.image}" alt="${name}">
+                        </div>`;
+                } else {
+                    profileImageHTML = `
+                        <div class="modal-hero-avatar">
+                            <div class="placeholder"><div class="mechaber-icon"></div></div>
+                        </div>`;
+                }
+            }
+
             // Generate hero header
             const heroHTML = `
                 <div class="modal-hero ${themeClass}">
+                    ${profileImageHTML}
                     <h1 class="modal-hero-title">${name}</h1>
                 </div>
             `;
