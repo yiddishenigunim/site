@@ -4753,37 +4753,42 @@
 
         /* Mechaber-specific grid sizing - fixed width cards */
         .page-theme-mechaber .category-grid {
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            grid-auto-rows: 240px;
+            grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+            grid-auto-rows: 1fr;
         }
 
         .page-theme-mechaber .category-card {
-            height: 240px;
+            display: grid;
+            grid-template-rows: auto 1fr;
         }
 
-        /* Mechaber text wrapping to prevent overflow */
+        /* Mechaber text wrapping and sizing to fit */
         .page-theme-mechaber .card-title {
             word-wrap: break-word;
             overflow-wrap: break-word;
-            hyphens: auto;
+            font-size: 1.1em;
+            line-height: 1.3;
         }
 
         .page-theme-mechaber .card-header-text {
             word-wrap: break-word;
             overflow-wrap: break-word;
-            hyphens: auto;
         }
 
         .page-theme-mechaber .card-mechaber-formal {
             word-wrap: break-word;
             overflow-wrap: break-word;
-            hyphens: auto;
+            font-size: 0.7em;
         }
 
         .page-theme-mechaber .card-mechaber-known {
             word-wrap: break-word;
             overflow-wrap: break-word;
-            hyphens: auto;
+            font-size: 1em;
+        }
+
+        .page-theme-mechaber .card-years {
+            font-size: 0.75em;
         }
 
         .page-theme-verter .category-card {
