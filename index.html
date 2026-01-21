@@ -13107,7 +13107,7 @@
         // ========================================
         // CACHE MANAGER - Minimize API calls
         // ========================================
-        const CACHE_VERSION = 'v9'; // Increment when data structure changes
+        const CACHE_VERSION = 'v10'; // Increment when data structure changes
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
         const CacheManager = {
@@ -13523,8 +13523,12 @@
                                     if (colNameLower === 'קאלעקשנס' || colNameLower.includes('קאלעקשן')) {
                                         info.collections = relatedNames;
                                     }
-                                    // Store zmanim list for collections
-                                    if (colNameLower === 'זמנים' || colNameLower.includes('זמן')) {
+                                    // Store zman for piyutim (take first if multiple)
+                                    if (colNameLower === 'זמן' || colNameLower === 'zman') {
+                                        info.zman = relatedNames[0]; // Take first zman
+                                    }
+                                    // Store zmanim list for collections (plural)
+                                    if (colNameLower === 'זמנים') {
                                         info.zmanim = relatedNames;
                                     }
                                     // Mechaber birth/death years (lookup fields)
@@ -13551,6 +13555,10 @@
                                     }
                                     if (colNameLower.includes('חצר')) {
                                         info.chatzer = relatedName;
+                                    }
+                                    // Handle zman lookup field for piyutim
+                                    if (colNameLower === 'זמן' || colNameLower === 'zman') {
+                                        info.zman = relatedName;
                                     }
                                 }
                                 return;
