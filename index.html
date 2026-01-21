@@ -17701,10 +17701,22 @@
             }
 
             const info = infoObj[name] || {};
-            // For piyutim, songs are stored in categories.zmanim, not categories.piyutim
-            const categoryKey = type === 'piyutim' ? 'zmanim' : type;
-            const songIndices = categories[categoryKey]?.[name] || [];
-            let songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
+            // For piyutim, search in allSongs directly (both pasigOif and maure fields)
+            // This matches the filter behavior on the nigunim page
+            let songs;
+            if (type === 'piyutim') {
+                songs = allSongs.filter(song => {
+                    // Check if piyut name is in pasigOif field
+                    if (song.pasigOif && song.pasigOif.includes(name)) return true;
+                    // Check if piyut name is in maure field
+                    if (song.maure && song.maure.includes(name)) return true;
+                    return false;
+                });
+            } else {
+                const categoryKey = type;
+                const songIndices = categories[categoryKey]?.[name] || [];
+                songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
+            }
             // Apply current sort order to songs
             songs = sortSongsByOrder(songs);
 
@@ -18876,7 +18888,12 @@
                         <h3>פיוטים</h3>
                         <div class="zman-items-grid">
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
-                    const songCount = categories.zmanim[piyutName]?.length || 0;
+                    // Count songs from both pasigOif and maure fields (matching filter logic)
+                    const songCount = allSongs.filter(song => {
+                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
+                        if (song.maure && song.maure.includes(piyutName)) return true;
+                        return false;
+                    }).length;
                     const piyutInfo = piyutimInfo[piyutName] || {};
                     const piyutId = piyutInfo.customId || piyutName;
                     return `
@@ -18976,7 +18993,12 @@
                     <div class="category-grid" id="piyutimGrid">
                         ${sortedPiyutim.map(piyutName => {
                 const info = piyutimInfo[piyutName] || {};
-                const songCount = categories.zmanim[piyutName]?.length || 0;
+                // Count songs from both pasigOif and maure fields (matching filter logic)
+                const songCount = allSongs.filter(song => {
+                    if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
+                    if (song.maure && song.maure.includes(piyutName)) return true;
+                    return false;
+                }).length;
                 const piyutId = info.customId || piyutName;
                 return `
                             <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
