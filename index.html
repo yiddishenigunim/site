@@ -9084,7 +9084,8 @@
         }
 
         /* Paused state - wave bars stay still */
-        .song-item.active.paused .wave-bar {
+        .song-item.active.paused .wave-bar,
+        .song-wave-animation.paused .wave-bar {
             animation-play-state: paused;
         }
 
@@ -9604,40 +9605,12 @@
             box-shadow: 0 6px 25px rgba(123, 31, 162, 0.5);
         }
 
-        .equalizer-icon {
-            display: flex;
-            align-items: center;
-            gap: 2px;
+        /* Reset margin for wave animation inside button */
+        .player-show-btn .song-wave-animation {
+            margin-right: 0;
+            margin-left: 0;
             height: 18px;
-            margin-left: 10px;
-        }
-
-        .equalizer-icon .bar {
-            width: 3px;
-            background: white;
-            border-radius: 3px;
-            animation: waveStream 0.8s ease-in-out infinite;
-            transform-origin: center;
-        }
-
-        .equalizer-icon .bar:nth-child(1) {
-            height: 8px;
-            animation-delay: 0s;
-        }
-
-        .equalizer-icon .bar:nth-child(2) {
-            height: 14px;
-            animation-delay: 0.1s;
-        }
-
-        .equalizer-icon .bar:nth-child(3) {
-            height: 10px;
-            animation-delay: 0.2s;
-        }
-
-        /* Paused state for equalizer */
-        .equalizer-icon.paused .bar {
-            animation-play-state: paused;
+            /* Match previous icon height */
         }
 
         .player-inner {
@@ -12939,10 +12912,11 @@
     <!-- Player Show Button (when minimized) -->
     <button class="player-show-btn" id="playerShowBtn" onclick="showPlayerBanner()">
         <span id="showBtnSongName">ווייז פלעיער</span>
-        <div class="equalizer-icon">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
+        <div class="song-wave-animation">
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
+            <span class="wave-bar"></span>
         </div>
     </button>
 
@@ -21228,10 +21202,10 @@
 
             // Update player play button
             document.getElementById('playPauseBtn').classList.add('playing');
-            // Remove paused state from equalizer
-            const equalizerIcon = document.querySelector('.equalizer-icon');
-            if (equalizerIcon) {
-                equalizerIcon.classList.remove('paused');
+            // Remove paused state from player show button wave
+            const playerShowWave = document.querySelector('#playerShowBtn .song-wave-animation');
+            if (playerShowWave) {
+                playerShowWave.classList.remove('paused');
             }
         }
 
@@ -21469,7 +21443,7 @@
         // Update play/pause state for both player and song list
         function updatePlayState(isPlaying) {
             const playPauseBtn = document.getElementById('playPauseBtn');
-            const equalizerIcon = document.querySelector('.equalizer-icon');
+            const playerShowWave = document.querySelector('#playerShowBtn .song-wave-animation');
 
             // Update player button
             if (isPlaying) {
@@ -21478,12 +21452,12 @@
                 playPauseBtn.classList.remove('playing');
             }
 
-            // Update equalizer icon in player-show-btn (pause when audio paused)
-            if (equalizerIcon) {
+            // Update wave animation in player-show-btn (pause when audio paused)
+            if (playerShowWave) {
                 if (isPlaying) {
-                    equalizerIcon.classList.remove('paused');
+                    playerShowWave.classList.remove('paused');
                 } else {
-                    equalizerIcon.classList.add('paused');
+                    playerShowWave.classList.add('paused');
                 }
             }
 
