@@ -19006,12 +19006,26 @@
                         return false;
                     }).length;
                     const piyutId = info.customId || piyutName;
+                    const zman = info.zman || '';
+
                     return `
-                        <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
-                            <div class="category-card-content">
-                                <div class="category-card-info">
-                                    <div class="category-card-title">${piyutName}</div>
-                                    ${songCount > 0 ? `<div class="category-card-count">${songCount} ניגונים</div>` : ''}
+                        <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
+                            <div class="card-header">
+                                <div class="card-icon"></div>
+                                <div class="card-header-text">
+                                    <div class="card-title">${piyutName}</div>
+                                    ${zman ? `
+                                        <div class="card-tags" onclick="event.stopPropagation();">
+                                            <span class="card-zman-tag"
+                                                  data-action="zman-detail"
+                                                  data-name="${escapeHtml(zman)}"
+                                                  data-tooltip-value="${escapeHtml(zman)}"
+                                                  data-tooltip-type="zman">${zman}</span>
+                                        </div>
+                                    ` : ''}
+                                    <div class="card-stats">
+                                        <span class="card-stat">${songCount} ניגונים</span>
+                                    </div>
                                 </div>
                             </div>
                         </a>
@@ -19048,12 +19062,26 @@
                         return false;
                     }).length;
                     const piyutId = info.customId || piyutName;
+                    const zman = info.zman || '';
+
                     return `
-                                <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
-                                    <div class="category-card-content">
-                                        <div class="category-card-info">
-                                            <div class="category-card-title">${piyutName}</div>
-                                            ${songCount > 0 ? `<div class="category-card-count">${songCount} ניגונים</div>` : ''}
+                                <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
+                                    <div class="card-header">
+                                        <div class="card-icon"></div>
+                                        <div class="card-header-text">
+                                            <div class="card-title">${piyutName}</div>
+                                            ${zman ? `
+                                                <div class="card-tags" onclick="event.stopPropagation();">
+                                                    <span class="card-zman-tag"
+                                                          data-action="zman-detail"
+                                                          data-name="${escapeHtml(zman)}"
+                                                          data-tooltip-value="${escapeHtml(zman)}"
+                                                          data-tooltip-type="zman">${zman}</span>
+                                                </div>
+                                            ` : ''}
+                                            <div class="card-stats">
+                                                <span class="card-stat">${songCount} ניגונים</span>
+                                            </div>
                                         </div>
                                     </div>
                                 </a>
