@@ -14536,6 +14536,7 @@
                 'mechabrim': 'page-theme-mechaber',
                 'verter': 'page-theme-verter',
                 'zmanim': 'page-theme-zman',
+                'piyutim': 'page-theme-piyut',
                 'collections': 'page-theme-collection',
                 'resources': 'page-theme-resource',
                 'documents': 'page-theme-document',
@@ -14550,6 +14551,7 @@
                 'mechabrim': { title: 'מחברים', subtitle: 'מחברים', countLabel: 'מחברים' },
                 'verter': { title: 'ווערטער', subtitle: 'ווערטער', countLabel: 'ווערטער' },
                 'zmanim': { title: 'זמנים', subtitle: 'זמנים', countLabel: 'זמנים' },
+                'piyutim': { title: 'פיוטים', subtitle: 'פיוטים', countLabel: 'פיוטים' },
                 'collections': { title: 'קאלעקשאנס', subtitle: 'קאלעקשאנס', countLabel: 'קאלעקשאנס' },
                 'resources': { title: 'רעסורסן', subtitle: 'רעסורסן', countLabel: 'רעסורסן' },
                 'documents': { title: 'דאקומענטן', subtitle: 'דאקומענטן', countLabel: 'דאקומענטן' },
@@ -18980,6 +18982,52 @@
             // Get all piyutim from piyutimInfo
             const sortedPiyutim = Object.keys(piyutimInfo).sort((a, b) => a.localeCompare(b, 'he'));
 
+            // Check if we're coming from skeleton (skeleton-grid exists)
+            const existingSkeletonGrid = container.querySelector('.skeleton-grid');
+            const existingCountEl = container.querySelector('.subtitle-count');
+
+            if (existingSkeletonGrid && existingCountEl) {
+                // Coming from skeleton - just update count and replace grid, keep header
+                animateCountUp(existingCountEl, sortedPiyutim.length);
+
+                // Replace skeleton-grid with category-grid
+                const categoryGrid = document.createElement('div');
+                categoryGrid.className = 'category-grid';
+                categoryGrid.id = 'piyutimGrid';
+                existingSkeletonGrid.replaceWith(categoryGrid);
+
+                // Generate cards HTML
+                const cardsHTML = sortedPiyutim.map(piyutName => {
+                    const info = piyutimInfo[piyutName] || {};
+                    // Count songs from both pasigOif and maure fields (matching filter logic)
+                    const songCount = allSongs.filter(song => {
+                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
+                        if (song.maure && song.maure.includes(piyutName)) return true;
+                        return false;
+                    }).length;
+                    const piyutId = info.customId || piyutName;
+                    return `
+                        <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
+                            <div class="category-card-content">
+                                <div class="category-card-info">
+                                    <div class="category-card-title">${piyutName}</div>
+                                    ${songCount > 0 ? `<div class="category-card-count">${songCount} ניגונים</div>` : ''}
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+
+                categoryGrid.innerHTML = cardsHTML;
+
+                // Hide loading wave bar
+                const loader = document.getElementById('piyutimLoader');
+                if (loader) setTimeout(() => loader.classList.remove('active'), 500);
+
+                return;
+            }
+
+            // First load - render full page
             container.innerHTML = `
                 <div class="page-theme-piyut">
                     <div class="page-title">
@@ -18992,25 +19040,25 @@
 
                     <div class="category-grid" id="piyutimGrid">
                         ${sortedPiyutim.map(piyutName => {
-                const info = piyutimInfo[piyutName] || {};
-                // Count songs from both pasigOif and maure fields (matching filter logic)
-                const songCount = allSongs.filter(song => {
-                    if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
-                    if (song.maure && song.maure.includes(piyutName)) return true;
-                    return false;
-                }).length;
-                const piyutId = info.customId || piyutName;
-                return `
-                            <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
-                                <div class="category-card-content">
-                                    <div class="category-card-info">
-                                        <div class="category-card-title">${piyutName}</div>
-                                        ${songCount > 0 ? `<div class="category-card-count">${songCount} ניגונים</div>` : ''}
+                    const info = piyutimInfo[piyutName] || {};
+                    // Count songs from both pasigOif and maure fields (matching filter logic)
+                    const songCount = allSongs.filter(song => {
+                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
+                        if (song.maure && song.maure.includes(piyutName)) return true;
+                        return false;
+                    }).length;
+                    const piyutId = info.customId || piyutName;
+                    return `
+                                <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
+                                    <div class="category-card-content">
+                                        <div class="category-card-info">
+                                            <div class="category-card-title">${piyutName}</div>
+                                            ${songCount > 0 ? `<div class="category-card-count">${songCount} ניגונים</div>` : ''}
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                        `;
-            }).join('')}
+                                </a>
+                            `;
+                }).join('')}
                     </div>
                 </div>
             `;
