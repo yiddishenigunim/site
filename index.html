@@ -4663,8 +4663,9 @@
         /* Category Cards Grid */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 320px));
             gap: 20px;
+            justify-content: center;
         }
 
         .category-card {
@@ -4840,6 +4841,8 @@
         .card-header-text {
             flex: 1;
             min-width: 0;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .card-description {
@@ -5509,6 +5512,8 @@
             font-weight: 700;
             color: var(--primary-deep);
             flex: 1;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Mechaber formal name (טיטל + ערשטע נאמען + לעצטע נאמען - smaller, lighter) */
@@ -5518,6 +5523,8 @@
             font-weight: 400;
             color: var(--color-mechaber);
             margin-bottom: 3px;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         /* Mechaber known name (גערופן + פלאץ + סופיקס - bigger, darker) */
@@ -5525,6 +5532,8 @@
             font-size: 1.1em;
             font-weight: 700;
             color: var(--color-mechaber-dark);
+            word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .card-count {
