@@ -8082,6 +8082,13 @@
             font-style: italic;
         }
 
+        .detail-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
         .detail-chatzer-badge {
             display: inline-block;
             background: var(--color-chatzer);
@@ -8106,18 +8113,18 @@
         }
 
         .detail-zman-badge {
-            background: var(--primary-pale);
-            color: var(--primary-deep);
-            padding: 5px 12px;
-            border-radius: 15px;
+            background: var(--color-zman);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
             font-size: 0.85em;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition-smooth);
         }
 
         .detail-zman-badge:hover {
-            background: var(--gradient-main);
-            color: white;
+            background: var(--color-zman-dark);
             transform: scale(1.05);
         }
 
@@ -13237,10 +13244,7 @@
                 const tooltipType = clickedElement.getAttribute('data-tooltip-type');
                 const tooltipValue = clickedElement.getAttribute('data-tooltip-value');
 
-                // Maure tags should filter by zman, not navigate to piyutim
-                const isMaureTag = clickedElement.classList.contains('maure-tag');
-
-                if (tooltipType === 'zman' && tooltipValue && piyutimInfo[tooltipValue] && !isMaureTag) {
+                if (tooltipType === 'zman' && tooltipValue && piyutimInfo[tooltipValue]) {
                     // This is a piyut, navigate to piyutim detail page
                     const piyutId = piyutimInfo[tooltipValue].customId || tooltipValue;
                     e.preventDefault();
@@ -13415,7 +13419,7 @@
         // ========================================
         // CACHE MANAGER - Minimize API calls
         // ========================================
-        const CACHE_VERSION = 'v9'; // Increment when data structure changes
+        const CACHE_VERSION = 'v11'; // Increment when data structure changes
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
         const CacheManager = {
@@ -13831,8 +13835,12 @@
                                     if (colNameLower === 'קאלעקשנס' || colNameLower.includes('קאלעקשן')) {
                                         info.collections = relatedNames;
                                     }
-                                    // Store zmanim list for collections
-                                    if (colNameLower === 'זמנים' || colNameLower.includes('זמן')) {
+                                    // Store zmanim for piyutim (all of them)
+                                    if (colNameLower === 'זמן' || colNameLower === 'zman') {
+                                        info.zmanim = relatedNames; // Store all zmanim
+                                    }
+                                    // Store zmanim list for collections (plural)
+                                    if (colNameLower === 'זמנים') {
                                         info.zmanim = relatedNames;
                                     }
                                     // Mechaber birth/death years (lookup fields)
@@ -13859,6 +13867,10 @@
                                     }
                                     if (colNameLower.includes('חצר')) {
                                         info.chatzer = relatedName;
+                                    }
+                                    // Handle zman lookup field for piyutim
+                                    if (colNameLower === 'זמן' || colNameLower === 'zman') {
+                                        info.zmanim = [relatedName]; // Store as array for consistency
                                     }
                                 }
                                 return;
@@ -14206,7 +14218,7 @@
                     }
                     // Also need songs for counts
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'mechabrim':
@@ -14215,7 +14227,7 @@
                         loadedCategories.mechabrim = true;
                     }
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'verter':
@@ -14224,7 +14236,7 @@
                         loadedCategories.verter = true;
                     }
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'zmanim':
@@ -14237,7 +14249,7 @@
                         loadedCategories.piyutim = true;
                     }
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'collections':
@@ -14246,7 +14258,7 @@
                         loadedCategories.collections = true;
                     }
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'piyutim':
@@ -14255,7 +14267,7 @@
                         loadedCategories.piyutim = true;
                     }
                     if (!loadedCategories.songs) {
-                        fetchSongsInBackground();
+                        await fetchSongsInBackground();
                     }
                     break;
                 case 'resources':
@@ -14844,6 +14856,7 @@
                 'mechabrim': 'page-theme-mechaber',
                 'verter': 'page-theme-verter',
                 'zmanim': 'page-theme-zman',
+                'piyutim': 'page-theme-piyut',
                 'collections': 'page-theme-collection',
                 'resources': 'page-theme-resource',
                 'documents': 'page-theme-document',
@@ -14858,6 +14871,7 @@
                 'mechabrim': { title: 'מחברים', subtitle: 'מחברים', countLabel: 'מחברים' },
                 'verter': { title: 'ווערטער', subtitle: 'ווערטער', countLabel: 'ווערטער' },
                 'zmanim': { title: 'זמנים', subtitle: 'זמנים', countLabel: 'זמנים' },
+                'piyutim': { title: 'פיוטים', subtitle: 'פיוטים', countLabel: 'פיוטים' },
                 'collections': { title: 'קאלעקשאנס', subtitle: 'קאלעקשאנס', countLabel: 'קאלעקשאנס' },
                 'resources': { title: 'רעסורסן', subtitle: 'רעסורסן', countLabel: 'רעסורסן' },
                 'documents': { title: 'דאקומענטן', subtitle: 'דאקומענטן', countLabel: 'דאקומענטן' },
@@ -17566,7 +17580,8 @@
                 case 'mechabrim': infoObj = mechabrimInfo; break;
                 case 'verter': infoObj = verterInfo; break;
                 case 'zmanim':
-                case 'zman': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
+                case 'zman': infoObj = zmaninInfo; break;
+                case 'piyutim': infoObj = piyutimInfo; break;
                 case 'collections': infoObj = collectionsInfo; break;
                 case 'albums': infoObj = albumsInfo; break;
                 case 'documents': infoObj = documentsInfo; break;
@@ -17846,7 +17861,7 @@
                 case 'chatzeros': infoObj = chatzerosInfo; break;
                 case 'mechabrim': infoObj = mechabrimInfo; break;
                 case 'verter': infoObj = verterInfo; break;
-                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
+                case 'zmanim': infoObj = zmaninInfo; break;
                 case 'piyutim': infoObj = piyutimInfo; break;
                 case 'collections': infoObj = collectionsInfo; break;
                 case 'albums': infoObj = albumsInfo; break;
@@ -17954,14 +17969,9 @@
                     typeName = 'ווערטער';
                     break;
                 case 'zmanim':
-                    infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
+                    infoObj = zmaninInfo;
                     icon = '';
-                    // Check if this is a piyut or a zman
-                    if (piyutimInfo[name]) {
-                        typeName = 'פיוט';
-                    } else {
-                        typeName = 'זמן';
-                    }
+                    typeName = 'זמן';
                     break;
                 case 'piyutim':
                     infoObj = piyutimInfo;
@@ -17991,8 +18001,22 @@
             }
 
             const info = infoObj[name] || {};
-            const songIndices = categories[type]?.[name] || [];
-            let songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
+            // For piyutim, search in allSongs directly (both pasigOif and maure fields)
+            // This matches the filter behavior on the nigunim page
+            let songs;
+            if (type === 'piyutim') {
+                songs = allSongs.filter(song => {
+                    // Check if piyut name is in pasigOif field
+                    if (song.pasigOif && song.pasigOif.includes(name)) return true;
+                    // Check if piyut name is in maure field
+                    if (song.maure && song.maure.includes(name)) return true;
+                    return false;
+                });
+            } else {
+                const categoryKey = type;
+                const songIndices = categories[categoryKey]?.[name] || [];
+                songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
+            }
             // Apply current sort order to songs
             songs = sortSongsByOrder(songs);
 
@@ -18078,16 +18102,16 @@
             const verterMakor = (type === 'verter' && info.makor) ? info.makor : '';
             const verterMarehMakom = (type === 'verter' && info.marehMakom) ? info.marehMakom : '';
 
-            // For piyutim (in zmanim category), get zman
-            const piyutZman = (type === 'zmanim' && piyutimInfo[name]?.zman) ? piyutimInfo[name].zman : '';
+            // For piyutim, get zmanim (array)
+            const piyutZmanim = (type === 'piyutim' && piyutimInfo[name]?.zmanim) ? piyutimInfo[name].zmanim : [];
 
-            // Map type to theme class - check if piyut
-            const isPiyut = type === 'zmanim' && piyutimInfo[name];
+            // Map type to theme class
             const themeMap = {
                 'chatzeros': 'theme-chatzer',
                 'mechabrim': 'theme-mechaber',
                 'verter': 'theme-verter',
-                'zmanim': isPiyut ? 'theme-piyut' : 'theme-zman',
+                'zmanim': 'theme-zman',
+                'piyutim': 'theme-piyut',
                 'collections': 'theme-collection'
             };
             const themeClass = themeMap[type] || '';
@@ -18134,9 +18158,16 @@
                                         ${verterMarehMakom ? `<span class="detail-mareh-text">${verterMarehMakom}</span>` : ''}
                                     </div>
                                 ` : ''}
-                                ${piyutZman ? `
-                                    <div class="detail-subtitle">
-                                        <span class="detail-zman-text">${piyutZman}</span>
+                                ${piyutZmanim.length > 0 ? `
+                                    <div class="detail-badges">
+                                        ${piyutZmanim.map(zman => `
+                                            <span class="detail-zman-badge"
+                                                  data-action="zman-detail"
+                                                  data-name="${escapeHtml(zman)}"
+                                                  data-tooltip-value="${escapeHtml(zman)}"
+                                                  data-tooltip-type="zman"
+                                                  style="cursor:pointer;">${zman}</span>
+                                        `).join('')}
                                     </div>
                                 ` : ''}
                                 ${(type === 'collections' && info.zmanim && info.zmanim.length > 0) ? `
@@ -18679,12 +18710,16 @@
 
         // Navigate to zman detail page
         function navigateToZmanDetail(name) {
-            const infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
-            const id = infoObj[name]?.rowId;
-            const customId = infoObj[name]?.customId;
-            currentDetailView = { type: 'zman', name: name, id: id, customId: customId };
-            updateURL();
-            renderCurrentPage();
+            // Check if this is a piyut or a zman
+            if (piyutimInfo[name]) {
+                // This is a piyut, navigate to piyutim detail page
+                const piyutId = piyutimInfo[name].customId || name;
+                window.location.hash = `#/piyutim/${encodeURIComponent(piyutId)}`;
+            } else if (zmaninInfo[name]) {
+                // This is a zman, navigate to zman detail page
+                const zmanId = zmaninInfo[name].customId || name;
+                window.location.hash = `#/zman/${encodeURIComponent(zmanId)}`;
+            }
         }
 
         // Render nigun detail page
@@ -19154,11 +19189,16 @@
                         <h3>פיוטים</h3>
                         <div class="zman-items-grid">
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
-                    const songCount = categories.zmanim[piyutName]?.length || 0;
+                    // Count songs from both pasigOif and maure fields (matching filter logic)
+                    const songCount = allSongs.filter(song => {
+                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
+                        if (song.maure && song.maure.includes(piyutName)) return true;
+                        return false;
+                    }).length;
                     const piyutInfo = piyutimInfo[piyutName] || {};
                     const piyutId = piyutInfo.customId || piyutName;
                     return `
-                                    <a class="zman-item-card" href="#/zmanim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
+                                    <a class="zman-item-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${piyutName}</div>
@@ -19241,6 +19281,68 @@
             // Get all piyutim from piyutimInfo
             const sortedPiyutim = Object.keys(piyutimInfo).sort((a, b) => a.localeCompare(b, 'he'));
 
+            // Check if we're coming from skeleton (skeleton-grid exists)
+            const existingSkeletonGrid = container.querySelector('.skeleton-grid');
+            const existingCountEl = container.querySelector('.subtitle-count');
+
+            if (existingSkeletonGrid && existingCountEl) {
+                // Coming from skeleton - just update count and replace grid, keep header
+                animateCountUp(existingCountEl, sortedPiyutim.length);
+
+                // Replace skeleton-grid with category-grid
+                const categoryGrid = document.createElement('div');
+                categoryGrid.className = 'category-grid';
+                categoryGrid.id = 'piyutimGrid';
+                existingSkeletonGrid.replaceWith(categoryGrid);
+
+                // Generate cards HTML
+                const cardsHTML = sortedPiyutim.map(piyutName => {
+                    const info = piyutimInfo[piyutName] || {};
+                    // Count songs from both pasigOif and maure fields (matching filter logic)
+                    const songCount = allSongs.filter(song => {
+                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
+                        if (song.maure && song.maure.includes(piyutName)) return true;
+                        return false;
+                    }).length;
+                    const piyutId = info.customId || piyutName;
+                    const zmanim = info.zmanim || [];
+
+                    return `
+                        <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
+                            <div class="card-header">
+                                <div class="card-icon"></div>
+                                <div class="card-header-text">
+                                    <div class="card-title">${piyutName}</div>
+                                    ${zmanim.length > 0 ? `
+                                        <div class="card-tags" onclick="event.stopPropagation();">
+                                            ${zmanim.map(zman => `
+                                                <span class="card-zman-tag"
+                                                      data-action="zman-detail"
+                                                      data-name="${escapeHtml(zman)}"
+                                                      data-tooltip-value="${escapeHtml(zman)}"
+                                                      data-tooltip-type="zman">${zman}</span>
+                                            `).join('')}
+                                        </div>
+                                    ` : ''}
+                                    <div class="card-stats">
+                                        <span class="card-stat">${songCount} ניגונים</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+
+                categoryGrid.innerHTML = cardsHTML;
+
+                // Hide loading wave bar
+                const loader = document.getElementById('piyutimLoader');
+                if (loader) setTimeout(() => loader.classList.remove('active'), 500);
+
+                return;
+            }
+
+            // First load - render full page
             container.innerHTML = `
                 <div class="page-theme-piyut">
                     <div class="page-title">
@@ -19253,20 +19355,41 @@
 
                     <div class="category-grid" id="piyutimGrid">
                         ${sortedPiyutim.map(piyutName => {
-                const info = piyutimInfo[piyutName] || {};
-                const songCount = categories.zmanim[piyutName]?.length || 0;
-                const piyutId = info.customId || piyutName;
-                return `
-                            <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
-                                <div class="category-card-content">
-                                    <div class="category-card-info">
-                                        <div class="category-card-title">${piyutName}</div>
-                                        ${songCount > 0 ? `<div class="category-card-count">${songCount} ניגונים</div>` : ''}
+                    const info = piyutimInfo[piyutName] || {};
+                    // Count songs from both pasigOif and maure fields (matching filter logic)
+                    const songCount = allSongs.filter(song => {
+                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
+                        if (song.maure && song.maure.includes(piyutName)) return true;
+                        return false;
+                    }).length;
+                    const piyutId = info.customId || piyutName;
+                    const zmanim = info.zmanim || [];
+
+                    return `
+                                <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
+                                    <div class="card-header">
+                                        <div class="card-icon"></div>
+                                        <div class="card-header-text">
+                                            <div class="card-title">${piyutName}</div>
+                                            ${zmanim.length > 0 ? `
+                                                <div class="card-tags" onclick="event.stopPropagation();">
+                                                    ${zmanim.map(zman => `
+                                                        <span class="card-zman-tag"
+                                                              data-action="zman-detail"
+                                                              data-name="${escapeHtml(zman)}"
+                                                              data-tooltip-value="${escapeHtml(zman)}"
+                                                              data-tooltip-type="zman">${zman}</span>
+                                                    `).join('')}
+                                                </div>
+                                            ` : ''}
+                                            <div class="card-stats">
+                                                <span class="card-stat">${songCount} ניגונים</span>
+                                            </div>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                        `;
-            }).join('')}
+                                </a>
+                            `;
+                }).join('')}
                     </div>
                 </div>
             `;
