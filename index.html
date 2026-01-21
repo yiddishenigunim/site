@@ -4663,8 +4663,9 @@
         /* Category Cards Grid */
         .category-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, 280px);
             gap: 20px;
+            justify-content: center;
         }
 
         .category-card {
@@ -4681,6 +4682,7 @@
             position: relative;
             text-decoration: none;
             color: inherit;
+            min-height: 180px;
         }
 
         .category-card> :first-child {
