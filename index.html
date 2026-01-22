@@ -19604,17 +19604,17 @@
 
                     <div class="category-grid" id="piyutimGrid">
                         ${sortedPiyutim.map(piyutName => {
-                    const info = piyutimInfo[piyutName] || {};
-                    // Count songs from both pasigOif and maure fields (matching filter logic)
-                    const songCount = allSongs.filter(song => {
-                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
-                        if (song.maure && song.maure.includes(piyutName)) return true;
-                        return false;
-                    }).length;
-                    const piyutId = info.customId || piyutName;
-                    const zmanim = info.zmanim || [];
+                const info = piyutimInfo[piyutName] || {};
+                // Count songs from both pasigOif and maure fields (matching filter logic)
+                const songCount = allSongs.filter(song => {
+                    if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
+                    if (song.maure && song.maure.includes(piyutName)) return true;
+                    return false;
+                }).length;
+                const piyutId = info.customId || piyutName;
+                const zmanim = info.zmanim || [];
 
-                    return `
+                return `
                                 <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
                                     <div class="card-header">
                                         <div class="card-icon"></div>
@@ -19638,7 +19638,7 @@
                                     </div>
                                 </a>
                             `;
-                }).join('')}
+            }).join('')}
                     </div>
                 </div>
             `;
@@ -22198,7 +22198,7 @@
         // Render detail content in modal
         async function renderDetailInModal(container, type, name) {
             // Show loading state
-            container.innerHTML = '<div class="loading"><div class="spinner"></div><p>טוען...</p></div>';
+            container.innerHTML = '<div class="loading"><div class="spinner"></div><p>לאודינג...</p></div>';
 
             // Get theme class for hero
             const themeMap = {
