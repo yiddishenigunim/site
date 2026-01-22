@@ -1444,6 +1444,7 @@
             padding-right: 0 !important;
             max-width: 100% !important;
             width: 100% !important;
+            background: none !important;
         }
 
         /* Ensure all content respects container width */
@@ -1505,6 +1506,10 @@
             color: var(--text-dark);
             line-height: 1.6;
             text-align: right;
+        }
+
+        #detailModalBody .detail-description-section .description-fade-overlay {
+            background: linear-gradient(to bottom, transparent, var(--color-mechaber-pale));
         }
 
         @media (max-width: 600px) {
@@ -3556,6 +3561,7 @@
         }
 
         .page-theme-mechaber {
+            --theme-bg: var(--color-mechaber-pale);
             background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
@@ -7911,6 +7917,7 @@
         }
 
         .detail-page.theme-mechaber {
+            --theme-bg: var(--color-mechaber-pale);
             background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
@@ -8288,6 +8295,70 @@
             font-size: 1em;
             color: var(--text-dark);
             font-weight: 600;
+        }
+
+        /* Collapsible Description Section */
+        .collapsible-section {
+            position: relative;
+        }
+
+        .detail-description-wrapper {
+            position: relative;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .detail-description-wrapper.collapsed {
+            max-height: 120px;
+        }
+
+        .detail-description-wrapper.expanded {
+            max-height: 2000px;
+        }
+
+        .description-fade-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: linear-gradient(to bottom, transparent, var(--theme-bg, #fce4ec));
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .detail-description-wrapper.expanded .description-fade-overlay {
+            opacity: 0;
+        }
+
+        .description-expand-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 4px;
+            margin-top: 0;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--primary);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .description-expand-btn:hover {
+            background: rgba(var(--primary-rgb), 0.05);
+            border-radius: 8px;
+        }
+
+        .expand-arrow {
+            display: inline-block;
+            transition: transform 0.4s ease;
+        }
+
+        .description-expand-btn.expanded .expand-arrow {
+            transform: rotate(180deg);
         }
 
         .detail-songs-section {
@@ -17910,6 +17981,22 @@
             openDetailModal(categoryKey, name);
         }
 
+        // Toggle description expand/collapse
+        function toggleDescriptionExpand(btn) {
+            const wrapper = btn.parentElement.querySelector('.detail-description-wrapper');
+            const isExpanded = wrapper.classList.contains('expanded');
+
+            if (isExpanded) {
+                wrapper.classList.remove('expanded');
+                wrapper.classList.add('collapsed');
+                btn.classList.remove('expanded');
+            } else {
+                wrapper.classList.remove('collapsed');
+                wrapper.classList.add('expanded');
+                btn.classList.add('expanded');
+            }
+        }
+
         // Go back from detail page
         function goBackFromDetail() {
             const page = currentDetailView?.type || 'home';
@@ -18234,9 +18321,15 @@
                     </div>
                     
                     ${info.description ? `
-                        <div class="detail-description-section">
+                        <div class="detail-description-section collapsible-section">
                             <h3>דעטאלן</h3>
-                            <div class="detail-description-content">${formatDescription(info.description)}</div>
+                            <div class="detail-description-wrapper collapsed">
+                                <div class="detail-description-content">${formatDescription(info.description)}</div>
+                                <div class="description-fade-overlay"></div>
+                            </div>
+                            <button class="description-expand-btn" onclick="toggleDescriptionExpand(this)">
+                                <span class="expand-arrow">▼</span>
+                            </button>
                         </div>
                     ` : ''}
                     
