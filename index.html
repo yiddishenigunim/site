@@ -1145,7 +1145,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(0, 0, 0, 0.35);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1181,6 +1181,38 @@
 
         .detail-modal-overlay.active .detail-modal-content {
             transform: scale(1) translateY(0);
+        }
+
+        /* Expand to full page animation */
+        @keyframes expandToFullPage {
+            0% {
+                transform: scale(1) translateY(0);
+                border-radius: 20px;
+            }
+
+            100% {
+                transform: scale(1.3);
+                border-radius: 0;
+                opacity: 0;
+            }
+        }
+
+        .detail-modal-content.expanding {
+            animation: expandToFullPage 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .detail-modal-overlay.expanding {
+            animation: fadeOut 0.4s ease forwards;
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
         }
 
         /* Theme-specific border colors */
@@ -1340,6 +1372,55 @@
             transform: scale(1.15);
         }
 
+        /* Theme-specific button hover colors */
+        .theme-mechaber .detail-modal-close:hover,
+        .theme-mechaber .detail-modal-expand:hover {
+            background: var(--color-mechaber-pale);
+            color: var(--color-mechaber-dark);
+        }
+
+        .theme-chatzer .detail-modal-close:hover,
+        .theme-chatzer .detail-modal-expand:hover {
+            background: var(--color-chatzer-pale);
+            color: var(--color-chatzer-dark);
+        }
+
+        .theme-verter .detail-modal-close:hover,
+        .theme-verter .detail-modal-expand:hover {
+            background: var(--color-verter-pale);
+            color: var(--color-verter);
+        }
+
+        .theme-zman .detail-modal-close:hover,
+        .theme-zman .detail-modal-expand:hover {
+            background: var(--color-zman-pale);
+            color: var(--color-zman-dark);
+        }
+
+        .theme-collection .detail-modal-close:hover,
+        .theme-collection .detail-modal-expand:hover {
+            background: var(--color-collection-pale);
+            color: var(--color-collection-dark);
+        }
+
+        .theme-album .detail-modal-close:hover,
+        .theme-album .detail-modal-expand:hover {
+            background: var(--color-album-pale);
+            color: var(--color-album-dark);
+        }
+
+        .theme-document .detail-modal-close:hover,
+        .theme-document .detail-modal-expand:hover {
+            background: var(--color-document-pale);
+            color: var(--color-document-dark);
+        }
+
+        .theme-resource .detail-modal-close:hover,
+        .theme-resource .detail-modal-expand:hover {
+            background: var(--color-resource-pale);
+            color: var(--color-resource-dark);
+        }
+
         /* Generic Modal Hero Header - matches nigun modal hero */
         .modal-hero-wrapper {
             position: relative;
@@ -1349,11 +1430,11 @@
         .modal-hero {
             position: relative;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
-            padding: 25px 25px 25px 25px;
+            padding: 30px 25px 30px 120px;
             text-align: center;
             margin: 0 60px 0 60px;
             border-radius: 0 0 20px 20px;
-            min-height: 100px;
+            min-height: 130px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1368,7 +1449,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             flex-shrink: 0;
         }
 
@@ -1394,13 +1475,15 @@
             line-height: 1.3;
             text-align: center;
             word-wrap: break-word;
+            overflow-wrap: break-word;
+            max-width: 100%;
         }
 
         .modal-hero-dates {
-            font-size: 0.9em;
+            font-size: 0.85em;
             color: rgba(255, 255, 255, 0.8);
             font-style: italic;
-            margin-top: 8px;
+            margin-top: 2px;
             text-align: center;
         }
 
@@ -2102,7 +2185,7 @@
             transform: translateX(-50%);
             background: transparent;
             min-width: 160px;
-            z-index: 1000;
+            z-index: 100;
             overflow: visible;
             padding-top: 12px;
         }
@@ -13475,6 +13558,10 @@
         let savedScrollPosition = 0;
         let currentNigunModalIdx = null;
 
+        // Modal stacking system - tracks open modals for proper z-index management
+        let modalStack = []; // Array of { type: 'nigun'|'detail', zIndex: number }
+        let modalZIndexCounter = 10000; // Starting z-index for modals
+
         // Helper to escape quotes for HTML attributes (converts " to &quot;)
         function escapeHtml(str) {
             if (!str) return '';
@@ -15414,6 +15501,7 @@
         function hideAllDropdowns() {
             document.querySelectorAll('.nav-dropdown-content').forEach(d => {
                 d.classList.add('hiding');
+                d.classList.remove('show');
             });
             setTimeout(() => {
                 document.querySelectorAll('.nav-dropdown-content').forEach(d => {
@@ -17968,11 +18056,16 @@
             lastHandledTime = now;
 
             console.log('handleURLChange called with hash:', hash);
-            const parts = hash.substring(2).split('/'); // Remove #/ and split
+
+            // Check for /preview suffix (modal mode)
+            const isPreviewMode = hash.includes('/preview');
+            const cleanHash = hash.replace('/preview', '');
+
+            const parts = cleanHash.substring(2).split('/'); // Remove #/ and split
 
             const page = parts[0] || 'home';
-            const idOrName = parts[1] ? decodeURIComponent(parts[1]) : null;
-            console.log('Parsed URL - page:', page, 'idOrName:', idOrName);
+            let idOrName = parts[1] ? decodeURIComponent(parts[1]) : null;
+            console.log('Parsed URL - page:', page, 'idOrName:', idOrName, 'isPreviewMode:', isPreviewMode);
 
             // Valid pages (including info pages)
             const validPages = ['home', 'nigunim', 'chatzeros', 'mechabrim', 'verter', 'zmanim', 'piyutim', 'collections', 'albums', 'documents', 'resources', 'zman', 'search', 'music', 'about', 'instructions', 'credits', 'thanks', 'terms', 'stats', 'contribute'];
@@ -18116,9 +18209,35 @@
                         currentDetailView = { type: 'zman', name: itemName, id: itemId, customId: itemCustomId };
                     } else if (page === 'nigunim') {
                         // Nigun detail page (nigunim/1 format)
+                        if (isPreviewMode) {
+                            // Preview mode: open as modal
+                            const songIdx = allSongs.findIndex(s =>
+                                s.customId === idOrName || s.rowId === idOrName || s.name === itemName
+                            );
+                            if (songIdx !== -1) {
+                                // Don't push to history since we're already at this URL
+                                nigunModalOpen = true;
+                                currentNigunModalIdx = songIdx;
+                                const modalBody = document.getElementById('nigunModalBody');
+                                renderNigunDetailInModal(modalBody, allSongs[songIdx].name, songIdx);
+                                const overlay = document.getElementById('nigunModalOverlay');
+                                modalZIndexCounter++;
+                                overlay.style.zIndex = modalZIndexCounter;
+                                modalStack.push({ type: 'nigun', zIndex: modalZIndexCounter, idx: songIdx });
+                                overlay.classList.add('active');
+                                document.body.style.overflow = 'hidden';
+                            }
+                            return; // Don't render full page
+                        }
                         currentPageView = 'songs';
                         currentDetailView = { type: 'nigunim', name: itemName, id: itemId, customId: itemCustomId };
                     } else {
+                        // Other detail pages (mechabrim, chatzeros, etc.)
+                        if (isPreviewMode) {
+                            // Preview mode: open as modal (skip history since we're already at this URL)
+                            openDetailModal(page, itemName, true);
+                            return; // Don't render full page - modal handles it
+                        }
                         currentPageView = page;
                         currentDetailView = { type: page, name: itemName, id: itemId, customId: itemCustomId };
                     }
@@ -20934,13 +21053,8 @@
         let showTooltipTimeout = null;
 
         function showTooltip(event, value, fieldType) {
-            clearTimeout(tooltipTimeout);
-            clearTimeout(showTooltipTimeout);
-
-            // Add a delay before showing the tooltip
-            showTooltipTimeout = setTimeout(() => {
-                performShowTooltip(event, value, fieldType);
-            }, 400);
+            // Tooltips disabled - preview modals now serve this purpose
+            return;
         }
 
         function performShowTooltip(event, value, fieldType) {
@@ -22195,17 +22309,20 @@
             currentNigunModalIdx = idx;
             nigunModalOpen = true;
 
-            // Update URL to nigun detail URL using pushState
+            // Update URL to nigun detail URL using pushState (with /preview for modal mode)
             const nigunId = song.customId || song.rowId || song.name;
-            const hash = `#/nigunim/${encodeURIComponent(nigunId)}`;
+            const hash = `#/nigunim/${encodeURIComponent(nigunId)}/preview`;
             history.pushState({ nigunModal: true, scrollPos: savedScrollPosition, idx: idx }, '', hash);
 
             // Render content in modal
             const modalBody = document.getElementById('nigunModalBody');
             renderNigunDetailInModal(modalBody, song.name, idx);
 
-            // Show overlay
+            // Show overlay with stacking z-index
             const overlay = document.getElementById('nigunModalOverlay');
+            modalZIndexCounter++;
+            overlay.style.zIndex = modalZIndexCounter;
+            modalStack.push({ type: 'nigun', zIndex: modalZIndexCounter, idx: idx, song: song });
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden'; // Prevent background scrolling
         }
@@ -22243,10 +22360,17 @@
             nigunModalOpen = false;
             currentNigunModalIdx = null;
 
+            // Remove from modal stack
+            modalStack = modalStack.filter(m => m.type !== 'nigun' || m.zIndex !== parseInt(document.getElementById('nigunModalOverlay').style.zIndex));
+
             // Hide overlay
             const overlay = document.getElementById('nigunModalOverlay');
             overlay.classList.remove('active');
-            document.body.style.overflow = ''; // Restore scrolling
+
+            // Only restore scrolling if no other modals are open
+            if (modalStack.length === 0) {
+                document.body.style.overflow = '';
+            }
 
             // Go back in history to restore previous URL
             history.back();
@@ -22258,7 +22382,7 @@
         let currentDetailModalName = null;
 
         // Open generic detail modal
-        function openDetailModal(type, name) {
+        function openDetailModal(type, name, skipHistory = false) {
             // Save current scroll position
             savedScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
             detailModalOpen = true;
@@ -22291,10 +22415,12 @@
             const themeClass = themeMap[type] || '';
             const categoryTitle = titleMap[type] || 'דעטאלן';
 
-            // Update URL
-            const itemId = getDetailItemId(type, name);
-            const hash = `#/${type}/${encodeURIComponent(itemId)}`;
-            history.pushState({ detailModal: true, scrollPos: savedScrollPosition, type: type, name: name }, '', hash);
+            // Update URL (with /preview for modal mode) - skip if already at correct URL
+            if (!skipHistory) {
+                const itemId = getDetailItemId(type, name);
+                const hash = `#/${type}/${encodeURIComponent(itemId)}/preview`;
+                history.pushState({ detailModal: true, scrollPos: savedScrollPosition, type: type, name: name }, '', hash);
+            }
 
             // Set modal title
             const modalTitle = document.getElementById('detailModalTitle');
@@ -22311,8 +22437,11 @@
 
             renderDetailInModal(modalBody, type, name);
 
-            // Show overlay
+            // Show overlay with stacking z-index
             const overlay = document.getElementById('detailModalOverlay');
+            modalZIndexCounter++;
+            overlay.style.zIndex = modalZIndexCounter;
+            modalStack.push({ type: 'detail', zIndex: modalZIndexCounter, modalType: type, name: name });
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
 
@@ -22505,38 +22634,66 @@
 
         // Expand modal to full page view
         function expandToFullPage() {
-            if (!detailModalOpen || !currentDetailModalType || !currentDetailModalName) return;
+            // Get current URL and remove /preview to get full page URL
+            const currentHash = window.location.hash;
+            const newHash = currentHash.replace('/preview', '');
 
-            const type = currentDetailModalType;
-            const name = currentDetailModalName;
+            // Get modal elements
+            const detailOverlay = document.getElementById('detailModalOverlay');
+            const detailContent = document.querySelector('.detail-modal-content');
+            const nigunOverlay = document.getElementById('nigunModalOverlay');
+            const nigunContent = document.querySelector('.nigun-modal-content');
 
-            // Close modal first (without navigating back)
-            detailModalOpen = false;
-            const overlay = document.getElementById('detailModalOverlay');
-            overlay.classList.remove('active');
-            document.body.style.overflow = '';
+            // Determine which modal is active and add expanding animation
+            const activeOverlay = detailModalOpen ? detailOverlay : nigunOverlay;
+            const activeContent = detailModalOpen ? detailContent : nigunContent;
 
-            // Clear modal state
-            currentDetailModalType = null;
-            currentDetailModalName = null;
+            if (activeOverlay && activeContent) {
+                // Add expanding animation classes
+                activeOverlay.classList.add('expanding');
+                activeContent.classList.add('expanding');
 
-            // Set up the full page view
-            currentPageView = type;
-            currentDetailView = { type: type, name: name };
+                // Wait for animation to complete, then clean up and show full page
+                setTimeout(() => {
+                    // Remove animation classes
+                    activeOverlay.classList.remove('expanding', 'active');
+                    activeContent.classList.remove('expanding');
 
-            // Update URL
-            history.replaceState(null, '', `#${type}/${encodeURIComponent(name)}`);
+                    // Reset modal states
+                    nigunModalOpen = false;
+                    detailModalOpen = false;
+                    currentNigunModalIdx = null;
+                    currentDetailModalType = null;
+                    currentDetailModalName = null;
+                    modalStack = [];
+                    document.body.style.overflow = '';
 
-            // Update nav buttons
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.page === type);
-            });
+                    // Navigate to full page URL (replace current history entry)
+                    history.replaceState(null, '', newHash);
 
-            // Render the detail page
-            renderDetailPage();
+                    // Parse and render the full page
+                    handleHashChange();
 
-            // Scroll to top
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 400); // Match animation duration
+            } else {
+                // Fallback: no animation
+                if (nigunOverlay) nigunOverlay.classList.remove('active');
+                if (detailOverlay) detailOverlay.classList.remove('active');
+
+                nigunModalOpen = false;
+                detailModalOpen = false;
+                currentNigunModalIdx = null;
+                currentDetailModalType = null;
+                currentDetailModalName = null;
+                modalStack = [];
+                document.body.style.overflow = '';
+
+                history.replaceState(null, '', newHash);
+                handleHashChange();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
         }
 
         // Close generic detail modal
@@ -22547,9 +22704,16 @@
             currentDetailModalType = null;
             currentDetailModalName = null;
 
+            // Remove from modal stack
+            modalStack = modalStack.filter(m => m.type !== 'detail' || m.zIndex !== parseInt(document.getElementById('detailModalOverlay').style.zIndex));
+
             const overlay = document.getElementById('detailModalOverlay');
             overlay.classList.remove('active');
-            document.body.style.overflow = '';
+
+            // Only restore scrolling if no other modals are open
+            if (modalStack.length === 0) {
+                document.body.style.overflow = '';
+            }
 
             history.back();
         }
