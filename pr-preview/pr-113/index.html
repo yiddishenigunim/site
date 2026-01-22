@@ -1315,7 +1315,7 @@
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
             padding: 45px 25px 40px 25px;
             text-align: center;
-            margin: 0 60px 25px 60px;
+            margin: -20px -20px 25px -20px;
             border-radius: 0 0 20px 20px;
             min-height: 100px;
             display: flex;
@@ -1333,45 +1333,6 @@
             line-height: 1.3;
             text-align: center;
             word-wrap: break-word;
-        }
-
-        /* Profile avatar in modal hero */
-        .modal-hero-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-            border: 4px solid white;
-            overflow: hidden;
-            flex-shrink: 0;
-            position: absolute;
-            left: 25px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-
-        .modal-hero-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .modal-hero-avatar .placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--color-mechaber-pale) 0%, var(--color-mechaber-light) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-hero-avatar .placeholder .mechaber-icon {
-            width: 28px;
-            height: 41px;
-            background-color: var(--color-mechaber);
-            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
-            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
         }
 
         /* Theme-specific hero colors */
@@ -1417,9 +1378,9 @@
             }
         }
 
+        /* Modal body content - below hero */
         .modal-body-content {
             padding: 20px;
-            background: white;
         }
 
         .modal-body-content .detail-page {
@@ -1432,19 +1393,54 @@
         }
 
         #detailModalBody {
-            padding: 0;
+            padding: 20px;
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
             overflow-x: hidden;
         }
 
-        /* Reset detail-page viewport-based calculations inside modal */
         #detailModalBody .detail-page {
-            margin-left: 0 !important;
-            margin-right: 0 !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
+            padding: 0 !important;
+            margin: 0 !important;
             max-width: 100% !important;
             width: 100% !important;
-            background: none !important;
+            overflow-x: hidden !important;
+            box-sizing: border-box !important;
+        }
+
+        #detailModalBody .detail-header {
+            margin: 0 !important;
+            border-radius: 0 !important;
+            box-shadow: none !important;
+            max-width: 100% !important;
+            width: 100% !important;
+        }
+
+        #detailModalBody .detail-category-bar {
+            max-width: 100% !important;
+        }
+
+        #detailModalBody .detail-header-content {
+            max-width: 100% !important;
+            flex-wrap: wrap;
+        }
+
+        #detailModalBody .detail-title {
+            word-wrap: break-word !important;
+            overflow-wrap: break-word !important;
+        }
+
+        #detailModalBody .detail-description-section,
+        #detailModalBody .detail-songs-section {
+            padding: 20px !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
+        }
+
+        #detailModalBody .detail-sections {
+            padding: 0 !important;
+            max-width: 100% !important;
         }
 
         /* Ensure all content respects container width */
@@ -1457,59 +1453,6 @@
         #detailModalBody .detail-image {
             max-width: 150px !important;
             height: auto !important;
-        }
-
-        /* Style detail-description-section in modal like nigun-additions-box */
-        #detailModalBody .detail-description-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            gap: 8px;
-            padding: 20px 20px 15px 20px;
-            background: var(--color-mechaber-pale);
-            border-radius: 12px;
-            margin: 25px auto 20px auto;
-            max-width: 600px;
-            position: relative;
-            border: 1.5px solid var(--color-mechaber-dark);
-            box-shadow: none;
-        }
-
-        #detailModalBody .detail-description-section h3 {
-            font-size: 0;
-            color: transparent;
-            width: 32px;
-            height: 32px;
-            padding: 0;
-            background: var(--color-mechaber);
-            border-radius: 50%;
-            margin: -36px 0 10px 0;
-            border: 3px solid white;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-bottom: none;
-        }
-
-        #detailModalBody .detail-description-section h3::before {
-            content: "i";
-            font-size: 1.1rem;
-            font-weight: bold;
-            font-style: italic;
-            color: white;
-        }
-
-        #detailModalBody .detail-description-section .detail-description-content {
-            font-size: 0.9em;
-            color: var(--text-dark);
-            line-height: 1.6;
-            text-align: right;
-        }
-
-        #detailModalBody .detail-description-section .description-fade-overlay {
-            background: linear-gradient(to bottom, transparent, var(--color-mechaber-pale));
         }
 
         @media (max-width: 600px) {
@@ -3561,7 +3504,6 @@
         }
 
         .page-theme-mechaber {
-            --theme-bg: var(--color-mechaber-pale);
             background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
@@ -7917,7 +7859,6 @@
         }
 
         .detail-page.theme-mechaber {
-            --theme-bg: var(--color-mechaber-pale);
             background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
@@ -8141,13 +8082,6 @@
             font-style: italic;
         }
 
-        .detail-badges {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin-top: 10px;
-        }
-
         .detail-chatzer-badge {
             display: inline-block;
             background: var(--color-chatzer);
@@ -8172,18 +8106,18 @@
         }
 
         .detail-zman-badge {
-            background: var(--color-zman);
-            color: white;
-            padding: 5px 15px;
-            border-radius: 20px;
+            background: var(--primary-pale);
+            color: var(--primary-deep);
+            padding: 5px 12px;
+            border-radius: 15px;
             font-size: 0.85em;
-            font-weight: 600;
             cursor: pointer;
             transition: var(--transition-smooth);
         }
 
         .detail-zman-badge:hover {
-            background: var(--color-zman-dark);
+            background: var(--gradient-main);
+            color: white;
             transform: scale(1.05);
         }
 
@@ -8304,146 +8238,11 @@
             font-weight: 600;
         }
 
-        /* Collapsible Description Section */
-        .collapsible-section {
-            position: relative;
-        }
-
-        .detail-description-wrapper {
-            position: relative;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out;
-        }
-
-        .detail-description-wrapper.collapsed {
-            max-height: 120px;
-        }
-
-        .detail-description-wrapper.expanded {
-            max-height: 2000px;
-        }
-
-        .description-fade-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: linear-gradient(to bottom, transparent, var(--theme-bg, #fce4ec));
-            pointer-events: none;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        .detail-description-wrapper.expanded .description-fade-overlay {
-            opacity: 0;
-        }
-
-        .description-expand-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 4px;
-            margin-top: 0;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            color: var(--primary);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .description-expand-btn:hover {
-            background: rgba(var(--primary-rgb), 0.05);
-            border-radius: 8px;
-        }
-
-        .expand-arrow {
-            display: inline-block;
-            transition: transform 0.4s ease;
-        }
-
-        .description-expand-btn.expanded .expand-arrow {
-            transform: rotate(180deg);
-        }
-
         .detail-songs-section {
             background: white;
             padding: 25px;
             border-radius: 20px;
             box-shadow: var(--card-shadow);
-        }
-
-        /* Collapsible songs list */
-        .detail-songs-section.collapsible-songs {
-            position: relative;
-        }
-
-        .songs-list-wrapper {
-            position: relative;
-            overflow: hidden;
-            transition: max-height 0.5s ease-out;
-        }
-
-        .songs-list-wrapper.collapsed {
-            max-height: 400px;
-        }
-
-        .songs-list-wrapper.expanded {
-            max-height: 10000px;
-        }
-
-        .songs-fade-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 80px;
-            background: linear-gradient(to bottom, transparent, white);
-            pointer-events: none;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        .detail-related-songs .songs-fade-overlay {
-            background: linear-gradient(to bottom, transparent, #f5f5f5);
-        }
-
-        .songs-list-wrapper.expanded .songs-fade-overlay {
-            opacity: 0;
-        }
-
-        .songs-expand-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            background: var(--primary-pale);
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            color: var(--primary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .songs-expand-btn:hover {
-            background: var(--primary-light);
-            color: white;
-        }
-
-        .songs-expand-btn .expand-arrow {
-            display: inline-block;
-            transition: transform 0.4s ease;
-        }
-
-        .songs-expand-btn.expanded .expand-arrow {
-            transform: rotate(180deg);
         }
 
         .detail-songs-section.detail-related-songs {
@@ -8593,11 +8392,10 @@
 
         .detail-songs-section h3 {
             color: var(--primary);
-            font-size: 0.95em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            padding-bottom: 0;
-            border-bottom: none;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-pale);
         }
 
         /* Detail Section Header with Filters */
@@ -9286,8 +9084,7 @@
         }
 
         /* Paused state - wave bars stay still */
-        .song-item.active.paused .wave-bar,
-        .song-wave-animation.paused .wave-bar {
+        .song-item.active.paused .wave-bar {
             animation-play-state: paused;
         }
 
@@ -9807,12 +9604,40 @@
             box-shadow: 0 6px 25px rgba(123, 31, 162, 0.5);
         }
 
-        /* Reset margin for wave animation inside button */
-        .player-show-btn .song-wave-animation {
-            margin-right: 0;
-            margin-left: 0;
+        .equalizer-icon {
+            display: flex;
+            align-items: center;
+            gap: 2px;
             height: 18px;
-            /* Match previous icon height */
+            margin-left: 10px;
+        }
+
+        .equalizer-icon .bar {
+            width: 3px;
+            background: white;
+            border-radius: 3px;
+            animation: waveStream 0.8s ease-in-out infinite;
+            transform-origin: center;
+        }
+
+        .equalizer-icon .bar:nth-child(1) {
+            height: 8px;
+            animation-delay: 0s;
+        }
+
+        .equalizer-icon .bar:nth-child(2) {
+            height: 14px;
+            animation-delay: 0.1s;
+        }
+
+        .equalizer-icon .bar:nth-child(3) {
+            height: 10px;
+            animation-delay: 0.2s;
+        }
+
+        /* Paused state for equalizer */
+        .equalizer-icon.paused .bar {
+            animation-play-state: paused;
         }
 
         .player-inner {
@@ -13114,11 +12939,10 @@
     <!-- Player Show Button (when minimized) -->
     <button class="player-show-btn" id="playerShowBtn" onclick="showPlayerBanner()">
         <span id="showBtnSongName">ווייז פלעיער</span>
-        <div class="song-wave-animation">
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
+        <div class="equalizer-icon">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
         </div>
     </button>
 
@@ -13439,7 +13263,10 @@
                 const tooltipType = clickedElement.getAttribute('data-tooltip-type');
                 const tooltipValue = clickedElement.getAttribute('data-tooltip-value');
 
-                if (tooltipType === 'zman' && tooltipValue && piyutimInfo[tooltipValue]) {
+                // Maure tags should filter by zman, not navigate to piyutim
+                const isMaureTag = clickedElement.classList.contains('maure-tag');
+
+                if (tooltipType === 'zman' && tooltipValue && piyutimInfo[tooltipValue] && !isMaureTag) {
                     // This is a piyut, navigate to piyutim detail page
                     const piyutId = piyutimInfo[tooltipValue].customId || tooltipValue;
                     e.preventDefault();
@@ -13614,7 +13441,7 @@
         // ========================================
         // CACHE MANAGER - Minimize API calls
         // ========================================
-        const CACHE_VERSION = 'v11'; // Increment when data structure changes
+        const CACHE_VERSION = 'v9'; // Increment when data structure changes
         const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
         const CacheManager = {
@@ -14030,12 +13857,8 @@
                                     if (colNameLower === 'קאלעקשנס' || colNameLower.includes('קאלעקשן')) {
                                         info.collections = relatedNames;
                                     }
-                                    // Store zmanim for piyutim (all of them)
-                                    if (colNameLower === 'זמן' || colNameLower === 'zman') {
-                                        info.zmanim = relatedNames; // Store all zmanim
-                                    }
-                                    // Store zmanim list for collections (plural)
-                                    if (colNameLower === 'זמנים') {
+                                    // Store zmanim list for collections
+                                    if (colNameLower === 'זמנים' || colNameLower.includes('זמן')) {
                                         info.zmanim = relatedNames;
                                     }
                                     // Mechaber birth/death years (lookup fields)
@@ -14062,10 +13885,6 @@
                                     }
                                     if (colNameLower.includes('חצר')) {
                                         info.chatzer = relatedName;
-                                    }
-                                    // Handle zman lookup field for piyutim
-                                    if (colNameLower === 'זמן' || colNameLower === 'zman') {
-                                        info.zmanim = [relatedName]; // Store as array for consistency
                                     }
                                 }
                                 return;
@@ -14413,7 +14232,7 @@
                     }
                     // Also need songs for counts
                     if (!loadedCategories.songs) {
-                        await fetchSongsInBackground();
+                        fetchSongsInBackground();
                     }
                     break;
                 case 'mechabrim':
@@ -14422,7 +14241,7 @@
                         loadedCategories.mechabrim = true;
                     }
                     if (!loadedCategories.songs) {
-                        await fetchSongsInBackground();
+                        fetchSongsInBackground();
                     }
                     break;
                 case 'verter':
@@ -14431,7 +14250,7 @@
                         loadedCategories.verter = true;
                     }
                     if (!loadedCategories.songs) {
-                        await fetchSongsInBackground();
+                        fetchSongsInBackground();
                     }
                     break;
                 case 'zmanim':
@@ -14444,7 +14263,7 @@
                         loadedCategories.piyutim = true;
                     }
                     if (!loadedCategories.songs) {
-                        await fetchSongsInBackground();
+                        fetchSongsInBackground();
                     }
                     break;
                 case 'collections':
@@ -14453,7 +14272,7 @@
                         loadedCategories.collections = true;
                     }
                     if (!loadedCategories.songs) {
-                        await fetchSongsInBackground();
+                        fetchSongsInBackground();
                     }
                     break;
                 case 'piyutim':
@@ -14462,7 +14281,7 @@
                         loadedCategories.piyutim = true;
                     }
                     if (!loadedCategories.songs) {
-                        await fetchSongsInBackground();
+                        fetchSongsInBackground();
                     }
                     break;
                 case 'resources':
@@ -14896,7 +14715,7 @@
                     category: extractText(values['c-u0H9G6FHoJ']), // חצר
                     verter: extractText(values['c-KAWfVfB4jq']),
                     mechaber: extractText(values['c-ujrTHeCJGo']),
-                    personalities: personalityNames, // פערזענליכקייט
+                    personality: personalityNames, // פערזענליכקייט
                     scale: extractText(values['c-wQZrHPVWog']),
                     ritem: extractText(values['c-OmWEZXO7Ys']),
                     gezungen: extractText(values['c-kiHIam57Z0']),
@@ -15051,7 +14870,6 @@
                 'mechabrim': 'page-theme-mechaber',
                 'verter': 'page-theme-verter',
                 'zmanim': 'page-theme-zman',
-                'piyutim': 'page-theme-piyut',
                 'collections': 'page-theme-collection',
                 'resources': 'page-theme-resource',
                 'documents': 'page-theme-document',
@@ -15066,7 +14884,6 @@
                 'mechabrim': { title: 'מחברים', subtitle: 'מחברים', countLabel: 'מחברים' },
                 'verter': { title: 'ווערטער', subtitle: 'ווערטער', countLabel: 'ווערטער' },
                 'zmanim': { title: 'זמנים', subtitle: 'זמנים', countLabel: 'זמנים' },
-                'piyutim': { title: 'פיוטים', subtitle: 'פיוטים', countLabel: 'פיוטים' },
                 'collections': { title: 'קאלעקשאנס', subtitle: 'קאלעקשאנס', countLabel: 'קאלעקשאנס' },
                 'resources': { title: 'רעסורסן', subtitle: 'רעסורסן', countLabel: 'רעסורסן' },
                 'documents': { title: 'דאקומענטן', subtitle: 'דאקומענטן', countLabel: 'דאקומענטן' },
@@ -17775,8 +17592,7 @@
                 case 'mechabrim': infoObj = mechabrimInfo; break;
                 case 'verter': infoObj = verterInfo; break;
                 case 'zmanim':
-                case 'zman': infoObj = zmaninInfo; break;
-                case 'piyutim': infoObj = piyutimInfo; break;
+                case 'zman': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
                 case 'collections': infoObj = collectionsInfo; break;
                 case 'albums': infoObj = albumsInfo; break;
                 case 'documents': infoObj = documentsInfo; break;
@@ -18056,7 +17872,7 @@
                 case 'chatzeros': infoObj = chatzerosInfo; break;
                 case 'mechabrim': infoObj = mechabrimInfo; break;
                 case 'verter': infoObj = verterInfo; break;
-                case 'zmanim': infoObj = zmaninInfo; break;
+                case 'zmanim': infoObj = Object.assign({}, zmaninInfo, piyutimInfo); break;
                 case 'piyutim': infoObj = piyutimInfo; break;
                 case 'collections': infoObj = collectionsInfo; break;
                 case 'albums': infoObj = albumsInfo; break;
@@ -18066,61 +17882,6 @@
 
             // Open in modal popup
             openDetailModal(categoryKey, name);
-        }
-
-        // Toggle description expand/collapse
-        function toggleDescriptionExpand(btn) {
-            const wrapper = btn.parentElement.querySelector('.detail-description-wrapper');
-            const isExpanded = wrapper.classList.contains('expanded');
-
-            if (isExpanded) {
-                wrapper.classList.remove('expanded');
-                wrapper.classList.add('collapsed');
-                btn.classList.remove('expanded');
-            } else {
-                wrapper.classList.remove('collapsed');
-                wrapper.classList.add('expanded');
-                btn.classList.add('expanded');
-            }
-        }
-
-        // Toggle songs list expand/collapse
-        function toggleSongsExpand(btn) {
-            const wrapper = btn.parentElement.querySelector('.songs-list-wrapper');
-            const isExpanded = wrapper.classList.contains('expanded');
-
-            if (isExpanded) {
-                wrapper.classList.remove('expanded');
-                wrapper.classList.add('collapsed');
-                btn.classList.remove('expanded');
-                btn.innerHTML = '<span>ווייז מער</span><span class="expand-arrow">▼</span>';
-            } else {
-                wrapper.classList.remove('collapsed');
-                wrapper.classList.add('expanded');
-                btn.classList.add('expanded');
-                btn.innerHTML = '<span>ווייז ווייניגער</span><span class="expand-arrow">▼</span>';
-            }
-        }
-
-        // Initialize collapsible sections - hide expand button if content is short
-        function initCollapsibleSections() {
-            // Check description sections
-            document.querySelectorAll('.detail-description-wrapper.collapsed').forEach(wrapper => {
-                const content = wrapper.querySelector('.detail-description-content');
-                const btn = wrapper.parentElement.querySelector('.description-expand-btn');
-                const overlay = wrapper.querySelector('.description-fade-overlay');
-
-                if (content && btn) {
-                    // Check if content height is less than max-height (120px)
-                    const contentHeight = content.scrollHeight;
-                    if (contentHeight <= 120) {
-                        btn.style.display = 'none';
-                        if (overlay) overlay.style.display = 'none';
-                        wrapper.classList.remove('collapsed');
-                        wrapper.classList.add('expanded');
-                    }
-                }
-            });
         }
 
         // Go back from detail page
@@ -18219,9 +17980,14 @@
                     typeName = 'ווערטער';
                     break;
                 case 'zmanim':
-                    infoObj = zmaninInfo;
+                    infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
                     icon = '';
-                    typeName = 'זמן';
+                    // Check if this is a piyut or a zman
+                    if (piyutimInfo[name]) {
+                        typeName = 'פיוט';
+                    } else {
+                        typeName = 'זמן';
+                    }
                     break;
                 case 'piyutim':
                     infoObj = piyutimInfo;
@@ -18251,52 +18017,10 @@
             }
 
             const info = infoObj[name] || {};
-            // For piyutim, search in allSongs directly (both pasigOif and maure fields)
-            // This matches the filter behavior on the nigunim page
-            let songs;
-            if (type === 'piyutim') {
-                songs = allSongs.filter(song => {
-                    // Check if piyut name is in pasigOif field
-                    if (song.pasigOif && song.pasigOif.includes(name)) return true;
-                    // Check if piyut name is in maure field
-                    if (song.maure && song.maure.includes(name)) return true;
-                    return false;
-                });
-            } else {
-                const categoryKey = type;
-                const songIndices = categories[categoryKey]?.[name] || [];
-                songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
-            }
+            const songIndices = categories[type]?.[name] || [];
+            let songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
             // Apply current sort order to songs
             songs = sortSongsByOrder(songs);
-
-            // For mechabrim: find songs where name appears in personalities field
-            let personalitySongs = [];
-            let personalityRecordings = [];
-            if (type === 'mechabrim') {
-                // Songs where mechaber is in personalities field (but not already in mechaber field)
-                const songIndicesSet = new Set(songIndices);
-                personalitySongs = allSongs.filter((song, idx) => {
-                    if (songIndicesSet.has(idx)) return false; // Exclude already-shown mechaber songs
-                    if (!song.personalities) return false;
-                    return song.personalities.split(',').map(p => p.trim()).includes(name);
-                });
-                personalitySongs = sortSongsByOrder(personalitySongs);
-
-                // Recordings where mechaber is in personalities field
-                allSongs.forEach((song, songIdx) => {
-                    if (song.recordings && Array.isArray(song.recordings)) {
-                        song.recordings.forEach((rec, recIdx) => {
-                            if (rec.personalities) {
-                                const recPersonalities = rec.personalities.split(',').map(p => p.trim());
-                                if (recPersonalities.includes(name)) {
-                                    personalityRecordings.push({ song, songIdx, recording: rec, recIdx });
-                                }
-                            }
-                        });
-                    }
-                });
-            }
 
             // Only show chatzer tags for mechabrim
             const chatzeros = (type === 'mechabrim' && info.chatzer)
@@ -18380,16 +18104,16 @@
             const verterMakor = (type === 'verter' && info.makor) ? info.makor : '';
             const verterMarehMakom = (type === 'verter' && info.marehMakom) ? info.marehMakom : '';
 
-            // For piyutim, get zmanim (array)
-            const piyutZmanim = (type === 'piyutim' && piyutimInfo[name]?.zmanim) ? piyutimInfo[name].zmanim : [];
+            // For piyutim (in zmanim category), get zman
+            const piyutZman = (type === 'zmanim' && piyutimInfo[name]?.zman) ? piyutimInfo[name].zman : '';
 
-            // Map type to theme class
+            // Map type to theme class - check if piyut
+            const isPiyut = type === 'zmanim' && piyutimInfo[name];
             const themeMap = {
                 'chatzeros': 'theme-chatzer',
                 'mechabrim': 'theme-mechaber',
                 'verter': 'theme-verter',
-                'zmanim': 'theme-zman',
-                'piyutim': 'theme-piyut',
+                'zmanim': isPiyut ? 'theme-piyut' : 'theme-zman',
                 'collections': 'theme-collection'
             };
             const themeClass = themeMap[type] || '';
@@ -18436,16 +18160,9 @@
                                         ${verterMarehMakom ? `<span class="detail-mareh-text">${verterMarehMakom}</span>` : ''}
                                     </div>
                                 ` : ''}
-                                ${piyutZmanim.length > 0 ? `
-                                    <div class="detail-badges">
-                                        ${piyutZmanim.map(zman => `
-                                            <span class="detail-zman-badge"
-                                                  data-action="zman-detail"
-                                                  data-name="${escapeHtml(zman)}"
-                                                  data-tooltip-value="${escapeHtml(zman)}"
-                                                  data-tooltip-type="zman"
-                                                  style="cursor:pointer;">${zman}</span>
-                                        `).join('')}
+                                ${piyutZman ? `
+                                    <div class="detail-subtitle">
+                                        <span class="detail-zman-text">${piyutZman}</span>
                                     </div>
                                 ` : ''}
                                 ${(type === 'collections' && info.zmanim && info.zmanim.length > 0) ? `
@@ -18463,15 +18180,9 @@
                     </div>
                     
                     ${info.description ? `
-                        <div class="detail-description-section collapsible-section">
+                        <div class="detail-description-section">
                             <h3>דעטאלן</h3>
-                            <div class="detail-description-wrapper collapsed">
-                                <div class="detail-description-content">${formatDescription(info.description)}</div>
-                                <div class="description-fade-overlay"></div>
-                            </div>
-                            <button class="description-expand-btn" onclick="toggleDescriptionExpand(this)">
-                                <span class="expand-arrow">▼</span>
-                            </button>
+                            <div class="detail-description-content">${formatDescription(info.description)}</div>
                         </div>
                     ` : ''}
                     
@@ -18598,104 +18309,139 @@
                                 </div>
                             </div>
                         </div>
-                        ${songs.length > 5 ? `
-                            <div class="songs-list-wrapper collapsed">
-                                <div class="detail-songs-list">
-                                    ${(() => {
-                        const playlistIndices = songs.map(song => allSongs.indexOf(song));
-                        return songs.map((song, i) => {
-                            const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                        }).join('');
-                    })()}
-                                </div>
-                                <div class="songs-fade-overlay"></div>
-                            </div>
-                            <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
-                                <span>ווייז מער</span><span class="expand-arrow">▼</span>
-                            </button>
-                        ` : `
-                            <div class="detail-songs-list">
-                                ${(() => {
+                        <div class="detail-songs-list">
+                            ${(() => {
                     const playlistIndices = songs.map(song => allSongs.indexOf(song));
                     return songs.map((song, i) => {
                         const globalIdx = allSongs.indexOf(song);
                         return renderSongItem(song, globalIdx, i + 1, playlistIndices);
                     }).join('');
                 })()}
-                            </div>
-                        `}
+                        </div>
                     </div>
                     
                     ${(() => {
                     // For mechabrim, show songs where they have a שייכות (personality)
-                    if (type === 'mechabrim' && personalitySongs.length > 0) {
-                        const playlistIndices = personalitySongs.map(song => allSongs.indexOf(song));
-                        const isCollapsible = personalitySongs.length > 5;
-                        return `
-                                <div class="detail-songs-section detail-related-songs ${isCollapsible ? 'collapsible-songs' : ''}">
-                                    <div class="detail-section-header">
-                                        <h3>${personalitySongs.length} ניגונים מיט וועלכע ער האט געהאט א שייכות</h3>
-                                    </div>
-                                    ${isCollapsible ? `
-                                        <div class="songs-list-wrapper collapsed">
-                                            <div class="detail-songs-list">
-                                                ${personalitySongs.map((song, i) => {
-                            const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                        }).join('')}
+                    if (type === 'mechabrim') {
+                        let relatedSongs = allSongs.filter(song => {
+                            if (!song.personality) return false;
+                            const personalities = song.personality.split(',').map(p => p.trim());
+                            return personalities.includes(name);
+                        });
+                        // Apply current sort order to related songs
+                        relatedSongs = sortSongsByOrder(relatedSongs);
+
+                        if (relatedSongs.length > 0) {
+                            const playlistIndices = relatedSongs.map(song => allSongs.indexOf(song));
+                            return `
+                                    <div class="detail-songs-section detail-related-songs">
+                                        <div class="detail-section-header">
+                                            <h3>${relatedSongs.length} ניגונים וואס ער האט א שייכות</h3>
+                                            <div class="detail-filters-group">
+                                                <!-- Sort Filter -->
+                                                <div class="detail-filter-dropdown">
+                                                    <div class="detail-filter-current">
+                                                        <span class="filter-icon">⇅</span>
+                                                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
+                                    currentSortOrder === 'alphabetical' ? 'א"ב' :
+                                        'לעצט צוגעלייגט'
+                                }</span>
+                                                    </div>
+                                                    <div class="detail-filter-options">
+                                                        <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
+                                                             onclick="changeSortOrder('random'); updateDetailView();">
+                                                            שאָפל
+                                                        </div>
+                                                        <div class="detail-filter-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
+                                                             onclick="changeSortOrder('alphabetical'); updateDetailView();">
+                                                            א"ב
+                                                        </div>
+                                                        <div class="detail-filter-option ${currentSortOrder === 'recent' ? 'active' : ''}"
+                                                             onclick="changeSortOrder('recent'); updateDetailView();">
+                                                            לעצט צוגעלייגט
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Display Mode Filter -->
+                                                <div class="detail-filter-dropdown">
+                                                    <div class="detail-filter-current">
+                                                        <span class="filter-icon">👁</span>
+                                                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                                        'אלעס'
+                                }</span>
+                                                    </div>
+                                                    <div class="detail-filter-options">
+                                                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
+                                                             onclick="changeDisplayMode('minimal'); updateDetailView();">
+                                                            קעפל
+                                                        </div>
+                                                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
+                                                             onclick="changeDisplayMode('recordings'); updateDetailView();">
+                                                            רעקארדירונגען
+                                                        </div>
+                                                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
+                                                             onclick="changeDisplayMode('full'); updateDetailView();">
+                                                            אלעס
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Quality Filter -->
+                                                <div class="detail-filter-dropdown detail-filter-quality">
+                                                    <div class="detail-filter-current quality-filter-spread">
+                                                        <span class="filter-label-left">
+                                                            <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
+                                                                <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
+                                                            </svg>
+                                                        </span>
+                                                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
+                                    minQualityRating === 1 ? '★' :
+                                        minQualityRating === 2 ? '★★' :
+                                            minQualityRating === 3 ? '★★★' :
+                                                minQualityRating === 4 ? '★★★★' :
+                                                    '★★★★★'
+                                }</span>
+                                                    </div>
+                                                    <div class="detail-filter-options">
+                                                        <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(0); updateDetailView();">
+                                                            אלע
+                                                        </div>
+                                                        <div class="detail-filter-option ${minQualityRating === 1 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(1); updateDetailView();">
+                                                            ★ א מענטש זינגט פאר זיך
+                                                        </div>
+                                                        <div class="detail-filter-option ${minQualityRating === 2 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(2); updateDetailView();">
+                                                            ★★ אראפגעזינגען אן מוזיק
+                                                        </div>
+                                                        <div class="detail-filter-option ${minQualityRating === 3 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(3); updateDetailView();">
+                                                            ★★★ אלטע מוזיק
+                                                        </div>
+                                                        <div class="detail-filter-option ${minQualityRating === 4 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(4); updateDetailView();">
+                                                            ★★★★ שיין און ניי
+                                                        </div>
+                                                        <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
+                                                             onclick="setMinQualityRating(5); updateDetailView();">
+                                                            ★★★★★ שיין, ניי און געשמאק
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <div class="songs-fade-overlay"></div>
                                         </div>
-                                        <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
-                                            <span>ווייז מער</span><span class="expand-arrow">▼</span>
-                                        </button>
-                                    ` : `
                                         <div class="detail-songs-list">
-                                            ${personalitySongs.map((song, i) => {
-                            const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                        }).join('')}
+                                            ${relatedSongs.map((song, i) => {
+                                    const globalIdx = allSongs.indexOf(song);
+                                    return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                                }).join('')}
                                         </div>
-                                    `}
-                                </div>
-                            `;
-                    }
-                    return '';
-                })()}
-                    
-                    ${(() => {
-                    // For mechabrim, show recordings where they appear in personalities
-                    if (type === 'mechabrim' && personalityRecordings.length > 0) {
-                        const isCollapsible = personalityRecordings.length > 5;
-                        return `
-                                <div class="detail-songs-section detail-related-recordings ${isCollapsible ? 'collapsible-songs' : ''}">
-                                    <div class="detail-section-header">
-                                        <h3>${personalityRecordings.length} רעקארדינגס</h3>
                                     </div>
-                                    ${isCollapsible ? `
-                                        <div class="songs-list-wrapper collapsed">
-                                            <div class="detail-songs-list">
-                                                ${personalityRecordings.map((item, i) => {
-                            const { song, songIdx } = item;
-                            return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx));
-                        }).join('')}
-                                            </div>
-                                            <div class="songs-fade-overlay"></div>
-                                        </div>
-                                        <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
-                                            <span>ווייז מער</span><span class="expand-arrow">▼</span>
-                                        </button>
-                                    ` : `
-                                        <div class="detail-songs-list">
-                                            ${personalityRecordings.map((item, i) => {
-                            const { song, songIdx } = item;
-                            return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx));
-                        }).join('')}
-                                        </div>
-                                    `}
-                                </div>
-                            `;
+                                `;
+                        }
                     }
                     return '';
                 })()}
@@ -18959,16 +18705,12 @@
 
         // Navigate to zman detail page
         function navigateToZmanDetail(name) {
-            // Check if this is a piyut or a zman
-            if (piyutimInfo[name]) {
-                // This is a piyut, navigate to piyutim detail page
-                const piyutId = piyutimInfo[name].customId || name;
-                window.location.hash = `#/piyutim/${encodeURIComponent(piyutId)}`;
-            } else if (zmaninInfo[name]) {
-                // This is a zman, navigate to zman detail page
-                const zmanId = zmaninInfo[name].customId || name;
-                window.location.hash = `#/zman/${encodeURIComponent(zmanId)}`;
-            }
+            const infoObj = Object.assign({}, zmaninInfo, piyutimInfo);
+            const id = infoObj[name]?.rowId;
+            const customId = infoObj[name]?.customId;
+            currentDetailView = { type: 'zman', name: name, id: id, customId: customId };
+            updateURL();
+            renderCurrentPage();
         }
 
         // Render nigun detail page
@@ -19438,16 +19180,11 @@
                         <h3>פיוטים</h3>
                         <div class="zman-items-grid">
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
-                    // Count songs from both pasigOif and maure fields (matching filter logic)
-                    const songCount = allSongs.filter(song => {
-                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
-                        if (song.maure && song.maure.includes(piyutName)) return true;
-                        return false;
-                    }).length;
+                    const songCount = categories.zmanim[piyutName]?.length || 0;
                     const piyutInfo = piyutimInfo[piyutName] || {};
                     const piyutId = piyutInfo.customId || piyutName;
                     return `
-                                    <a class="zman-item-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
+                                    <a class="zman-item-card" href="#/zmanim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="zmanim" data-name="${escapeHtml(piyutName)}">
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${piyutName}</div>
@@ -19530,68 +19267,6 @@
             // Get all piyutim from piyutimInfo
             const sortedPiyutim = Object.keys(piyutimInfo).sort((a, b) => a.localeCompare(b, 'he'));
 
-            // Check if we're coming from skeleton (skeleton-grid exists)
-            const existingSkeletonGrid = container.querySelector('.skeleton-grid');
-            const existingCountEl = container.querySelector('.subtitle-count');
-
-            if (existingSkeletonGrid && existingCountEl) {
-                // Coming from skeleton - just update count and replace grid, keep header
-                animateCountUp(existingCountEl, sortedPiyutim.length);
-
-                // Replace skeleton-grid with category-grid
-                const categoryGrid = document.createElement('div');
-                categoryGrid.className = 'category-grid';
-                categoryGrid.id = 'piyutimGrid';
-                existingSkeletonGrid.replaceWith(categoryGrid);
-
-                // Generate cards HTML
-                const cardsHTML = sortedPiyutim.map(piyutName => {
-                    const info = piyutimInfo[piyutName] || {};
-                    // Count songs from both pasigOif and maure fields (matching filter logic)
-                    const songCount = allSongs.filter(song => {
-                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
-                        if (song.maure && song.maure.includes(piyutName)) return true;
-                        return false;
-                    }).length;
-                    const piyutId = info.customId || piyutName;
-                    const zmanim = info.zmanim || [];
-
-                    return `
-                        <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
-                            <div class="card-header">
-                                <div class="card-icon"></div>
-                                <div class="card-header-text">
-                                    <div class="card-title">${piyutName}</div>
-                                    ${zmanim.length > 0 ? `
-                                        <div class="card-tags" onclick="event.stopPropagation();">
-                                            ${zmanim.map(zman => `
-                                                <span class="card-zman-tag"
-                                                      data-action="zman-detail"
-                                                      data-name="${escapeHtml(zman)}"
-                                                      data-tooltip-value="${escapeHtml(zman)}"
-                                                      data-tooltip-type="zman">${zman}</span>
-                                            `).join('')}
-                                        </div>
-                                    ` : ''}
-                                    <div class="card-stats">
-                                        <span class="card-stat">${songCount} ניגונים</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </a>
-                    `;
-                }).join('');
-
-                categoryGrid.innerHTML = cardsHTML;
-
-                // Hide loading wave bar
-                const loader = document.getElementById('piyutimLoader');
-                if (loader) setTimeout(() => loader.classList.remove('active'), 500);
-
-                return;
-            }
-
-            // First load - render full page
             container.innerHTML = `
                 <div class="page-theme-piyut">
                     <div class="page-title">
@@ -19604,41 +19279,20 @@
 
                     <div class="category-grid" id="piyutimGrid">
                         ${sortedPiyutim.map(piyutName => {
-                    const info = piyutimInfo[piyutName] || {};
-                    // Count songs from both pasigOif and maure fields (matching filter logic)
-                    const songCount = allSongs.filter(song => {
-                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
-                        if (song.maure && song.maure.includes(piyutName)) return true;
-                        return false;
-                    }).length;
-                    const piyutId = info.customId || piyutName;
-                    const zmanim = info.zmanim || [];
-
-                    return `
-                                <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
-                                    <div class="card-header">
-                                        <div class="card-icon"></div>
-                                        <div class="card-header-text">
-                                            <div class="card-title">${piyutName}</div>
-                                            ${zmanim.length > 0 ? `
-                                                <div class="card-tags" onclick="event.stopPropagation();">
-                                                    ${zmanim.map(zman => `
-                                                        <span class="card-zman-tag"
-                                                              data-action="zman-detail"
-                                                              data-name="${escapeHtml(zman)}"
-                                                              data-tooltip-value="${escapeHtml(zman)}"
-                                                              data-tooltip-type="zman">${zman}</span>
-                                                    `).join('')}
-                                                </div>
-                                            ` : ''}
-                                            <div class="card-stats">
-                                                <span class="card-stat">${songCount} ניגונים</span>
-                                            </div>
-                                        </div>
+                const info = piyutimInfo[piyutName] || {};
+                const songCount = categories.zmanim[piyutName]?.length || 0;
+                const piyutId = info.customId || piyutName;
+                return `
+                            <a class="category-card piyut-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
+                                <div class="category-card-content">
+                                    <div class="category-card-info">
+                                        <div class="category-card-title">${piyutName}</div>
+                                        ${songCount > 0 ? `<div class="category-card-count">${songCount} ניגונים</div>` : ''}
                                     </div>
-                                </a>
-                            `;
-                }).join('')}
+                                </div>
+                            </a>
+                        `;
+            }).join('')}
                     </div>
                 </div>
             `;
@@ -19974,52 +19628,7 @@
         // Render category page with lazy loading
         function renderCategoryPage(container, categoryKey, title, icon, subtitle) {
             const data = categories[categoryKey];
-
-            // Sort keys - for mechabrim, sort by birthYear; otherwise alphabetically
-            let sortedKeys;
-            if (categoryKey === 'mechabrim') {
-                // Helper to parse Hebrew year to numeric value
-                const parseHebrewYear = (yearStr) => {
-                    if (!yearStr) return 9999;
-                    // Hebrew letter values
-                    const hebrewValues = {
-                        'א': 1, 'ב': 2, 'ג': 3, 'ד': 4, 'ה': 5, 'ו': 6, 'ז': 7, 'ח': 8, 'ט': 9,
-                        'י': 10, 'כ': 20, 'ך': 20, 'ל': 30, 'מ': 40, 'ם': 40, 'נ': 50, 'ן': 50,
-                        'ס': 60, 'ע': 70, 'פ': 80, 'ף': 80, 'צ': 90, 'ץ': 90,
-                        'ק': 100, 'ר': 200, 'ש': 300, 'ת': 400
-                    };
-                    // Sum all Hebrew letter values
-                    let total = 0;
-                    for (const char of yearStr) {
-                        if (hebrewValues[char]) {
-                            total += hebrewValues[char];
-                        }
-                    }
-                    // Only consider it a valid year if >= 500 (like תק"_ = 5500+)
-                    // This excludes month names (אב=3, אייר=221, ניסן=170, etc.)
-                    return total >= 500 ? total : 9999;
-                };
-
-                // Sort by birthYear, fallback to deathYear-70, empty dates at end
-                sortedKeys = Object.keys(data).sort((a, b) => {
-                    const infoA = mechabrimInfo[a] || {};
-                    const infoB = mechabrimInfo[b] || {};
-                    // Get birth year, or estimate from death year - 70
-                    let yearA = parseHebrewYear(infoA.birthYear);
-                    if (yearA === 9999 && infoA.deathYear) {
-                        const deathA = parseHebrewYear(infoA.deathYear);
-                        if (deathA !== 9999) yearA = deathA - 70;
-                    }
-                    let yearB = parseHebrewYear(infoB.birthYear);
-                    if (yearB === 9999 && infoB.deathYear) {
-                        const deathB = parseHebrewYear(infoB.deathYear);
-                        if (deathB !== 9999) yearB = deathB - 70;
-                    }
-                    return yearA - yearB;
-                });
-            } else {
-                sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
-            }
+            const sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
 
             // Reset lazy loading state
             categoryLazyState = {
@@ -21619,10 +21228,10 @@
 
             // Update player play button
             document.getElementById('playPauseBtn').classList.add('playing');
-            // Remove paused state from player show button wave
-            const playerShowWave = document.querySelector('#playerShowBtn .song-wave-animation');
-            if (playerShowWave) {
-                playerShowWave.classList.remove('paused');
+            // Remove paused state from equalizer
+            const equalizerIcon = document.querySelector('.equalizer-icon');
+            if (equalizerIcon) {
+                equalizerIcon.classList.remove('paused');
             }
         }
 
@@ -21860,7 +21469,7 @@
         // Update play/pause state for both player and song list
         function updatePlayState(isPlaying) {
             const playPauseBtn = document.getElementById('playPauseBtn');
-            const playerShowWave = document.querySelector('#playerShowBtn .song-wave-animation');
+            const equalizerIcon = document.querySelector('.equalizer-icon');
 
             // Update player button
             if (isPlaying) {
@@ -21869,12 +21478,12 @@
                 playPauseBtn.classList.remove('playing');
             }
 
-            // Update wave animation in player-show-btn (pause when audio paused)
-            if (playerShowWave) {
+            // Update equalizer icon in player-show-btn (pause when audio paused)
+            if (equalizerIcon) {
                 if (isPlaying) {
-                    playerShowWave.classList.remove('paused');
+                    equalizerIcon.classList.remove('paused');
                 } else {
-                    playerShowWave.classList.add('paused');
+                    equalizerIcon.classList.add('paused');
                 }
             }
 
@@ -22173,9 +21782,6 @@
             const overlay = document.getElementById('detailModalOverlay');
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
-
-            // Initialize collapsible sections after rendering
-            setTimeout(initCollapsibleSections, 50);
         }
 
         // Get item ID for URL
@@ -22214,27 +21820,9 @@
             };
             const themeClass = themeMap[type] || '';
 
-            // Get info for profile image (for mechabrim type)
-            let profileImageHTML = '';
-            if (type === 'mechabrim') {
-                const info = mechabrimInfo[name] || {};
-                if (info.image) {
-                    profileImageHTML = `
-                        <div class="modal-hero-avatar">
-                            <img src="${info.image}" alt="${name}">
-                        </div>`;
-                } else {
-                    profileImageHTML = `
-                        <div class="modal-hero-avatar">
-                            <div class="placeholder"><div class="mechaber-icon"></div></div>
-                        </div>`;
-                }
-            }
-
             // Generate hero header
             const heroHTML = `
                 <div class="modal-hero ${themeClass}">
-                    ${profileImageHTML}
                     <h1 class="modal-hero-title">${name}</h1>
                 </div>
             `;

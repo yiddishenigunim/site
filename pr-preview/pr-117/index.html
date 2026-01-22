@@ -1444,7 +1444,6 @@
             padding-right: 0 !important;
             max-width: 100% !important;
             width: 100% !important;
-            background: none !important;
         }
 
         /* Ensure all content respects container width */
@@ -1506,10 +1505,6 @@
             color: var(--text-dark);
             line-height: 1.6;
             text-align: right;
-        }
-
-        #detailModalBody .detail-description-section .description-fade-overlay {
-            background: linear-gradient(to bottom, transparent, var(--color-mechaber-pale));
         }
 
         @media (max-width: 600px) {
@@ -3561,7 +3556,6 @@
         }
 
         .page-theme-mechaber {
-            --theme-bg: var(--color-mechaber-pale);
             background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
@@ -7917,7 +7911,6 @@
         }
 
         .detail-page.theme-mechaber {
-            --theme-bg: var(--color-mechaber-pale);
             background: linear-gradient(180deg, var(--color-mechaber-pale) 0%, color-mix(in srgb, var(--color-mechaber-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
         }
 
@@ -8304,146 +8297,11 @@
             font-weight: 600;
         }
 
-        /* Collapsible Description Section */
-        .collapsible-section {
-            position: relative;
-        }
-
-        .detail-description-wrapper {
-            position: relative;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out;
-        }
-
-        .detail-description-wrapper.collapsed {
-            max-height: 120px;
-        }
-
-        .detail-description-wrapper.expanded {
-            max-height: 2000px;
-        }
-
-        .description-fade-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 60px;
-            background: linear-gradient(to bottom, transparent, var(--theme-bg, #fce4ec));
-            pointer-events: none;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        .detail-description-wrapper.expanded .description-fade-overlay {
-            opacity: 0;
-        }
-
-        .description-expand-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-            padding: 4px;
-            margin-top: 0;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            color: var(--primary);
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .description-expand-btn:hover {
-            background: rgba(var(--primary-rgb), 0.05);
-            border-radius: 8px;
-        }
-
-        .expand-arrow {
-            display: inline-block;
-            transition: transform 0.4s ease;
-        }
-
-        .description-expand-btn.expanded .expand-arrow {
-            transform: rotate(180deg);
-        }
-
         .detail-songs-section {
             background: white;
             padding: 25px;
             border-radius: 20px;
             box-shadow: var(--card-shadow);
-        }
-
-        /* Collapsible songs list */
-        .detail-songs-section.collapsible-songs {
-            position: relative;
-        }
-
-        .songs-list-wrapper {
-            position: relative;
-            overflow: hidden;
-            transition: max-height 0.5s ease-out;
-        }
-
-        .songs-list-wrapper.collapsed {
-            max-height: 400px;
-        }
-
-        .songs-list-wrapper.expanded {
-            max-height: 10000px;
-        }
-
-        .songs-fade-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 80px;
-            background: linear-gradient(to bottom, transparent, white);
-            pointer-events: none;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-        }
-
-        .detail-related-songs .songs-fade-overlay {
-            background: linear-gradient(to bottom, transparent, #f5f5f5);
-        }
-
-        .songs-list-wrapper.expanded .songs-fade-overlay {
-            opacity: 0;
-        }
-
-        .songs-expand-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            background: var(--primary-pale);
-            border: none;
-            border-radius: 10px;
-            cursor: pointer;
-            color: var(--primary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .songs-expand-btn:hover {
-            background: var(--primary-light);
-            color: white;
-        }
-
-        .songs-expand-btn .expand-arrow {
-            display: inline-block;
-            transition: transform 0.4s ease;
-        }
-
-        .songs-expand-btn.expanded .expand-arrow {
-            transform: rotate(180deg);
         }
 
         .detail-songs-section.detail-related-songs {
@@ -8593,11 +8451,10 @@
 
         .detail-songs-section h3 {
             color: var(--primary);
-            font-size: 0.95em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            padding-bottom: 0;
-            border-bottom: none;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--primary-pale);
         }
 
         /* Detail Section Header with Filters */
@@ -18068,61 +17925,6 @@
             openDetailModal(categoryKey, name);
         }
 
-        // Toggle description expand/collapse
-        function toggleDescriptionExpand(btn) {
-            const wrapper = btn.parentElement.querySelector('.detail-description-wrapper');
-            const isExpanded = wrapper.classList.contains('expanded');
-
-            if (isExpanded) {
-                wrapper.classList.remove('expanded');
-                wrapper.classList.add('collapsed');
-                btn.classList.remove('expanded');
-            } else {
-                wrapper.classList.remove('collapsed');
-                wrapper.classList.add('expanded');
-                btn.classList.add('expanded');
-            }
-        }
-
-        // Toggle songs list expand/collapse
-        function toggleSongsExpand(btn) {
-            const wrapper = btn.parentElement.querySelector('.songs-list-wrapper');
-            const isExpanded = wrapper.classList.contains('expanded');
-
-            if (isExpanded) {
-                wrapper.classList.remove('expanded');
-                wrapper.classList.add('collapsed');
-                btn.classList.remove('expanded');
-                btn.innerHTML = '<span>ווייז מער</span><span class="expand-arrow">▼</span>';
-            } else {
-                wrapper.classList.remove('collapsed');
-                wrapper.classList.add('expanded');
-                btn.classList.add('expanded');
-                btn.innerHTML = '<span>ווייז ווייניגער</span><span class="expand-arrow">▼</span>';
-            }
-        }
-
-        // Initialize collapsible sections - hide expand button if content is short
-        function initCollapsibleSections() {
-            // Check description sections
-            document.querySelectorAll('.detail-description-wrapper.collapsed').forEach(wrapper => {
-                const content = wrapper.querySelector('.detail-description-content');
-                const btn = wrapper.parentElement.querySelector('.description-expand-btn');
-                const overlay = wrapper.querySelector('.description-fade-overlay');
-
-                if (content && btn) {
-                    // Check if content height is less than max-height (120px)
-                    const contentHeight = content.scrollHeight;
-                    if (contentHeight <= 120) {
-                        btn.style.display = 'none';
-                        if (overlay) overlay.style.display = 'none';
-                        wrapper.classList.remove('collapsed');
-                        wrapper.classList.add('expanded');
-                    }
-                }
-            });
-        }
-
         // Go back from detail page
         function goBackFromDetail() {
             const page = currentDetailView?.type || 'home';
@@ -18463,15 +18265,9 @@
                     </div>
                     
                     ${info.description ? `
-                        <div class="detail-description-section collapsible-section">
+                        <div class="detail-description-section">
                             <h3>דעטאלן</h3>
-                            <div class="detail-description-wrapper collapsed">
-                                <div class="detail-description-content">${formatDescription(info.description)}</div>
-                                <div class="description-fade-overlay"></div>
-                            </div>
-                            <button class="description-expand-btn" onclick="toggleDescriptionExpand(this)">
-                                <span class="expand-arrow">▼</span>
-                            </button>
+                            <div class="detail-description-content">${formatDescription(info.description)}</div>
                         </div>
                     ` : ''}
                     
@@ -18598,66 +18394,32 @@
                                 </div>
                             </div>
                         </div>
-                        ${songs.length > 5 ? `
-                            <div class="songs-list-wrapper collapsed">
-                                <div class="detail-songs-list">
-                                    ${(() => {
-                        const playlistIndices = songs.map(song => allSongs.indexOf(song));
-                        return songs.map((song, i) => {
-                            const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                        }).join('');
-                    })()}
-                                </div>
-                                <div class="songs-fade-overlay"></div>
-                            </div>
-                            <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
-                                <span>ווייז מער</span><span class="expand-arrow">▼</span>
-                            </button>
-                        ` : `
-                            <div class="detail-songs-list">
-                                ${(() => {
+                        <div class="detail-songs-list">
+                            ${(() => {
                     const playlistIndices = songs.map(song => allSongs.indexOf(song));
                     return songs.map((song, i) => {
                         const globalIdx = allSongs.indexOf(song);
                         return renderSongItem(song, globalIdx, i + 1, playlistIndices);
                     }).join('');
                 })()}
-                            </div>
-                        `}
+                        </div>
                     </div>
                     
                     ${(() => {
                     // For mechabrim, show songs where they have a שייכות (personality)
                     if (type === 'mechabrim' && personalitySongs.length > 0) {
                         const playlistIndices = personalitySongs.map(song => allSongs.indexOf(song));
-                        const isCollapsible = personalitySongs.length > 5;
                         return `
-                                <div class="detail-songs-section detail-related-songs ${isCollapsible ? 'collapsible-songs' : ''}">
+                                <div class="detail-songs-section detail-related-songs">
                                     <div class="detail-section-header">
                                         <h3>${personalitySongs.length} ניגונים מיט וועלכע ער האט געהאט א שייכות</h3>
                                     </div>
-                                    ${isCollapsible ? `
-                                        <div class="songs-list-wrapper collapsed">
-                                            <div class="detail-songs-list">
-                                                ${personalitySongs.map((song, i) => {
+                                    <div class="detail-songs-list">
+                                        ${personalitySongs.map((song, i) => {
                             const globalIdx = allSongs.indexOf(song);
                             return renderSongItem(song, globalIdx, i + 1, playlistIndices);
                         }).join('')}
-                                            </div>
-                                            <div class="songs-fade-overlay"></div>
-                                        </div>
-                                        <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
-                                            <span>ווייז מער</span><span class="expand-arrow">▼</span>
-                                        </button>
-                                    ` : `
-                                        <div class="detail-songs-list">
-                                            ${personalitySongs.map((song, i) => {
-                            const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
-                        }).join('')}
-                                        </div>
-                                    `}
+                                    </div>
                                 </div>
                             `;
                     }
@@ -18667,33 +18429,17 @@
                     ${(() => {
                     // For mechabrim, show recordings where they appear in personalities
                     if (type === 'mechabrim' && personalityRecordings.length > 0) {
-                        const isCollapsible = personalityRecordings.length > 5;
                         return `
-                                <div class="detail-songs-section detail-related-recordings ${isCollapsible ? 'collapsible-songs' : ''}">
+                                <div class="detail-songs-section detail-related-recordings">
                                     <div class="detail-section-header">
                                         <h3>${personalityRecordings.length} רעקארדינגס</h3>
                                     </div>
-                                    ${isCollapsible ? `
-                                        <div class="songs-list-wrapper collapsed">
-                                            <div class="detail-songs-list">
-                                                ${personalityRecordings.map((item, i) => {
+                                    <div class="detail-songs-list">
+                                        ${personalityRecordings.map((item, i) => {
                             const { song, songIdx } = item;
                             return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx));
                         }).join('')}
-                                            </div>
-                                            <div class="songs-fade-overlay"></div>
-                                        </div>
-                                        <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
-                                            <span>ווייז מער</span><span class="expand-arrow">▼</span>
-                                        </button>
-                                    ` : `
-                                        <div class="detail-songs-list">
-                                            ${personalityRecordings.map((item, i) => {
-                            const { song, songIdx } = item;
-                            return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx));
-                        }).join('')}
-                                        </div>
-                                    `}
+                                    </div>
                                 </div>
                             `;
                     }
@@ -22173,9 +21919,6 @@
             const overlay = document.getElementById('detailModalOverlay');
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
-
-            // Initialize collapsible sections after rendering
-            setTimeout(initCollapsibleSections, 50);
         }
 
         // Get item ID for URL
