@@ -18254,6 +18254,7 @@
             // For piyutim, search in allSongs directly (both pasigOif and maure fields)
             // This matches the filter behavior on the nigunim page
             let songs;
+            let songIndices = []; // Declare at top level for use in mechabrim filtering
             if (type === 'piyutim') {
                 songs = allSongs.filter(song => {
                     // Check if piyut name is in pasigOif field
@@ -18264,7 +18265,7 @@
                 });
             } else {
                 const categoryKey = type;
-                const songIndices = categories[categoryKey]?.[name] || [];
+                songIndices = categories[categoryKey]?.[name] || [];
                 songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
             }
             // Apply current sort order to songs
