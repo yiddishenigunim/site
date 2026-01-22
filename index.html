@@ -1302,25 +1302,86 @@
             justify-content: center;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             z-index: 20;
+            transition: all 0.25s ease;
         }
 
         .detail-modal-close:hover {
-            background: #f0f0f0;
-            color: #333;
+            background: var(--primary-pale);
+            color: var(--primary);
+            transform: scale(1.15);
+        }
+
+        /* Expand button - opposite side of close button */
+        .detail-modal-expand {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2em;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 20;
+            transition: all 0.25s ease;
+        }
+
+        .detail-modal-expand:hover {
+            background: var(--primary-pale);
+            color: var(--primary);
+            transform: scale(1.15);
         }
 
         /* Generic Modal Hero Header - matches nigun modal hero */
+        .modal-hero-wrapper {
+            position: relative;
+            margin-bottom: 40px;
+        }
+
         .modal-hero {
             position: relative;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
-            padding: 45px 25px 40px 25px;
+            padding: 25px 25px 25px 25px;
             text-align: center;
-            margin: 0 60px 25px 60px;
+            margin: 0 60px 0 60px;
             border-radius: 0 0 20px 20px;
             min-height: 100px;
             display: flex;
             align-items: center;
             justify-content: center;
+            gap: 20px;
+        }
+
+        .modal-hero-left {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .modal-hero-border-badges {
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        .modal-hero-border-badges .modal-hero-badges {
+            margin-top: 0;
         }
 
         .modal-hero-title {
@@ -1335,6 +1396,41 @@
             word-wrap: break-word;
         }
 
+        .modal-hero-dates {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
+            font-style: italic;
+            margin-top: 8px;
+            text-align: center;
+        }
+
+        .modal-hero-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 12px;
+            justify-content: center;
+        }
+
+        /* Meta section under hero (dates + badges) */
+        .modal-meta-section {
+            background: var(--bg-light);
+            padding: 15px 25px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .modal-meta-dates {
+            font-size: 0.95em;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-bottom: 10px;
+        }
+
+        .modal-meta-section .modal-hero-badges {
+            justify-content: center;
+        }
+
         /* Profile avatar in modal hero */
         .modal-hero-avatar {
             width: 80px;
@@ -1345,10 +1441,6 @@
             border: 4px solid white;
             overflow: hidden;
             flex-shrink: 0;
-            position: absolute;
-            left: 25px;
-            top: 50%;
-            transform: translateY(-50%);
         }
 
         .modal-hero-avatar img {
@@ -7852,15 +7944,16 @@
             display: block;
             font-size: 0.55em;
             font-weight: 400;
-            color: var(--color-mechaber);
+            color: rgba(255, 255, 255, 0.85);
             margin-bottom: 6px;
         }
 
         /* Mechaber known name on profile (big, darker) */
         .mechaber-known {
+            display: block;
             font-size: 1em;
             font-weight: 700;
-            color: var(--color-mechaber-dark);
+            color: white;
         }
 
         .detail-page.theme-verter .detail-category-bar {
@@ -8032,6 +8125,10 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            padding: 6px;
+            /* Allow shadow to be visible */
+            margin: -6px;
+            /* Compensate for padding */
         }
 
         .detail-subtitle {
@@ -8091,8 +8188,8 @@
         }
 
         .detail-image-placeholder .mechaber-icon {
-            width: 55px;
-            height: 82px;
+            width: 75px;
+            height: 100px;
             background-color: var(--color-mechaber);
             -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
             mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
@@ -8136,8 +8233,8 @@
 
         .detail-life-dates {
             margin-top: 8px;
-            font-size: 1em;
-            color: var(--text-secondary);
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.8);
             font-style: italic;
         }
 
@@ -8400,14 +8497,23 @@
             left: 0;
             right: 0;
             height: 80px;
-            background: linear-gradient(to bottom, transparent, white);
+            background: linear-gradient(to bottom, transparent, rgba(37, 99, 235, 0.03));
             pointer-events: none;
             opacity: 1;
             transition: opacity 0.3s ease;
         }
 
+        .theme-mechaber .songs-fade-overlay {
+            background: linear-gradient(to bottom, transparent, rgba(233, 30, 99, 0.03));
+        }
+
+        .theme-mechaber .detail-related-songs .songs-fade-overlay,
         .detail-related-songs .songs-fade-overlay {
-            background: linear-gradient(to bottom, transparent, #f5f5f5);
+            background: linear-gradient(to bottom, transparent, rgba(37, 99, 235, 0.03));
+        }
+
+        .detail-related-recordings .songs-fade-overlay {
+            background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.03));
         }
 
         .songs-list-wrapper.expanded .songs-fade-overlay {
@@ -8418,23 +8524,23 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             width: 100%;
-            padding: 12px;
-            margin-top: 8px;
-            background: var(--primary-pale);
+            padding: 8px;
+            margin-top: 5px;
+            background: transparent;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             cursor: pointer;
-            color: var(--primary);
-            font-size: 0.9rem;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            color: var(--color-nigun);
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
         }
 
         .songs-expand-btn:hover {
-            background: var(--primary-light);
-            color: white;
+            background: var(--color-nigun-pale);
+            color: var(--color-nigun-dark);
         }
 
         .songs-expand-btn .expand-arrow {
@@ -8450,6 +8556,10 @@
             margin-top: 25px;
             background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
             border: 1px solid var(--color-mechaber-pale);
+        }
+
+        .detail-songs-section.detail-related-recordings {
+            margin-top: 25px;
         }
 
         .detail-songs-section.detail-related-songs h3 {
@@ -8595,9 +8705,31 @@
             color: var(--primary);
             font-size: 0.95em;
             font-weight: 600;
-            margin-bottom: 15px;
+            margin-bottom: 25px;
             padding-bottom: 0;
             border-bottom: none;
+        }
+
+        /* Background colors for different section types - very pale versions */
+        .detail-songs-section {
+            background: rgba(37, 99, 235, 0.03);
+            /* Very pale nigun blue (default) */
+        }
+
+        /* Mechaber modal: first songs list uses mechaber pink */
+        .theme-mechaber .detail-songs-section:not(.detail-related-songs):not(.detail-related-recordings) {
+            background: rgba(233, 30, 99, 0.03);
+            /* Very pale mechaber pink */
+        }
+
+        .detail-songs-section.detail-related-songs {
+            background: rgba(37, 99, 235, 0.03);
+            /* Very pale nigun blue */
+        }
+
+        .detail-songs-section.detail-related-recordings {
+            background: rgba(16, 185, 129, 0.03);
+            /* Very pale resource green */
         }
 
         /* Detail Section Header with Filters */
@@ -10239,7 +10371,7 @@
         .nigun-modal-content {
             background: white;
             border-radius: 20px;
-            max-width: 850px;
+            max-width: 750px;
             width: 100%;
             height: 80vh;
             overflow-y: auto;
@@ -13209,6 +13341,15 @@
     <!-- Generic Detail Modal Overlay (for mechabrim, chatzeros, etc.) -->
     <div class="detail-modal-overlay" id="detailModalOverlay" onclick="if(event.target === this) closeDetailModal()">
         <div class="detail-modal-content">
+            <button class="detail-modal-expand" onclick="event.stopPropagation(); expandToFullPage()"
+                title="עקספענד צו פולע בלאט">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+            </button>
             <button class="detail-modal-close" onclick="event.stopPropagation(); closeDetailModal()">×</button>
             <div id="detailModalBody"></div>
         </div>
@@ -18502,7 +18643,7 @@
                     
                     <div class="detail-songs-section">
                         <div class="detail-section-header">
-                            <h3>${songs.length} ניגונים ${type === 'mechabrim' ? 'וואס ער האט מחבר געווען' : ''}</h3>
+                            <h3>${type === 'mechabrim' ? 'מחבר געווען ' : ''}${songs.length} ניגונים</h3>
                             <div class="detail-filters-group">
                                 <!-- Sort Filter -->
                                 <div class="detail-filter-dropdown">
@@ -18606,7 +18747,7 @@
                         const playlistIndices = songs.map(song => allSongs.indexOf(song));
                         return songs.map((song, i) => {
                             const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                            return renderSongItem(song, globalIdx, i + 1, playlistIndices, { hideMechaber: type === 'mechabrim' });
                         }).join('');
                     })()}
                                 </div>
@@ -18621,7 +18762,7 @@
                     const playlistIndices = songs.map(song => allSongs.indexOf(song));
                     return songs.map((song, i) => {
                         const globalIdx = allSongs.indexOf(song);
-                        return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                        return renderSongItem(song, globalIdx, i + 1, playlistIndices, { hideMechaber: type === 'mechabrim' });
                     }).join('');
                 })()}
                             </div>
@@ -18636,7 +18777,7 @@
                         return `
                                 <div class="detail-songs-section detail-related-songs ${isCollapsible ? 'collapsible-songs' : ''}">
                                     <div class="detail-section-header">
-                                        <h3>${personalitySongs.length} ניגונים מיט וועלכע ער האט געהאט א שייכות</h3>
+                                        <h3>געהאט שייכות מיט ${personalitySongs.length} ניגונים</h3>
                                     </div>
                                     ${isCollapsible ? `
                                         <div class="songs-list-wrapper collapsed">
@@ -18672,14 +18813,14 @@
                         return `
                                 <div class="detail-songs-section detail-related-recordings ${isCollapsible ? 'collapsible-songs' : ''}">
                                     <div class="detail-section-header">
-                                        <h3>${personalityRecordings.length} רעקארדינגס</h3>
+                                        <h3>רעקארדירט ${personalityRecordings.length} ניגונים</h3>
                                     </div>
                                     ${isCollapsible ? `
                                         <div class="songs-list-wrapper collapsed">
                                             <div class="detail-songs-list">
                                                 ${personalityRecordings.map((item, i) => {
                             const { song, songIdx } = item;
-                            return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx));
+                            return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx), { forceRecordingsMode: true });
                         }).join('')}
                                             </div>
                                             <div class="songs-fade-overlay"></div>
@@ -18691,7 +18832,7 @@
                                         <div class="detail-songs-list">
                                             ${personalityRecordings.map((item, i) => {
                             const { song, songIdx } = item;
-                            return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx));
+                            return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx), { forceRecordingsMode: true });
                         }).join('')}
                                         </div>
                                     `}
@@ -21048,14 +21189,14 @@
         }
 
         // Render song item - supports display modes: 'minimal', 'recordings', 'full'
-        function renderSongItem(song, globalIdx, displayNum, playlistIndices = null) {
+        function renderSongItem(song, globalIdx, displayNum, playlistIndices = null, options = {}) {
             const isActive = globalIdx === currentSongIndex;
             const hasAudio = songHasQualityAudio(song); // Uses quality filter
-            const displayMode = currentDisplayMode || 'minimal';
+            const displayMode = options.forceRecordingsMode ? 'recordings' : (currentDisplayMode || 'minimal');
 
             // Create meta with links - using entity-specific colors
             let metaParts = [];
-            if (song.mechaber) {
+            if (song.mechaber && !options.hideMechaber) {
                 metaParts.push(createMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
             }
             if (song.category) {
@@ -22175,6 +22316,11 @@
             overlay.classList.add('active');
             document.body.style.overflow = 'hidden';
 
+            // Scroll modal content to top
+            if (modalContent) {
+                modalContent.scrollTop = 0;
+            }
+
             // Initialize collapsible sections after rendering
             setTimeout(initCollapsibleSections, 50);
         }
@@ -22215,10 +22361,16 @@
             };
             const themeClass = themeMap[type] || '';
 
-            // Get info for profile image (for mechabrim type)
+            // Get info for profile image and enhanced display (for mechabrim type)
             let profileImageHTML = '';
+            let mechaberFullName = name;
+            let mechaberLifeDates = '';
+            let chatzerBadgesHTML = '';
+
             if (type === 'mechabrim') {
                 const info = mechabrimInfo[name] || {};
+
+                // Profile image
                 if (info.image) {
                     profileImageHTML = `
                         <div class="modal-hero-avatar">
@@ -22230,13 +22382,66 @@
                             <div class="placeholder"><div class="mechaber-icon"></div></div>
                         </div>`;
                 }
+
+                // Build full name (formal + known name)
+                const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
+
+                if (info.gerufen) {
+                    const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                    const knownName = knownParts.join(' ');
+                    mechaberFullName = `<span class="mechaber-formal">${formalName}</span><span class="mechaber-known">${knownName}</span>`;
+                } else {
+                    const fullNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
+                    mechaberFullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : name;
+                }
+
+                // Build life dates
+                const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
+                const deathParts = [info.deathDay, info.deathMonth, info.deathYear].filter(Boolean);
+                const birthStr = birthParts.length > 0 ? birthParts.join(' ') : '';
+                const deathStr = deathParts.length > 0 ? deathParts.join(' ') : '';
+
+                if (birthStr || deathStr) {
+                    if (birthStr && deathStr) {
+                        mechaberLifeDates = `${birthStr} - ${deathStr}`;
+                    } else if (birthStr) {
+                        mechaberLifeDates = `נולד: ${birthStr}`;
+                    } else if (deathStr) {
+                        mechaberLifeDates = `נפטר: ${deathStr}`;
+                    }
+                }
+
+                // Build chatzer badges
+                if (info.chatzer) {
+                    const chatzeros = info.chatzer.split(',').map(c => c.trim()).filter(Boolean);
+                    if (chatzeros.length > 0) {
+                        chatzerBadgesHTML = `
+                            <div class="modal-hero-badges">
+                                ${chatzeros.map(chatzer => `
+                                    <span class="detail-chatzer-badge"
+                                          data-action="filter"
+                                          data-page="chatzeros"
+                                          data-filter-key="chatzer"
+                                          data-value="${escapeHtml(chatzer)}"
+                                          style="cursor:pointer;">${chatzer}</span>
+                                `).join('')}
+                            </div>`;
+                    }
+                }
             }
 
             // Generate hero header
             const heroHTML = `
-                <div class="modal-hero ${themeClass}">
-                    ${profileImageHTML}
-                    <h1 class="modal-hero-title">${name}</h1>
+                <div class="modal-hero-wrapper">
+                    <div class="modal-hero ${themeClass}">
+                        <div class="modal-hero-left">
+                            ${profileImageHTML}
+                            ${mechaberLifeDates ? `<div class="modal-hero-dates">${mechaberLifeDates}</div>` : ''}
+                        </div>
+                        <h1 class="modal-hero-title">${type === 'mechabrim' ? mechaberFullName : name}</h1>
+                    </div>
+                    ${chatzerBadgesHTML ? `<div class="modal-hero-border-badges">${chatzerBadgesHTML}</div>` : ''}
                 </div>
             `;
 
@@ -22296,6 +22501,42 @@
 
             // Clear the currentDetailView since we don't actually want to navigate
             currentDetailView = null;
+        }
+
+        // Expand modal to full page view
+        function expandToFullPage() {
+            if (!detailModalOpen || !currentDetailModalType || !currentDetailModalName) return;
+
+            const type = currentDetailModalType;
+            const name = currentDetailModalName;
+
+            // Close modal first (without navigating back)
+            detailModalOpen = false;
+            const overlay = document.getElementById('detailModalOverlay');
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+
+            // Clear modal state
+            currentDetailModalType = null;
+            currentDetailModalName = null;
+
+            // Set up the full page view
+            currentPageView = type;
+            currentDetailView = { type: type, name: name };
+
+            // Update URL
+            history.replaceState(null, '', `#${type}/${encodeURIComponent(name)}`);
+
+            // Update nav buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.page === type);
+            });
+
+            // Render the detail page
+            renderDetailPage();
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Close generic detail modal
