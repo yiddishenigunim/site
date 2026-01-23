@@ -13421,12 +13421,12 @@
     <div class="search-modal-overlay" id="searchModalOverlay" onclick="closeSearchModal()">
         <div class="search-modal" onclick="event.stopPropagation()">
             <div class="search-modal-header">
-                <h3>🔍 זוכט אין אוצר הניגונים</h3>
+                <h3>🔍 זוך אין אוצר הניגונים</h3>
                 <button class="search-modal-close" onclick="closeSearchModal()">×</button>
             </div>
             <div class="search-modal-body">
                 <input type="text" id="searchModalInput" class="search-modal-input"
-                    placeholder="זוכט א ניגון, מחבר, חצר..."
+                    placeholder="זוך א ניגון, מחבר, חצר..."
                     onkeydown="if(event.key==='Enter') executeSearchFromModal()">
                 <button class="search-modal-btn" onclick="executeSearchFromModal()">זוך</button>
             </div>
@@ -13605,7 +13605,7 @@
         const VERTER_TABLE_ID = 'grid-tLcBzyh_tz'; // ווערטער טעיבל
         const PIYUTIM_TABLE_ID = 'grid-318i50N4cK'; // פיוטים טעיבל
         const ZMANIM_TABLE_ID = 'grid-K2rOGXJwjk'; // זמנים טעיבל
-        const COLLECTIONS_TABLE_ID = 'grid-K7Mo-tilkg'; // קאלעקשנס טעיבל
+        const COLLECTIONS_TABLE_ID = 'grid-K7Mo-tilkg'; // קאלעקשאנס טעיבל
         const RESOURCES_TABLE_ID = 'grid-8Gfz8rXNUV'; // רעסורסן טעיבל
         const DOCUMENTS_TABLE_ID = 'grid-3wKzDnkPg-'; // דאקומענטן טעיבל
         const ALBUMS_TABLE_ID = 'grid-bbTaa18Jhx'; // אלבומס טעיבל
@@ -14323,7 +14323,7 @@
                                 'c-BUEMMqGeaq', // ווערטער ID
                                 'c-u_op0cdc6C', // פיוטים ID
                                 'c-Hnj-jcC9Fz', // זמנים ID
-                                'c-qWlY1R6WOz', // קאלעקשנס ID
+                                'c-qWlY1R6WOz', // קאלעקשאנס ID
                                 'c-ov8ZZ90jjL', // רעסורסן ID
                                 'c-ABZxwZf5gG', // דאקומענטן ID
                                 'c-6sbXQP4zbj'  // אלבומס ID
@@ -14371,7 +14371,7 @@
                                         info.piyutim = relatedNames;
                                     }
                                     // Store collections list for zmanim
-                                    if (colNameLower === 'קאלעקשנס' || colNameLower.includes('קאלעקשן')) {
+                                    if (colNameLower === 'קאלעקשאנס' || colNameLower.includes('קאלעקשן')) {
                                         info.collections = relatedNames;
                                     }
                                     // Store zmanim for piyutim (all of them)
@@ -15982,7 +15982,7 @@
                                     <div class="goal-brick-text">חסידישע ניגונים ערשטמאליג אויסגעשטעלט<br><strong>לויט די ריטעם און סקעיל</strong></div>
                                 </div>
                                 <div class="goal-brick">
-                                    <div class="goal-brick-text"><strong>קאלעקשנס פון ניגונים</strong><br>וואס זענען פאסיג צו ווערן געזינגען ביי סיי וועלכן מאורע</div>
+                                    <div class="goal-brick-text"><strong>קאלעקשאנס פון ניגונים</strong><br>וואס זענען פאסיג צו ווערן געזינגען ביי סיי וועלכן מאורע</div>
                                 </div>
                             </div>
 
@@ -18607,7 +18607,7 @@
                 case 'collections':
                     infoObj = collectionsInfo;
                     icon = '';
-                    typeName = 'קאלעקשאן';
+                    typeName = 'קאלעקשן';
                     break;
                 case 'albums':
                     infoObj = albumsInfo;
@@ -21243,7 +21243,7 @@
                     break;
                 case 'collection':
                     categoryKey = 'collections';
-                    typeName = 'קאלעקשאן';
+                    typeName = 'קאלעקשן';
                     extraInfo = collectionsInfo[value];
                     themeClass = 'tooltip-collection';
                     break;
@@ -22553,7 +22553,7 @@
                 'verter': 'ווערטער',
                 'zmanim': 'זמן',
                 'piyutim': 'פיוט',
-                'collections': 'קאלעקשאן',
+                'collections': 'קאלעקשן',
                 'albums': 'אלבום',
                 'documents': 'דאקומענט',
                 'resources': 'רעסורס'
@@ -23133,7 +23133,7 @@
             content.innerHTML = `
                 <div class="page-theme-nigun">
                     <div class="page-title">
-                        <div class="page-title-bar">זוכט "${term}"...</div>
+                        <div class="page-title-bar">זוך "${term}"...</div>
                         <div class="page-title-content">
                             <div class="subtitle">לאודינג רעזולטאטן...</div>
                         </div>
@@ -23168,7 +23168,7 @@
             content.innerHTML = `
                 <div class="page-theme-nigun">
                     <div class="page-title">
-                        <div class="page-title-bar">זוכט "${term}"...</div>
+                        <div class="page-title-bar">זוך "${term}"...</div>
                     </div>
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 16px;">
                         <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
@@ -23326,7 +23326,7 @@
                         <input type="text" 
                                id="searchResultsInput" 
                                class="search-results-input" 
-                               placeholder="זוכט עפעס אנדערש..."
+                               placeholder="זוך עפעס אנדערש..."
                                value="${searchQuery}"
                                onkeydown="if(event.key==='Enter') executeSearchFromResults()">
                         <button class="search-results-btn" onclick="executeSearchFromResults()">🔍 זוכן</button>
@@ -24069,7 +24069,7 @@
             "זוך א חצר...",
             "זוך אן אלבום...",
             "זוך א זמן...",
-            "זוך א קאלעקשאן...",
+            "זוך א קאלעקשן...",
             "זוך ווערטער...",
             "זוך א ריטעם..."
         ];
