@@ -1232,6 +1232,10 @@
             border-color: var(--color-zman);
         }
 
+        .detail-modal-content.theme-piyut {
+            border-color: var(--color-piyut);
+        }
+
         .detail-modal-content.theme-collection {
             border-color: var(--color-collection);
         }
@@ -1430,7 +1434,7 @@
         .modal-hero {
             position: relative;
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
-            padding: 30px 25px 30px 120px;
+            padding: 30px 25px;
             text-align: center;
             margin: 0 60px 0 60px;
             border-radius: 0 0 20px 20px;
@@ -1476,6 +1480,12 @@
             text-align: center;
             word-wrap: break-word;
             overflow-wrap: break-word;
+            max-width: 100%;
+        }
+
+        /* Mechaber-specific: add equal padding on both sides for image clearance */
+        .theme-mechaber .modal-hero-title {
+            padding: 0 100px;
             max-width: 100%;
         }
 
@@ -1566,6 +1576,10 @@
             background: linear-gradient(135deg, var(--color-zman) 0%, var(--color-zman-dark) 100%);
         }
 
+        .modal-hero.theme-piyut {
+            background: linear-gradient(135deg, var(--color-piyut) 0%, var(--color-piyut-dark) 100%);
+        }
+
         .modal-hero.theme-collection {
             background: linear-gradient(135deg, var(--color-collection) 0%, var(--color-collection-dark) 100%);
         }
@@ -1602,16 +1616,19 @@
         }
 
         /* Hide back button in modal context */
+        .detail-modal-body .back-button,
         #detailModalBody .back-button {
             display: none !important;
         }
 
+        .detail-modal-body,
         #detailModalBody {
             padding: 0;
             overflow-x: hidden;
         }
 
         /* Reset detail-page viewport-based calculations inside modal */
+        .detail-modal-body .detail-page,
         #detailModalBody .detail-page {
             margin-left: 0 !important;
             margin-right: 0 !important;
@@ -1623,18 +1640,21 @@
         }
 
         /* Ensure all content respects container width */
+        .detail-modal-body *,
         #detailModalBody * {
             max-width: 100% !important;
             box-sizing: border-box !important;
         }
 
         /* Fix image sizing in modal */
+        .detail-modal-body .detail-image,
         #detailModalBody .detail-image {
             max-width: 150px !important;
             height: auto !important;
         }
 
         /* Style detail-description-section in modal like nigun-additions-box */
+        .detail-modal-body .detail-description-section,
         #detailModalBody .detail-description-section {
             display: flex;
             flex-direction: column;
@@ -7959,11 +7979,8 @@
         .detail-header {
             display: flex;
             flex-direction: column;
-            background: white;
-            border-radius: 16px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 25px;
-            overflow: hidden;
+            position: relative;
+            margin-bottom: 40px;
         }
 
         .detail-category-bar {
@@ -7972,14 +7989,20 @@
             font-weight: 600;
             background: var(--gradient-main);
             color: white;
+            text-align: left;
+            border-radius: 16px 16px 0 0;
         }
 
         .detail-header-content {
+            position: relative;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-deep) 100%);
+            padding: 30px 25px;
+            text-align: center;
+            border-radius: 0 0 20px 20px;
+            min-height: 100px;
             display: flex;
-            flex-direction: row;
-            gap: 20px;
             align-items: center;
-            padding: 25px;
+            justify-content: center;
         }
 
         .detail-header-content.no-image {
@@ -7987,22 +8010,49 @@
             text-align: center;
         }
 
+        /* Profile image container for full page - absolutely positioned like modal */
+        .detail-header-content .detail-image,
+        .detail-header-content .detail-image-placeholder {
+            position: absolute;
+            left: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+            border: 4px solid white;
+            overflow: hidden;
+            object-fit: cover;
+        }
+
         .detail-header-text {
             display: flex;
             flex-direction: column;
+            align-items: center;
             gap: 8px;
+            text-align: center;
+            width: 100%;
         }
 
         .detail-header-content.no-image .detail-header-text {
             align-items: center;
         }
 
+        /* Mechaber-specific: add padding for image clearance on full page */
+        .detail-page.theme-mechaber .detail-header-text {
+            padding: 0 100px;
+        }
+
         .detail-title {
-            font-size: 1.8em;
-            font-weight: 600;
+            font-size: 2em;
+            font-weight: 700;
             font-family: 'Heebo', sans-serif;
-            color: var(--primary-deep);
+            color: white;
             margin: 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            line-height: 1.3;
         }
 
         /* Category-themed detail pages */
@@ -8010,16 +8060,16 @@
             background: var(--color-chatzer);
         }
 
-        .detail-page.theme-chatzer .detail-title {
-            color: var(--color-chatzer-dark);
+        .detail-page.theme-chatzer .detail-header-content {
+            background: linear-gradient(135deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
         }
 
         .detail-page.theme-mechaber .detail-category-bar {
             background: var(--color-mechaber);
         }
 
-        .detail-page.theme-mechaber .detail-title {
-            color: var(--color-mechaber-dark);
+        .detail-page.theme-mechaber .detail-header-content {
+            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
         }
 
         /* Mechaber formal name on profile (small, lighter) */
@@ -8043,34 +8093,32 @@
             background: var(--color-verter);
         }
 
-        .detail-page.theme-verter .detail-title {
-            color: var(--color-verter-dark);
+        .detail-page.theme-verter .detail-header-content {
+            background: linear-gradient(135deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
         }
 
         .detail-page.theme-zman .detail-category-bar {
             background: var(--color-zman);
         }
 
-        .detail-page.theme-zman .detail-title,
-        .detail-page.theme-zman h1 {
-            color: var(--color-zman-dark);
+        .detail-page.theme-zman .detail-header-content {
+            background: linear-gradient(135deg, var(--color-zman) 0%, var(--color-zman-dark) 100%);
         }
 
         .detail-page.theme-piyut .detail-category-bar {
             background: #2e8b2e;
         }
 
-        .detail-page.theme-piyut .detail-title,
-        .detail-page.theme-piyut h1 {
-            color: #1b5e20;
+        .detail-page.theme-piyut .detail-header-content {
+            background: linear-gradient(135deg, #2e8b2e 0%, #1b5e20 100%);
         }
 
         .detail-page.theme-collection .detail-category-bar {
             background: var(--color-collection);
         }
 
-        .detail-page.theme-collection .detail-title {
-            color: var(--color-collection-dark);
+        .detail-page.theme-collection .detail-header-content {
+            background: linear-gradient(135deg, var(--color-collection) 0%, var(--color-collection-dark) 100%);
         }
 
         /* Full-width detail page theme backgrounds */
@@ -8326,6 +8374,7 @@
             flex-wrap: wrap;
             gap: 8px;
             margin-top: 10px;
+            justify-content: center;
         }
 
         .detail-chatzer-badge {
@@ -10454,7 +10503,7 @@
         .nigun-modal-content {
             background: white;
             border-radius: 20px;
-            max-width: 750px;
+            max-width: 850px;
             width: 100%;
             height: 80vh;
             overflow-y: auto;
@@ -10499,6 +10548,64 @@
 
         .nigun-modal-overlay.active .nigun-modal-content {
             transform: scale(1) translateY(0);
+        }
+
+        /* Nigun modal close button */
+        .nigun-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.8em;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 20;
+            transition: all 0.25s ease;
+        }
+
+        .nigun-modal-close:hover {
+            background: var(--color-nigun-pale);
+            color: var(--color-nigun-dark);
+            transform: scale(1.15);
+        }
+
+        /* Nigun modal expand button */
+        .nigun-modal-expand {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.2em;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            z-index: 20;
+            transition: all 0.25s ease;
+        }
+
+        .nigun-modal-expand:hover {
+            background: var(--color-nigun-pale);
+            color: var(--color-nigun-dark);
+            transform: scale(1.15);
         }
 
         /* Hide back button inside modal since we have our own close */
@@ -13416,6 +13523,15 @@
     <!-- Nigun Modal Overlay (Lightbox) -->
     <div class="nigun-modal-overlay" id="nigunModalOverlay" onclick="if(event.target === this) closeNigunModal()">
         <div class="nigun-modal-content">
+            <button class="nigun-modal-expand" onclick="event.stopPropagation(); expandToFullPage()"
+                title="עקספענד צו פולע בלאט">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 3 21 3 21 9"></polyline>
+                    <polyline points="9 21 3 21 3 15"></polyline>
+                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                </svg>
+            </button>
             <button class="nigun-modal-close" onclick="event.stopPropagation(); closeNigunModal()">×</button>
             <div id="nigunModalBody"></div>
         </div>
@@ -18655,10 +18771,24 @@
             };
             const themeClass = themeMap[type] || '';
 
+            // Plural names for back button
+            const pluralNameMap = {
+                'chatzeros': 'חצרות',
+                'mechabrim': 'מחברים',
+                'verter': 'ווערטער',
+                'zmanim': 'זמנים',
+                'piyutim': 'פיוטים',
+                'collections': 'קאלעקשאנס',
+                'albums': 'אלבומס',
+                'documents': 'דאקומענטן',
+                'resources': 'רעסורסן'
+            };
+            const pluralName = pluralNameMap[type] || typeName;
+
             container.innerHTML = `
                 <div class="detail-page ${themeClass}" data-type="${type}">
                     <button class="back-button" onclick="goBackFromDetail()">
-                        → צוריק
+                        → ${pluralName}
                     </button>
                     
                     <div class="detail-header">
@@ -18680,10 +18810,9 @@
                                     <div class="detail-badges">
                                         ${chatzeros.map(chatzer => `
                                             <span class="detail-chatzer-badge"
-                                                  data-action="filter"
-                                                  data-page="chatzeros"
-                                                  data-filter-key="chatzer"
-                                                  data-value="${escapeHtml(chatzer)}"
+                                                  data-action="detail"
+                                                  data-category="chatzeros"
+                                                  data-name="${escapeHtml(chatzer)}"
                                                   data-tooltip-value="${escapeHtml(chatzer)}"
                                                   data-tooltip-type="chatzer"
                                                   style="cursor:pointer;">${chatzer}</span>
@@ -19273,7 +19402,7 @@
 
             container.innerHTML = `
                 <div class="detail-page nigun-detail-page">
-                    <button class="back-button" onclick="navigateTo('nigunim')">
+                    <button class="back-button" onclick="navigateTo('nigunim')">→ ניגונים
                     </button>
                     
                     <!-- New Hero Header for Modal -->
@@ -19324,7 +19453,7 @@
                             ${song.maure ? `
                                 <div class="nigun-modal-hero-maure">
                                     ${song.maure.split(',').map(m => m.trim()).filter(Boolean).map(m => `
-                                        <span class="maure-tag" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(m)}" data-tooltip-value="${escapeHtml(m)}" data-tooltip-type="zman">${m}</span>
+                                        <span class="maure-tag" data-action="detail" data-category="piyutim" data-name="${escapeHtml(m)}" data-tooltip-value="${escapeHtml(m)}" data-tooltip-type="piyut" onclick="event.stopPropagation(); navigateToDetail('piyutim', '${escapeHtml(m).replace(/'/g, "\\'")}');">${m}</span>
                                     `).join('')}
                                 </div>
                             ` : ''}
@@ -19353,7 +19482,7 @@
                         rec.album.split(',').forEach(a => {
                             const albumName = a.trim();
                             if (albumName) {
-                                recTags.push('<span class="nigun-tag-inline tag-album" data-action="detail" data-category="albums" data-name="' + escapeHtml(albumName) + '" data-tooltip-value="' + escapeHtml(albumName) + '" data-tooltip-type="collection" style="cursor:pointer;" onclick="event.stopPropagation();">' + albumName + '</span>');
+                                recTags.push('<span class="nigun-tag-inline tag-album" data-action="detail" data-category="albums" data-name="' + escapeHtml(albumName) + '" data-tooltip-value="' + escapeHtml(albumName) + '" data-tooltip-type="collection" style="cursor:pointer;" onclick="event.stopPropagation(); navigateToDetail(\'albums\', \'' + escapeHtml(albumName).replace(/'/g, "\\'") + '\');">' + albumName + '</span>');
                             }
                         });
                     }
@@ -19361,7 +19490,7 @@
                         rec.personalities.split(',').forEach(p => {
                             const name = p.trim();
                             if (name) {
-                                recTags.push('<span class="nigun-tag-inline tag-mechaber" data-action="detail" data-category="mechabrim" data-name="' + escapeHtml(name) + '" data-tooltip-value="' + escapeHtml(name) + '" data-tooltip-type="mechaber" style="cursor:pointer;" onclick="event.stopPropagation();">' + name + '</span>');
+                                recTags.push('<span class="nigun-tag-inline tag-mechaber" data-action="detail" data-category="mechabrim" data-name="' + escapeHtml(name) + '" data-tooltip-value="' + escapeHtml(name) + '" data-tooltip-type="mechaber" style="cursor:pointer;" onclick="event.stopPropagation(); navigateToDetail(\'mechabrim\', \'' + escapeHtml(name).replace(/'/g, "\\'") + '\');">' + name + '</span>');
                             }
                         });
                     }
@@ -19420,7 +19549,7 @@
                                         </div>
                                     ` : ''}
                                     ${song.pasigOif ? song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
-                                        <div class="nigun-detail-box box-pasig" data-action="filter" data-page="nigunim" data-filter-key="zman" data-value="${escapeHtml(p)}" data-tooltip-value="${escapeHtml(p)}" data-tooltip-type="zman">
+                                        <div class="nigun-detail-box box-pasig" data-action="detail" data-category="piyutim" data-name="${escapeHtml(p)}" data-tooltip-value="${escapeHtml(p)}" data-tooltip-type="piyut">
                                             <div class="nigun-detail-box-header">פאסיג אויף</div>
                                             <div class="nigun-detail-box-content">${p}</div>
                                         </div>
@@ -19649,7 +19778,7 @@
             let html = `
                 <div class="detail-page theme-zman">
                     <button class="back-button" onclick="navigateTo('zmanim')">
-                        → זמנים בלאט
+                        → זמנים
                     </button>
                     
                     <div class="detail-header">
@@ -20098,10 +20227,9 @@
                             <div class="card-tags" onclick="event.stopPropagation();">
                                 ${chatzeros.map(chatzer => `
                                     <span class="card-chatzer-tag"
-                                          data-action="filter"
-                                          data-page="chatzeros"
-                                          data-filter-key="chatzer"
-                                          data-value="${escapeHtml(chatzer)}"
+                                          data-action="detail"
+                                          data-category="chatzeros"
+                                          data-name="${escapeHtml(chatzer)}"
                                           data-tooltip-value="${escapeHtml(chatzer)}"
                                           data-tooltip-type="chatzer">${chatzer}</span>
                                 `).join('')}
@@ -20464,10 +20592,9 @@
                                             <div class="card-tags" onclick="event.stopPropagation();">
                                                 ${chatzeros.map(chatzer => `
                                                     <span class="card-chatzer-tag"
-                                                          data-action="filter"
-                                                          data-page="chatzeros"
-                                                          data-filter-key="chatzer"
-                                                          data-value="${escapeHtml(chatzer)}"
+                                                          data-action="detail"
+                                                          data-category="chatzeros"
+                                                          data-name="${escapeHtml(chatzer)}"
                                                           data-tooltip-value="${escapeHtml(chatzer)}"
                                                           data-tooltip-type="chatzer">${chatzer}</span>
                                                 `).join('')}
@@ -20818,7 +20945,7 @@
             container.innerHTML = `
                 <div class="detail-page page-theme-album">
                     <button class="back-button" onclick="navigateTo('albums')">
-                        → אלבומס בלאט
+                        → אלבומס
                     </button>
                     
                     <div class="detail-header">
@@ -20898,7 +21025,7 @@
             container.innerHTML = `
                 <div class="detail-page page-theme-document">
                     <button class="back-button" onclick="navigateTo('documents')">
-                        → דאקומענטן בלאט
+                        → דאקומענטן
                     </button>
                     
                     <div class="detail-header">
@@ -20986,7 +21113,7 @@
             container.innerHTML = `
                 <div class="detail-page page-theme-resource">
                     <button class="back-button" onclick="navigateTo('resources')">
-                        → רעסורסן בלאט
+                        → רעסורסן
                     </button>
                     
                     <div class="detail-header">
@@ -21282,7 +21409,7 @@
         });
 
         // Create meta links for song items (handles multiple comma-separated values)
-        // Uses pill button styling with category colors and data attributes for event delegation
+        // Opens preview modals using data-action="detail"
         function createMetaLinks(value, page, filterKey, entityType = null) {
             if (!value) return '';
             const values = value.split(',').map(v => v.trim()).filter(Boolean);
@@ -21291,14 +21418,24 @@
                     filterKey === 'verter' ? 'verter-tag' :
                         filterKey === 'zman' ? 'zman-tag' :
                             filterKey === 'collection' ? 'collection-tag' : 'song-meta-link';
+            // Map filterKey to category for detail navigation
+            const categoryMap = {
+                'mechaber': 'mechabrim',
+                'chatzer': 'chatzeros',
+                'verter': 'verter',
+                'zman': 'zmanim',
+                'collection': 'collections',
+                'piyut': 'piyutim'
+            };
+            const category = categoryMap[filterKey] || page;
             return values.map(v =>
                 `<span class="${tagClass} song-meta-tag"
-                    data-action="filter"
-                    data-page="${page}"
-                    data-filter-key="${filterKey}"
-                    data-value="${escapeHtml(v)}"
+                    data-action="detail"
+                    data-category="${category}"
+                    data-name="${escapeHtml(v)}"
                     data-tooltip-value="${escapeHtml(v)}"
-                    data-tooltip-type="${filterKey}">${v}</span>`
+                    data-tooltip-type="${filterKey}"
+                    onclick="event.stopPropagation(); navigateToDetail('${category}', '${escapeHtml(v).replace(/'/g, "\\'")}');">${v}</span>`
             ).join(' ');
         }
 
@@ -21395,7 +21532,7 @@
                                 data-category="albums" 
                                 data-name="${escapeHtml(rec.album)}"
                                 style="cursor:pointer;"
-                                onclick="event.stopPropagation();">${rec.album}</span>`);
+                                onclick="event.stopPropagation(); navigateToDetail('albums', '${escapeHtml(rec.album).replace(/'/g, "\\'")}');">${rec.album}</span>`);
                         }
                         if (rec.personalities) {
                             rec.personalities.split(',').forEach(p => {
@@ -21406,7 +21543,7 @@
                                         data-category="mechabrim"
                                         data-name="${escapeHtml(name)}"
                                         style="cursor:pointer;"
-                                        onclick="event.stopPropagation();">${name}</span>`);
+                                        onclick="event.stopPropagation(); navigateToDetail('mechabrim', '${escapeHtml(name).replace(/'/g, "\\'")}');">${name}</span>`);
                                 }
                             });
                         }
@@ -21457,7 +21594,7 @@
                               data-name="${escapeHtml(v)}"
                               data-tooltip-value="${escapeHtml(v)}"
                               data-tooltip-type="verter"
-                              onclick="event.stopPropagation();">${v}</span>
+                              onclick="event.stopPropagation(); navigateToDetail('verter', '${escapeHtml(v).replace(/'/g, "\\'")}');">${v}</span>
                     `).join('');
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">ווערטער:</span><div class="song-full-tags">${verterTags}</div></div>`);
                 }
@@ -21471,7 +21608,7 @@
                               data-name="${escapeHtml(c)}"
                               data-tooltip-value="${escapeHtml(c)}"
                               data-tooltip-type="collection"
-                              onclick="event.stopPropagation();">${c}</span>
+                              onclick="event.stopPropagation(); navigateToDetail('collections', '${escapeHtml(c).replace(/'/g, "\\'")}');">${c}</span>
                     `).join('');
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">קאלעקשאנס:</span><div class="song-full-tags">${collectionTags}</div></div>`);
                 }
@@ -21480,13 +21617,12 @@
                 if (song.pasigOif) {
                     const pasigTags = song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
                         <span class="nigun-tag-inline tag-piyut" 
-                              data-action="filter" 
-                              data-page="nigunim"
-                              data-filter-key="zman"
-                              data-value="${escapeHtml(p)}"
+                              data-action="detail" 
+                              data-category="piyutim"
+                              data-name="${escapeHtml(p)}"
                               data-tooltip-value="${escapeHtml(p)}"
-                              data-tooltip-type="zman"
-                              onclick="event.stopPropagation();">${p}</span>
+                              data-tooltip-type="piyut"
+                              onclick="event.stopPropagation(); navigateToDetail('piyutim', '${escapeHtml(p).replace(/'/g, "\\'")}');">${p}</span>
                     `).join('');
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">פאסיג אויף:</span><div class="song-full-tags">${pasigTags}</div></div>`);
                 }
@@ -21501,7 +21637,7 @@
                               data-value="${escapeHtml(s)}"
                               data-tooltip-value="${escapeHtml(s)}"
                               data-tooltip-type="scale"
-                              onclick="event.stopPropagation();">${s}</span>
+                              onclick="event.stopPropagation(); navigateToWithFilter('music', 'scale', '${escapeHtml(s).replace(/'/g, "\\'")}');">${s}</span>
                     `).join('');
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סקעיל:</span><div class="song-full-tags">${scaleTags}</div></div>`);
                 }
@@ -21516,7 +21652,7 @@
                               data-value="${escapeHtml(r)}"
                               data-tooltip-value="${escapeHtml(r)}"
                               data-tooltip-type="ritem"
-                              onclick="event.stopPropagation();">${r}</span>
+                              onclick="event.stopPropagation(); navigateToWithFilter('music', 'ritem', '${escapeHtml(r).replace(/'/g, "\\'")}');">${r}</span>
                     `).join('');
                     extraInfo.push(`<div class="song-full-row"><span class="song-full-label">ריטעם:</span><div class="song-full-tags">${ritemTags}</div></div>`);
                 }
@@ -21551,7 +21687,7 @@
                                 data-category="albums" 
                                 data-name="${escapeHtml(rec.album)}"
                                 style="cursor:pointer;"
-                                onclick="event.stopPropagation();">${rec.album}</span>`);
+                                onclick="event.stopPropagation(); navigateToDetail('albums', '${escapeHtml(rec.album).replace(/'/g, "\\'")}');">${rec.album}</span>`);
                         }
                         if (rec.personalities) {
                             rec.personalities.split(',').forEach(p => {
@@ -21562,7 +21698,7 @@
                                         data-category="mechabrim"
                                         data-name="${escapeHtml(name)}"
                                         style="cursor:pointer;"
-                                        onclick="event.stopPropagation();">${name}</span>`);
+                                        onclick="event.stopPropagation(); navigateToDetail('mechabrim', '${escapeHtml(name).replace(/'/g, "\\'")}');">${name}</span>`);
                                 }
                             });
                         }
@@ -21819,18 +21955,27 @@
         }
 
         // Create player meta links (handles multiple comma-separated values)
-        // entityType determines the color class (mechaber, chatzer, collection)
+        // Opens preview modals using data-action="detail"
         function createPlayerMetaLinks(value, page, filterKey, entityType = null) {
             if (!value) return '';
             const values = value.split(',').map(v => v.trim()).filter(Boolean);
             // Use entity-specific class if provided, otherwise generic
             const linkClass = entityType ? `player-meta-link-${entityType}` : 'player-meta-link';
+            // Map filterKey to category for detail navigation
+            const categoryMap = {
+                'mechaber': 'mechabrim',
+                'chatzer': 'chatzeros',
+                'verter': 'verter',
+                'zman': 'zmanim',
+                'collection': 'collections',
+                'piyut': 'piyutim'
+            };
+            const category = categoryMap[filterKey] || page;
             return values.map(v =>
                 `<a href="#" class="${linkClass}"
-                    data-action="filter"
-                    data-page="${page}"
-                    data-filter-key="${filterKey}"
-                    data-value="${escapeHtml(v)}"
+                    data-action="detail"
+                    data-category="${category}"
+                    data-name="${escapeHtml(v)}"
                     data-tooltip-value="${escapeHtml(v)}"
                     data-tooltip-type="${filterKey}">${v}</a>`
             ).join(', ');
@@ -22183,30 +22328,31 @@
             const values = value.split(',').map(v => v.trim()).filter(Boolean);
 
             return values.map(v => {
+                // Entity types that open preview modals
+                const detailTypes = {
+                    'mechaber': 'mechabrim',
+                    'chatzer': 'chatzeros',
+                    'verter': 'verter',
+                    'zman': 'zmanim',
+                    'collection': 'collections',
+                    'piyut': 'piyutim'
+                };
+
+                // Check if this field type opens a preview
+                if (detailTypes[fieldType]) {
+                    return `<a href="#" class="field-link"
+                        data-action="detail"
+                        data-category="${detailTypes[fieldType]}"
+                        data-name="${escapeHtml(v)}"
+                        data-close-modal="true"
+                        data-tooltip-value="${escapeHtml(v)}"
+                        data-tooltip-type="${fieldType}">${v}</a>`;
+                }
+
+                // Filter types (scale, ritem, gezungen, maure) - no preview page
                 let page = '';
                 let filterKey = '';
-
                 switch (fieldType) {
-                    case 'mechaber':
-                        page = 'mechabrim';
-                        filterKey = 'mechaber';
-                        break;
-                    case 'chatzer':
-                        page = 'chatzeros';
-                        filterKey = 'chatzer';
-                        break;
-                    case 'verter':
-                        page = 'verter';
-                        filterKey = 'verter';
-                        break;
-                    case 'zman':
-                        page = 'zmanim';
-                        filterKey = 'zman';
-                        break;
-                    case 'collection':
-                        page = 'collections';
-                        filterKey = 'collection';
-                        break;
                     case 'scale':
                         page = 'songs';
                         filterKey = 'scale';
@@ -22382,7 +22528,7 @@
         let currentDetailModalName = null;
 
         // Open generic detail modal
-        function openDetailModal(type, name, skipHistory = false) {
+        async function openDetailModal(type, name, skipHistory = false) {
             // Save current scroll position
             savedScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
             detailModalOpen = true;
@@ -22395,7 +22541,7 @@
                 'chatzeros': 'theme-chatzer',
                 'verter': 'theme-verter',
                 'zmanim': 'theme-zman',
-                'piyutim': 'theme-zman',
+                'piyutim': 'theme-piyut',
                 'collections': 'theme-collection',
                 'albums': 'theme-album',
                 'documents': 'theme-document',
@@ -22422,27 +22568,62 @@
                 history.pushState({ detailModal: true, scrollPos: savedScrollPosition, type: type, name: name }, '', hash);
             }
 
-            // Set modal title
-            const modalTitle = document.getElementById('detailModalTitle');
-            if (modalTitle) {
-                modalTitle.textContent = name;
+            // Check if there are already modals open (for stacking)
+            const hasExistingModals = modalStack.length > 0;
+
+            // Create a new dynamic modal overlay for stacking
+            modalZIndexCounter++;
+            const modalId = 'dynamicDetailModal_' + modalZIndexCounter;
+
+            // Create overlay element
+            const overlay = document.createElement('div');
+            overlay.className = 'detail-modal-overlay';
+            overlay.id = modalId;
+            overlay.style.zIndex = modalZIndexCounter;
+            overlay.onclick = function (e) { if (e.target === this) closeTopDetailModal(); };
+
+            // If stacking on top of existing modal, make background transparent
+            if (hasExistingModals) {
+                overlay.style.background = 'transparent';
+                overlay.style.backdropFilter = 'none';
             }
 
-            // Render content in modal
-            const modalBody = document.getElementById('detailModalBody');
-            const modalContent = document.querySelector('.detail-modal-content');
+            // Create modal content structure
+            overlay.innerHTML = `
+                <div class="detail-modal-content ${themeClass}">
+                    <button class="detail-modal-expand" onclick="event.stopPropagation(); expandToFullPage()"
+                        title="עקספענד צו פולע בלאט">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="15 3 21 3 21 9"></polyline>
+                            <polyline points="9 21 3 21 3 15"></polyline>
+                            <line x1="21" y1="3" x2="14" y2="10"></line>
+                            <line x1="3" y1="21" x2="10" y2="14"></line>
+                        </svg>
+                    </button>
+                    <button class="detail-modal-close" onclick="event.stopPropagation(); closeTopDetailModal()">×</button>
+                    <div class="detail-modal-body"><div class="loading"><div class="spinner"></div><p>לאודינג...</p></div></div>
+                </div>
+            `;
 
-            // Apply theme class
-            modalContent.className = 'detail-modal-content ' + themeClass;
+            // Add to DOM
+            document.body.appendChild(overlay);
 
-            renderDetailInModal(modalBody, type, name);
+            // Track in modal stack
+            modalStack.push({ type: 'detail', zIndex: modalZIndexCounter, modalType: type, name: name, overlayId: modalId });
 
-            // Show overlay with stacking z-index
-            const overlay = document.getElementById('detailModalOverlay');
-            modalZIndexCounter++;
-            overlay.style.zIndex = modalZIndexCounter;
-            modalStack.push({ type: 'detail', zIndex: modalZIndexCounter, modalType: type, name: name });
-            overlay.classList.add('active');
+            // Render content
+            const modalBody = overlay.querySelector('.detail-modal-body');
+            const modalContent = overlay.querySelector('.detail-modal-content');
+
+            await renderDetailInModal(modalBody, type, name);
+
+            // Show with animation - double RAF ensures browser paints initial state first
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    overlay.classList.add('active');
+                });
+            });
+
             document.body.style.overflow = 'hidden';
 
             // Scroll modal content to top
@@ -22452,6 +22633,48 @@
 
             // Initialize collapsible sections after rendering
             setTimeout(initCollapsibleSections, 50);
+        }
+
+        // Close the topmost detail modal only
+        function closeTopDetailModal() {
+            // Find the topmost detail modal in the stack
+            const detailModals = modalStack.filter(m => m.type === 'detail');
+            if (detailModals.length === 0) return;
+
+            const topModal = detailModals[detailModals.length - 1];
+            const overlay = document.getElementById(topModal.overlayId);
+
+            if (overlay) {
+                overlay.classList.remove('active');
+                // Remove after animation
+                setTimeout(() => {
+                    overlay.remove();
+                }, 300);
+            }
+
+            // Remove from stack
+            modalStack = modalStack.filter(m => m.overlayId !== topModal.overlayId);
+
+            // Update state
+            if (modalStack.filter(m => m.type === 'detail').length === 0) {
+                detailModalOpen = false;
+                currentDetailModalType = null;
+                currentDetailModalName = null;
+            } else {
+                // Update to previous modal's info
+                const prevModal = modalStack.filter(m => m.type === 'detail').pop();
+                if (prevModal) {
+                    currentDetailModalType = prevModal.modalType;
+                    currentDetailModalName = prevModal.name;
+                }
+            }
+
+            // Only restore scrolling if no other modals are open
+            if (modalStack.length === 0) {
+                document.body.style.overflow = '';
+            }
+
+            history.back();
         }
 
         // Get item ID for URL
@@ -22482,7 +22705,7 @@
                 'chatzeros': 'theme-chatzer',
                 'verter': 'theme-verter',
                 'zmanim': 'theme-zman',
-                'piyutim': 'theme-zman',
+                'piyutim': 'theme-piyut',
                 'collections': 'theme-collection',
                 'albums': 'theme-album',
                 'documents': 'theme-document',
@@ -22549,10 +22772,9 @@
                             <div class="modal-hero-badges">
                                 ${chatzeros.map(chatzer => `
                                     <span class="detail-chatzer-badge"
-                                          data-action="filter"
-                                          data-page="chatzeros"
-                                          data-filter-key="chatzer"
-                                          data-value="${escapeHtml(chatzer)}"
+                                          data-action="detail"
+                                          data-category="chatzeros"
+                                          data-name="${escapeHtml(chatzer)}"
                                           style="cursor:pointer;">${chatzer}</span>
                                 `).join('')}
                             </div>`;
@@ -22585,6 +22807,7 @@
                 case 'chatzeros':
                 case 'verter':
                 case 'collections':
+                case 'piyutim':
                     // Set currentDetailView for the render function
                     currentDetailView = { type, name };
                     await renderDetailPage();
@@ -22594,7 +22817,6 @@
                     mainContent.innerHTML = savedMainHTML;
                     break;
                 case 'zmanim':
-                case 'piyutim':
                     currentDetailView = { type: 'zman', name };
                     await renderDetailPage();
                     tempContainer.innerHTML = mainContent.innerHTML;
@@ -22634,30 +22856,73 @@
 
         // Expand modal to full page view
         function expandToFullPage() {
-            // Get current URL and remove /preview to get full page URL
-            const currentHash = window.location.hash;
-            const newHash = currentHash.replace('/preview', '');
+            // Build URL from modal state, not from current URL
+            let targetType = null;
+            let targetName = null;
 
-            // Get modal elements
-            const detailOverlay = document.getElementById('detailModalOverlay');
-            const detailContent = document.querySelector('.detail-modal-content');
-            const nigunOverlay = document.getElementById('nigunModalOverlay');
-            const nigunContent = document.querySelector('.nigun-modal-content');
+            if (detailModalOpen && currentDetailModalType && currentDetailModalName) {
+                targetType = currentDetailModalType;
+                targetName = currentDetailModalName;
+            } else if (nigunModalOpen && currentNigunModalIdx !== null) {
+                // For nigun modal, get song info
+                const song = allSongs[currentNigunModalIdx];
+                if (song) {
+                    targetType = 'nigunim';
+                    targetName = song.customId || song.rowId || song.name;
+                }
+            }
 
-            // Determine which modal is active and add expanding animation
-            const activeOverlay = detailModalOpen ? detailOverlay : nigunOverlay;
-            const activeContent = detailModalOpen ? detailContent : nigunContent;
+            if (!targetType || !targetName) {
+                console.error('expandToFullPage: No target type or name available');
+                return;
+            }
 
-            if (activeOverlay && activeContent) {
-                // Add expanding animation classes
-                activeOverlay.classList.add('expanding');
-                activeContent.classList.add('expanding');
+            // Get item ID for URL
+            const itemId = getDetailItemId(targetType, targetName);
+            const newHash = `#/${targetType}/${encodeURIComponent(itemId)}`;
 
-                // Wait for animation to complete, then clean up and show full page
+            // Find active modal - check dynamic modals in stack first
+            let activeOverlay = null;
+            let activeContent = null;
+
+            // Check for dynamic detail modals in stack
+            const detailModals = modalStack.filter(m => m.type === 'detail');
+            if (detailModals.length > 0) {
+                const topModal = detailModals[detailModals.length - 1];
+                activeOverlay = document.getElementById(topModal.overlayId);
+                if (activeOverlay) {
+                    activeContent = activeOverlay.querySelector('.detail-modal-content');
+                }
+            }
+
+            // Fallback to static modals
+            if (!activeOverlay) {
+                const staticDetailOverlay = document.getElementById('detailModalOverlay');
+                const nigunOverlay = document.getElementById('nigunModalOverlay');
+
+                if (detailModalOpen && staticDetailOverlay) {
+                    activeOverlay = staticDetailOverlay;
+                    activeContent = activeOverlay.querySelector('.detail-modal-content');
+                } else if (nigunModalOpen && nigunOverlay) {
+                    activeOverlay = nigunOverlay;
+                    activeContent = activeOverlay.querySelector('.nigun-modal-content');
+                }
+            }
+
+            if (activeOverlay) {
+                // Add fade-out animation
+                activeOverlay.classList.remove('active');
+                if (activeContent) {
+                    activeContent.classList.add('expanding');
+                }
+
+                // Wait for fade animation to complete, then clean up and show full page
                 setTimeout(() => {
-                    // Remove animation classes
-                    activeOverlay.classList.remove('expanding', 'active');
-                    activeContent.classList.remove('expanding');
+                    // Remove all dynamic modals from DOM
+                    modalStack.forEach(m => {
+                        const overlay = document.getElementById(m.overlayId);
+                        if (overlay) overlay.remove();
+                    });
 
                     // Reset modal states
                     nigunModalOpen = false;
@@ -22672,15 +22937,17 @@
                     history.replaceState(null, '', newHash);
 
                     // Parse and render the full page
-                    handleHashChange();
+                    handleURLChange();
 
                     // Scroll to top
                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                }, 400); // Match animation duration
+                }, 300); // Match fade animation duration
             } else {
                 // Fallback: no animation
-                if (nigunOverlay) nigunOverlay.classList.remove('active');
-                if (detailOverlay) detailOverlay.classList.remove('active');
+                modalStack.forEach(m => {
+                    const overlay = document.getElementById(m.overlayId);
+                    if (overlay) overlay.remove();
+                });
 
                 nigunModalOpen = false;
                 detailModalOpen = false;
@@ -22691,31 +22958,14 @@
                 document.body.style.overflow = '';
 
                 history.replaceState(null, '', newHash);
-                handleHashChange();
+                handleURLChange();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
         }
 
-        // Close generic detail modal
+        // Close generic detail modal (wrapper for closeTopDetailModal)
         function closeDetailModal() {
-            if (!detailModalOpen) return;
-
-            detailModalOpen = false;
-            currentDetailModalType = null;
-            currentDetailModalName = null;
-
-            // Remove from modal stack
-            modalStack = modalStack.filter(m => m.type !== 'detail' || m.zIndex !== parseInt(document.getElementById('detailModalOverlay').style.zIndex));
-
-            const overlay = document.getElementById('detailModalOverlay');
-            overlay.classList.remove('active');
-
-            // Only restore scrolling if no other modals are open
-            if (modalStack.length === 0) {
-                document.body.style.overflow = '';
-            }
-
-            history.back();
+            closeTopDetailModal();
         }
 
         // Handle browser back/forward for nigun modal
@@ -22741,19 +22991,44 @@
 
             // Check if we're closing the detail modal
             if (detailModalOpen) {
-                detailModalOpen = false;
-                currentDetailModalType = null;
-                currentDetailModalName = null;
+                // Find and close the topmost detail modal from stack
+                const detailModals = modalStack.filter(m => m.type === 'detail');
+                if (detailModals.length > 0) {
+                    const topModal = detailModals[detailModals.length - 1];
+                    const overlay = document.getElementById(topModal.overlayId);
 
-                const overlay = document.getElementById('detailModalOverlay');
-                overlay.classList.remove('active');
-                document.body.style.overflow = '';
+                    if (overlay) {
+                        overlay.classList.remove('active');
+                        setTimeout(() => {
+                            overlay.remove();
+                        }, 300);
+                    }
 
-                // Restore scroll position
-                if (e.state && e.state.scrollPos !== undefined) {
-                    window.scrollTo(0, e.state.scrollPos);
-                } else {
-                    window.scrollTo(0, savedScrollPosition);
+                    // Remove from stack
+                    modalStack = modalStack.filter(m => m.overlayId !== topModal.overlayId);
+
+                    // Update state based on remaining modals
+                    const remainingDetailModals = modalStack.filter(m => m.type === 'detail');
+                    if (remainingDetailModals.length === 0) {
+                        detailModalOpen = false;
+                        currentDetailModalType = null;
+                        currentDetailModalName = null;
+                    } else {
+                        const prevModal = remainingDetailModals[remainingDetailModals.length - 1];
+                        currentDetailModalType = prevModal.modalType;
+                        currentDetailModalName = prevModal.name;
+                    }
+                }
+
+                // Only restore scrolling and overflow if no modals remain
+                if (modalStack.length === 0) {
+                    document.body.style.overflow = '';
+                    // Restore scroll position
+                    if (e.state && e.state.scrollPos !== undefined) {
+                        window.scrollTo(0, e.state.scrollPos);
+                    } else {
+                        window.scrollTo(0, savedScrollPosition);
+                    }
                 }
                 return;
             }
@@ -23890,6 +24165,23 @@
                 }
             }, { passive: true });
         })();
+
+        // Handle nav dropdown button clicks - force close dropdown on click
+        document.querySelectorAll('.nav-dropdown-btn, .nav-dropdown-item').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const dropdown = btn.closest('.nav-dropdown');
+                if (dropdown) {
+                    const content = dropdown.querySelector('.nav-dropdown-content');
+                    if (content) {
+                        content.classList.add('hiding');
+                        // Remove hiding class after navigation so hover works again
+                        setTimeout(() => {
+                            content.classList.remove('hiding');
+                        }, 300);
+                    }
+                }
+            });
+        });
     </script>
 </body>
 
