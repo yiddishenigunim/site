@@ -2267,6 +2267,11 @@
             display: none !important;
         }
 
+        /* Cooldown state - completely disable hover behavior on parent dropdown */
+        .nav-dropdown.cooldown .nav-dropdown-content {
+            display: none !important;
+        }
+
         /* Beautiful dropdown items - each as separate white card */
         .nav-dropdown-item {
             display: flex;
@@ -6586,11 +6591,25 @@
         }
 
         .nigun-detail-box.box-scale {
-            background: var(--color-zman-pale);
+            background: var(--color-music-pale);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nigun-detail-box.box-scale:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .nigun-detail-box.box-ritem {
-            background: var(--color-zman-pale);
+            background: var(--color-music-pale);
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .nigun-detail-box.box-ritem:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .nigun-detail-box.box-maure {
@@ -6639,11 +6658,11 @@
         }
 
         .nigun-detail-box.box-scale .nigun-detail-box-header {
-            background: var(--color-zman-dark);
+            background: var(--color-music-dark);
         }
 
         .nigun-detail-box.box-ritem .nigun-detail-box-header {
-            background: var(--color-zman-dark);
+            background: var(--color-music-dark);
         }
 
         .nigun-detail-box.box-maure .nigun-detail-box-header {
@@ -6755,13 +6774,23 @@
         .nigun-tag-inline.tag-scale {
             background: var(--color-music);
             color: white;
-            cursor: default;
+            cursor: pointer;
+        }
+
+        .nigun-tag-inline.tag-scale:hover {
+            background: var(--color-music-dark, #b8960c);
+            transform: scale(1.05);
         }
 
         .nigun-tag-inline.tag-ritem {
             background: var(--color-music);
             color: white;
-            cursor: default;
+            cursor: pointer;
+        }
+
+        .nigun-tag-inline.tag-ritem:hover {
+            background: var(--color-music-dark, #b8960c);
+            transform: scale(1.05);
         }
 
         .nigun-tag-inline.tag-zman {
@@ -7984,13 +8013,8 @@
         }
 
         .detail-category-bar {
-            padding: 8px 20px;
-            font-size: 0.85em;
-            font-weight: 600;
-            background: var(--gradient-main);
-            color: white;
-            text-align: left;
-            border-radius: 16px 16px 0 0;
+            display: none;
+            /* Hide category bar on full page */
         }
 
         .detail-header-content {
@@ -8010,13 +8034,21 @@
             text-align: center;
         }
 
-        /* Profile image container for full page - absolutely positioned like modal */
-        .detail-header-content .detail-image,
-        .detail-header-content .detail-image-placeholder {
+        /* Left container for profile image and dates - like modal hero left */
+        .detail-header-left {
             position: absolute;
             left: 25px;
             top: 50%;
             transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Profile image for full page */
+        .detail-header-left .detail-image,
+        .detail-header-left .detail-image-placeholder {
             width: 80px;
             height: 80px;
             border-radius: 50%;
@@ -8025,6 +8057,15 @@
             border: 4px solid white;
             overflow: hidden;
             object-fit: cover;
+        }
+
+        /* Life dates under image */
+        .detail-header-left .detail-life-dates {
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.9);
+            text-align: center;
+            white-space: nowrap;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
         }
 
         .detail-header-text {
@@ -8446,11 +8487,12 @@
 
         .detail-title {
             font-size: 2em;
-            color: var(--primary-deep);
+            color: white;
             font-family: 'Heebo', sans-serif;
             font-weight: 600;
             margin-bottom: 0;
             line-height: 1.3;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
 
         .detail-description-section {
@@ -8800,37 +8842,130 @@
         }
 
         .detail-verter-section {
-            background: white;
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            padding: 20px 20px 15px 20px;
+            background: var(--color-verter-pale);
+            border-radius: 12px;
+            margin: 20px auto 25px auto;
+            max-width: 600px;
+            border: 1.5px solid var(--color-verter-dark);
+            position: relative;
         }
 
         .detail-verter-section h3 {
-            color: var(--primary);
-            font-size: 1.2em;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--primary-pale);
+            display: none;
+            /* Hide the old header - we use icon instead */
+        }
+
+        /* Text icon floating on top of verter box */
+        .verter-box-icon {
+            color: var(--color-verter);
+            font-size: 1em;
+            font-weight: bold;
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-verter-light, #e8f5e9);
+            border-radius: 50%;
+            font-style: normal;
+            margin-top: -29px;
+            border: 3px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .verter-box-icon svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
         }
 
         .verter-content {
-            background: linear-gradient(135deg, #f8fafc 0%, #fff 100%);
-            padding: 25px;
-            border-radius: 15px;
-            border-right: 4px solid var(--accent-gold);
+            font-size: 0.95em;
+            color: var(--color-verter-dark);
+            line-height: 1.7;
+            text-align: right;
+            width: 100%;
+            font-family: 'Heebo', sans-serif;
         }
 
         .verter-line {
-            font-size: 1.1em;
+            font-size: 1.05em;
             line-height: 1.8;
-            color: var(--text-dark);
-            font-family: 'David Libre', serif;
+            color: var(--color-verter-dark);
+            font-family: 'Heebo', sans-serif;
         }
 
         .verter-line.verter-empty {
-            height: 15px;
+            height: 12px;
+        }
+
+        /* Collapsible verter wrapper */
+        .verter-wrapper {
+            position: relative;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+        }
+
+        .verter-wrapper.collapsed {
+            max-height: 100px;
+        }
+
+        .verter-wrapper.expanded {
+            max-height: 2000px;
+        }
+
+        .verter-fade-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: linear-gradient(to bottom, transparent, var(--color-verter-pale));
+            pointer-events: none;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+
+        .verter-wrapper.expanded .verter-fade-overlay {
+            opacity: 0;
+        }
+
+        .verter-expand-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 4px;
+            margin-top: 5px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            color: var(--color-verter-dark);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            font-family: 'Heebo', sans-serif;
+        }
+
+        .verter-expand-btn:hover {
+            background: rgba(0, 100, 0, 0.05);
+            border-radius: 8px;
+        }
+
+        .verter-expand-btn .expand-arrow {
+            display: inline-block;
+            transition: transform 0.4s ease;
+            margin-right: 5px;
+        }
+
+        .verter-expand-btn.expanded .expand-arrow {
+            transform: rotate(180deg);
         }
 
         .detail-songs-section h3 {
@@ -9856,12 +9991,27 @@
             background: var(--color-music-pale, #e3f2fd) !important;
             color: var(--color-music-dark, #1565c0) !important;
             border-color: var(--color-music-light, #90caf9) !important;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .tag-scale:hover {
+            background: var(--color-music-light, #90caf9) !important;
+            transform: scale(1.05);
         }
 
         .tag-ritem {
-            background: #f3e5f5 !important;
-            color: #7b1fa2 !important;
-            border-color: #ce93d8 !important;
+            background: var(--color-music-pale, #fff8e1) !important;
+            color: var(--color-music-dark, #b8960c) !important;
+            border-color: var(--color-music-light, #ffe082) !important;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+        }
+
+        .tag-ritem:hover {
+            background: var(--color-music-light, #ffe082) !important;
+            color: var(--color-music-dark, #b8960c) !important;
+            transform: scale(1.05);
         }
 
         .tag-siman {
@@ -16135,17 +16285,17 @@
                     </div>
 
                     <div class="info-page-content">
-                        <p>דער פראיעקט איז געבויט געווארן דורך פרייוויליגע וואס האבן א ליבשאפט צו חסידישע ניגונים.</p>
+                        <p>-</p>
 
                         <div class="credits-page-list">
                             <div class="credit-page-item">
-                                <strong>דאטאבאנק:</strong> געזאמלט און ארגאניזירט מיט גרויס מי
+                                <strong>א:</strong> ...
                             </div>
                             <div class="credit-page-item">
-                                <strong>טעכנאלאגיע:</strong> געבויט מיט מאדערנע וועב טעכנאלאגיעס
+                                <strong>ב:</strong> ...
                             </div>
                             <div class="credit-page-item">
-                                <strong>אוידיא:</strong> רעקארדירונגען פון פארשידענע מקורות
+                                <strong>ג:</strong> ...
                             </div>
                         </div>
                     </div>
@@ -16161,21 +16311,21 @@
 
                     <div class="info-page-header">
                         <h1 class="info-page-title">התודה והברכה</h1>
-                        <p class="info-page-subtitle">א יישר כח צו אלע וואס האבן ביישטייערט</p>
+                        <p class="info-page-subtitle">א יישר כח צו אלע ביישטייערער</p>
                     </div>
 
                     <div class="info-page-content">
-                        <p>א גרויסן יישר כח צו אלע וואס האבן ביישטייערט צו דעם פראיעקט:</p>
+                        <p>א גרויסן יישר כח צו אלע וואס טוען ביישטייערט צו דעם פראיעקט:</p>
 
                         <ul class="thanks-page-list">
-                            <li>די וואס האבן געטיילט ניגונים און רעקארדירונגען</li>
-                            <li>די וואס האבן געהאלפן מיט אינפארמאציע וועגן די ניגונים</li>
-                            <li>די וואס האבן געגעבן פידבעק און פארשלאגן</li>
+                            <li>די וואס טוען ארויפלייגן ניגונים און רעקארדירונגען</li>
+                            <li>די וואס האבן העלפן מיט אינפארמאציע וועגן די ניגונים</li>
+                            <li>די וואס האבן טיילן מיט פידבעק און פארשלאגן</li>
                             <li>אלע וואס נוצן און פארשפרייטן דעם אוצר</li>
                         </ul>
 
                         <div class="blessing-text">
-                            יהי רצון שנזכה להמשיך לשמוע ולשיר ניגונים עד ביאת גואל צדק במהרה בימינו אמן.
+                            יהי רצון שנזכה להמשיך ולחזק כח הנגינה הטהורה בישראל, ובקרוב נזכה לשמוע שירת הלויים בביאת גואל צדק בב"א!
                         </div>
                     </div>
                 </div>
@@ -18460,6 +18610,25 @@
             }
         }
 
+        // Toggle verter expand/collapse
+        function toggleVerterExpand(btn) {
+            const wrapper = btn.parentElement.querySelector('.verter-wrapper');
+            const textSpan = btn.querySelector('.expand-text');
+            const isExpanded = wrapper.classList.contains('expanded');
+
+            if (isExpanded) {
+                wrapper.classList.remove('expanded');
+                wrapper.classList.add('collapsed');
+                btn.classList.remove('expanded');
+                textSpan.textContent = 'מער';
+            } else {
+                wrapper.classList.remove('collapsed');
+                wrapper.classList.add('expanded');
+                btn.classList.add('expanded');
+                textSpan.textContent = 'ווייניגער';
+            }
+        }
+
         // Toggle songs list expand/collapse
         function toggleSongsExpand(btn) {
             const wrapper = btn.parentElement.querySelector('.songs-list-wrapper');
@@ -18794,18 +18963,20 @@
                     <div class="detail-header">
                         <div class="detail-category-bar">${typeName}</div>
                         <div class="detail-header-content ${(info.image || type === 'mechabrim') ? '' : 'no-image'}">
-                            ${info.image ? `
-                                <img class="detail-image" src="${info.image}" alt="${name}">
-                            ` : (type === 'mechabrim' ? `
-                                <div class="detail-image-placeholder"><div class="mechaber-icon"></div></div>
-                            ` : '')}
-                            <div class="detail-header-text">
-                                <h1 class="detail-title">${type === 'mechabrim' ? mechaberFullName : name}</h1>
+                            <div class="detail-header-left">
+                                ${info.image ? `
+                                    <img class="detail-image" src="${info.image}" alt="${name}">
+                                ` : (type === 'mechabrim' ? `
+                                    <div class="detail-image-placeholder"><div class="mechaber-icon"></div></div>
+                                ` : '')}
                                 ${mechaberLifeDates ? `
                                     <div class="detail-life-dates">
                                         ${mechaberLifeDates}
                                     </div>
                                 ` : ''}
+                            </div>
+                            <div class="detail-header-text">
+                                <h1 class="detail-title">${type === 'mechabrim' ? mechaberFullName : name}</h1>
                                 ${chatzeros.length > 0 ? `
                                     <div class="detail-badges">
                                         ${chatzeros.map(chatzer => `
@@ -18884,8 +19055,19 @@
                     
                     ${(type === 'verter' && verterText) ? `
                         <div class="detail-verter-section">
-                            <h3>ווערטער</h3>
-                            <div class="verter-content">${formatVerter(verterText)}</div>
+                            <span class="verter-box-icon">
+                                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM6 20V4h6v6h6v10H6zm2-6h8v2H8v-2zm0-4h8v2H8v-2z"/>
+                                </svg>
+                            </span>
+                            <div class="verter-wrapper collapsed">
+                                <div class="verter-content">${formatVerter(verterText)}</div>
+                                <div class="verter-fade-overlay"></div>
+                            </div>
+                            <button class="verter-expand-btn" onclick="toggleVerterExpand(this)">
+                                <span class="expand-arrow">▼</span>
+                                <span class="expand-text">מער</span>
+                            </button>
                         </div>
                     ` : ''}
                     
@@ -19537,13 +19719,13 @@
                                         </div>
                                     `).join('') : ''}
                                     ${song.ritem ? `
-                                        <div class="nigun-detail-box box-ritem">
+                                        <div class="nigun-detail-box box-ritem" style="cursor:pointer;" onclick="event.stopPropagation(); navigateToWithFilter('music', 'ritem', '${escapeHtml(song.ritem).replace(/'/g, "\\'")}');">
                                             <div class="nigun-detail-box-header">ריטעם</div>
                                             <div class="nigun-detail-box-content">${song.ritem}</div>
                                         </div>
                                     ` : ''}
                                     ${song.scale ? `
-                                        <div class="nigun-detail-box box-scale">
+                                        <div class="nigun-detail-box box-scale" style="cursor:pointer;" onclick="event.stopPropagation(); navigateToWithFilter('music', 'scale', '${escapeHtml(song.scale).replace(/'/g, "\\'")}');">
                                             <div class="nigun-detail-box-header">סקעיל</div>
                                             <div class="nigun-detail-box-content">${song.scale}</div>
                                         </div>
@@ -22386,7 +22568,7 @@
 
         // Navigate to page with filter applied (opens detail page)
         function navigateToWithFilter(page, filterKey, value) {
-            // Handle scale, rhythm, gezungen, maure - filter songs page
+            // Handle scale, rhythm, gezungen, maure - filter nigunim page
             if (filterKey === 'scale' || filterKey === 'ritem' || filterKey === 'gezungen' || filterKey === 'maure') {
                 // Reset all filters first
                 activeFilters = {
@@ -22409,6 +22591,9 @@
 
                 currentDetailView = null;
                 currentPageView = 'songs';
+
+                // Close any open modals
+                closeAllModals();
 
                 // Update nav buttons
                 document.querySelectorAll('.nav-btn').forEach(btn => {
@@ -24171,14 +24356,24 @@
             btn.addEventListener('click', (e) => {
                 const dropdown = btn.closest('.nav-dropdown');
                 if (dropdown) {
-                    const content = dropdown.querySelector('.nav-dropdown-content');
-                    if (content) {
-                        content.classList.add('hiding');
-                        // Remove hiding class after navigation so hover works again
+                    // Add cooldown class to parent dropdown - this completely disables hover
+                    dropdown.classList.add('cooldown');
+
+                    // Remove cooldown after mouse leaves AND 1 second delay
+                    const handleMouseLeave = () => {
+                        dropdown.removeEventListener('mouseleave', handleMouseLeave);
+                        // Wait 1 second after mouse leaves before allowing dropdown to work again
                         setTimeout(() => {
-                            content.classList.remove('hiding');
-                        }, 300);
-                    }
+                            dropdown.classList.remove('cooldown');
+                        }, 1000);
+                    };
+                    dropdown.addEventListener('mouseleave', handleMouseLeave);
+
+                    // Fallback: remove cooldown after 10 seconds if mouse never leaves
+                    setTimeout(() => {
+                        dropdown.classList.remove('cooldown');
+                        dropdown.removeEventListener('mouseleave', handleMouseLeave);
+                    }, 10000);
                 }
             });
         });
