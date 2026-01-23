@@ -7363,37 +7363,34 @@
         /* Rating Modal Overlay */
         .rating-modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            bottom: 120px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 10000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            padding: 20px;
+            transition: opacity 0.3s ease, visibility 0.3s ease, bottom 0.3s ease;
+            pointer-events: none;
         }
 
         .rating-modal-overlay.active {
             opacity: 1;
             visibility: visible;
+            pointer-events: auto;
         }
 
         .rating-modal-content {
             background: white;
-            border-radius: 20px;
-            max-width: 500px;
-            width: 100%;
+            border-radius: 16px;
+            max-width: 380px;
+            width: auto;
+            min-width: 320px;
             position: relative;
-            transform: scale(0.9) translateY(30px);
+            transform: scale(0.9) translateY(20px);
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 25px 80px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             border: 3px solid var(--color-nigun);
-            padding: 30px;
+            padding: 20px;
         }
 
         .rating-modal-overlay.active .rating-modal-content {
@@ -7402,15 +7399,15 @@
 
         .rating-modal-close {
             position: absolute;
-            top: 15px;
-            right: 15px;
+            top: 10px;
+            right: 10px;
             background: none;
             border: none;
-            font-size: 2em;
+            font-size: 1.5em;
             color: #999;
             cursor: pointer;
-            width: 35px;
-            height: 35px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -7427,27 +7424,27 @@
         }
 
         .rating-modal-header {
-            font-size: 1.3em;
+            font-size: 1.1em;
             font-weight: 700;
             color: var(--text-dark);
             text-align: center;
-            margin-bottom: 30px;
-            padding-right: 30px;
+            margin-bottom: 15px;
+            padding-right: 25px;
         }
 
         .rating-modal-options {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 8px;
         }
 
         .rating-modal-option {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 15px 20px;
+            gap: 12px;
+            padding: 10px 15px;
             border: 2px solid #e0e0e0;
-            border-radius: 12px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s ease;
             background: white;
@@ -7505,26 +7502,35 @@
         }
 
         @media (max-width: 768px) {
+            .rating-modal-overlay {
+                bottom: 100px;
+                left: 10px;
+                right: 10px;
+                transform: none;
+            }
+
             .rating-modal-content {
-                max-width: 90%;
-                padding: 25px 20px;
+                max-width: 100%;
+                min-width: auto;
+                width: 100%;
+                padding: 18px 15px;
             }
 
             .rating-modal-header {
-                font-size: 1.1em;
-                margin-bottom: 20px;
+                font-size: 1em;
+                margin-bottom: 12px;
             }
 
             .rating-modal-option {
-                padding: 12px 15px;
+                padding: 10px 12px;
             }
 
             .rating-modal-option-stars {
-                font-size: 1.1em;
+                font-size: 1em;
             }
 
             .rating-modal-option-text {
-                font-size: 0.9em;
+                font-size: 0.85em;
             }
         }
 
