@@ -3855,6 +3855,82 @@
 
         .page-theme-nigun {
             background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Floating musical notes container for nigunim page */
+        .songs-floating-notes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 50;
+            overflow: visible;
+        }
+
+        .songs-floating-notes .note-wrapper {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            animation: songsNoteFlight linear infinite;
+        }
+
+        .songs-floating-notes .musical-note {
+            color: rgba(74, 124, 201, 0.2);
+            text-shadow: 0 0 20px rgba(74, 124, 201, 0.1);
+            font-size: inherit;
+            display: block;
+        }
+
+        /* Wandering animations for notes - reuse hero section's smooth wander animations */
+        .songs-floating-notes .musical-note.wander-1 {
+            animation: wander1 ease-in-out infinite alternate;
+        }
+
+        .songs-floating-notes .musical-note.wander-2 {
+            animation: wander2 ease-in-out infinite alternate;
+        }
+
+        .songs-floating-notes .musical-note.wander-3 {
+            animation: wander3 ease-in-out infinite alternate;
+        }
+
+        @keyframes songsNoteFlight {
+            0% {
+                transform: translate(-50%, -50%) scale(0.3);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            85% {
+                opacity: 0.5;
+            }
+
+            100% {
+                transform: translate(var(--end-x), var(--end-y)) scale(1.2);
+                opacity: 0;
+            }
+        }
+
+        /* Ensure content is above the notes but below header */
+        .page-theme-nigun .page-title {
+            position: relative;
+            z-index: 60;
+        }
+
+        .songs-page-layout {
+            position: relative;
+            z-index: 60;
         }
 
         .page-theme-resource {
@@ -6424,80 +6500,77 @@
         .nigun-mechaber-grid {
             display: flex;
             flex-wrap: wrap;
-            gap: 15px;
+            gap: 12px;
             justify-content: center;
         }
 
         .nigun-mechaber-card {
-            display: inline-flex;
+            display: flex;
             flex-direction: column;
             align-items: center;
-            background: var(--bg-light);
-            border-radius: 15px;
-            padding: 20px 25px;
+            background: var(--color-mechaber);
+            border-radius: 12px;
+            padding: 15px 8px 10px 8px;
             cursor: pointer;
-            transition: var(--transition-smooth);
-            border: 2px solid transparent;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: none;
             position: relative;
-            /* For pseudo-element */
+            width: 110px;
+            text-decoration: none;
         }
 
         /* Hover effect for Mechaber Card */
         .nigun-mechaber-card::after {
             content: '';
             position: absolute;
-            border-radius: 15px;
-            border: 2px solid var(--color-mechaber);
+            border-radius: 12px;
+            border: 2px solid var(--color-mechaber-light);
             opacity: 0;
-            top: -6px;
-            left: -6px;
-            right: -6px;
-            bottom: -6px;
-            transition: opacity 0.2s ease, top 0s 0.2s, bottom 0s 0.2s, left 0s 0.2s, right 0s 0.2s;
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+            transition: opacity 0.2s ease;
             pointer-events: none;
             box-sizing: border-box;
-            box-shadow: 0 0 15px rgba(239, 83, 80, 0.15);
+            box-shadow: 0 0 15px rgba(156, 91, 181, 0.25);
         }
 
         .nigun-mechaber-card:hover::after {
             opacity: 1;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
         }
 
         .nigun-mechaber-card:hover {
-            /* border-color handled by ::after now */
-            background: white;
-            transform: translateY(-2px);
-            box-shadow: var(--card-shadow);
+            transform: scale(1.03);
+            box-shadow: 0 4px 15px rgba(156, 91, 181, 0.3);
         }
 
         .nigun-mechaber-image {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
             object-fit: cover;
-            margin-bottom: 10px;
-            border: 3px solid var(--color-mechaber-pale);
+            margin-bottom: 8px;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .nigun-mechaber-placeholder {
-            width: 80px;
-            height: 80px;
+            width: 70px;
+            height: 70px;
             border-radius: 50%;
-            background: var(--color-mechaber-pale);
+            background: linear-gradient(135deg, var(--color-mechaber-pale) 0%, var(--color-mechaber-light) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .nigun-mechaber-placeholder .mechaber-icon {
-            width: 37px;
-            height: 55px;
+            width: 28px;
+            height: 41px;
             background-color: var(--color-mechaber);
             -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
             mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
@@ -6505,9 +6578,11 @@
 
         .nigun-mechaber-name {
             font-weight: 600;
-            color: var(--text-dark);
+            color: white;
             text-align: center;
-            font-size: 0.95em;
+            font-size: 0.85em;
+            line-height: 1.2;
+            text-wrap: balance;
         }
 
         /* Personality Section */
@@ -8202,6 +8277,8 @@
         /* Mechaber-specific: add padding for image clearance on full page */
         .detail-page.theme-mechaber .detail-header-text {
             padding: 0 100px;
+            align-items: flex-end;
+            text-align: right;
         }
 
         .detail-title {
@@ -8881,6 +8958,21 @@
             border-bottom: 2px solid var(--primary-pale);
         }
 
+        .detail-mechabrim-box {
+            background: var(--color-mechaber-pale);
+            border-radius: 16px;
+            padding: 20px;
+            border: 2px solid var(--color-mechaber-light);
+        }
+
+        .detail-mechabrim-header {
+            color: var(--color-mechaber-dark);
+            font-size: 1.1em;
+            font-weight: 600;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
         .mechabrim-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
@@ -9164,7 +9256,8 @@
             font-weight: 500;
             color: var(--color-nigun-dark);
             white-space: nowrap;
-            min-width: fit-content;
+            min-width: 90px;
+            justify-content: center;
         }
 
         .detail-filter-current:hover {
@@ -9256,6 +9349,345 @@
 
         .detail-filter-current.quality-filter-spread:hover .filter-stars-right {
             color: white;
+        }
+
+        /* Filter Panel Button and Dropdown */
+        .filter-panel-dropdown {
+            position: relative;
+        }
+
+        .filter-panel-btn {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--color-nigun-pale);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition-smooth);
+            font-size: 0.8em;
+            font-weight: 500;
+            color: var(--color-nigun-dark);
+            white-space: nowrap;
+            border: none;
+            font-family: inherit;
+            min-width: 90px;
+            justify-content: center;
+        }
+
+        .filter-panel-btn:hover {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .filter-panel-btn.has-active {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .filter-panel-btn .filter-btn-icon {
+            width: 16px;
+            height: 16px;
+            flex-shrink: 0;
+        }
+
+        .filter-panel-btn:hover .filter-btn-icon,
+        .filter-panel-btn.has-active .filter-btn-icon {
+            stroke: white;
+        }
+
+        .filter-panel-btn .filter-icon {
+            font-size: 1.1em;
+        }
+
+        .filter-panel-btn .filter-count {
+            background: white;
+            color: var(--color-nigun);
+            padding: 1px 6px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-right: 2px;
+        }
+
+        .filter-panel-content {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            margin-top: 8px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 40px rgba(74, 124, 201, 0.25);
+            padding: 16px;
+            min-width: 320px;
+            max-width: 400px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 200;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        .filter-panel-content.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        /* Open filter panel on hover like other dropdowns */
+        .filter-panel-dropdown:hover .filter-panel-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .search-panel-content {
+            min-width: 280px;
+            max-width: 320px;
+            padding: 12px;
+        }
+
+        .search-panel-content .filter-panel-search {
+            margin-bottom: 0;
+        }
+
+        .search-panel-content .filter-panel-active-tags {
+            margin-top: 10px;
+            padding-top: 10px;
+        }
+
+        .filter-panel-search {
+            display: flex;
+            position: relative;
+            margin-bottom: 12px;
+        }
+
+        .filter-panel-search-input {
+            flex: 1;
+            padding: 10px 14px;
+            padding-left: 40px;
+            border: 2px solid var(--color-nigun-pale);
+            border-radius: 10px;
+            font-size: 0.9em;
+            font-family: inherit;
+            direction: rtl;
+            transition: var(--transition-smooth);
+        }
+
+        .filter-panel-search-input:focus {
+            outline: none;
+            border-color: var(--color-nigun);
+        }
+
+        .filter-panel-search-btn {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            font-size: 1.1em;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: var(--transition-smooth);
+        }
+
+        .filter-panel-search-btn:hover {
+            opacity: 1;
+        }
+
+        .filter-panel-search-clear {
+            position: absolute;
+            left: 38px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #999;
+            color: white;
+            border: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 12px;
+            line-height: 1;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .filter-panel-search-clear:hover {
+            background: #666;
+        }
+
+        .filter-panel-section-title {
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-panel-filters {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .filter-panel-item {
+            position: relative;
+        }
+
+        .filter-panel-item-btn {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 14px;
+            background: #f8fafc;
+            border: 1px solid transparent;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            font-size: 0.9em;
+        }
+
+        .filter-panel-item-btn:hover {
+            background: var(--color-nigun-pale);
+            border-color: var(--color-nigun-light);
+        }
+
+        .filter-panel-item-btn.active {
+            background: var(--color-nigun-pale);
+            border-color: var(--color-nigun);
+        }
+
+        .filter-panel-item-label {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .filter-panel-item-value {
+            font-size: 0.85em;
+            color: var(--text-muted);
+        }
+
+        .filter-panel-item-value.has-selection {
+            color: var(--color-nigun);
+            font-weight: 600;
+        }
+
+        .filter-panel-item-options {
+            display: none;
+            margin-top: 6px;
+            padding: 8px;
+            background: #f8fafc;
+            border-radius: 8px;
+            max-height: 180px;
+            overflow-y: auto;
+        }
+
+        .filter-panel-item.open .filter-panel-item-options {
+            display: block;
+        }
+
+        .filter-panel-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.85em;
+            border-radius: 6px;
+        }
+
+        .filter-panel-option:hover {
+            background: var(--color-nigun-pale);
+        }
+
+        .filter-panel-option input {
+            accent-color: var(--color-nigun);
+            width: 14px;
+            height: 14px;
+            cursor: pointer;
+        }
+
+        .filter-panel-active-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #eee;
+        }
+
+        .filter-panel-tag {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: var(--color-nigun-pale);
+            border-radius: 20px;
+            font-size: 0.8em;
+            color: var(--color-nigun-dark);
+        }
+
+        .filter-panel-tag-remove {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.1em;
+            line-height: 1;
+            color: var(--color-nigun);
+            padding: 0;
+            margin-right: -2px;
+        }
+
+        .filter-panel-tag-remove:hover {
+            color: var(--color-nigun-dark);
+        }
+
+        /* Filter colors for panel items */
+        .filter-panel-item[data-filter="collection"] .filter-panel-item-btn::before {
+            background: var(--color-collection);
+        }
+
+        .filter-panel-item[data-filter="chatzer"] .filter-panel-item-btn::before {
+            background: var(--color-chatzer);
+        }
+
+        .filter-panel-item[data-filter="mechaber"] .filter-panel-item-btn::before {
+            background: var(--color-mechaber);
+        }
+
+        .filter-panel-item[data-filter="verter"] .filter-panel-item-btn::before {
+            background: var(--color-verter);
+        }
+
+        .filter-panel-item[data-filter="gezungen"] .filter-panel-item-btn::before {
+            background: #2e8b2e;
+        }
+
+        .filter-panel-item[data-filter="ritem"] .filter-panel-item-btn::before {
+            background: var(--color-music);
+        }
+
+        .filter-panel-item[data-filter="scale"] .filter-panel-item-btn::before {
+            background: var(--color-nigun);
+        }
+
+        .filter-panel-item .filter-panel-item-btn::before {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 0 10px 10px 0;
         }
 
         /* Responsive adjustments for filters */
@@ -9437,47 +9869,28 @@
         }
 
         .song-item.no-audio {
-            background: var(--bg-light);
-            opacity: 0.55;
-            filter: grayscale(40%);
+            background: var(--color-nigun-pale);
+            opacity: 0.7;
         }
 
         .song-item.no-audio:hover {
-            opacity: 0.9;
-            filter: grayscale(0%);
+            opacity: 1;
             box-shadow: 0 6px 20px rgba(74, 124, 201, 0.35);
         }
 
         .song-item.no-audio .song-number {
-            background: var(--bg-light);
-            color: var(--text-muted);
+            background: rgba(74, 124, 201, 0.15);
+            color: var(--color-nigun);
         }
 
         .song-item.no-audio .song-name {
-            color: var(--text-muted);
+            color: var(--color-nigun-dark);
         }
 
-        .song-item.active {
-            background: #4a7cc9 !important;
-            color: white !important;
-            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.4) !important;
-        }
-
+        /* Active song item - NO visual change, only the recording row gets blue */
+        /* (Active class is added for functionality, but card stays normal) */
         .song-item.active::after {
             opacity: 0 !important;
-        }
-
-        .song-item.active:hover {
-            background: #3d6bb5 !important;
-            box-shadow: 0 6px 20px rgba(74, 124, 201, 0.5) !important;
-        }
-
-        .song-item.active .song-meta {
-            color: rgba(255, 255, 255, 0.9) !important;
-        }
-
-        .song-item.active .song-name {
-            color: white !important;
         }
 
         .song-number {
@@ -9506,7 +9919,7 @@
 
         .song-name {
             font-weight: 600;
-            font-size: 1em;
+            font-size: 1.15em;
             margin-bottom: 3px;
             white-space: nowrap;
             overflow: hidden;
@@ -9638,15 +10051,8 @@
             transform: scale(1);
         }
 
-        .song-item.active .song-play-btn-new {
-            background: rgba(255, 255, 255, 0.25);
-            color: white;
-        }
-
-        .song-item.active .song-play-btn-new:hover {
-            background: white !important;
-            color: var(--color-nigun) !important;
-        }
+        /* Play buttons in active song items - NO change, keep normal blue */
+        /* (Only the active-recording's button gets white styling) */
 
         /* Recording play button - smaller version */
         .rec-play-btn {
@@ -9668,75 +10074,56 @@
          * 4. Active recording: White with blue glow
          */
 
-        /* Active recording row - beautiful highlight */
+        /* === ACTIVE RECORDING - Dark blue with white text === */
         .song-item-recording.active-recording {
-            background: linear-gradient(135deg, rgba(227, 242, 253, 0.95) 0%, rgba(187, 222, 251, 0.8) 100%);
+            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-nigun) 100%);
             border-radius: 10px;
-            box-shadow: inset 0 0 0 2px var(--color-nigun-light);
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.4);
+            transition: all 0.4s ease;
+        }
+
+        /* Active recording hover - just shadow, no border animation */
+        .song-item-recording.active-recording::after {
+            display: none;
+        }
+
+        .song-item-recording.active-recording:hover {
+            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-nigun) 100%) !important;
+            box-shadow: 0 6px 20px rgba(74, 124, 201, 0.5);
         }
 
         .song-item-recording.active-recording .song-item-rec-num {
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            background: rgba(255, 255, 255, 0.25);
             color: white;
-            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.4);
         }
 
         .song-item-recording.active-recording .song-item-rec-name {
-            color: var(--color-nigun-dark);
+            color: white;
             font-weight: 600;
         }
 
-        .song-item-recording.active-recording .rec-play-btn {
-            background: var(--color-nigun) !important;
+        .song-item-recording.active-recording .song-item-rec-tags .nigun-tag-inline {
+            background: rgba(255, 255, 255, 0.2) !important;
             color: white !important;
-            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.4);
+            border-color: rgba(255, 255, 255, 0.3) !important;
         }
 
-        /* Active nigun with expanded recordings - enhanced header */
-        .song-item-expanded.active .song-item-header,
-        .song-item-full.active .song-item-header {
-            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-nigun) 100%);
-            border-radius: 12px 12px 0 0;
+        .song-item-recording.active-recording .rec-rating-display {
+            color: rgba(255, 255, 255, 0.9);
         }
 
-        /* Recordings container in active nigun */
-        .song-item-expanded.active .song-item-recordings,
-        .song-item-full.active .song-full-recordings {
-            background: linear-gradient(180deg, rgba(74, 124, 201, 0.15) 0%, rgba(74, 124, 201, 0.08) 100%);
-            border-top: 2px solid var(--color-nigun-light);
+        .song-item-recording.active-recording .rec-play-btn {
+            background: rgba(255, 255, 255, 0.25) !important;
+            color: white !important;
         }
 
-        /* Recording rows inside active nigun */
-        .song-item-expanded.active .song-item-recording:not(.active-recording),
-        .song-item-full.active .song-item-recording:not(.active-recording) {
-            background: rgba(255, 255, 255, 0.5);
-            border: 1px solid rgba(74, 124, 201, 0.15);
+        .song-item-recording.active-recording .rec-play-btn:hover {
+            background: white !important;
+            color: var(--color-nigun-dark) !important;
         }
 
-        .song-item-expanded.active .song-item-recording:not(.active-recording):hover,
-        .song-item-full.active .song-item-recording:not(.active-recording):hover {
-            background: rgba(255, 255, 255, 0.8);
-            border-color: var(--color-nigun-light);
-        }
-
-        /* Recording number in active nigun */
-        .song-item-expanded.active .song-item-rec-num,
-        .song-item-full.active .song-item-rec-num {
-            background: var(--color-nigun-pale);
-            color: var(--color-nigun);
-        }
-
-        /* Recording name in active nigun */
-        .song-item-expanded.active .song-item-rec-name,
-        .song-item-full.active .song-item-rec-name {
-            color: var(--color-nigun-dark);
-        }
-
-        /* Tags in active nigun recordings */
-        .song-item-expanded.active .song-item-rec-tags .nigun-tag-inline,
-        .song-item-full.active .song-item-rec-tags .nigun-tag-inline {
-            opacity: 0.9;
-        }
+        /* Active song items - NO visual change except for active recording blue style */
+        /* (Removed white background overrides - card stays normal when playing) */
 
         /* Low quality indicator button */
         .song-btn-low-quality {
@@ -9824,30 +10211,142 @@
             gap: 0;
         }
 
+        /* === HEADER - Dark blue with white text === */
         .song-item-expanded .song-item-header,
         .song-item-full .song-item-header {
             display: flex;
             align-items: center;
             gap: 15px;
             padding: 15px 20px;
+            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-nigun) 100%);
+            border-radius: 12px 12px 0 0;
         }
 
-        /* Recordings list inside song item */
+        .song-item-expanded .song-item-header .song-name,
+        .song-item-full .song-item-header .song-name {
+            color: white;
+        }
+
+        .song-item-expanded .song-item-header .song-meta,
+        .song-item-full .song-item-header .song-meta {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .song-item-expanded .song-item-header .song-number,
+        .song-item-full .song-item-header .song-number {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        .song-item-expanded .song-item-header .song-play-btn-new,
+        .song-item-full .song-item-header .song-play-btn-new {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+        }
+
+        .song-item-expanded .song-item-header .song-play-btn-new:hover,
+        .song-item-full .song-item-header .song-play-btn-new:hover {
+            background: white;
+            color: var(--color-nigun-dark);
+        }
+
+        /* Wave animation white for dark headers */
+        .song-item-expanded .song-item-header .song-wave-animation .wave-bar,
+        .song-item-full .song-item-header .song-wave-animation .wave-bar {
+            background: white;
+        }
+
+        .song-item-expanded .song-item-header .song-play-btn-new:hover,
+        .song-item-full .song-item-header .song-play-btn-new:hover {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        /* Wave animation color for light headers */
+        .song-item-expanded .song-item-header .song-wave-animation .wave-bar,
+        .song-item-full .song-item-header .song-wave-animation .wave-bar {
+            background: var(--color-nigun);
+        }
+
+        /* === NO AUDIO - Songs without recordings get light blue header === */
+        .song-item-expanded.no-audio .song-item-header,
+        .song-item-full.no-audio .song-item-header {
+            background: var(--color-nigun-pale);
+        }
+
+        .song-item-expanded.no-audio .song-item-header .song-name,
+        .song-item-full.no-audio .song-item-header .song-name {
+            color: var(--color-nigun-dark);
+        }
+
+        .song-item-expanded.no-audio .song-item-header .song-meta,
+        .song-item-full.no-audio .song-item-header .song-meta {
+            color: var(--color-nigun);
+        }
+
+        .song-item-expanded.no-audio .song-item-header .song-number,
+        .song-item-full.no-audio .song-item-header .song-number {
+            background: rgba(74, 124, 201, 0.15);
+            color: var(--color-nigun);
+        }
+
+        .song-item-expanded.no-audio .song-item-header .nigun-tag,
+        .song-item-full.no-audio .song-item-header .nigun-tag {
+            background: rgba(74, 124, 201, 0.15);
+            color: var(--color-nigun-dark);
+        }
+
+        /* Recordings list inside song item - white background */
         .song-item-recordings {
-            border-top: 1px solid var(--color-nigun-pale);
-            padding: 8px 20px 12px;
-            background: rgba(74, 124, 201, 0.03);
+            border-top: none;
+            padding: 12px 20px 16px;
+            background: white;
+            border-radius: 0 0 12px 12px;
         }
 
+        /* Individual recordings - light blue background with border animation */
         .song-item-recording {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 8px 12px;
-            margin: 4px 0;
-            border-radius: 8px;
+            padding: 10px 14px;
+            margin: 6px 0;
+            border-radius: 10px;
             cursor: pointer;
-            transition: var(--transition-smooth);
+            transition: all 0.4s ease;
+            background: var(--color-nigun-pale);
+            position: relative;
+        }
+
+        /* Border effect using pseudo-element - same as song-item */
+        .song-item-recording::after {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: -5px;
+            right: -5px;
+            bottom: -5px;
+            border-radius: 12px;
+            border: 2px solid var(--color-nigun);
+            background: transparent;
+            opacity: 0;
+            transition: opacity 0.2s ease, top 0s 0.2s, bottom 0s 0.2s, left 0s 0.2s, right 0s 0.2s;
+            pointer-events: none;
+            box-sizing: border-box;
+            box-shadow: 0 0 12px rgba(74, 124, 201, 0.15);
+        }
+
+        .song-item-recording:hover::after {
+            opacity: 1;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .song-item-recording:hover {
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.3);
         }
 
         /* Recording items in modal get same style as regular song-items */
@@ -9866,24 +10365,21 @@
         .nigun-recordings-list .song-item-recording::after {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            border-radius: 10px;
-            border: 2px solid var(--color-nigun);
-            opacity: 0;
             top: -6px;
             left: -6px;
             right: -6px;
             bottom: -6px;
+            border-radius: 10px;
+            border: 2px solid var(--color-nigun);
+            background: transparent;
+            opacity: 0;
             transition: opacity 0.2s ease, top 0s 0.2s, bottom 0s 0.2s, left 0s 0.2s, right 0s 0.2s;
             pointer-events: none;
             box-sizing: border-box;
             box-shadow: 0 0 15px rgba(74, 124, 201, 0.1);
         }
 
-        .song-item-recording:hover {
+        .song-item-recording:not(.active-recording):hover {
             background: var(--color-nigun-pale);
         }
 
@@ -9994,25 +10490,33 @@
             transform: none !important;
         }
 
-        .low-quality-rec {
-            opacity: 0.6;
+        .low-quality-rec:not(.active-recording) {
+            opacity: 0.65;
+            background: white !important;
         }
 
-        .low-quality-rec:hover {
-            opacity: 0.8;
+        .low-quality-rec:not(.active-recording):hover {
+            opacity: 1;
+            background: white !important;
         }
 
-        /* Full mode - additional info section */
+        /* Active low-quality recordings keep their blue style */
+        .low-quality-rec.active-recording {
+            opacity: 1;
+        }
+
+        /* === EXTRA INFO SECTION (Full mode) - Light blue === */
         .song-full-details {
-            border-top: 1px solid var(--color-nigun-pale);
-            padding: 12px 20px;
-            background: rgba(74, 124, 201, 0.03);
+            border-top: none;
+            padding: 14px 20px;
+            background: var(--color-nigun-pale);
         }
 
         .song-full-label {
             font-weight: 600;
             color: var(--color-nigun-dark);
             white-space: nowrap;
+            min-width: 80px;
         }
 
         .song-full-value {
@@ -10024,10 +10528,12 @@
             line-height: 1.4;
         }
 
+        /* === RECORDINGS SECTION - White background === */
         .song-full-recordings {
-            border-top: 1px solid var(--color-nigun-pale);
-            padding: 10px 20px 12px;
-            background: rgba(74, 124, 201, 0.05);
+            border-top: none;
+            padding: 12px 20px 16px;
+            background: white;
+            border-radius: 0 0 12px 12px;
         }
 
         .song-full-rec-title {
@@ -10057,43 +10563,8 @@
             transform: scale(1.2);
         }
 
-        /* Active state for expanded items */
-        .song-item-expanded.active .song-item-recordings,
-        .song-item-full.active .song-full-details,
-        .song-item-full.active .song-full-recordings {
-            background: rgba(255, 255, 255, 0.1);
-            border-top-color: rgba(255, 255, 255, 0.2);
-        }
-
-        .song-item-expanded.active .song-item-recording:hover,
-        .song-item-full.active .song-item-recording:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        .song-item-expanded.active .song-item-rec-num,
-        .song-item-full.active .song-item-rec-num {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-
-        .song-item-expanded.active .song-item-rec-name,
-        .song-item-full.active .song-item-rec-name,
-        .song-item-full.active .song-full-label,
-        .song-item-full.active .song-full-value,
-        .song-item-full.active .song-full-rec-title {
-            color: rgba(255, 255, 255, 0.9);
-        }
-
-        .song-item-expanded.active .song-item-rec-play,
-        .song-item-full.active .song-item-rec-play {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        .song-item-expanded.active .song-item-rec-play:hover,
-        .song-item-full.active .song-item-rec-play:hover {
-            background: white;
-            color: var(--color-nigun);
-        }
+        /* Active song items - recordings inside keep normal color */
+        /* (Only the active-recording row gets blue styling) */
 
         /* Tags container for full mode */
         .song-full-tags {
@@ -10154,21 +10625,8 @@
             border-radius: 8px;
         }
 
-        /* Active state adjustments for tags in full mode */
-        .song-item-full.active .nigun-tag-inline {
-            background: rgba(255, 255, 255, 0.2) !important;
-            border-color: rgba(255, 255, 255, 0.3) !important;
-            color: white !important;
-        }
-
-        .song-item-full.active .nigun-tag-inline:hover {
-            background: rgba(255, 255, 255, 0.35) !important;
-        }
-
-        .song-item-full.active .song-full-date {
-            background: rgba(255, 255, 255, 0.15);
-            color: rgba(255, 255, 255, 0.9);
-        }
+        /* Active state - tags and date keep normal colors */
+        /* (No visual change when playing) */
 
 
         .songs-card {
@@ -11363,13 +11821,9 @@
             margin-bottom: 20px;
         }
 
-        /* Songs page sidebar layout */
+        /* Songs page layout (sidebar removed - now uses filter panel button) */
         .songs-page-layout {
-            display: flex;
-            flex-direction: row-reverse;
-            gap: 25px;
-            align-items: flex-start;
-            position: relative;
+            display: block;
         }
 
         .songs-main-content {
@@ -14177,7 +14631,10 @@
             mechabrim: {},
             verter: {},
             zmanim: {},
-            collections: {}
+            collections: {},
+            scale: {},
+            ritem: {},
+            gezungen: {}
         };
 
         // Extended info for all categories (from separate tables)
@@ -16719,6 +17176,10 @@
 
         // Get the HTML for songs page filters
         function getSongsFiltersHTML() {
+            const totalActiveFilters = Object.values(activeFilters).reduce((sum, arr) => sum + arr.length, 0);
+            const hasSearch = searchQuery && searchQuery.length > 0;
+            const hasActiveFilters = totalActiveFilters > 0 || hasSearch;
+
             return `
                 <!-- Sort Filter -->
                 <div class="detail-filter-dropdown">
@@ -16772,19 +17233,11 @@
 
                 <!-- Quality Filter -->
                 <div class="detail-filter-dropdown detail-filter-quality">
-                    <div class="detail-filter-current quality-filter-spread">
-                        <span class="filter-label-left">
-                            <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
-                                <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
-                            </svg>
-                        </span>
-                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
-                    minQualityRating === 1 ? '★' :
-                        minQualityRating === 2 ? '★★' :
-                            minQualityRating === 3 ? '★★★' :
-                                minQualityRating === 4 ? '★★★★' :
-                                    '★★★★★'
-                }</span>
+                    <div class="detail-filter-current">
+                        <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
+                        </svg>
+                        <span class="filter-label">קוואליטעט${minQualityRating > 0 ? ' ' + '★'.repeat(minQualityRating) : ''}</span>
                     </div>
                     <div class="detail-filter-options">
                         <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
@@ -16813,8 +17266,186 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Search Button -->
+                <div class="filter-panel-dropdown" id="searchPanelDropdown">
+                    <button class="filter-panel-btn ${hasSearch ? 'has-active' : ''}" onclick="toggleSearchPanel(event)">
+                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <span>זוך</span>
+                    </button>
+                    <div class="filter-panel-content search-panel-content" id="searchPanelContent">
+                        <div class="filter-panel-search">
+                            <input type="text"
+                                   id="filterPanelSearchInput"
+                                   class="filter-panel-search-input"
+                                   placeholder="זוך א ניגון..."
+                                   value="${searchQuery || ''}"
+                                   onkeypress="if(event.key==='Enter')handleFilterPanelSearch(this.value)">
+                            ${searchQuery ? '<button class="filter-panel-search-clear" onclick="clearSearch()">×</button>' : ''}
+                            <button class="filter-panel-search-btn" onclick="handleFilterPanelSearch(document.getElementById('filterPanelSearchInput').value)">🔍</button>
+                        </div>
+                        ${searchQuery ? `<div class="filter-panel-active-tags"><span class="filter-panel-tag">🔍 ${searchQuery}<button class="filter-panel-tag-remove" onclick="clearSearch()">×</button></span></div>` : ''}
+                    </div>
+                </div>
+
+                <!-- Filters Button -->
+                <div class="filter-panel-dropdown" id="filterPanelDropdown">
+                    <button class="filter-panel-btn ${totalActiveFilters > 0 ? 'has-active' : ''}" onclick="toggleFilterPanel(event)">
+                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 21v-7"/>
+                            <path d="M4 10V3"/>
+                            <path d="M12 21v-9"/>
+                            <path d="M12 8V3"/>
+                            <path d="M20 21v-5"/>
+                            <path d="M20 12V3"/>
+                            <circle cx="4" cy="13" r="2"/>
+                            <circle cx="12" cy="9" r="2"/>
+                            <circle cx="20" cy="15" r="2"/>
+                        </svg>
+                        <span>פילטער</span>
+                        ${totalActiveFilters > 0 ? `<span class="filter-count">${totalActiveFilters}</span>` : ''}
+                    </button>
+                    <div class="filter-panel-content" id="filterPanelContent">
+                        <div class="filter-panel-section-title">פילטערס:</div>
+                        <div class="filter-panel-filters">
+                            ${renderFilterPanelItem('collection', 'קאלעקשאנס', categories.collections)}
+                            ${renderFilterPanelItem('chatzer', 'חצר', categories.chatzeros)}
+                            ${renderFilterPanelItem('mechaber', 'מחבר', categories.mechabrim)}
+                            ${renderFilterPanelItem('verter', 'ווערטער', categories.verter)}
+                            ${renderFilterPanelItem('gezungen', 'געזינגען אויף', categories.gezungen)}
+                            ${renderFilterPanelItem('ritem', 'ריטעם', categories.ritem)}
+                            ${renderFilterPanelItem('scale', 'סקעיל', categories.scale)}
+                        </div>
+                        
+                        <div class="filter-panel-active-tags" id="filterPanelActiveTags">
+                            ${getActiveFilterTagsHTML()}
+                        </div>
+                    </div>
+                </div>
             `;
         }
+
+        // Render filter panel item
+        function renderFilterPanelItem(key, label, data) {
+            if (!data) data = {};
+            const options = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
+            const selectedCount = activeFilters[key]?.length || 0;
+            const selectedValue = selectedCount > 0 ? `(${selectedCount})` : '';
+
+            return `
+                <div class="filter-panel-item" data-filter="${key}">
+                    <button class="filter-panel-item-btn ${selectedCount > 0 ? 'active' : ''}" onclick="toggleFilterPanelItem('${key}')">
+                        <span class="filter-panel-item-label">${label}</span>
+                        <span class="filter-panel-item-value ${selectedCount > 0 ? 'has-selection' : ''}">${selectedValue || '(אלע)'}</span>
+                    </button>
+                    <div class="filter-panel-item-options" id="filter-panel-options-${key}">
+                        ${options.slice(0, 50).map(opt => {
+                const escapedOpt = opt.replace(/'/g, "\\'").replace(/"/g, '\\"');
+                return `
+                                <label class="filter-panel-option" onclick="event.stopPropagation()">
+                                    <input type="checkbox" 
+                                        value="${opt.replace(/"/g, '&quot;')}" 
+                                        ${activeFilters[key]?.includes(opt) ? 'checked' : ''}
+                                        onchange="handleFilterChange('${key}', '${escapedOpt}', this.checked)">
+                                    ${opt}
+                                </label>
+                            `;
+            }).join('')}
+                        ${options.length > 50 ? `<div style="padding: 8px; text-align: center; color: var(--text-muted); font-size: 0.8em;">... און נאך ${options.length - 50}</div>` : ''}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Get active filter tags HTML
+        function getActiveFilterTagsHTML() {
+            let html = '';
+
+            if (searchQuery) {
+                html += `<span class="filter-panel-tag">🔍 ${searchQuery}<button class="filter-panel-tag-remove" onclick="clearSearch()">×</button></span>`;
+            }
+
+            Object.keys(activeFilters).forEach(key => {
+                activeFilters[key].forEach(value => {
+                    html += `<span class="filter-panel-tag">${value}<button class="filter-panel-tag-remove" onclick="removeFilter('${key}', '${value.replace(/'/g, "\\'")}')">×</button></span>`;
+                });
+            });
+
+            return html;
+        }
+
+        // Toggle search panel
+        function toggleSearchPanel(event) {
+            event.stopPropagation();
+            const panel = document.getElementById('searchPanelContent');
+            const filterPanel = document.getElementById('filterPanelContent');
+            if (filterPanel) filterPanel.classList.remove('show');
+            if (panel) {
+                panel.classList.toggle('show');
+                if (panel.classList.contains('show')) {
+                    // Focus the search input
+                    setTimeout(() => {
+                        const input = document.getElementById('filterPanelSearchInput');
+                        if (input) input.focus();
+                    }, 100);
+                }
+            }
+        }
+
+        // Toggle filter panel
+        function toggleFilterPanel(event) {
+            event.stopPropagation();
+            const panel = document.getElementById('filterPanelContent');
+            const searchPanel = document.getElementById('searchPanelContent');
+            if (searchPanel) searchPanel.classList.remove('show');
+            if (panel) {
+                panel.classList.toggle('show');
+            }
+        }
+
+        // Toggle filter panel item
+        function toggleFilterPanelItem(key) {
+            const item = document.querySelector(`.filter-panel-item[data-filter="${key}"]`);
+            if (item) {
+                // Close other items
+                document.querySelectorAll('.filter-panel-item.open').forEach(el => {
+                    if (el !== item) el.classList.remove('open');
+                });
+                item.classList.toggle('open');
+            }
+        }
+
+        // Handle filter panel search
+        function handleFilterPanelSearch(query) {
+            searchQuery = query.trim();
+            applyFilters();
+            updateSongsFiltersUI();
+        }
+
+        // Remove single filter
+        function removeFilter(key, value) {
+            activeFilters[key] = activeFilters[key].filter(v => v !== value);
+            applyFilters();
+            updateSongsFiltersUI();
+        }
+
+        // Close search and filter panels on outside click
+        document.addEventListener('click', (e) => {
+            const searchDropdown = document.getElementById('searchPanelDropdown');
+            if (searchDropdown && !searchDropdown.contains(e.target)) {
+                const searchPanel = document.getElementById('searchPanelContent');
+                if (searchPanel) searchPanel.classList.remove('show');
+            }
+
+            const filterDropdown = document.getElementById('filterPanelDropdown');
+            if (filterDropdown && !filterDropdown.contains(e.target)) {
+                const filterPanel = document.getElementById('filterPanelContent');
+                if (filterPanel) filterPanel.classList.remove('show');
+            }
+        });
 
         // Update songs filters UI only (without re-rendering the whole page)
         function updateSongsFiltersUI() {
@@ -16839,6 +17470,7 @@
 
             container.innerHTML = `
                 <div class="page-theme-nigun">
+                    <div class="songs-floating-notes" id="songsFloatingNotes"></div>
                     <div class="page-title">
                         <div class="page-title-bar">ניגונים</div>
                         <div class="page-title-content">
@@ -16850,7 +17482,7 @@
                     <div class="songs-page-layout">
                         <div class="songs-main-content">
                             <div class="songs-card">
-                                <div style="padding: 15px 20px 10px 20px; display: flex; justify-content: flex-end;">
+                                <div style="padding: 15px 20px 10px 20px; display: flex; justify-content: center;">
                                     <div class="detail-filters-group">
                                         ${getSongsFiltersHTML()}
                                     </div>
@@ -16871,35 +17503,6 @@
                                 <div id="songsLoadMoreIndicator" style="height: 1px;"></div>
                             </div>
                         </div>
-
-                        <div class="sidebar-wrapper">
-                        <div class="songs-sidebar">
-                            <div class="sidebar-search-box">
-                                <input type="text"
-                                       id="songsSearchInput"
-                                       class="sidebar-search-input"
-                                       placeholder="זוך א ניגון..."
-                                       value="${searchQuery || ''}"
-                                       onkeypress="if(event.key==='Enter')handleSongsSearch(this.value)">
-                                ${searchQuery ? '<button class="sidebar-search-clear" onclick="clearSearch()">×</button>' : ''}
-                                <button class="sidebar-search-btn" onclick="handleSongsSearch(document.getElementById('songsSearchInput').value)">🔍</button>
-                            </div>
-
-                            <div class="sidebar-section">
-                                <div class="sidebar-section-title">פילטערס:</div>
-                            </div>
-
-                            ${renderSidebarFilter('collection', 'קאלעקשאנס:', categories.collections)}
-                            ${renderSidebarFilter('chatzer', 'חצר:', categories.chatzeros)}
-                            ${renderSidebarFilter('mechaber', 'מחבר:', categories.mechabrim)}
-                            ${renderSidebarFilter('verter', 'ווערטער:', categories.verter)}
-                            ${renderSidebarFilter('gezungen', 'געזינגען אויף:', categories.gezungen)}
-                            ${renderSidebarFilter('ritem', 'ריטעם:', categories.ritem)}
-                            ${renderSidebarFilter('scale', 'סקעיל:', categories.scale)}
-
-                            <div class="active-filters" id="activeFilterTags"></div>
-                        </div>
-                        </div><!-- sidebar-wrapper -->
                     </div>
                 </div>
             `;
@@ -16932,6 +17535,56 @@
 
             // Initialize sort toggle slider position
             initSortToggleSlider();
+
+            // Generate floating musical notes
+            generateSongsFloatingNotes();
+        }
+
+        // Generate floating musical notes for the nigunim page background
+        function generateSongsFloatingNotes() {
+            console.log('[NOTES DEBUG] generateSongsFloatingNotes called');
+            const notesContainer = document.getElementById('songsFloatingNotes');
+            console.log('[NOTES DEBUG] notesContainer:', notesContainer);
+            if (!notesContainer) {
+                console.log('[NOTES DEBUG] Container not found! Exiting.');
+                return;
+            }
+
+            const symbols = ['♩', '♪', '♫', '♬', '𝄞'];
+            const noteCount = 35; // More notes
+            let html = '';
+
+            for (let i = 0; i < noteCount; i++) {
+                const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                const size = 50 + Math.random() * 70; // 50-120px
+                const duration = 25 + Math.random() * 35; // Much slower: 25-60s
+                const delay = Math.random() * duration;
+                const rot = (Math.random() * 40 - 20) + 'deg';
+
+                // Random angle for radial movement from center - all directions
+                const angle = Math.random() * 360;
+                const distance = 60 + Math.random() * 40; // 60-100 distance
+                const endXVal = Math.cos(angle * Math.PI / 180) * distance;
+                const endYVal = Math.sin(angle * Math.PI / 180) * distance;
+
+                // Use calc() to handle negative values properly
+                const endX = `calc(${endXVal}vw - 50%)`;
+                const endY = `calc(${endYVal}vh - 50%)`;
+
+                // Random wander class for subtle movement
+                const wanderClass = `wander-${Math.floor(Math.random() * 3) + 1}`;
+                const wanderDuration = 15 + Math.random() * 10; // 15-25s wander cycle - slow and calm
+
+                html += `
+                    <div class="note-wrapper" style="--end-x: ${endX}; --end-y: ${endY}; animation-duration: ${duration}s; animation-delay: -${delay}s;">
+                        <span class="musical-note ${wanderClass}" style="--rot: ${rot}; font-size: ${size}px; animation-duration: ${wanderDuration}s;">${symbol}</span>
+                    </div>
+                `;
+            }
+            notesContainer.innerHTML = html;
+            console.log('[NOTES DEBUG] Added', noteCount, 'notes to container');
+            console.log('[NOTES DEBUG] Container innerHTML length:', notesContainer.innerHTML.length);
+            console.log('[NOTES DEBUG] Container computed style:', window.getComputedStyle(notesContainer).display, window.getComputedStyle(notesContainer).visibility, window.getComputedStyle(notesContainer).opacity);
         }
 
         // Load more songs (for infinite scroll)
@@ -19030,8 +19683,17 @@
                         name: mechName,
                         image: mechInfo.image,
                         id: mechInfo.customId || mechName,
-                        description: mechInfo.description
-                    }));
+                        description: mechInfo.description,
+                        birthYear: mechInfo.birthYear ? parseInt(mechInfo.birthYear) : null,
+                        deathYear: mechInfo.deathYear ? parseInt(mechInfo.deathYear) : null
+                    }))
+                    .sort((a, b) => {
+                        // Sort by birth year first, then death year
+                        // Use birth year if available, otherwise death year
+                        const yearA = a.birthYear || a.deathYear || 9999;
+                        const yearB = b.birthYear || b.deathYear || 9999;
+                        return yearA - yearB;
+                    });
             }
 
             // For verter, get the lyrics text
@@ -19161,17 +19823,19 @@
                     
                     ${mechabrimFromChatzer.length > 0 ? `
                         <div class="detail-mechabrim-section">
-                            <h3>${mechabrimFromChatzer.length} מחברים</h3>
-                            <div class="nigun-mechaber-grid">
-                                ${mechabrimFromChatzer.map(mech => `
-                                    <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(mech.id)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mech.name)}">
-                                        ${mech.image
+                            <div class="detail-mechabrim-box">
+                                <div class="detail-mechabrim-header">${mechabrimFromChatzer.length} מחברים</div>
+                                <div class="nigun-mechaber-grid">
+                                    ${mechabrimFromChatzer.map(mech => `
+                                        <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(mech.id)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mech.name)}">
+                                            ${mech.image
                     ? `<img class="nigun-mechaber-image" src="${mech.image}" alt="${mech.name}">`
                     : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                 }
-                                        <div class="nigun-mechaber-name">${mech.name}</div>
-                                    </a>
-                                `).join('')}
+                                            <div class="nigun-mechaber-name">${mech.name}</div>
+                                        </a>
+                                    `).join('')}
+                                </div>
                             </div>
                         </div>
                     ` : ''}
