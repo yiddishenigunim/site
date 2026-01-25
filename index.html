@@ -811,13 +811,12 @@
             font-weight: 700;
             color: white;
             margin: 0;
-            margin-left: 130px;
+            padding: 0 130px;
             font-family: 'Heebo', sans-serif;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             line-height: 1.3;
             text-align: center;
-            flex: 1;
-            padding-right: 20px;
+            max-width: 100%;
             word-wrap: break-word;
         }
 
@@ -1016,27 +1015,26 @@
             z-index: 15;
             text-decoration: none;
             background: var(--color-mechaber);
-            padding: 33px 12px 6px 12px;
+            padding: 33px 15px 6px 15px;
             border-radius: 0 0 12px 12px;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             transform-origin: top center;
             margin-bottom: -20px;
-            min-height: 140px;
+            max-height: 150px;
+            min-width: 120px;
+            max-width: 150px;
+            overflow: hidden;
         }
 
         .nigun-modal-mechaber-profile:hover {
-            transform: scale(1.08);
-            box-shadow: 0 6px 20px rgba(156, 91, 181, 0.4);
+            transform: scale(1.03);
+            box-shadow: 0 4px 15px rgba(156, 91, 181, 0.3);
         }
 
         /* When no mechaber, center the title fully */
-        .nigun-modal-hero.no-mechaber {
-            padding-left: 25px;
-        }
-
         .nigun-modal-hero.no-mechaber .nigun-modal-hero-title {
-            margin-left: 20px;
+            padding: 0 25px;
         }
 
         .nigun-modal-mechaber-avatar {
@@ -1048,7 +1046,7 @@
             border: 3px solid white;
             overflow: hidden;
             flex-shrink: 0;
-            margin: 0 -8px;
+            margin: 0 -8px 8px -8px;
         }
 
         .nigun-modal-mechaber-avatar:hover {
@@ -1081,15 +1079,29 @@
         }
 
         .nigun-modal-mechaber-name {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 10px;
             font-weight: 600;
-            font-size: 0.85em;
             color: white;
-            padding: 8px 8px 6px 8px;
+            padding: 4px 6px;
             cursor: pointer;
             transition: opacity 0.2s ease;
-            white-space: nowrap;
             text-decoration: none;
             text-align: center;
+            width: max-content;
+            max-width: 130px;
+        }
+
+        .nigun-modal-mechaber-name .mechaber-formal {
+            display: none;
+        }
+
+        .nigun-modal-mechaber-name .mechaber-known {
+            font-size: 10px !important;
+            text-wrap: balance;
+            line-height: 1.15;
         }
 
         .nigun-modal-mechaber-name:hover {
@@ -2267,8 +2279,15 @@
             display: none !important;
         }
 
-        /* Cooldown state - completely disable hover behavior on parent dropdown */
+        /* Cooldown state - hide dropdown but keep button clickable */
         .nav-dropdown.cooldown .nav-dropdown-content {
+            display: none !important;
+            visibility: hidden !important;
+            opacity: 0 !important;
+        }
+
+        /* Override hover rule during cooldown */
+        .nav-dropdown.cooldown:hover .nav-dropdown-content {
             display: none !important;
         }
 
@@ -3660,6 +3679,46 @@
             color: var(--text-muted);
             font-size: 0.95em;
             transition: color 0.3s;
+            text-align: center;
+            display: block;
+            width: 100%;
+        }
+
+        /* Category-specific dark colors for subtitle (not mechabrim) */
+        .page-theme-verter .page-title .subtitle {
+            color: var(--color-verter-dark, #2e7d32);
+        }
+
+        .page-theme-zman .page-title .subtitle {
+            color: var(--color-zman-dark, #5d4037);
+        }
+
+        .page-theme-chatzer .page-title .subtitle {
+            color: var(--color-chatzer-dark, #0d47a1);
+        }
+
+        .page-theme-nigun .page-title .subtitle {
+            color: var(--color-nigun-dark, #1565c0);
+        }
+
+        .page-theme-collection .page-title .subtitle {
+            color: var(--color-collection-dark, #4a148c);
+        }
+
+        .page-theme-album .page-title .subtitle {
+            color: var(--color-album-dark, #b8860b);
+        }
+
+        .page-theme-document .page-title .subtitle {
+            color: var(--color-document-dark, #00695c);
+        }
+
+        .page-theme-resource .page-title .subtitle {
+            color: var(--color-resource-dark, #c62828);
+        }
+
+        .page-theme-music .page-title .subtitle {
+            color: var(--color-music-dark, #b8960c);
         }
 
         /* Loading Animation for Subtitle */
@@ -5173,6 +5232,22 @@
             flex-wrap: wrap;
         }
 
+        /* Center card-stats on all pages except mechabrim */
+        .page-theme-verter .card-stats,
+        .page-theme-piyut .card-stats,
+        .page-theme-nigun .card-stats,
+        .page-theme-zman .card-stats,
+        .page-theme-chatzer .card-stats,
+        .page-theme-collection .card-stats,
+        .page-theme-album .card-stats,
+        .page-theme-document .card-stats,
+        .page-theme-resource .card-stats,
+        .page-theme-music .card-stats {
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+        }
+
         .card-stat {
             font-size: 0.8em;
             color: var(--text-muted);
@@ -5766,6 +5841,36 @@
             font-weight: 700;
             color: var(--primary-deep);
             flex: 1;
+            text-align: center;
+        }
+
+        /* Category-specific dark colors for card titles (not mechabrim) */
+        .page-theme-verter .card-title {
+            color: var(--color-verter-dark, #2e7d32);
+        }
+
+        .page-theme-zman .card-title {
+            color: var(--color-zman-dark, #5d4037);
+        }
+
+        .page-theme-chatzer .card-title {
+            color: var(--color-chatzer-dark, #0d47a1);
+        }
+
+        .page-theme-collection .card-title {
+            color: var(--color-collection-dark, #4a148c);
+        }
+
+        .page-theme-album .card-title {
+            color: var(--color-album-dark, #b8860b);
+        }
+
+        .page-theme-document .card-title {
+            color: var(--color-document-dark, #00695c);
+        }
+
+        .page-theme-resource .card-title {
+            color: var(--color-resource-dark, #c62828);
         }
 
         /* Mechaber formal name (טיטל + ערשטע נאמען + לעצטע נאמען - smaller, lighter) */
@@ -8468,8 +8573,15 @@
         }
 
         .detail-makor-text {
-            color: var(--primary);
+            display: inline-block;
+            background: white;
+            color: #666;
             font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
         }
 
         .detail-mareh-text {
@@ -13832,6 +13944,11 @@
         function escapeHtml(str) {
             if (!str) return '';
             return String(str).replace(/"/g, '&quot;');
+        }
+
+        // Helper for singular/plural labels
+        function pluralize(count, singular, plural) {
+            return count === 1 ? `${count} ${singular}` : `${count} ${plural}`;
         }
 
         // Global event delegation for handling clicks with special characters
@@ -19508,8 +19625,8 @@
                             <div class="card-header-text">
                                 <div class="card-title">${zmanName}</div>
                                 <div class="card-stats">
-                                    ${piyutimCount > 0 ? `<span class="card-stat">${piyutimCount} פיוטים</span>` : ''}
-                                    ${collectionsCount > 0 ? `<span class="card-stat">${collectionsCount} קאלעקשאנס</span>` : ''}
+                                    ${piyutimCount > 0 ? `<span class="card-stat">${pluralize(piyutimCount, 'פיוט', 'פיוטים')}</span>` : ''}
+                                    ${collectionsCount > 0 ? `<span class="card-stat">${pluralize(collectionsCount, 'קאלעקשאן', 'קאלעקשאנס')}</span>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -19582,6 +19699,27 @@
             const firstMechaberInfo = firstMechaber ? mechabrimInfo[firstMechaber] : null;
             const firstMechaberId = firstMechaberInfo?.customId || firstMechaber;
 
+            // Build mechaber name HTML like mechabrim cards
+            let mechaberNameHtml = firstMechaber || '';
+            if (firstMechaberInfo) {
+                const info = firstMechaberInfo;
+                // Formal name = title + firstName + lastName (like mechabrim card)
+                const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                const formalName = formalParts.join(' ');
+
+                if (info.gerufen) {
+                    // Has gerufen - two lines: formal (small) + known (big)
+                    const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                    const knownName = knownParts.join(' ');
+                    mechaberNameHtml = `<span class="mechaber-formal">${formalName}</span><span class="mechaber-known">${knownName}</span>`;
+                } else {
+                    // No gerufen - show name WITHOUT suffix (suffix hidden if no gerufen)
+                    const fullNameParts = [info.title, info.firstName, info.lastName, info.platz].filter(Boolean);
+                    const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : firstMechaber;
+                    mechaberNameHtml = `<span class="mechaber-known">${fullName}</span>`;
+                }
+            }
+
             container.innerHTML = `
                 <div class="detail-page nigun-detail-page">
                     <button class="back-button" onclick="navigateTo('nigunim')">→ ניגונים
@@ -19599,7 +19737,7 @@
                         : `<div class="placeholder"><div class="mechaber-icon"></div></div>`
                     }
                                 </div>
-                                <span class="nigun-modal-mechaber-name">${firstMechaber}</span>
+                                <span class="nigun-modal-mechaber-name">${mechaberNameHtml}</span>
                             </a>
                         ` : ''}
                     </div>
@@ -19719,13 +19857,13 @@
                                         </div>
                                     `).join('') : ''}
                                     ${song.ritem ? `
-                                        <div class="nigun-detail-box box-ritem" style="cursor:pointer;" onclick="event.stopPropagation(); navigateToWithFilter('music', 'ritem', '${escapeHtml(song.ritem).replace(/'/g, "\\'")}');">
+                                        <div class="nigun-detail-box box-ritem" data-action="filter" data-page="music" data-filter-key="ritem" data-value="${escapeHtml(song.ritem)}">
                                             <div class="nigun-detail-box-header">ריטעם</div>
                                             <div class="nigun-detail-box-content">${song.ritem}</div>
                                         </div>
                                     ` : ''}
                                     ${song.scale ? `
-                                        <div class="nigun-detail-box box-scale" style="cursor:pointer;" onclick="event.stopPropagation(); navigateToWithFilter('music', 'scale', '${escapeHtml(song.scale).replace(/'/g, "\\'")}');">
+                                        <div class="nigun-detail-box box-scale" data-action="filter" data-page="music" data-filter-key="scale" data-value="${escapeHtml(song.scale)}">
                                             <div class="nigun-detail-box-header">סקעיל</div>
                                             <div class="nigun-detail-box-content">${song.scale}</div>
                                         </div>
@@ -19993,7 +20131,7 @@
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${colName}</div>
-                                            ${songCount > 0 ? `<div class="zman-item-count">${songCount} ניגונים</div>` : ''}
+                                            ${songCount > 0 ? `<div class="zman-item-count">${pluralize(songCount, 'ניגון', 'ניגונים')}</div>` : ''}
                                         </div>
                                     </a>
                                 `;
@@ -20023,7 +20161,7 @@
                                         <div class="zman-item-icon"></div>
                                         <div class="zman-item-info">
                                             <div class="zman-item-name">${piyutName}</div>
-                                            ${songCount > 0 ? `<div class="zman-item-count">${songCount} ניגונים</div>` : ''}
+                                            ${songCount > 0 ? `<div class="zman-item-count">${pluralize(songCount, 'ניגון', 'ניגונים')}</div>` : ''}
                                         </div>
                                     </a>
                                 `;
@@ -20067,7 +20205,7 @@
                                     <div class="collection-icon">♫</div>
                                     <div class="collection-info">
                                         <div class="collection-title">${key}</div>
-                                        <div class="collection-meta">${songCount} ניגונים</div>
+                                        <div class="collection-meta">${pluralize(songCount, 'ניגון', 'ניגונים')}</div>
                                         ${zmanim.length > 0 ? `
                                             <div class="collection-zmanim" onclick="event.stopPropagation();">
                                                 ${zmanim.slice(0, 3).map(zman => `<span class="collection-zman-tag"
@@ -20146,7 +20284,7 @@
                                         </div>
                                     ` : ''}
                                     <div class="card-stats">
-                                        <span class="card-stat">${songCount} ניגונים</span>
+                                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
                                     </div>
                                 </div>
                             </div>
@@ -20204,7 +20342,7 @@
                                                 </div>
                                             ` : ''}
                                             <div class="card-stats">
-                                                <span class="card-stat">${songCount} ניגונים</span>
+                                                <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
                                             </div>
                                         </div>
                                     </div>
@@ -20418,8 +20556,8 @@
                             </div>
                         ` : ''}
                         <div class="card-stats">
-                            ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${mechabrimCount} מחברים</span>` : ''}
-                            <span class="card-stat">${songCount} ניגונים</span>
+                            ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${pluralize(mechabrimCount, 'מחבר', 'מחברים')}</span>` : ''}
+                            <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
                         </div>
                     </div>
                 </div>
@@ -20783,8 +20921,8 @@
                                             </div>
                                         ` : ''}
                                         <div class="card-stats">
-                                            ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${mechabrimCount} מחברים</span>` : ''}
-                                            <span class="card-stat">${songCount} ניגונים</span>
+                                            ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${pluralize(mechabrimCount, 'מחבר', 'מחברים')}</span>` : ''}
+                                            <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
                                         </div>
                                     </div>
                                 </div>
@@ -21491,7 +21629,7 @@
             const songIndices = categories[categoryKey]?.[value] || [];
             const songCount = songIndices.length;
 
-            let statsHtml = `${songCount} ניגונים`;
+            let statsHtml = pluralize(songCount, 'ניגון', 'ניגונים');
 
             // For chatzeros, count mechabrim
             if (fieldType === 'chatzer') {
@@ -21502,7 +21640,7 @@
                         return mechChatzeros.includes(value);
                     }).length;
                 if (mechabrimCount > 0) {
-                    statsHtml = `${mechabrimCount} מחברים · ${statsHtml}`;
+                    statsHtml = `${pluralize(mechabrimCount, 'מחבר', 'מחברים')} · ${statsHtml}`;
                 }
             }
 
@@ -22568,8 +22706,28 @@
 
         // Navigate to page with filter applied (opens detail page)
         function navigateToWithFilter(page, filterKey, value) {
-            // Handle scale, rhythm, gezungen, maure - filter nigunim page
-            if (filterKey === 'scale' || filterKey === 'ritem' || filterKey === 'gezungen' || filterKey === 'maure') {
+            // Handle scale, ritem - just navigate to music page (no filter)
+            if (filterKey === 'scale' || filterKey === 'ritem') {
+                // Close any open modals
+                closeAllModals();
+
+                // Navigate to music page
+                currentDetailView = null;
+                currentPageView = 'music';
+
+                // Update nav buttons
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.dataset.page === 'music');
+                });
+
+                updateURL();
+                renderCurrentPage();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+
+            // Handle gezungen, maure - filter nigunim page
+            if (filterKey === 'gezungen' || filterKey === 'maure') {
                 // Reset all filters first
                 activeFilters = {
                     chatzer: [],
@@ -22682,6 +22840,29 @@
 
             // Insert the rendered content into modal
             container.innerHTML = tempContainer.innerHTML;
+        }
+
+        // Close all open modals (nigun and detail)
+        function closeAllModals() {
+            // Close nigun modal if open
+            if (nigunModalOpen) {
+                nigunModalOpen = false;
+                currentNigunModalIdx = null;
+                const nigunOverlay = document.getElementById('nigunModalOverlay');
+                if (nigunOverlay) nigunOverlay.classList.remove('active');
+            }
+            // Close detail modal if open
+            if (detailModalOpen) {
+                detailModalOpen = false;
+                currentDetailModalType = null;
+                currentDetailModalName = null;
+                const detailOverlay = document.getElementById('detailModalOverlay');
+                if (detailOverlay) detailOverlay.classList.remove('active');
+            }
+            // Restore scrolling
+            document.body.style.overflow = '';
+            // Clear modal stack
+            modalStack = [];
         }
 
         // Close nigun modal overlay
@@ -24356,24 +24537,18 @@
             btn.addEventListener('click', (e) => {
                 const dropdown = btn.closest('.nav-dropdown');
                 if (dropdown) {
-                    // Add cooldown class to parent dropdown - this completely disables hover
+                    // Add cooldown class - CSS will hide dropdown
                     dropdown.classList.add('cooldown');
 
-                    // Remove cooldown after mouse leaves AND 1 second delay
+                    // Only remove cooldown AFTER mouse has left the dropdown completely
                     const handleMouseLeave = () => {
                         dropdown.removeEventListener('mouseleave', handleMouseLeave);
-                        // Wait 1 second after mouse leaves before allowing dropdown to work again
                         setTimeout(() => {
                             dropdown.classList.remove('cooldown');
-                        }, 1000);
+                        }, 200);
                     };
-                    dropdown.addEventListener('mouseleave', handleMouseLeave);
 
-                    // Fallback: remove cooldown after 10 seconds if mouse never leaves
-                    setTimeout(() => {
-                        dropdown.classList.remove('cooldown');
-                        dropdown.removeEventListener('mouseleave', handleMouseLeave);
-                    }, 10000);
+                    dropdown.addEventListener('mouseleave', handleMouseLeave);
                 }
             });
         });
