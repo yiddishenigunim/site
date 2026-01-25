@@ -811,7 +811,7 @@
             font-weight: 700;
             color: white;
             margin: 0;
-            padding: 0 130px;
+            padding: 0 160px;
             font-family: 'Heebo', sans-serif;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
             line-height: 1.3;
@@ -870,9 +870,9 @@
         .personality-tag {
             background: var(--color-mechaber);
             color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85em;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75em;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -925,9 +925,9 @@
         .maure-tag {
             background: var(--color-piyut);
             color: white;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 0.85em;
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-size: 0.75em;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -989,6 +989,32 @@
 
         .document-tag:hover {
             background: var(--color-document-dark);
+            transform: scale(1.05);
+        }
+
+        /* Resources tags */
+        .nigun-modal-hero-resources {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resource-tag {
+            background: #1976D2;
+            color: white;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(25, 118, 210, 0.3);
+        }
+
+        .resource-tag:hover {
+            background: #1565C0;
             transform: scale(1.05);
         }
 
@@ -2266,9 +2292,8 @@
             }
         }
 
-        /* Keep dropdown open and parent styled when hovering anywhere in the dropdown area */
-        .nav-dropdown:hover .nav-dropdown-content,
-        .nav-dropdown:focus-within .nav-dropdown-content {
+        /* Keep dropdown open when hovering anywhere in the dropdown area */
+        .nav-dropdown:hover .nav-dropdown-content {
             display: block;
         }
 
@@ -2276,18 +2301,6 @@
         /* Individual button hover styles handle the transform */
 
         .nav-dropdown-content.hiding {
-            display: none !important;
-        }
-
-        /* Cooldown state - hide dropdown but keep button clickable */
-        .nav-dropdown.cooldown .nav-dropdown-content {
-            display: none !important;
-            visibility: hidden !important;
-            opacity: 0 !important;
-        }
-
-        /* Override hover rule during cooldown */
-        .nav-dropdown.cooldown:hover .nav-dropdown-content {
             display: none !important;
         }
 
@@ -15880,17 +15893,10 @@
             alert('די אפציע צו צולייגן א ניגון קומט באלד!');
         }
 
-        // Hide all dropdowns
+        // Hide all dropdowns - not needed anymore since CSS hover handles this naturally
         function hideAllDropdowns() {
-            document.querySelectorAll('.nav-dropdown-content').forEach(d => {
-                d.classList.add('hiding');
-                d.classList.remove('show');
-            });
-            setTimeout(() => {
-                document.querySelectorAll('.nav-dropdown-content').forEach(d => {
-                    d.classList.remove('hiding');
-                });
-            }, 300);
+            // CSS hover automatically shows/hides dropdowns
+            // This function exists for backwards compatibility but does nothing
         }
 
         // Close dropdowns when clicking on items
@@ -19708,8 +19714,8 @@
                 const formalName = formalParts.join(' ');
 
                 if (info.gerufen) {
-                    // Has gerufen - two lines: formal (small) + known (big)
-                    const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                    // Has gerufen - two lines: formal (small) + known (big), NO suffix in modal
+                    const knownParts = [info.gerufen, info.platz].filter(Boolean);
                     const knownName = knownParts.join(' ');
                     mechaberNameHtml = `<span class="mechaber-formal">${formalName}</span><span class="mechaber-known">${knownName}</span>`;
                 } else {
@@ -19880,12 +19886,7 @@
                                             <div class="nigun-detail-box-content">${col}</div>
                                         </div>
                                     `).join('') : ''}
-                                    ${song.resources ? song.resources.split(',').map(r => r.trim()).filter(Boolean).map(r => `
-                                        <div class="nigun-detail-box box-resources" data-action="detail" data-category="resources" data-name="${escapeHtml(r)}" style="cursor:pointer;">
-                                            <div class="nigun-detail-box-header">רעסורסן</div>
-                                            <div class="nigun-detail-box-content">${r}</div>
-                                        </div>
-                                    `).join('') : ''}
+
                                 </div>
                             </div>`;
                 })()}
@@ -19974,8 +19975,16 @@
                         </div>
                     ` : ''}
 
-                    ${(song.albums || song.documents) ? `
+                    ${(song.resources || song.albums || song.documents) ? `
                         <div class="nigun-modal-hero-bottom" style="margin-top: 15px;">
+                            ${song.resources ? `
+                                <div class="nigun-modal-hero-resources">
+                                    ${song.resources.split(',').map(r => r.trim()).filter(Boolean).map(r => `
+                                        <span class="resource-tag" data-action="detail" data-category="resources" data-name="${escapeHtml(r)}" data-tooltip-value="${escapeHtml(r)}" data-tooltip-type="resource" style="cursor:pointer;">${r}</span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                            ${(song.resources && song.albums) ? `<div class="nigun-modal-divider"></div>` : ''}
                             ${song.albums ? `
                                 <div class="nigun-modal-hero-albums">
                                     ${song.albums.split(',').map(a => a.trim()).filter(Boolean).map(a => `
@@ -19983,7 +19992,7 @@
                                     `).join('')}
                                 </div>
                             ` : ''}
-                            ${(song.albums && song.documents) ? `<div class="nigun-modal-divider"></div>` : ''}
+                            ${((song.resources || song.albums) && song.documents) ? `<div class="nigun-modal-divider"></div>` : ''}
                             ${song.documents ? `
                                 <div class="nigun-modal-hero-documents">
                                     ${song.documents.split(',').map(d => d.trim()).filter(Boolean).map(d => `
@@ -20002,16 +20011,7 @@
                 </div>
             `;
 
-            // After render, adjust title margin based on mechaber stripe width
-            requestAnimationFrame(() => {
-                const mechaberProfile = container.querySelector('.nigun-modal-mechaber-profile');
-                const title = container.querySelector('.nigun-modal-hero-title');
-                if (mechaberProfile && title) {
-                    const mechaberWidth = mechaberProfile.offsetWidth;
-                    // Add 20px gap between mechaber and title
-                    title.style.marginLeft = (mechaberWidth + 20) + 'px';
-                }
-            });
+            // Title centering is now handled by CSS padding: 0 160px on .nigun-modal-hero-title
         }
 
         // Play recording from nigun detail page
@@ -24532,26 +24532,24 @@
             }, { passive: true });
         })();
 
-        // Handle nav dropdown button clicks - force close dropdown on click
-        document.querySelectorAll('.nav-dropdown-btn, .nav-dropdown-item').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const dropdown = btn.closest('.nav-dropdown');
-                if (dropdown) {
-                    // Add cooldown class - CSS will hide dropdown
-                    dropdown.classList.add('cooldown');
+        // Close dropdown immediately on click (even if mouse is still on it)
+        (function () {
+            document.querySelectorAll('.nav-dropdown').forEach(dropdown => {
+                const content = dropdown.querySelector('.nav-dropdown-content');
 
-                    // Only remove cooldown AFTER mouse has left the dropdown completely
-                    const handleMouseLeave = () => {
-                        dropdown.removeEventListener('mouseleave', handleMouseLeave);
-                        setTimeout(() => {
-                            dropdown.classList.remove('cooldown');
-                        }, 200);
-                    };
+                // On click of any link in the dropdown, hide it immediately
+                dropdown.querySelectorAll('a').forEach(link => {
+                    link.addEventListener('click', () => {
+                        content.classList.add('hiding');
+                    });
+                });
 
-                    dropdown.addEventListener('mouseleave', handleMouseLeave);
-                }
+                // Remove hiding class when mouse leaves, so hover works again next time
+                dropdown.addEventListener('mouseleave', () => {
+                    content.classList.remove('hiding');
+                });
             });
-        });
+        })();
     </script>
 </body>
 
