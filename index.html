@@ -10205,41 +10205,53 @@
         }
 
         /* Wave Animation for Playing Song */
-        /* Center-mirrored wave animation (streaming style) */
+        /* Hidden by default, shown only for active song */
         .song-wave-animation {
-            display: flex;
+            display: none;
             align-items: center;
-            justify-content: center;
             gap: 2px;
-            height: 20px;
+            height: 16px;
+            margin-left: 8px;
             flex-shrink: 0;
+        }
+
+        /* Show wave only when song-item is active */
+        .song-item.active .song-wave-animation {
+            display: inline-flex;
         }
 
         .wave-bar {
             width: 3px;
             background: white;
-            border-radius: 3px;
-            animation: waveStream 0.8s ease-in-out infinite;
+            border-radius: 2px;
+            height: 10px;
             transform-origin: center;
+            transition: transform 0.3s ease-out;
         }
 
-        .wave-bar:nth-child(1) {
-            height: 8px;
+        /* Default state (loading/paused) - all bars at minimum height */
+        .song-item.active .wave-bar {
+            transform: scaleY(0.4);
+        }
+
+        /* Animated state - bars wave when playing (not paused) */
+        .song-item.active:not(.paused) .wave-bar {
+            animation: waveStream 0.8s ease-in-out infinite;
+        }
+
+        .song-item.active:not(.paused) .wave-bar:nth-child(1) {
             animation-delay: 0s;
         }
 
-        .wave-bar:nth-child(2) {
-            height: 14px;
+        .song-item.active:not(.paused) .wave-bar:nth-child(2) {
             animation-delay: 0.2s;
         }
 
-        .wave-bar:nth-child(3) {
-            height: 16px;
+        .song-item.active:not(.paused) .wave-bar:nth-child(3) {
             animation-delay: 0.1s;
         }
 
-        .wave-bar:nth-child(4) {
-            height: 10px;
+        .song-item.active:not(.paused) .wave-bar:nth-child(4) {
             animation-delay: 0.3s;
         }
 
@@ -10247,25 +10259,106 @@
 
             0%,
             100% {
-                transform: scaleY(0.3);
+                transform: scaleY(0.5);
             }
 
             50% {
-                transform: scaleY(1);
+                transform: scaleY(1.5);
             }
         }
 
-        /* Paused state - wave bars freeze in place */
-        .song-item.active.paused .wave-bar,
-        .song-wave-animation.paused .wave-bar {
-            animation-play-state: paused;
+        /* Fade to minimum keyframes */
+        @keyframes fadeToMin {
+            to {
+                transform: scaleY(0.4);
+            }
         }
 
-        /* Loading state - wave bars equal size before audio starts */
-        .song-wave-animation.loading .wave-bar {
-            animation: none;
-            height: 12px !important;
-            transform: scaleY(1) !important;
+        /* Paused state - smoothly fade to minimum height */
+        .song-item.active.paused .wave-bar {
+            animation: fadeToMin 0.3s ease-out forwards;
+        }
+
+        /* Player wave animation (bottom player) */
+        .player-wave-animation {
+            display: none;
+            align-items: center;
+            gap: 2px;
+            height: 16px;
+            margin-right: 12px;
+        }
+
+        /* Show player wave when audio is loaded */
+        body.has-audio .player-wave-animation {
+            display: inline-flex;
+        }
+
+        /* Player wave bars inherit from .wave-bar base styles */
+        /* Default: minimum height */
+        .player-wave-animation .wave-bar {
+            transform: scaleY(0.4);
+        }
+
+        /* Playing state - animate */
+        body.playing .player-wave-animation .wave-bar {
+            animation: waveStream 0.8s ease-in-out infinite;
+        }
+
+        body.playing .player-wave-animation .wave-bar:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        body.playing .player-wave-animation .wave-bar:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        body.playing .player-wave-animation .wave-bar:nth-child(3) {
+            animation-delay: 0.1s;
+        }
+
+        body.playing .player-wave-animation .wave-bar:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        /* Paused state for player - fade to minimum */
+        body.has-audio:not(.playing) .player-wave-animation .wave-bar {
+            animation: fadeToMin 0.3s ease-out forwards;
+        }
+
+        /* Player Show Button wave animation */
+        #playerShowBtn .song-wave-animation {
+            display: none;
+        }
+
+        /* Show wave in show button when audio loaded */
+        body.has-audio #playerShowBtn .song-wave-animation {
+            display: inline-flex;
+        }
+
+        /* Playing state for show button */
+        body.playing #playerShowBtn .song-wave-animation .wave-bar {
+            animation: waveStream 0.8s ease-in-out infinite;
+        }
+
+        body.playing #playerShowBtn .song-wave-animation .wave-bar:nth-child(1) {
+            animation-delay: 0s;
+        }
+
+        body.playing #playerShowBtn .song-wave-animation .wave-bar:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        body.playing #playerShowBtn .song-wave-animation .wave-bar:nth-child(3) {
+            animation-delay: 0.1s;
+        }
+
+        body.playing #playerShowBtn .song-wave-animation .wave-bar:nth-child(4) {
+            animation-delay: 0.3s;
+        }
+
+        /* Paused state for show button */
+        body.has-audio:not(.playing) #playerShowBtn .song-wave-animation .wave-bar {
+            animation: fadeToMin 0.3s ease-out forwards;
         }
 
         /* Expanded song item (recordings mode) */
@@ -14272,6 +14365,12 @@
             <div class="player-info">
                 <div class="player-song-name" id="playerSongName">קליק אויף א ניגון צו שפילן</div>
                 <div class="player-song-meta" id="playerSongMeta"></div>
+                <div class="player-wave-animation" id="playerWave">
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                </div>
             </div>
             <div class="player-controls">
                 <button class="player-btn" onclick="playPrevious()" title="פריערדיגע"><svg viewBox="0 0 24 24"
@@ -22569,16 +22668,8 @@
                 ? `playSongFromList(${globalIdx}, [${playlistIndices.join(',')}])`
                 : `playSong(${globalIdx})`;
 
-            // Wave animation for currently playing song
-            // Use 'loading' class for equal-height bars until audio starts
-            const waveAnimation = isActive ? `
-                <div class="song-wave-animation loading">
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                </div>
-            ` : '';
+            // Wave animation - ALWAYS in HTML, visibility controlled by CSS
+            const waveHtml = '<div class="song-wave-animation"><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span></div>';
 
             // === MINIMAL MODE (default) ===
             if (displayMode === 'minimal') {
@@ -22601,17 +22692,7 @@
                 }
                 // No recordings = no button (playBtnHtml stays empty)
 
-                return `
-                    <div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
-                        <div class="song-number">${displayNum}</div>
-                        <div class="song-info">
-                            <div class="song-name">${song.name}</div>
-                            <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
-                        </div>
-                        ${waveAnimation}
-                        ${playBtnHtml}
-                    </div>
-                `;
+                return `<div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}"><div class="song-number">${displayNum}</div><div class="song-info"><div class="song-name">${song.name}</div><div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div></div>${waveHtml}${playBtnHtml}</div>`;
             }
 
             if (displayMode === 'recordings') {
@@ -22681,7 +22762,7 @@
                                 <div class="song-name">${song.name}</div>
                                 <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                             </div>
-                            ${waveAnimation}
+                            ${waveHtml}
                         </div>
                         ${recordingsHtml}
                     </div>
@@ -22843,7 +22924,7 @@
                                 <div class="song-name">${song.name}</div>
                                 <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                             </div>
-                            ${waveAnimation}
+                            ${waveHtml}
                         </div>
                         ${extraInfo.length > 0 ? `<div class="song-full-details">${extraInfo.join('')}</div>` : ''}
                         ${recordingsHtml}
@@ -22859,7 +22940,7 @@
                         <div class="song-name">${song.name}</div>
                         <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                     </div>
-                    ${waveAnimation}
+                    ${waveHtml}
                     ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
                         <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span>
                         <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
@@ -22949,12 +23030,15 @@
                 currentPlayingRecordingInfo = null;
             }
 
+            // FIRST: Update song list to show wave with 'loading' state
+            updateActiveSongInList();
+
+            // THEN: Start loading and playing audio
             audioPlayer.src = song.audioUrl;
             audioPlayer.play();
 
             showPlayer();
             updatePlayerUI(song);
-            updateActiveSongInList();
         }
 
         // Play song from a specific playlist (detail pages)
@@ -23137,14 +23221,10 @@
 
         // Update active song highlight
         function updateActiveSongInList() {
-            // Remove active state and wave animation from all song items
+            // Remove active state from all song items
             document.querySelectorAll('.song-item').forEach(item => {
                 item.classList.remove('active');
                 item.classList.remove('paused');
-                const existingWave = item.querySelector('.song-wave-animation');
-                if (existingWave) {
-                    existingWave.remove();
-                }
             });
 
             // Reset all play buttons
@@ -23158,37 +23238,16 @@
                 if (activeItem) {
                     activeItem.classList.add('active');
 
-                    // Add wave animation if not already present
-                    if (!activeItem.querySelector('.song-wave-animation')) {
-                        const waveDiv = document.createElement('div');
-                        // Use 'loading' class for equal-height bars until audio starts
-                        waveDiv.className = 'song-wave-animation loading';
-                        waveDiv.innerHTML = '<span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span>';
-
-                        // For expanded/full items, insert into header
-                        const header = activeItem.querySelector('.song-item-header');
-                        if (header) {
-                            header.appendChild(waveDiv);
-                        } else {
-                            // Insert before the play button for minimal items
-                            const playBtn = activeItem.querySelector('.song-play-btn-new');
-                            if (playBtn) {
-                                activeItem.insertBefore(waveDiv, playBtn);
-                            } else {
-                                activeItem.appendChild(waveDiv);
-                            }
-                        }
+                    // Set paused class based on actual audio state
+                    // During loading, audioPlayer.paused is true, so bars will be static
+                    if (audioPlayer.paused) {
+                        activeItem.classList.add('paused');
                     }
 
                     // Update play button state
                     const activeBtn = activeItem.querySelector('.song-play-btn-new');
                     if (activeBtn && !audioPlayer.paused) {
                         activeBtn.classList.add('playing');
-                    }
-
-                    // Update paused state
-                    if (audioPlayer.paused) {
-                        activeItem.classList.add('paused');
                     }
                 }
             }
@@ -23363,10 +23422,51 @@
             updatePlayState(true);
         });
 
+        // Helper: Smoothly fade wave bars to minimum height
+        function fadeWaveBarsToMin() {
+            // Get all wave bars from song list and player
+            const allWaveBars = document.querySelectorAll('.song-item.active .wave-bar, #playerShowBtn .wave-bar, .player-wave-animation .wave-bar');
+            allWaveBars.forEach(bar => {
+                // Capture current animated transform
+                const currentTransform = getComputedStyle(bar).transform;
+                // Apply current transform as inline style
+                bar.style.transform = currentTransform;
+                // Remove CSS animation
+                bar.style.animation = 'none';
+                // Force reflow
+                bar.offsetHeight;
+                // Add transition and animate to minimum
+                bar.style.transition = 'transform 0.3s ease-out';
+                bar.style.transform = 'scaleY(0.4)';
+            });
+        }
+
+        // Helper: Reset wave bars to let CSS animation take over
+        function resetWaveBars() {
+            const allWaveBars = document.querySelectorAll('.song-item.active .wave-bar, #playerShowBtn .wave-bar, .player-wave-animation .wave-bar');
+            allWaveBars.forEach(bar => {
+                bar.style.transform = '';
+                bar.style.transition = '';
+                bar.style.animation = '';
+            });
+        }
+
         // Update play/pause state for both player and song list
         function updatePlayState(isPlaying) {
             const playPauseBtn = document.getElementById('playPauseBtn');
             const playerShowWave = document.querySelector('#playerShowBtn .song-wave-animation');
+
+            // Update body classes for player wave animation
+            document.body.classList.add('has-audio');
+            if (isPlaying) {
+                document.body.classList.add('playing');
+                // Reset inline styles when playing
+                resetWaveBars();
+            } else {
+                // Smoothly fade wave bars to minimum before removing playing class
+                fadeWaveBarsToMin();
+                document.body.classList.remove('playing');
+            }
 
             // Update player button
             if (isPlaying) {
