@@ -1041,15 +1041,15 @@
             z-index: 15;
             text-decoration: none;
             background: var(--color-mechaber);
-            padding: 33px 15px 6px 15px;
-            border-radius: 0 0 12px 12px;
+            padding: 28px 10px 5px 10px;
+            border-radius: 0 0 10px 10px;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             transform-origin: top center;
-            margin-bottom: -20px;
-            max-height: 150px;
-            min-width: 120px;
-            max-width: 150px;
+            margin-bottom: -15px;
+            max-height: 115px;
+            min-width: 85px;
+            max-width: 110px;
             overflow: hidden;
         }
 
@@ -1064,15 +1064,15 @@
         }
 
         .nigun-modal-mechaber-avatar {
-            width: 75px;
-            height: 75px;
+            width: 55px;
+            height: 55px;
             border-radius: 50%;
             background: white;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-            border: 3px solid white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            border: 2px solid white;
             overflow: hidden;
             flex-shrink: 0;
-            margin: 0 -8px 8px -8px;
+            margin: 0 -5px 5px -5px;
         }
 
         .nigun-modal-mechaber-avatar:hover {
@@ -1097,8 +1097,8 @@
         }
 
         .nigun-modal-mechaber-avatar .placeholder .mechaber-icon {
-            width: 28px;
-            height: 41px;
+            width: 20px;
+            height: 30px;
             background-color: var(--color-mechaber);
             -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
             mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
@@ -1108,16 +1108,16 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
             color: white;
-            padding: 4px 6px;
+            padding: 2px 4px;
             cursor: pointer;
             transition: opacity 0.2s ease;
             text-decoration: none;
             text-align: center;
             width: max-content;
-            max-width: 130px;
+            max-width: 100px;
         }
 
         .nigun-modal-mechaber-name .mechaber-formal {
@@ -9825,6 +9825,7 @@
             box-shadow: 0 2px 8px rgba(74, 124, 201, 0.1);
             transition: all 0.4s ease;
             position: relative;
+            overflow: visible;
         }
 
         /* Border effect using pseudo-element - fade from outside to inside */
@@ -10368,6 +10369,30 @@
             align-items: stretch;
             padding: 0;
             gap: 0;
+            overflow: visible;
+        }
+
+        /* Hover effect for full mode - on the whole card */
+        .song-item-full:hover {
+            box-shadow: 0 8px 25px rgba(74, 124, 201, 0.4);
+            transform: translateY(-2px);
+            transition: all 0.3s ease;
+        }
+
+        .song-item-full {
+            transition: all 0.3s ease;
+            border-radius: 12px;
+        }
+
+        /* Blue border hover effect for full mode */
+        .song-item-full::after {
+            border-radius: 12px;
+            z-index: 100;
+        }
+
+        .song-item-full:hover::after {
+            border-radius: 12px;
+            z-index: 100;
         }
 
         /* === HEADER - Dark blue with white text === */
@@ -10454,7 +10479,296 @@
             color: var(--color-nigun-dark);
         }
 
-        /* Recordings list inside song item - white background */
+        .song-full-body {
+            background: white;
+            padding: 8px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            overflow: visible;
+            position: relative;
+        }
+
+        /* Full mode header - single row RTL layout */
+        .song-full-header {
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-height: 60px;
+            flex-wrap: nowrap;
+            justify-content: space-between;
+            padding: 12px 20px;
+            overflow: visible;
+            z-index: 10;
+        }
+
+        /* Left section - holds mechaber and wave together */
+        .song-full-left-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+
+        /* Title on the right (RTL) */
+        .song-full-title-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        /* Tags in center - absolutely positioned to stay truly centered */
+        .song-full-tags-center {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            max-width: 60%;
+            pointer-events: auto;
+        }
+
+        /* White dot divider between tag groups */
+        .song-full-tag-divider {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9em;
+            margin: 0 4px;
+        }
+
+        /* Inline mechaber for full mode - small horizontal pill */
+        .song-full-mechaber-inline {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px 4px 4px;
+            background: var(--color-mechaber);
+            border-radius: 20px;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-left: 0;
+        }
+
+        .song-full-mechaber-inline:hover {
+            transform: scale(1.03);
+            box-shadow: 0 3px 10px rgba(156, 91, 181, 0.3);
+        }
+
+        .song-full-mechaber-inline .mechaber-avatar-small {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: white;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .song-full-mechaber-inline .mechaber-avatar-small img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .song-full-mechaber-inline .mechaber-avatar-small .placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-mechaber-pale) 0%, var(--color-mechaber-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .song-full-mechaber-inline .mechaber-avatar-small .mechaber-icon {
+            width: 12px;
+            height: 18px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+        }
+
+        .song-full-mechaber-inline .mechaber-name-small {
+            font-size: 11px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        /* Mechaber profile in full mode - like modal (for legacy/fallback) */
+        .song-full-mechaber-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 16px;
+            background: var(--color-mechaber-pale);
+            border-radius: 25px;
+            text-decoration: none;
+            color: var(--color-mechaber-dark);
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .song-full-mechaber-profile:hover {
+            background: var(--color-mechaber-light);
+            color: white;
+            transform: scale(1.02);
+        }
+
+        .song-full-mechaber-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            overflow: hidden;
+            background: var(--color-mechaber-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .song-full-mechaber-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .song-full-mechaber-avatar .placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--color-mechaber-pale);
+        }
+
+        .song-full-mechaber-avatar .placeholder .mechaber-icon {
+            width: 18px;
+            height: 18px;
+            background: var(--color-mechaber);
+            mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E") center/contain no-repeat;
+            -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z'/%3E%3C/svg%3E") center/contain no-repeat;
+        }
+
+        .song-full-mechaber-name {
+            font-size: 0.9em;
+            font-weight: 600;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.2;
+        }
+
+        .song-full-mechaber-name .mechaber-formal {
+            font-size: 0.75em;
+            opacity: 0.8;
+            font-weight: 500;
+        }
+
+        .song-full-mechaber-name .mechaber-known {
+            font-weight: 700;
+        }
+
+        /* Chatzeros tags in full mode */
+        .song-full-chatzeros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .song-full-chatzeros .chatzer-tag {
+            padding: 6px 14px;
+            background: var(--color-chatzer-pale);
+            color: var(--color-chatzer-dark);
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .song-full-chatzeros .chatzer-tag:hover {
+            background: var(--color-chatzer);
+            color: white;
+        }
+
+        /* Simple tags row for full mode */
+        .song-full-tags-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 12px 16px;
+            background: white;
+            justify-content: center;
+        }
+
+        /* Details grid inside full mode - smaller version */
+        .song-full-body .nigun-details-grid {
+            margin: 8px 0;
+            gap: 12px 10px;
+        }
+
+        .song-full-body .nigun-detail-box {
+            min-width: 70px;
+            max-width: 120px;
+            min-height: 50px;
+            padding: 6px 10px;
+        }
+
+        .song-full-body .nigun-detail-box-header {
+            font-size: 0.65em;
+            padding: 3px 6px;
+        }
+
+        .song-full-body .nigun-detail-box-content {
+            padding-top: 20px;
+            font-size: 0.85em;
+        }
+
+        .song-full-body .nigun-detail-siman-bar {
+            margin: 8px auto;
+            padding: 10px 16px;
+            max-width: 100%;
+        }
+
+        /* Song full hero - extends nigun-modal-hero */
+        .song-full-hero {
+            position: relative;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .song-full-hero .nigun-modal-hero-title {
+            font-size: 1.3em;
+            margin-bottom: 8px;
+        }
+
+        .song-full-number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85em;
+        }
+
+        /* Adjust hero-bottom for song-full */
+        .song-item-full-card .nigun-modal-hero-bottom {
+            background: white;
+            padding: 12px 16px;
+        }
+
         .song-item-recordings {
             border-top: none;
             padding: 12px 20px 16px;
@@ -10794,6 +11108,13 @@
             box-shadow: var(--card-shadow);
         }
 
+        /* When full mode, make the container transparent */
+        .songs-card.full-mode-active {
+            background: transparent;
+            box-shadow: none;
+            padding: 0;
+        }
+
         .filters-container {
             max-width: 700px;
             margin: 0 auto 20px auto;
@@ -10807,7 +11128,7 @@
         .all-songs-grid {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 16px;
             min-height: 300px;
         }
 
@@ -18219,6 +18540,16 @@
             // Update toggle UI
             updateDisplayToggleSlider(mode);
 
+            // Toggle full-mode-active class on songs-card
+            const songsCard = document.querySelector('.songs-card');
+            if (songsCard) {
+                if (mode === 'full') {
+                    songsCard.classList.add('full-mode-active');
+                } else {
+                    songsCard.classList.remove('full-mode-active');
+                }
+            }
+
             // Update display with animation
             if (currentPageView === 'songs') {
                 updateSongsListWithAnimation();
@@ -22771,85 +23102,85 @@
 
             // === FULL MODE - show all available info ===
             if (displayMode === 'full') {
-                // Build additional info sections with colorful tags like detail page
-                let extraInfo = [];
+                // Build details grid with card boxes like nigun modal preview
+                let detailBoxes = [];
 
-                // Verter (lyrics) - purple/verter color with tooltip
+                // Verter (lyrics) - card boxes
                 if (song.verter) {
-                    const verterTags = song.verter.split(',').map(v => v.trim()).filter(Boolean).map(v => `
-                        <span class="nigun-tag-inline tag-verter" 
-                              data-action="detail" 
-                              data-category="verter" 
-                              data-name="${escapeHtml(v)}"
-                              data-tooltip-value="${escapeHtml(v)}"
-                              data-tooltip-type="verter"
-                              onclick="event.stopPropagation(); navigateToDetail('verter', '${escapeHtml(v).replace(/'/g, "\\'")}');">${v}</span>
-                    `).join('');
-                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">ווערטער:</span><div class="song-full-tags">${verterTags}</div></div>`);
+                    song.verter.split(',').map(v => v.trim()).filter(Boolean).forEach(v => {
+                        detailBoxes.push(`
+                            <div class="nigun-detail-box box-verter" data-action="detail" data-category="verter" data-name="${escapeHtml(v)}" data-tooltip-value="${escapeHtml(v)}" data-tooltip-type="verter" onclick="event.stopPropagation(); navigateToDetail('verter', '${escapeHtml(v).replace(/'/g, "\\'")}');">
+                                <div class="nigun-detail-box-header">ווערטער</div>
+                                <div class="nigun-detail-box-content">${v}</div>
+                            </div>
+                        `);
+                    });
                 }
 
-                // Collections - collection color with tooltip
-                if (song.collections) {
-                    const collectionTags = song.collections.split(',').map(c => c.trim()).filter(Boolean).map(c => `
-                        <span class="nigun-tag-inline tag-collection" 
-                              data-action="detail" 
-                              data-category="collections" 
-                              data-name="${escapeHtml(c)}"
-                              data-tooltip-value="${escapeHtml(c)}"
-                              data-tooltip-type="collection"
-                              onclick="event.stopPropagation(); navigateToDetail('collections', '${escapeHtml(c).replace(/'/g, "\\'")}');">${c}</span>
-                    `).join('');
-                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">קאלעקשאנס:</span><div class="song-full-tags">${collectionTags}</div></div>`);
-                }
-
-                // Pasig Oif (suitable for) - zman/piyut color with tooltip
-                if (song.pasigOif) {
-                    const pasigTags = song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).map(p => `
-                        <span class="nigun-tag-inline tag-piyut" 
-                              data-action="detail" 
-                              data-category="piyutim"
-                              data-name="${escapeHtml(p)}"
-                              data-tooltip-value="${escapeHtml(p)}"
-                              data-tooltip-type="piyut"
-                              onclick="event.stopPropagation(); navigateToDetail('piyutim', '${escapeHtml(p).replace(/'/g, "\\'")}');">${p}</span>
-                    `).join('');
-                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">פאסיג אויף:</span><div class="song-full-tags">${pasigTags}</div></div>`);
-                }
-
-                // Scale - music color with tooltip
+                // Scale - card box
                 if (song.scale) {
-                    const scaleTags = song.scale.split(',').map(s => s.trim()).filter(Boolean).map(s => `
-                        <span class="nigun-tag-inline tag-scale" 
-                              data-action="filter" 
-                              data-page="nigunim"
-                              data-filter-key="scale"
-                              data-value="${escapeHtml(s)}"
-                              data-tooltip-value="${escapeHtml(s)}"
-                              data-tooltip-type="scale"
-                              onclick="event.stopPropagation(); navigateToWithFilter('music', 'scale', '${escapeHtml(s).replace(/'/g, "\\'")}');">${s}</span>
-                    `).join('');
-                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סקעיל:</span><div class="song-full-tags">${scaleTags}</div></div>`);
+                    detailBoxes.push(`
+                        <div class="nigun-detail-box box-scale" data-action="filter" data-page="music" data-filter-key="scale" data-value="${escapeHtml(song.scale)}" onclick="event.stopPropagation(); navigateToWithFilter('music', 'scale', '${escapeHtml(song.scale).replace(/'/g, "\\'")}');">
+                            <div class="nigun-detail-box-header">סקעיל</div>
+                            <div class="nigun-detail-box-content">${song.scale}</div>
+                        </div>
+                    `);
                 }
 
-                // Ritem - music color with tooltip
+                // Ritem - card box
                 if (song.ritem) {
-                    const ritemTags = song.ritem.split(',').map(r => r.trim()).filter(Boolean).map(r => `
-                        <span class="nigun-tag-inline tag-ritem" 
-                              data-action="filter" 
-                              data-page="nigunim"
-                              data-filter-key="ritem"
-                              data-value="${escapeHtml(r)}"
-                              data-tooltip-value="${escapeHtml(r)}"
-                              data-tooltip-type="ritem"
-                              onclick="event.stopPropagation(); navigateToWithFilter('music', 'ritem', '${escapeHtml(r).replace(/'/g, "\\'")}');">${r}</span>
-                    `).join('');
-                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">ריטעם:</span><div class="song-full-tags">${ritemTags}</div></div>`);
+                    detailBoxes.push(`
+                        <div class="nigun-detail-box box-ritem" data-action="filter" data-page="music" data-filter-key="ritem" data-value="${escapeHtml(song.ritem)}" onclick="event.stopPropagation(); navigateToWithFilter('music', 'ritem', '${escapeHtml(song.ritem).replace(/'/g, "\\'")}');">
+                            <div class="nigun-detail-box-header">ריטעם</div>
+                            <div class="nigun-detail-box-content">${song.ritem}</div>
+                        </div>
+                    `);
                 }
 
-                // Siman - simple tag
-                if (song.siman) {
-                    extraInfo.push(`<div class="song-full-row"><span class="song-full-label">סימן:</span><span class="nigun-tag-inline tag-siman">${formatDescription(song.siman)}</span></div>`);
+                // Pasig Oif - card boxes
+                if (song.pasigOif) {
+                    song.pasigOif.split(',').map(p => p.trim()).filter(Boolean).forEach(p => {
+                        detailBoxes.push(`
+                            <div class="nigun-detail-box box-pasig" data-action="detail" data-category="piyutim" data-name="${escapeHtml(p)}" data-tooltip-value="${escapeHtml(p)}" data-tooltip-type="piyut" onclick="event.stopPropagation(); navigateToDetail('piyutim', '${escapeHtml(p).replace(/'/g, "\\'")}');">
+                                <div class="nigun-detail-box-header">פאסיג אויף</div>
+                                <div class="nigun-detail-box-content">${p}</div>
+                            </div>
+                        `);
+                    });
                 }
+
+                // Collections - card boxes
+                if (song.collections) {
+                    song.collections.split(',').map(c => c.trim()).filter(Boolean).forEach(c => {
+                        detailBoxes.push(`
+                            <div class="nigun-detail-box box-collections" data-action="detail" data-category="collections" data-name="${escapeHtml(c)}" data-tooltip-value="${escapeHtml(c)}" data-tooltip-type="collection" onclick="event.stopPropagation(); navigateToDetail('collections', '${escapeHtml(c).replace(/'/g, "\\'")}');">
+                                <div class="nigun-detail-box-header">קאלעקשאנס</div>
+                                <div class="nigun-detail-box-content">${c}</div>
+                            </div>
+                        `);
+                    });
+                }
+
+                // Build the details grid HTML
+                const detailsGridHtml = detailBoxes.length > 0 ? `
+                    <div class="nigun-details-grid song-full-grid">
+                        <div class="nigun-details-row">
+                            ${detailBoxes.join('')}
+                        </div>
+                    </div>
+                ` : '';
+
+                // Siman bar - styled like modal
+                const simanHtml = song.siman ? `
+                    <div class="nigun-detail-siman-bar">
+                        <span class="nigun-detail-siman-label">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16">
+                                <path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7zm2.85 11.1l-.85.6V16h-4v-2.3l-.85-.6A4.997 4.997 0 0 1 7 9c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.63-.8 3.16-2.15 4.1z"/>
+                            </svg>
+                        </span>
+                        <span class="nigun-detail-siman-text">${formatDescription(song.siman)}</span>
+                    </div>
+                ` : '';
 
                 // Recordings section with more info
                 let recordingsHtml = '';
@@ -22916,17 +23247,93 @@
                         </div>
                     `;
                 }
+                // Get first mechaber for the hero profile (like modal)
+                const firstMechaber = song.mechaber ? song.mechaber.split(',')[0].trim() : null;
+                const firstMechaberInfo = firstMechaber ? mechabrimInfo[firstMechaber] : null;
+                const firstMechaberId = firstMechaberInfo?.customId || firstMechaber;
+
+                // Build mechaber name HTML like modal
+                let mechaberNameHtml = firstMechaber || '';
+                if (firstMechaberInfo) {
+                    const info = firstMechaberInfo;
+                    const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                    const formalName = formalParts.join(' ');
+                    if (info.gerufen) {
+                        const knownParts = [info.gerufen, info.platz].filter(Boolean);
+                        const knownName = knownParts.join(' ');
+                        mechaberNameHtml = `<span class="mechaber-formal">${formalName}</span><span class="mechaber-known">${knownName}</span>`;
+                    } else {
+                        const fullNameParts = [info.title, info.firstName, info.lastName, info.platz].filter(Boolean);
+                        const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : firstMechaber;
+                        mechaberNameHtml = `<span class="mechaber-known">${fullName}</span>`;
+                    }
+                }
+
+                // Build mechaber profile HTML - same as modal
+                const mechaberProfileHtml = firstMechaber ? `
+                    <a class="nigun-modal-mechaber-profile" href="#/mechabrim/${encodeURIComponent(firstMechaberId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(firstMechaber)}" onclick="event.stopPropagation();">
+                        <div class="nigun-modal-mechaber-avatar">
+                            ${firstMechaberInfo?.image
+                        ? `<img src="${firstMechaberInfo.image}" alt="${firstMechaber}">`
+                        : `<div class="placeholder"><div class="mechaber-icon"></div></div>`
+                    }
+                        </div>
+                        <span class="nigun-modal-mechaber-name">${mechaberNameHtml}</span>
+                    </a>
+                ` : '';
+
+                // Parse chatzeros, personalities and maure for tags row
+                const chatzeros = song.category ? song.category.split(',').map(c => c.trim()).filter(Boolean) : [];
+                const personalities = song.personalities ? song.personalities.split(',').map(p => p.trim()).filter(Boolean) : [];
+                const maureList = song.maure ? song.maure.split(',').map(m => m.trim()).filter(Boolean) : [];
+
+                // Build tags groups with dividers between them
+                const chatzerosHtml = chatzeros.map(chatzer => {
+                    const cInfo = chatzerosInfo[chatzer] || {};
+                    const cId = cInfo.customId || chatzer;
+                    return `<a class="chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}" onclick="event.stopPropagation();">${chatzer}</a>`;
+                }).join('');
+
+                const personalitiesHtml = personalities.map(p => {
+                    const pInfo = mechabrimInfo[p] || {};
+                    const pId = pInfo.customId || p;
+                    return `<a class="personality-tag" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(p)}" onclick="event.stopPropagation();">${p}</a>`;
+                }).join('');
+
+                const maureHtml = maureList.map(m => `<span class="maure-tag" onclick="event.stopPropagation(); navigateToDetail('piyutim', '${escapeHtml(m).replace(/'/g, "\\'")}');">${m}</span>`).join('');
+
+                // Build inline tags with dividers (for centered section) - personalities first
+                const tagGroups = [];
+                if (personalitiesHtml) tagGroups.push(personalitiesHtml);
+                if (chatzerosHtml) tagGroups.push(chatzerosHtml);
+                if (maureHtml) tagGroups.push(maureHtml);
+                const centeredTagsHtml = tagGroups.length > 0 ?
+                    `<div class="song-full-tags-center">${tagGroups.join('<span class="song-full-tag-divider">•</span>')}</div>` :
+                    '<div class="song-full-tags-center"></div>';
+
+                // Build inline mechaber (not absolute positioned stripe)
+                const inlineMechaberHtml = firstMechaber ? `
+                    <a class="song-full-mechaber-inline" href="#/mechabrim/${encodeURIComponent(firstMechaberId)}" onclick="event.stopPropagation(); navigateToDetail('mechabrim', '${escapeHtml(firstMechaberId).replace(/'/g, "\\'")}');">
+                        <div class="mechaber-avatar-small">
+                            ${firstMechaberInfo?.image ? `<img src="${firstMechaberInfo.image}" alt="${escapeHtml(firstMechaber)}">` : `<div class="placeholder"><div class="mechaber-icon"></div></div>`}
+                        </div>
+                        <span class="mechaber-name-small">${firstMechaber}</span>
+                    </a>
+                ` : '';
+
                 return `
                     <div class="song-item song-item-full ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
-                        <div class="song-item-header">
-                            <div class="song-number">${displayNum}</div>
-                            <div class="song-info">
+                        <div class="song-item-header song-full-header">
+                            <div class="song-full-title-right">
+                                <div class="song-number">${displayNum}</div>
                                 <div class="song-name">${song.name}</div>
-                                <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                             </div>
-                            ${waveHtml}
+                            ${centeredTagsHtml}
+                            <div class="song-full-left-section">
+                                ${inlineMechaberHtml}
+                                ${waveHtml}
+                            </div>
                         </div>
-                        ${extraInfo.length > 0 ? `<div class="song-full-details">${extraInfo.join('')}</div>` : ''}
                         ${recordingsHtml}
                     </div>
                 `;
