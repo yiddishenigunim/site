@@ -6739,7 +6739,7 @@
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
-        /* Siman box - styled like info-box */
+        /* Siman box - styled like info-box - GRAY THEME */
         .nigun-detail-siman-bar {
             display: flex;
             flex-direction: column;
@@ -6747,15 +6747,15 @@
             text-align: center;
             gap: 8px;
             padding: 15px 20px;
-            background: var(--color-nigun-pale);
+            background: #f5f5f5;
             border-radius: 12px;
             margin: 20px auto;
             max-width: 600px;
-            border: 1.5px solid var(--color-nigun-dark);
+            border: 1.5px solid #d0d0d0;
         }
 
         .nigun-detail-siman-label {
-            color: var(--color-nigun);
+            color: #666666;
             font-size: 1em;
             font-weight: bold;
             flex-shrink: 0;
@@ -6764,7 +6764,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--color-nigun-light);
+            background: #e0e0e0;
             border-radius: 50%;
             font-style: normal;
             margin-top: -29px;
@@ -6774,7 +6774,7 @@
 
         .nigun-detail-siman-text {
             font-size: 0.85em;
-            color: var(--text-secondary);
+            color: #555555;
             line-height: 1.6;
         }
 
@@ -9823,7 +9823,7 @@
             background: var(--color-nigun-pale);
             border: none;
             box-shadow: 0 2px 8px rgba(74, 124, 201, 0.1);
-            transition: box-shadow 0.3s ease;
+            transition: all 0.4s ease;
             position: relative;
         }
 
@@ -9887,8 +9887,44 @@
             color: var(--color-nigun-dark);
         }
 
-        /* Active song item - NO visual change, only the recording row gets blue */
-        /* (Active class is added for functionality, but card stays normal) */
+        /* Active song item in minimal mode - dark blue background with fade */
+        .song-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--color-nigun);
+            border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .song-item.active::before {
+            opacity: 1;
+        }
+
+        .song-item.active {
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.4);
+        }
+
+        /* Ensure content is above the overlay */
+        .song-item>* {
+            position: relative;
+            z-index: 1;
+        }
+
+        .song-item.active .song-name {
+            color: white;
+        }
+
+        .song-item.active .song-meta {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
         .song-item.active::after {
             opacity: 0 !important;
         }
@@ -9925,6 +9961,7 @@
             overflow: hidden;
             text-overflow: ellipsis;
             color: var(--color-nigun-dark);
+            transition: color 0.4s ease;
         }
 
         .song-meta {
@@ -9932,6 +9969,7 @@
             flex-wrap: wrap;
             gap: 4px;
             align-items: center;
+            transition: color 0.4s ease;
         }
 
         .song-meta-link {
@@ -10074,12 +10112,34 @@
          * 4. Active recording: White with blue glow
          */
 
-        /* === ACTIVE RECORDING - Dark blue with white text === */
-        .song-item-recording.active-recording {
-            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-nigun) 100%);
+        /* === ACTIVE RECORDING - Dark blue with white text and fade === */
+        .song-item-recording::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--color-nigun);
             border-radius: 10px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .song-item-recording.active-recording::before {
+            opacity: 1;
+        }
+
+        .song-item-recording.active-recording {
             box-shadow: 0 4px 15px rgba(74, 124, 201, 0.4);
-            transition: all 0.4s ease;
+        }
+
+        /* Ensure content is above the overlay */
+        .song-item-recording>* {
+            position: relative;
+            z-index: 1;
         }
 
         /* Active recording hover - just shadow, no border animation */
@@ -10088,7 +10148,6 @@
         }
 
         .song-item-recording.active-recording:hover {
-            background: linear-gradient(135deg, var(--color-nigun-dark) 0%, var(--color-nigun) 100%) !important;
             box-shadow: 0 6px 20px rgba(74, 124, 201, 0.5);
         }
 
@@ -10153,7 +10212,7 @@
             justify-content: center;
             gap: 2px;
             height: 20px;
-            margin-right: 8px;
+            flex-shrink: 0;
         }
 
         .wave-bar {
@@ -10196,10 +10255,17 @@
             }
         }
 
-        /* Paused state - wave bars stay still */
+        /* Paused state - wave bars freeze in place */
         .song-item.active.paused .wave-bar,
         .song-wave-animation.paused .wave-bar {
             animation-play-state: paused;
+        }
+
+        /* Loading state - wave bars equal size before audio starts */
+        .song-wave-animation.loading .wave-bar {
+            animation: none;
+            height: 12px !important;
+            transform: scaleY(1) !important;
         }
 
         /* Expanded song item (recordings mode) */
@@ -10262,10 +10328,9 @@
             color: white;
         }
 
-        /* Wave animation color for light headers */
-        .song-item-expanded .song-item-header .song-wave-animation .wave-bar,
-        .song-item-full .song-item-header .song-wave-animation .wave-bar {
-            background: var(--color-nigun);
+        /* Wave animation white for active recordings */
+        .song-item-recording.active-recording .song-wave-animation .wave-bar {
+            background: white !important;
         }
 
         /* === NO AUDIO - Songs without recordings get light blue header === */
@@ -10611,9 +10676,9 @@
         }
 
         .tag-siman {
-            background: #fff3e0 !important;
-            color: #e65100 !important;
-            border-color: #ffcc80 !important;
+            background: #f0f0f0 !important;
+            color: #666666 !important;
+            border-color: #d0d0d0 !important;
         }
 
         /* Date styling */
@@ -11158,6 +11223,33 @@
             transition: var(--transition-smooth);
             display: flex;
             align-items: center;
+            position: relative;
+        }
+
+        /* ::before overlay for fade transition */
+        .modal-recording-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--color-nigun);
+            border-radius: 12px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .modal-recording-item.active::before {
+            opacity: 1;
+        }
+
+        /* Ensure content is above overlay */
+        .modal-recording-item>* {
+            position: relative;
+            z-index: 1;
         }
 
         .modal-recording-item:hover {
@@ -11166,7 +11258,7 @@
         }
 
         .modal-recording-item.active {
-            background: var(--primary);
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.4);
         }
 
         .modal-recording-item.active .modal-recording-name {
@@ -14165,7 +14257,7 @@
     <!-- Player Show Button (when minimized) -->
     <button class="player-show-btn" id="playerShowBtn" onclick="showPlayerBanner()">
         <span id="showBtnSongName">ווייז פלעיער</span>
-        <div class="song-wave-animation">
+        <div class="song-wave-animation loading">
             <span class="wave-bar"></span>
             <span class="wave-bar"></span>
             <span class="wave-bar"></span>
@@ -17453,6 +17545,37 @@
             if (filtersContainer) {
                 filtersContainer.innerHTML = getSongsFiltersHTML();
             }
+
+            // Update filter button active state
+            const totalActiveFilters = Object.values(activeFilters).reduce((sum, arr) => sum + arr.length, 0);
+            const filterBtn = document.querySelector('#filterPanelDropdown .filter-panel-btn');
+            if (filterBtn) {
+                if (totalActiveFilters > 0) {
+                    filterBtn.classList.add('has-active');
+                    // Update count badge
+                    let countBadge = filterBtn.querySelector('.filter-count');
+                    if (!countBadge) {
+                        countBadge = document.createElement('span');
+                        countBadge.className = 'filter-count';
+                        filterBtn.appendChild(countBadge);
+                    }
+                    countBadge.textContent = totalActiveFilters;
+                } else {
+                    filterBtn.classList.remove('has-active');
+                    const countBadge = filterBtn.querySelector('.filter-count');
+                    if (countBadge) countBadge.remove();
+                }
+            }
+
+            // Update search button active state
+            const searchBtn = document.querySelector('#searchPanelDropdown .filter-panel-btn');
+            if (searchBtn) {
+                if (searchQuery) {
+                    searchBtn.classList.add('has-active');
+                } else {
+                    searchBtn.classList.remove('has-active');
+                }
+            }
         }
 
         // Render all songs page
@@ -17550,14 +17673,14 @@
                 return;
             }
 
-            const symbols = ['♩', '♪', '♫', '♬', '𝄞'];
+            const symbols = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
             const noteCount = 35; // More notes
             let html = '';
 
             for (let i = 0; i < noteCount; i++) {
                 const symbol = symbols[Math.floor(Math.random() * symbols.length)];
                 const size = 50 + Math.random() * 70; // 50-120px
-                const duration = 25 + Math.random() * 35; // Much slower: 25-60s
+                const duration = 90 + Math.random() * 60; // Ultra slow: 90-150s
                 const delay = Math.random() * duration;
                 const rot = (Math.random() * 40 - 20) + 'deg';
 
@@ -17573,7 +17696,7 @@
 
                 // Random wander class for subtle movement
                 const wanderClass = `wander-${Math.floor(Math.random() * 3) + 1}`;
-                const wanderDuration = 15 + Math.random() * 10; // 15-25s wander cycle - slow and calm
+                const wanderDuration = 40 + Math.random() * 20; // 40-60s wander cycle - ultra slow and calm
 
                 html += `
                     <div class="note-wrapper" style="--end-x: ${endX}; --end-y: ${endY}; animation-duration: ${duration}s; animation-delay: -${delay}s;">
@@ -22447,8 +22570,9 @@
                 : `playSong(${globalIdx})`;
 
             // Wave animation for currently playing song
+            // Use 'loading' class for equal-height bars until audio starts
             const waveAnimation = isActive ? `
-                <div class="song-wave-animation">
+                <div class="song-wave-animation loading">
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
@@ -23004,9 +23128,9 @@
 
             // Update player play button
             document.getElementById('playPauseBtn').classList.add('playing');
-            // Remove paused state from player show button wave
+            // Only remove paused state from player show button wave if audio is actually playing
             const playerShowWave = document.querySelector('#playerShowBtn .song-wave-animation');
-            if (playerShowWave) {
+            if (playerShowWave && !audioPlayer.paused) {
                 playerShowWave.classList.remove('paused');
             }
         }
@@ -23037,13 +23161,9 @@
                     // Add wave animation if not already present
                     if (!activeItem.querySelector('.song-wave-animation')) {
                         const waveDiv = document.createElement('div');
-                        waveDiv.className = 'song-wave-animation';
-                        waveDiv.innerHTML = `
-                            <span class="wave-bar"></span>
-                            <span class="wave-bar"></span>
-                            <span class="wave-bar"></span>
-                            <span class="wave-bar"></span>
-                        `;
+                        // Use 'loading' class for equal-height bars until audio starts
+                        waveDiv.className = 'song-wave-animation loading';
+                        waveDiv.innerHTML = '<span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span><span class="wave-bar"></span>';
 
                         // For expanded/full items, insert into header
                         const header = activeItem.querySelector('.song-item-header');
@@ -23238,7 +23358,8 @@
             updatePlayState(false);
         });
 
-        audioPlayer.addEventListener('play', () => {
+        // 'playing' event fires when audio actually starts (after buffering/loading)
+        audioPlayer.addEventListener('playing', () => {
             updatePlayState(true);
         });
 
@@ -23257,6 +23378,7 @@
             // Update wave animation in player-show-btn (pause when audio paused)
             if (playerShowWave) {
                 if (isPlaying) {
+                    playerShowWave.classList.remove('loading');
                     playerShowWave.classList.remove('paused');
                 } else {
                     playerShowWave.classList.add('paused');
@@ -23290,6 +23412,19 @@
                     activeItem.classList.add('paused');
                 }
 
+                // Update wave animation in song list (pause/unpause based on play state)
+                const songWave = activeItem?.querySelector('.song-wave-animation');
+                if (songWave) {
+                    if (isPlaying) {
+                        // Remove both loading and paused when audio starts
+                        songWave.classList.remove('loading');
+                        songWave.classList.remove('paused');
+                    } else {
+                        // Add paused class to freeze animation in place
+                        songWave.classList.add('paused');
+                    }
+                }
+
                 // Update active recording button
                 const activeRecBtn = document.querySelector(`.rec-play-btn[data-song-idx="${currentSongIndex}"][data-rec-idx="${currentRecordingIndex}"]`);
                 if (activeRecBtn && isPlaying) {
@@ -23300,6 +23435,17 @@
                 const activeRecRow = document.querySelector(`.song-item-recording[data-song-idx="${currentSongIndex}"][data-rec-idx="${currentRecordingIndex}"]`);
                 if (activeRecRow) {
                     activeRecRow.classList.add('active-recording');
+
+                    // Update wave animation in recording row
+                    const recWave = activeRecRow.querySelector('.song-wave-animation');
+                    if (recWave) {
+                        if (isPlaying) {
+                            recWave.classList.remove('loading');
+                            recWave.classList.remove('paused');
+                        } else {
+                            recWave.classList.add('paused');
+                        }
+                    }
                 }
             }
         }
