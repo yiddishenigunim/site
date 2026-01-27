@@ -3624,13 +3624,13 @@
             border-radius: 0 0 30px 30px;
             /* Square top, rounded bottom */
             box-shadow: var(--card-shadow);
-            margin-bottom: 25px;
-            overflow: hidden;
+            margin-bottom: 0;
+            overflow: visible;
             position: sticky;
             top: 0;
             z-index: 99;
             text-align: center;
-            padding: 40px 25px 50px 25px;
+            padding: 20px 25px 15px 25px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -3677,6 +3677,250 @@
             width: 100%;
             order: 1;
             /* Show first */
+        }
+
+        /* Filters container inside page-title */
+        .page-title-filters {
+            display: none;
+        }
+
+        /* Sub-header bar for settings/filters */
+        .page-settings-bar {
+            background: var(--color-nigun-pale);
+            padding: 12px 40px;
+            display: flex;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin: 0 auto 25px auto;
+            border-radius: 0 0 25px 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: calc(100% - 40px);
+        }
+
+        .page-settings-bar .detail-filters-group {
+            background: transparent;
+            padding: 0;
+            gap: 12px;
+        }
+
+        .page-settings-bar .detail-filter-dropdown {
+            width: 130px;
+        }
+
+        .page-settings-bar .filter-panel-dropdown {
+            width: 130px;
+        }
+
+        .page-settings-bar .detail-filter-current {
+            background: white;
+            color: var(--color-nigun-dark);
+            padding: 7px 12px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+
+        .page-settings-bar .detail-filter-current:hover,
+        .page-settings-bar .detail-filter-dropdown:hover .detail-filter-current {
+            background: var(--color-nigun);
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-settings-bar .filter-panel-btn {
+            background: white;
+            color: var(--color-nigun-dark);
+            border: none;
+            padding: 7px 12px;
+            border-radius: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: all 0.15s ease;
+        }
+
+        .page-settings-bar .filter-panel-btn:hover,
+        .page-settings-bar .filter-panel-dropdown:hover .filter-panel-btn {
+            background: var(--color-nigun);
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Search button - transparent with border */
+        .page-settings-bar .search-trigger-btn {
+            background: transparent;
+            color: var(--color-nigun-dark);
+            border: 2px solid var(--color-nigun);
+            padding: 7px 35px;
+            border-radius: 6px;
+            font-size: 0.85em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-width: 140px;
+        }
+
+        .page-settings-bar .search-trigger-btn:hover {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .page-settings-bar .search-trigger-btn.has-active {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        /* Expandable search container */
+        .page-settings-bar .expandable-search {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 12px;
+            z-index: 10;
+        }
+
+        .page-settings-bar .expandable-search-input {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            max-width: 100px;
+            opacity: 0;
+            background: var(--color-nigun);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 9px 40px 9px 15px;
+            font-size: 0.9em;
+            font-weight: 500;
+            transition: max-width 0.3s ease, opacity 0.2s ease;
+            pointer-events: none;
+            text-align: right;
+        }
+
+        .page-settings-bar .expandable-search-input::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .page-settings-bar .expandable-search.expanded .expandable-search-input {
+            max-width: 800px;
+            width: calc(90vw - 80px);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .page-settings-bar .expandable-search.expanded .search-trigger-btn {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .page-settings-bar .search-close-btn {
+            position: absolute;
+            left: calc(50% + 350px);
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2em;
+            cursor: pointer;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        .page-settings-bar .expandable-search.expanded .search-close-btn {
+            left: calc(50% + min(45vw - 40px, 400px) - 30px);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .page-settings-bar .search-close-btn:hover {
+            color: white;
+        }
+
+        .page-settings-bar .detail-filter-options,
+        .page-settings-bar .filter-panel-content {
+            z-index: 1000;
+        }
+
+        .page-title-filters .detail-filter-dropdown {
+            width: 120px;
+        }
+
+        .page-title-filters .filter-panel-dropdown {
+            width: 120px;
+        }
+
+        .page-title-filters #searchPanelDropdown {
+            width: 150px;
+        }
+
+        .page-title-filters .detail-filter-current {
+            background: var(--color-nigun-pale);
+            color: var(--color-nigun-dark);
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            justify-content: center;
+            text-align: center;
+            transition: all 0.15s ease;
+        }
+
+        .page-title-filters .detail-filter-current:hover {
+            background: var(--color-nigun);
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-title-filters .filter-panel-btn {
+            background: var(--color-nigun-pale);
+            color: var(--color-nigun-dark);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 12px;
+            font-size: 0.9em;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+        }
+
+        .page-title-filters .filter-panel-btn:hover {
+            background: var(--color-nigun);
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-title-filters .detail-filter-options,
+        .page-title-filters .filter-panel-content {
+            z-index: 1000;
         }
 
         /* Make tiny loader white inside page-title */
@@ -3880,12 +4124,12 @@
 
         /* Ensure content is above the notes but below header */
         .page-theme-nigun .page-title {
-            z-index: 60;
+            z-index: 100;
         }
 
         .songs-page-layout {
             position: relative;
-            z-index: 60;
+            z-index: 50;
         }
 
         .page-theme-resource {
@@ -17747,6 +17991,31 @@
             const hasActiveFilters = totalActiveFilters > 0 || hasSearch;
 
             return `
+                <!-- Display Mode Filter -->
+                <div class="detail-filter-dropdown">
+                    <div class="detail-filter-current">
+                        <span class="filter-icon">👁</span>
+                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                        'אלעס'
+                }</span>
+                    </div>
+                    <div class="detail-filter-options">
+                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
+                             onclick="changeDisplayMode('minimal');">
+                            קעפל
+                        </div>
+                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
+                             onclick="changeDisplayMode('recordings');">
+                            רעקארדירונגען
+                        </div>
+                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
+                             onclick="changeDisplayMode('full');">
+                            אלעס
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Sort Filter -->
                 <div class="detail-filter-dropdown">
                     <div class="detail-filter-current">
@@ -17772,27 +18041,56 @@
                     </div>
                 </div>
 
-                <!-- Display Mode Filter -->
-                <div class="detail-filter-dropdown">
-                    <div class="detail-filter-current">
-                        <span class="filter-icon">👁</span>
-                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
-                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                        'אלעס'
-                }</span>
-                    </div>
-                    <div class="detail-filter-options">
-                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
-                             onclick="changeDisplayMode('minimal');">
-                            קעפל
+                <!-- Search Button - Expandable -->
+                <div class="expandable-search" id="expandableSearch">
+                    <button class="search-trigger-btn ${hasSearch ? 'has-active' : ''}" onclick="toggleExpandableSearch(event)">
+                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <span>זוך</span>
+                    </button>
+                    <input type="text"
+                           class="expandable-search-input"
+                           id="expandableSearchInput"
+                           placeholder="זוך א ניגון..."
+                           value="${searchQuery || ''}"
+                           oninput="handleLiveSearch(this.value)"
+                           onkeydown="if(event.key==='Escape')closeExpandableSearch()">
+                    <button class="search-close-btn" onclick="closeExpandableSearch()">×</button>
+                </div>
+
+                <!-- Filters Button -->
+                <div class="filter-panel-dropdown" id="filterPanelDropdown">
+                    <button class="filter-panel-btn ${totalActiveFilters > 0 ? 'has-active' : ''}" onclick="toggleFilterPanel(event)">
+                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 21v-7"/>
+                            <path d="M4 10V3"/>
+                            <path d="M12 21v-9"/>
+                            <path d="M12 8V3"/>
+                            <path d="M20 21v-5"/>
+                            <path d="M20 12V3"/>
+                            <circle cx="4" cy="13" r="2"/>
+                            <circle cx="12" cy="9" r="2"/>
+                            <circle cx="20" cy="15" r="2"/>
+                        </svg>
+                        <span>פילטער</span>
+                        ${totalActiveFilters > 0 ? `<span class="filter-count">${totalActiveFilters}</span>` : ''}
+                    </button>
+                    <div class="filter-panel-content" id="filterPanelContent">
+                        <div class="filter-panel-section-title">פילטערס:</div>
+                        <div class="filter-panel-filters">
+                            ${renderFilterPanelItem('collection', 'קאלעקשאנס', categories.collections)}
+                            ${renderFilterPanelItem('chatzer', 'חצר', categories.chatzeros)}
+                            ${renderFilterPanelItem('mechaber', 'מחבר', categories.mechabrim)}
+                            ${renderFilterPanelItem('verter', 'ווערטער', categories.verter)}
+                            ${renderFilterPanelItem('gezungen', 'געזינגען אויף', categories.gezungen)}
+                            ${renderFilterPanelItem('ritem', 'ריטעם', categories.ritem)}
+                            ${renderFilterPanelItem('scale', 'סקעיל', categories.scale)}
                         </div>
-                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
-                             onclick="changeDisplayMode('recordings');">
-                            רעקארדירונגען
-                        </div>
-                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
-                             onclick="changeDisplayMode('full');">
-                            אלעס
+                        
+                        <div class="filter-panel-active-tags" id="filterPanelActiveTags">
+                            ${getActiveFilterTagsHTML()}
                         </div>
                     </div>
                 </div>
@@ -17829,65 +18127,6 @@
                         <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
                              onclick="setMinQualityRating(5);">
                             ★★★★★ שיין, ניי און געשמאק
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Search Button -->
-                <div class="filter-panel-dropdown" id="searchPanelDropdown">
-                    <button class="filter-panel-btn ${hasSearch ? 'has-active' : ''}" onclick="toggleSearchPanel(event)">
-                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="M21 21l-4.35-4.35"/>
-                        </svg>
-                        <span>זוך</span>
-                    </button>
-                    <div class="filter-panel-content search-panel-content" id="searchPanelContent">
-                        <div class="filter-panel-search">
-                            <input type="text"
-                                   id="filterPanelSearchInput"
-                                   class="filter-panel-search-input"
-                                   placeholder="זוך א ניגון..."
-                                   value="${searchQuery || ''}"
-                                   onkeypress="if(event.key==='Enter')handleFilterPanelSearch(this.value)">
-                            ${searchQuery ? '<button class="filter-panel-search-clear" onclick="clearSearch()">×</button>' : ''}
-                            <button class="filter-panel-search-btn" onclick="handleFilterPanelSearch(document.getElementById('filterPanelSearchInput').value)">🔍</button>
-                        </div>
-                        ${searchQuery ? `<div class="filter-panel-active-tags"><span class="filter-panel-tag">🔍 ${searchQuery}<button class="filter-panel-tag-remove" onclick="clearSearch()">×</button></span></div>` : ''}
-                    </div>
-                </div>
-
-                <!-- Filters Button -->
-                <div class="filter-panel-dropdown" id="filterPanelDropdown">
-                    <button class="filter-panel-btn ${totalActiveFilters > 0 ? 'has-active' : ''}" onclick="toggleFilterPanel(event)">
-                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 21v-7"/>
-                            <path d="M4 10V3"/>
-                            <path d="M12 21v-9"/>
-                            <path d="M12 8V3"/>
-                            <path d="M20 21v-5"/>
-                            <path d="M20 12V3"/>
-                            <circle cx="4" cy="13" r="2"/>
-                            <circle cx="12" cy="9" r="2"/>
-                            <circle cx="20" cy="15" r="2"/>
-                        </svg>
-                        <span>פילטער</span>
-                        ${totalActiveFilters > 0 ? `<span class="filter-count">${totalActiveFilters}</span>` : ''}
-                    </button>
-                    <div class="filter-panel-content" id="filterPanelContent">
-                        <div class="filter-panel-section-title">פילטערס:</div>
-                        <div class="filter-panel-filters">
-                            ${renderFilterPanelItem('collection', 'קאלעקשאנס', categories.collections)}
-                            ${renderFilterPanelItem('chatzer', 'חצר', categories.chatzeros)}
-                            ${renderFilterPanelItem('mechaber', 'מחבר', categories.mechabrim)}
-                            ${renderFilterPanelItem('verter', 'ווערטער', categories.verter)}
-                            ${renderFilterPanelItem('gezungen', 'געזינגען אויף', categories.gezungen)}
-                            ${renderFilterPanelItem('ritem', 'ריטעם', categories.ritem)}
-                            ${renderFilterPanelItem('scale', 'סקעיל', categories.scale)}
-                        </div>
-                        
-                        <div class="filter-panel-active-tags" id="filterPanelActiveTags">
-                            ${getActiveFilterTagsHTML()}
                         </div>
                     </div>
                 </div>
@@ -18015,7 +18254,7 @@
 
         // Update songs filters UI only (without re-rendering the whole page)
         function updateSongsFiltersUI() {
-            const filtersContainer = document.querySelector('.songs-card .detail-filters-group');
+            const filtersContainer = document.querySelector('.page-settings-bar .detail-filters-group');
             if (filtersContainer) {
                 filtersContainer.innerHTML = getSongsFiltersHTML();
             }
@@ -18074,15 +18313,15 @@
                         <div class="loading-wave-bar" id="loadingWaveBar"></div>
                     </div>
 
+                    <div class="page-settings-bar">
+                        <div class="detail-filters-group">
+                            ${getSongsFiltersHTML()}
+                        </div>
+                    </div>
+
                     <div class="songs-page-layout">
                         <div class="songs-main-content">
                             <div class="songs-card">
-                                <div style="padding: 15px 20px 10px 20px; display: flex; justify-content: center;">
-                                    <div class="detail-filters-group">
-                                        ${getSongsFiltersHTML()}
-                                    </div>
-                                </div>
-
                                 <div class="all-songs-grid" id="songsGrid">
                                     ${filteredSongs.length === 0 && !songsFullyLoaded ? `
                                         <div class="skeleton-song-row"></div>
@@ -19622,13 +19861,66 @@
             // Clear the input box
             const searchInput = document.getElementById('songsSearchInput');
             if (searchInput) searchInput.value = '';
+            const expandableInput = document.getElementById('expandableSearchInput');
+            if (expandableInput) expandableInput.value = '';
             applyFilters();
             // Re-render to remove the X button
             renderCurrentPage();
         }
 
+        // Expandable search functions
+        function toggleExpandableSearch(event) {
+            event.stopPropagation();
+            const container = document.getElementById('expandableSearch');
+            if (!container) return;
 
+            if (container.classList.contains('expanded')) {
+                closeExpandableSearch();
+            } else {
+                container.classList.add('expanded');
+                const input = document.getElementById('expandableSearchInput');
+                if (input) {
+                    setTimeout(() => input.focus(), 300);
+                }
+            }
+        }
 
+        function closeExpandableSearch() {
+            const container = document.getElementById('expandableSearch');
+            if (container) {
+                container.classList.remove('expanded');
+            }
+        }
+
+        function handleExpandableSearch(value) {
+            searchQuery = value.trim();
+            currentPage = 1;
+            closeExpandableSearch();
+            applyFilters();
+        }
+
+        // Live search with debounce
+        let liveSearchTimeout = null;
+        function handleLiveSearch(value) {
+            if (liveSearchTimeout) {
+                clearTimeout(liveSearchTimeout);
+            }
+            liveSearchTimeout = setTimeout(() => {
+                searchQuery = value.trim();
+                currentPage = 1;
+                applyFilters();
+            }, 200);
+        }
+
+        // Close expandable search when clicking outside
+        document.addEventListener('click', function (event) {
+            const container = document.getElementById('expandableSearch');
+            if (container && container.classList.contains('expanded')) {
+                if (!container.contains(event.target)) {
+                    closeExpandableSearch();
+                }
+            }
+        });
 
 
         // Current detail view
