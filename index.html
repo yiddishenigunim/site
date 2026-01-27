@@ -21418,7 +21418,7 @@
                     return '<div class="song-item-recording" onclick="event.stopPropagation(); playNigunRecording(' + songIdx + ', ' + i + ', this)" data-song-idx="' + songIdx + '" data-rec-idx="' + i + '" data-rating="' + (rec.rating || 0) + '">' +
                         '<div class="song-item-rec-num">' + (i + 1) + '</div>' +
                         '<div class="song-item-rec-info">' +
-                        '<div class="song-item-rec-name">' + displayName + '</div>' +
+                        '<div class="song-item-rec-name">' + formatDescription(displayName) + '</div>' +
                         (recTags.length > 0 ? '<div class="song-item-rec-tags">' + recTags.join('') + '</div>' : '') +
                         '</div>' +
                         recRating +
@@ -23423,7 +23423,7 @@
                                     <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
                                         <div class="song-item-rec-num">${i + 1}</div>
                                         <div class="song-item-rec-info">
-                                            <div class="song-item-rec-name">${displayName}</div>
+                                            <div class="song-item-rec-name">${formatDescription(displayName)}</div>
                                             ${recTags.length > 0 ? `<div class="song-item-rec-tags">${recTags.join('')}</div>` : ''}
                                         </div>
                                         ${recRating}
@@ -23586,7 +23586,7 @@
                                     <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${actualIndex}">
                                         <div class="song-item-rec-num">${actualIndex + 1}</div>
                                         <div class="song-item-rec-info">
-                                            <div class="song-item-rec-name">${displayName}</div>
+                                            <div class="song-item-rec-name">${formatDescription(displayName)}</div>
                                             ${recTags.length > 0 ? `<div class="song-item-rec-tags">${recTags.join('')}</div>` : ''}
                                         </div>
                                         ${recRating}
