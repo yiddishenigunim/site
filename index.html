@@ -9848,6 +9848,7 @@
             pointer-events: none;
             box-sizing: border-box;
             box-shadow: 0 0 15px rgba(74, 124, 201, 0.1);
+            z-index: 10;
         }
 
         .song-item:hover::after {
@@ -9877,15 +9878,6 @@
         .song-item.no-audio:hover {
             opacity: 1;
             box-shadow: 0 6px 20px rgba(74, 124, 201, 0.35);
-        }
-
-        .song-item.no-audio .song-number {
-            background: rgba(74, 124, 201, 0.15);
-            color: var(--color-nigun);
-        }
-
-        .song-item.no-audio .song-name {
-            color: var(--color-nigun-dark);
         }
 
         /* Active song item in minimal mode - dark blue background with fade */
@@ -10375,6 +10367,7 @@
             padding: 0;
             gap: 0;
             overflow: visible;
+            height: 100%;
         }
 
         /* Hover effect for full mode - on the whole card */
@@ -10456,33 +10449,7 @@
             background: white !important;
         }
 
-        /* === NO AUDIO - Songs without recordings get light blue header === */
-        .song-item-expanded.no-audio .song-item-header,
-        .song-item-full.no-audio .song-item-header {
-            background: var(--color-nigun-pale);
-        }
 
-        .song-item-expanded.no-audio .song-item-header .song-name,
-        .song-item-full.no-audio .song-item-header .song-name {
-            color: var(--color-nigun-dark);
-        }
-
-        .song-item-expanded.no-audio .song-item-header .song-meta,
-        .song-item-full.no-audio .song-item-header .song-meta {
-            color: var(--color-nigun);
-        }
-
-        .song-item-expanded.no-audio .song-item-header .song-number,
-        .song-item-full.no-audio .song-item-header .song-number {
-            background: rgba(74, 124, 201, 0.15);
-            color: var(--color-nigun);
-        }
-
-        .song-item-expanded.no-audio .song-item-header .nigun-tag,
-        .song-item-full.no-audio .song-item-header .nigun-tag {
-            background: rgba(74, 124, 201, 0.15);
-            color: var(--color-nigun-dark);
-        }
 
         .song-full-body {
             background: white;
@@ -10794,6 +10761,7 @@
             padding: 12px 20px 16px;
             background: white;
             border-radius: 0 0 12px 12px;
+            flex-grow: 1;
         }
 
         /* Individual recordings - light blue background with border animation */
@@ -11139,10 +11107,132 @@
         }
 
         .all-songs-grid {
-            display: flex;
-            flex-direction: column;
+            display: grid;
             gap: 16px;
             min-height: 300px;
+            grid-template-columns: minmax(0, 1fr);
+            /* Default: full mode - 1 per row */
+        }
+
+        /* Minimal mode - 3 per row */
+        .view-mode-minimal .all-songs-grid {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        /* Recordings mode - 2 per row */
+        .view-mode-recordings .all-songs-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+            align-items: stretch;
+        }
+
+        /* Full mode - 1 per row (default) */
+        .view-mode-full .all-songs-grid {
+            grid-template-columns: minmax(0, 1fr);
+            gap: 16px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 900px) {
+            .view-mode-minimal .all-songs-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .view-mode-recordings .all-songs-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .view-mode-minimal .all-songs-grid,
+            .view-mode-recordings .all-songs-grid,
+            .view-mode-full .all-songs-grid {
+                grid-template-columns: minmax(0, 1fr);
+            }
+        }
+
+        /* Song item adjustments for minimal mode - compact horizontal layout */
+        .view-mode-minimal .song-item {
+            flex-direction: row;
+            align-items: center;
+            padding: 10px 12px;
+            gap: 10px;
+            overflow: visible;
+            /* Keep visible for hover border animation */
+            position: relative;
+            box-shadow: inset 0 0 0 1px rgba(74, 124, 201, 0.3), 0 2px 6px rgba(74, 124, 201, 0.15);
+        }
+
+        .view-mode-minimal .song-item .song-info {
+            position: relative;
+        }
+
+        .view-mode-minimal .song-item .song-number {
+            flex-shrink: 0;
+            width: 24px;
+            height: 24px;
+            font-size: 0.75em;
+        }
+
+        .view-mode-minimal .song-item .song-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 2px;
+            overflow: hidden;
+        }
+
+        .view-mode-minimal .song-item .song-name {
+            font-size: 0.95em;
+            white-space: normal;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            line-height: 1.3;
+            max-height: 2.6em;
+        }
+
+        .view-mode-minimal .song-item .song-meta {
+            font-size: 0.8em;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            opacity: 0.8;
+            width: 100%;
+        }
+
+        .view-mode-minimal .song-item .song-play-btn-new {
+            flex-shrink: 0;
+            width: 28px;
+            height: 28px;
+        }
+
+        .view-mode-minimal .song-item .song-wave-animation {
+            position: absolute;
+            left: 45px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .view-mode-minimal .song-item .song-play-btn-new .play-icon svg,
+        .view-mode-minimal .song-item .song-play-btn-new .pause-icon svg {
+            width: 12px;
+            height: 12px;
+        }
+
+        /* Song meta separator styling */
+        .song-meta-separator {
+            color: var(--color-nigun-dark);
+        }
+
+        /* Hide separator in minimal mode (single line layout) */
+        .view-mode-minimal .song-item .song-meta-separator {
+            display: none;
         }
 
         .all-songs-controls {
@@ -18025,7 +18115,7 @@
             };
 
             container.innerHTML = `
-                <div class="page-theme-nigun">
+                <div class="page-theme-nigun view-mode-${currentDisplayMode}">
                     <div class="songs-floating-notes" id="songsFloatingNotes"></div>
                     <div class="page-title">
                         <div class="page-title-bar">ניגונים</div>
@@ -18561,6 +18651,13 @@
                 } else {
                     songsCard.classList.remove('full-mode-active');
                 }
+            }
+
+            // Toggle view-mode-xxx class on page container for grid layout
+            const pageContainer = document.querySelector('.page-theme-nigun');
+            if (pageContainer) {
+                pageContainer.classList.remove('view-mode-minimal', 'view-mode-recordings', 'view-mode-full');
+                pageContainer.classList.add('view-mode-' + mode);
             }
 
             // Update display with animation
@@ -23046,7 +23143,7 @@
                 }
                 // No recordings = no button (playBtnHtml stays empty)
 
-                return `<div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}"><div class="song-number">${displayNum}</div><div class="song-info"><div class="song-name">${song.name}</div><div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div></div>${waveHtml}${playBtnHtml}</div>`;
+                return `<div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}"><div class="song-number">${displayNum}</div><div class="song-info"><div class="song-name">${song.name}</div><div class="song-meta">${metaParts.join('<span class="song-meta-separator"> • </span>')}</div></div>${waveHtml}${playBtnHtml}</div>`;
             }
 
             if (displayMode === 'recordings') {
