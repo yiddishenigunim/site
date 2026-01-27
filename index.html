@@ -10208,17 +10208,22 @@
         /* Wave Animation for Playing Song */
         /* Hidden by default, shown only for active song */
         .song-wave-animation {
-            display: none;
+            display: inline-flex;
             align-items: center;
             gap: 2px;
             height: 16px;
             margin-left: 8px;
             flex-shrink: 0;
+            opacity: 0;
+            width: 0;
+            overflow: hidden;
+            transition: opacity 0.3s ease, width 0.3s ease, margin 0.3s ease;
         }
 
         /* Show wave only when song-item is active */
         .song-item.active .song-wave-animation {
-            display: inline-flex;
+            opacity: 1;
+            width: 20px;
         }
 
         .wave-bar {
@@ -10496,11 +10501,12 @@
             display: flex;
             align-items: center;
             min-height: 60px;
-            flex-wrap: nowrap;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            justify-content: center;
             padding: 12px 20px;
             overflow: visible;
             z-index: 10;
+            gap: 8px 20px;
         }
 
         /* Left section - holds mechaber and wave together */
@@ -10510,6 +10516,10 @@
             gap: 10px;
             flex-shrink: 0;
             transition: all 0.3s ease;
+            position: absolute;
+            left: 2px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
         /* Title on the right (RTL) */
@@ -10518,21 +10528,31 @@
             align-items: center;
             gap: 10px;
             flex-shrink: 0;
+            max-width: 35%;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
         }
 
-        /* Tags in center - absolutely positioned to stay truly centered */
+        /* Tags in center - use flex */
         .song-full-tags-center {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
             display: flex;
             flex-wrap: wrap;
             align-items: center;
             justify-content: center;
-            gap: 6px;
-            max-width: 60%;
+            gap: 6px 4px;
+            max-width: 50%;
             pointer-events: auto;
+        }
+
+        /* Tag group - keeps same type tags together on wrap */
+        .song-full-tag-group {
+            display: inline-flex;
+            flex-wrap: nowrap;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
         }
 
         /* White dot divider between tag groups */
@@ -10547,7 +10567,7 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            padding: 4px 10px 4px 4px;
+            padding: 2px 2px 2px 14px;
             background: var(--color-mechaber);
             border-radius: 20px;
             text-decoration: none;
@@ -11102,17 +11122,10 @@
 
 
         .songs-card {
-            background: white;
-            border-radius: 16px;
-            padding: 25px;
-            box-shadow: var(--card-shadow);
-        }
-
-        /* When full mode, make the container transparent */
-        .songs-card.full-mode-active {
             background: transparent;
-            box-shadow: none;
+            border-radius: 16px;
             padding: 0;
+            box-shadow: none;
         }
 
         .filters-container {
@@ -18718,6 +18731,16 @@
             toggle.querySelectorAll('.sort-toggle-option').forEach(opt => {
                 opt.classList.toggle('active', opt.dataset.mode === mode);
             });
+
+            // Toggle full-mode-active class on songs-card
+            const songsCard = document.querySelector('.songs-card');
+            if (songsCard) {
+                if (mode === 'full') {
+                    songsCard.classList.add('full-mode-active');
+                } else {
+                    songsCard.classList.remove('full-mode-active');
+                }
+            }
         }
 
         // Apply filters without updating display (for use before animated update)
@@ -23289,31 +23312,27 @@
 
                 // Build tags groups with dividers between them
                 const chatzerosHtml = chatzeros.map(chatzer => {
-                    const cInfo = chatzerosInfo[chatzer] || {};
-                    const cId = cInfo.customId || chatzer;
-                    return `<a class="chatzer-tag" href="#/chatzeros/${encodeURIComponent(cId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(chatzer)}" onclick="event.stopPropagation();">${chatzer}</a>`;
+                    return `<a class="chatzer-tag" href="#" onclick="event.stopPropagation(); event.preventDefault(); navigateToDetail('chatzeros', '${escapeHtml(chatzer).replace(/'/g, "\\'")}');">${chatzer}</a>`;
                 }).join('');
 
                 const personalitiesHtml = personalities.map(p => {
-                    const pInfo = mechabrimInfo[p] || {};
-                    const pId = pInfo.customId || p;
-                    return `<a class="personality-tag" href="#/mechabrim/${encodeURIComponent(pId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(p)}" onclick="event.stopPropagation();">${p}</a>`;
+                    return `<a class="personality-tag" href="#" onclick="event.stopPropagation(); event.preventDefault(); navigateToDetail('mechabrim', '${escapeHtml(p).replace(/'/g, "\\'")}');">${p}</a>`;
                 }).join('');
 
                 const maureHtml = maureList.map(m => `<span class="maure-tag" onclick="event.stopPropagation(); navigateToDetail('piyutim', '${escapeHtml(m).replace(/'/g, "\\'")}');">${m}</span>`).join('');
 
-                // Build inline tags with dividers (for centered section) - personalities first
+                // Build inline tags - each group wrapped in its own container
                 const tagGroups = [];
-                if (personalitiesHtml) tagGroups.push(personalitiesHtml);
-                if (chatzerosHtml) tagGroups.push(chatzerosHtml);
-                if (maureHtml) tagGroups.push(maureHtml);
+                if (personalitiesHtml) tagGroups.push(`<span class="song-full-tag-group">${personalitiesHtml}</span>`);
+                if (chatzerosHtml) tagGroups.push(`<span class="song-full-tag-group">${chatzerosHtml}</span>`);
+                if (maureHtml) tagGroups.push(`<span class="song-full-tag-group">${maureHtml}</span>`);
                 const centeredTagsHtml = tagGroups.length > 0 ?
                     `<div class="song-full-tags-center">${tagGroups.join('<span class="song-full-tag-divider">•</span>')}</div>` :
                     '<div class="song-full-tags-center"></div>';
 
                 // Build inline mechaber (not absolute positioned stripe)
                 const inlineMechaberHtml = firstMechaber ? `
-                    <a class="song-full-mechaber-inline" href="#/mechabrim/${encodeURIComponent(firstMechaberId)}" onclick="event.stopPropagation(); navigateToDetail('mechabrim', '${escapeHtml(firstMechaberId).replace(/'/g, "\\'")}');">
+                    <a class="song-full-mechaber-inline" href="#" onclick="event.stopPropagation(); event.preventDefault(); navigateToDetail('mechabrim', '${escapeHtml(firstMechaberId).replace(/'/g, "\\'")}');">
                         <div class="mechaber-avatar-small">
                             ${firstMechaberInfo?.image ? `<img src="${firstMechaberInfo.image}" alt="${escapeHtml(firstMechaber)}">` : `<div class="placeholder"><div class="mechaber-icon"></div></div>`}
                         </div>
@@ -23333,6 +23352,9 @@
                                 ${inlineMechaberHtml}
                                 ${waveHtml}
                             </div>
+                        </div>
+                        <div class="song-full-body">
+                            ${detailsGridHtml}
                         </div>
                         ${recordingsHtml}
                     </div>
@@ -24377,6 +24399,22 @@
             return info.customId || name;
         }
 
+        // Find entity by name OR by customId - returns { key, info }
+        function findEntityByNameOrId(infoObj, nameOrId) {
+            // First try direct lookup by name
+            if (infoObj[nameOrId]) {
+                return { key: nameOrId, info: infoObj[nameOrId] };
+            }
+            // Try finding by customId
+            for (const [key, info] of Object.entries(infoObj)) {
+                if (info.customId === nameOrId) {
+                    return { key, info };
+                }
+            }
+            // Not found
+            return { key: nameOrId, info: {} };
+        }
+
         // Render detail content in modal
         async function renderDetailInModal(container, type, name) {
             // Show loading state
@@ -24403,7 +24441,8 @@
             let chatzerBadgesHTML = '';
 
             if (type === 'mechabrim') {
-                const info = mechabrimInfo[name] || {};
+                const { key: mechaberKey, info } = findEntityByNameOrId(mechabrimInfo, name);
+                mechaberFullName = mechaberKey; // Update display name to actual name
 
                 // Profile image
                 if (info.image) {
