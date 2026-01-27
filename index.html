@@ -20698,9 +20698,9 @@
                                 ` : ''}
                                 ${(verterMakor || verterMarehMakom) ? `
                                     <div class="detail-subtitle">
-                                        ${verterMakor ? `<span class="detail-makor-text">${verterMakor}</span>` : ''}
+                                        ${verterMakor ? `<span class="detail-makor-text">${formatDescription(verterMakor)}</span>` : ''}
                                         ${(verterMakor && verterMarehMakom) ? '<span class="detail-separator">•</span>' : ''}
-                                        ${verterMarehMakom ? `<span class="detail-mareh-text">${verterMarehMakom}</span>` : ''}
+                                        ${verterMarehMakom ? `<span class="detail-mareh-text">${formatDescription(verterMarehMakom)}</span>` : ''}
                                     </div>
                                 ` : ''}
                                 ${piyutZmanim.length > 0 ? `
@@ -22777,9 +22777,9 @@
                             <div class="album-info">
                                 <div class="album-title clickable-title" data-action="detail" data-category="albums" data-name="${escapeHtml(key)}">${key}</div>
                                 ${info.chatzer ? `<div class="album-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}" data-tooltip-value="${escapeHtml(info.chatzer)}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
-                                ${serie ? `<div class="album-serie">${serie}</div>` : ''}
+                                ${serie ? `<div class="album-serie">${formatDescription(serie)}</div>` : ''}
                                 ${info.year ? `<div class="album-year">שנת ${info.year}</div>` : ''}
-                                ${notes ? `<div class="album-notes">${notes}</div>` : ''}
+                                ${notes ? `<div class="album-notes">${formatDescription(notes)}</div>` : ''}
                             </div>
                             <div class="album-actions">
                                 ${hasBooklet ? `
@@ -22841,7 +22841,7 @@
                             ${hasImage ? `<img class="detail-image" src="${coverUrl}" alt="${albumName}">` : ''}
                             <div class="detail-header-text">
                                 <h1 class="detail-title" style="color: var(--color-album-dark);">${albumName}</h1>
-                                ${producer ? `<div class="detail-subtitle">${producer}</div>` : ''}
+                                ${producer ? `<div class="detail-subtitle">${formatDescription(producer)}</div>` : ''}
                                 ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
                                 ${info.year ? `<div class="detail-year">שנת ${info.year}</div>` : ''}
                             </div>
@@ -22921,7 +22921,7 @@
                             <div class="detail-header-text">
                                 <h1 class="detail-title" style="color: var(--color-document-dark);">${docName}</h1>
                                 ${sortType ? `<div class="detail-type-badge" style="background: var(--color-document-pale); color: var(--color-document-dark);">${sortType}</div>` : ''}
-                                ${info.serie ? `<div class="detail-subtitle">${info.serie.replace(/\`\`\`/g, '')}</div>` : ''}
+                                ${info.serie ? `<div class="detail-subtitle">${formatDescription(info.serie.replace(/\`\`\`/g, ''))}</div>` : ''}
                                 ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
                             </div>
                         </div>
