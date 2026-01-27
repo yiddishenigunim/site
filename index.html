@@ -136,7 +136,7 @@
             bottom: 0;
             left: 0;
             right: 0;
-            height: 3px;
+            height: 4px;
             background: transparent;
             overflow: hidden;
             opacity: 0;
@@ -156,9 +156,9 @@
             height: 100%;
             background: linear-gradient(90deg,
                     transparent 0%,
-                    var(--color-nigun-light) 25%,
-                    var(--color-nigun) 50%,
-                    var(--color-nigun-light) 75%,
+                    rgba(255, 255, 255, 0.5) 25%,
+                    white 50%,
+                    rgba(255, 255, 255, 0.5) 75%,
                     transparent 100%);
             animation: loadingWave 1.5s infinite ease-in-out;
         }
@@ -372,46 +372,7 @@
             }
         }
 
-        /* Category-themed loading wave bars */
-        .page-theme-chatzer .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-chatzer-light) 25%, var(--color-chatzer) 50%, var(--color-chatzer-light) 75%, transparent 100%);
-        }
-
-        .page-theme-mechaber .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-mechaber-light) 25%, var(--color-mechaber) 50%, var(--color-mechaber-light) 75%, transparent 100%);
-        }
-
-        .page-theme-verter .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-verter-light) 25%, var(--color-verter) 50%, var(--color-verter-light) 75%, transparent 100%);
-        }
-
-        .page-theme-zman .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-zman-light) 25%, var(--color-zman) 50%, var(--color-zman-light) 75%, transparent 100%);
-        }
-
-        .page-theme-collection .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-collection-light) 25%, var(--color-collection) 50%, var(--color-collection-light) 75%, transparent 100%);
-        }
-
-        .page-theme-piyut .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-piyut-light) 25%, var(--color-piyut) 50%, var(--color-piyut-light) 75%, transparent 100%);
-        }
-
-        .page-theme-resource .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-resource-light) 25%, var(--color-resource) 50%, var(--color-resource-light) 75%, transparent 100%);
-        }
-
-        .page-theme-document .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-document-light) 25%, var(--color-document) 50%, var(--color-document-light) 75%, transparent 100%);
-        }
-
-        .page-theme-album .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-album-light) 25%, var(--color-album) 50%, var(--color-album-light) 75%, transparent 100%);
-        }
-
-        .page-theme-music .loading-wave-bar.active::before {
-            background: linear-gradient(90deg, transparent 0%, var(--color-music-light) 25%, var(--color-music) 50%, var(--color-music-light) 75%, transparent 100%);
-        }
+        /* Wave bars are now all white - no category-specific colors needed */
 
         .subtitle {
             transition: opacity 0.3s ease-out;
@@ -3656,82 +3617,116 @@
             }
         }
 
-        /* Page Title */
+        /* Page Title - now the colored box itself */
         .page-title {
-            background: white;
-            border-radius: 16px;
+            background: var(--color-nigun);
+            /* Default, overridden by page themes */
+            border-radius: 0 0 30px 30px;
+            /* Square top, rounded bottom */
             box-shadow: var(--card-shadow);
             margin-bottom: 25px;
             overflow: hidden;
+            position: sticky;
+            top: 0;
+            z-index: 99;
+            text-align: center;
+            padding: 40px 25px 50px 25px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
+        /* Wave bar at bottom of colored box */
+        .page-title>.loading-wave-bar {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        /* Title name - now below number, BIGGER */
         .page-title-bar {
-            padding: 25px 20px;
-            font-size: 2.2em;
+            font-size: 4em;
             font-weight: 700;
             font-family: 'Heebo', sans-serif;
-            background: var(--gradient-main);
             color: white;
-            text-align: center;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            line-height: 1.2;
+            order: 2;
+            /* Show second */
+            margin-top: 10px;
         }
 
+        /* Hide the white content area */
         .page-title-content {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 15px 25px;
-            background: white;
+            display: none;
         }
 
         .page-title-icon {
             display: none;
         }
 
+        /* Number - now on top, SMALLER */
         .page-title .subtitle {
-            color: var(--text-muted);
-            font-size: 0.95em;
-            transition: color 0.3s;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.2em;
+            font-weight: 500;
             text-align: center;
             display: block;
             width: 100%;
+            order: 1;
+            /* Show first */
         }
 
-        /* Category-specific dark colors for subtitle (not mechabrim) */
-        .page-theme-verter .page-title .subtitle {
-            color: var(--color-verter-dark, #2e7d32);
+        /* Make tiny loader white inside page-title */
+        .page-title .loader-tiny .note {
+            color: white;
         }
 
-        .page-theme-zman .page-title .subtitle {
-            color: var(--color-zman-dark, #5d4037);
+        /* Page-specific background colors for page-title */
+        .page-theme-verter .page-title {
+            background: var(--color-verter);
         }
 
-        .page-theme-chatzer .page-title .subtitle {
-            color: var(--color-chatzer-dark, #0d47a1);
+        .page-theme-zman .page-title {
+            background: var(--color-zman);
         }
 
-        .page-theme-nigun .page-title .subtitle {
-            color: var(--color-nigun-dark, #1565c0);
+        .page-theme-chatzer .page-title {
+            background: var(--color-chatzer);
         }
 
-        .page-theme-collection .page-title .subtitle {
-            color: var(--color-collection-dark, #4a148c);
+        .page-theme-nigun .page-title {
+            background: var(--color-nigun);
         }
 
-        .page-theme-album .page-title .subtitle {
-            color: var(--color-album-dark, #b8860b);
+        .page-theme-collection .page-title {
+            background: var(--color-collection);
         }
 
-        .page-theme-document .page-title .subtitle {
-            color: var(--color-document-dark, #00695c);
+        .page-theme-album .page-title {
+            background: var(--color-album);
         }
 
-        .page-theme-resource .page-title .subtitle {
-            color: var(--color-resource-dark, #c62828);
+        .page-theme-document .page-title {
+            background: var(--color-document);
         }
 
-        .page-theme-music .page-title .subtitle {
-            color: var(--color-music-dark, #b8960c);
+        .page-theme-resource .page-title {
+            background: var(--color-resource);
+        }
+
+        .page-theme-music .page-title {
+            background: var(--color-music);
+        }
+
+        .page-theme-mechaber .page-title {
+            background: var(--color-mechaber);
+        }
+
+        .page-theme-piyut .page-title {
+            background: var(--color-piyut);
         }
 
         /* Loading Animation for Subtitle */
@@ -3767,46 +3762,7 @@
             }
         }
 
-        /* Category-themed page titles */
-        .page-theme-chatzer .page-title-bar {
-            background: var(--color-chatzer);
-        }
-
-        .page-theme-mechaber .page-title-bar {
-            background: var(--color-mechaber);
-        }
-
-        .page-theme-verter .page-title-bar {
-            background: var(--color-verter);
-        }
-
-        .page-theme-zman .page-title-bar {
-            background: var(--color-zman);
-        }
-
-        .page-theme-collection .page-title-bar {
-            background: var(--color-collection);
-        }
-
-        .page-theme-piyut .page-title-bar {
-            background: var(--color-piyut);
-        }
-
-        .page-theme-nigun .page-title-bar {
-            background: var(--color-nigun);
-        }
-
-        .page-theme-resource .page-title-bar {
-            background: var(--color-resource);
-        }
-
-        .page-theme-document .page-title-bar {
-            background: var(--color-document);
-        }
-
-        .page-theme-album .page-title-bar {
-            background: var(--color-album);
-        }
+        /* Category-themed page title bars - now transparent (using parent background) */
 
         /* Full-width page theme backgrounds */
         .page-theme-chatzer,
@@ -3856,7 +3812,7 @@
         .page-theme-nigun {
             background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
             position: relative;
-            overflow: hidden;
+            /* overflow: hidden removed to allow sticky header */
         }
 
         /* Floating musical notes container for nigunim page */
@@ -3924,7 +3880,6 @@
 
         /* Ensure content is above the notes but below header */
         .page-theme-nigun .page-title {
-            position: relative;
             z-index: 60;
         }
 
@@ -16779,10 +16734,8 @@
                     <div class="${themeClass}">
                         <div class="page-title">
                             <div class="page-title-bar">${pageInfo.title}</div>
-                            <div class="page-title-content">
-                                <div class="subtitle"><span class="count-number">0</span> ${pageInfo.countLabel}</div>
-                                <div class="loading-wave-bar active" id="loadingWaveBar"></div>
-                            </div>
+                            <div class="subtitle"><span class="count-number">0</span></div>
+                            <div class="loading-wave-bar active" id="loadingWaveBar"></div>
                         </div>
                         <div class="skeleton-songs-layout">
                             <div class="skeleton-songs-main">
@@ -16812,10 +16765,8 @@
                 <div class="${themeClass}">
                     <div class="page-title">
                         <div class="page-title-bar">${pageInfo.title}</div>
-                        <div class="page-title-content">
-                            <div class="subtitle"><span class="subtitle-count">0</span> ${pageInfo.countLabel}</div>
-                            <div class="loading-wave-bar active" id="categoryLoader"></div>
-                        </div>
+                        <div class="subtitle"><span class="subtitle-count">0</span></div>
+                        <div class="loading-wave-bar active" id="categoryLoader"></div>
                     </div>
                     <div class="skeleton-grid">
                         <div class="skeleton-card"></div>
@@ -18119,10 +18070,8 @@
                     <div class="songs-floating-notes" id="songsFloatingNotes"></div>
                     <div class="page-title">
                         <div class="page-title-bar">ניגונים</div>
-                        <div class="page-title-content">
-                            <div class="subtitle ${!songsFullyLoaded ? 'loading-state' : ''}">${!songsFullyLoaded ? getTinyLoaderHTML() + ' ' : ''}<span class="count-number">${filteredSongs.length}</span> ניגונים</div>
-                            <div class="loading-wave-bar" id="loadingWaveBar"></div>
-                        </div>
+                        <div class="subtitle ${!songsFullyLoaded ? 'loading-state' : ''}">${!songsFullyLoaded ? getTinyLoaderHTML() + ' ' : ''}<span class="count-number">${filteredSongs.length}</span></div>
+                        <div class="loading-wave-bar" id="loadingWaveBar"></div>
                     </div>
 
                     <div class="songs-page-layout">
@@ -19509,7 +19458,7 @@
 
         // Update songs count display
         function updateSongsCount() {
-            const subtitle = document.querySelector('.page-title-content .subtitle');
+            const subtitle = document.querySelector('.page-title .subtitle');
             if (!subtitle) return;
 
             const count = filteredSongs.length;
@@ -19526,7 +19475,7 @@
                 // Show loading state with musical notes + count up
                 let loader = subtitle.querySelector('.loader-tiny');
                 if (!loader) {
-                    subtitle.innerHTML = `${getTinyLoaderHTML()} <span class="count-number">0</span> ניגונים`;
+                    subtitle.innerHTML = `${getTinyLoaderHTML()} <span class="count-number">0</span>`;
                     countSpan = subtitle.querySelector('.count-number');
                 }
                 subtitle.classList.add('loading-state');
@@ -19545,7 +19494,7 @@
                 }
                 // Continue count animation
                 if (!subtitle.querySelector('.count-number')) {
-                    subtitle.innerHTML = `<span class="count-number">0</span> ניגונים`;
+                    subtitle.innerHTML = `<span class="count-number">0</span>`;
                     countSpan = subtitle.querySelector('.count-number');
                 }
                 animateCountUp(subtitle.querySelector('.count-number'), count, 800, '');
@@ -20943,10 +20892,8 @@
                 <div class="page-theme-zman">
                     <div class="page-title">
                         <div class="page-title-bar">זמנים</div>
-                        <div class="page-title-content">
-                            <div class="subtitle"><span class="subtitle-count">0</span> זמנים</div>
-                            <div class="loading-wave-bar active" id="zmanLoader"></div>
-                        </div>
+                        <div class="subtitle"><span class="subtitle-count">0</span></div>
+                        <div class="loading-wave-bar active" id="zmanLoader"></div>
                     </div>
                     
                     <div class="category-grid">
@@ -21522,10 +21469,8 @@
                 <div class="page-theme-collection">
                     <div class="page-title">
                         <div class="page-title-bar">קאלעקשאנס</div>
-                        <div class="page-title-content">
-                            <div class="subtitle"><span class="subtitle-count">0</span> קאלעקשאנס</div>
-                            <div class="loading-wave-bar active" id="collectionLoader"></div>
-                        </div>
+                        <div class="subtitle"><span class="subtitle-count">0</span></div>
+                        <div class="loading-wave-bar active" id="collectionLoader"></div>
                     </div>
 
                     <div class="collections-grid">
@@ -21643,10 +21588,8 @@
                 <div class="page-theme-piyut">
                     <div class="page-title">
                         <div class="page-title-bar">פיוטים</div>
-                        <div class="page-title-content">
-                            <div class="subtitle"><span class="subtitle-count">0</span> פיוטים</div>
-                            <div class="loading-wave-bar active" id="piyutimLoader"></div>
-                        </div>
+                        <div class="subtitle"><span class="subtitle-count">0</span></div>
+                        <div class="loading-wave-bar active" id="piyutimLoader"></div>
                     </div>
 
                     <div class="category-grid" id="piyutimGrid">
@@ -21725,11 +21668,9 @@
             container.innerHTML = `
                 <div class="page-theme-music">
                     <div class="page-title">
-                        <div class="page-title-bar" style="background: var(--color-music);">מוזיק</div>
-                        <div class="page-title-content">
-                            <div class="subtitle">ניגונים לויט ריטעם און סקעיל</div>
-                            <div class="loading-wave-bar active" id="musicLoader"></div>
-                        </div>
+                        <div class="page-title-bar">מוזיק</div>
+                        <div class="subtitle">ניגונים לויט ריטעם און סקעיל</div>
+                        <div class="loading-wave-bar active" id="musicLoader"></div>
                     </div>
 
                     <!-- Rhythm Groups -->
@@ -22129,10 +22070,8 @@
                     <div class="${themeClass}">
                         <div class="page-title">
                             <div class="page-title-bar">${title}</div>
-                            <div class="page-title-content">
-                                <div class="subtitle"><span class="subtitle-count">0</span> ${title}</div>
-                                <div class="loading-wave-bar category-loader" id="categoryLoader"></div>
-                            </div>
+                            <div class="subtitle"><span class="subtitle-count">0</span></div>
+                            <div class="loading-wave-bar category-loader" id="categoryLoader"></div>
                         </div>
 
                         <div class="category-grid" id="categoryGrid">
@@ -22186,9 +22125,7 @@
                 <div class="${themeClass}">
                     <div class="page-title">
                         <div class="page-title-bar">${title}</div>
-                        <div class="page-title-content">
-                            <div class="subtitle">${subtitle} • ${sortedKeys.length} קאטעגאריעס</div>
-                        </div>
+                        <div class="subtitle">${subtitle} • ${sortedKeys.length} קאטעגאריעס</div>
                     </div>
 
                     <div class="category-grid" id="categoryGrid">
@@ -22294,10 +22231,8 @@
                 <div class="page-theme-resource">
                     <div class="page-title">
                         <div class="page-title-bar">רעסורסן</div>
-                        <div class="page-title-content">
-                            <div class="subtitle"><span class="subtitle-count">0</span> רעסורסן</div>
-                            <div class="loading-wave-bar active" id="resourceLoader"></div>
-                        </div>
+                        <div class="subtitle"><span class="subtitle-count">0</span></div>
+                        <div class="loading-wave-bar active" id="resourceLoader"></div>
                     </div>
             `;
 
@@ -22393,10 +22328,8 @@
                 <div class="page-theme-document">
                     <div class="page-title">
                         <div class="page-title-bar">דאקומענטן</div>
-                        <div class="page-title-content">
-                            <div class="subtitle"><span class="subtitle-count">0</span> דאקומענטן</div>
-                            <div class="loading-wave-bar active" id="documentLoader"></div>
-                        </div>
+                        <div class="subtitle"><span class="subtitle-count">0</span></div>
+                        <div class="loading-wave-bar active" id="documentLoader"></div>
                     </div>
             `;
 
@@ -22506,10 +22439,8 @@
                 <div class="page-theme-album">
                     <div class="page-title">
                         <div class="page-title-bar">אלבומס</div>
-                        <div class="page-title-content">
-                            <div class="subtitle"><span class="subtitle-count">0</span> אלבומס</div>
-                            <div class="loading-wave-bar active" id="albumLoader"></div>
-                        </div>
+                        <div class="subtitle"><span class="subtitle-count">0</span></div>
+                        <div class="loading-wave-bar active" id="albumLoader"></div>
                     </div>
             `;
 
@@ -24953,9 +24884,7 @@
                 <div class="page-theme-nigun">
                     <div class="page-title">
                         <div class="page-title-bar">זוך "${term}"...</div>
-                        <div class="page-title-content">
-                            <div class="subtitle">לאודינג רעזולטאטן...</div>
-                        </div>
+                        <div class="subtitle">לאודינג רעזולטאטן...</div>
                     </div>
                     <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 16px;">
                         <div class="loader-medium"><span class="note">♪</span><span class="note">♫</span><span class="note">♪</span></div>
@@ -25136,9 +25065,7 @@
                 <div class="page-theme-nigun">
                     <div class="page-title">
                         <div class="page-title-bar">רעזולטאטן פאר "${searchQuery}"</div>
-                        <div class="page-title-content">
-                            <div class="subtitle">${totalResults} רעזולטאטן געפונען</div>
-                        </div>
+                        <div class="subtitle">${totalResults} רעזולטאטן געפונען</div>
                     </div>
                     
                     <div class="search-results-searchbar">
