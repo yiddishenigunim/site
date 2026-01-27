@@ -11637,23 +11637,23 @@
             position: relative;
             display: inline-flex;
             align-items: center;
+            gap: 10px;
             background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            border-radius: 10px;
-            padding: 10px 15px 18px 75px;
-            margin-top: 15px;
-            margin-bottom: 8px;
-            box-shadow: 0 3px 12px rgba(74, 124, 201, 0.3);
+            border-radius: 0 0 12px 12px;
+            padding: 8px 12px 14px 70px;
+            margin-bottom: 6px;
+            box-shadow: 0 4px 12px rgba(74, 124, 201, 0.25);
         }
 
         .player-mechaber-profile {
             position: absolute;
-            top: -12px;
-            left: 8px;
+            top: 0;
+            left: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
             background: var(--color-mechaber);
-            padding: 6px 8px 4px 8px;
+            padding: 5px 7px 4px 7px;
             border-radius: 0 0 8px 8px;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
@@ -11667,8 +11667,8 @@
         }
 
         .player-mechaber-avatar {
-            width: 40px;
-            height: 40px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             background: white;
             border: 2px solid white;
@@ -11693,20 +11693,20 @@
         }
 
         .player-mechaber-avatar .placeholder .mechaber-icon {
-            width: 16px;
-            height: 22px;
+            width: 14px;
+            height: 20px;
             background-color: var(--color-mechaber);
             -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
             mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
         }
 
         .player-mechaber-name {
-            font-size: 8px;
+            font-size: 7px;
             font-weight: 600;
             color: white;
             text-align: center;
-            margin-top: 3px;
-            max-width: 55px;
+            margin-top: 2px;
+            max-width: 50px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -11715,15 +11715,15 @@
         .player-info-content {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             min-width: 0;
         }
 
         .player-info-box .player-song-name {
             color: white;
-            font-size: 1.05em;
-            font-weight: 700;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+            font-size: 0.9em;
+            font-weight: 600;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
         }
 
         .player-info-box .player-song-name:hover {
@@ -11731,21 +11731,27 @@
             text-decoration: underline;
         }
 
+        /* Wave animation inside the box */
+        .player-info-box .player-wave-animation {
+            margin-right: 0;
+            margin-left: 5px;
+        }
+
         /* Tags positioned at bottom edge - half on, half off */
         .player-info-tags {
             position: absolute;
-            bottom: -8px;
-            right: 15px;
+            bottom: -7px;
+            right: 12px;
             display: flex;
             flex-wrap: wrap;
-            gap: 5px;
+            gap: 4px;
             align-items: center;
         }
 
         .player-tag {
-            padding: 3px 10px;
-            border-radius: 12px;
-            font-size: 0.72em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.68em;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -11788,7 +11794,7 @@
 
         /* When no mechaber, reduce left padding */
         .player-info-box.no-mechaber {
-            padding-left: 15px;
+            padding-left: 12px;
         }
 
         /* Hide old meta when using new box */
@@ -12780,47 +12786,44 @@
                 order: 1;
                 width: 100%;
                 text-align: center;
-                margin-bottom: 10px;
+                margin-bottom: 8px;
             }
 
             .player-info-box {
-                padding: 8px 12px 16px 65px;
-                margin-top: 12px;
-                margin-bottom: 6px;
+                padding: 6px 10px 12px 60px;
             }
 
             .player-info-box.no-mechaber {
-                padding-left: 12px;
+                padding-left: 10px;
             }
 
             .player-mechaber-profile {
-                top: -10px;
-                left: 6px;
-                padding: 5px 6px 3px 6px;
+                left: 8px;
+                padding: 4px 5px 3px 5px;
             }
 
             .player-mechaber-avatar {
-                width: 34px;
-                height: 34px;
+                width: 32px;
+                height: 32px;
             }
 
             .player-mechaber-name {
-                font-size: 7px;
-                max-width: 48px;
+                font-size: 6px;
+                max-width: 42px;
             }
 
             .player-info-box .player-song-name {
-                font-size: 0.9em;
+                font-size: 0.85em;
             }
 
             .player-info-tags {
-                right: 12px;
+                right: 10px;
                 bottom: -6px;
             }
 
             .player-tag {
-                font-size: 0.65em;
-                padding: 2px 7px;
+                font-size: 0.6em;
+                padding: 2px 6px;
             }
 
             .player-controls {
