@@ -11731,12 +11731,6 @@
             text-decoration: underline;
         }
 
-        /* Wave animation inside the box */
-        .player-info-box .player-wave-animation {
-            margin-right: 0;
-            margin-left: 5px;
-        }
-
         /* Tags positioned at bottom edge - half on, half off */
         .player-info-tags {
             position: absolute;
@@ -11800,11 +11794,6 @@
         /* Hide old meta when using new box */
         .player-info-box .player-song-meta {
             display: none;
-        }
-
-        /* White wave bars in the info box */
-        .player-info-box .player-wave-animation .wave-bar {
-            background: rgba(255, 255, 255, 0.9);
         }
 
         .player-meta-link {
@@ -15216,12 +15205,12 @@
                         <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א ניגון צו שפילן</div>
                         <div class="player-info-tags" id="playerInfoTags"></div>
                     </div>
-                    <div class="player-wave-animation" id="playerWave">
-                        <span class="wave-bar"></span>
-                        <span class="wave-bar"></span>
-                        <span class="wave-bar"></span>
-                        <span class="wave-bar"></span>
-                    </div>
+                </div>
+                <div class="player-wave-animation" id="playerWave">
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
+                    <span class="wave-bar"></span>
                 </div>
                 <div class="player-song-meta" id="playerSongMeta" style="display: none;"></div>
             </div>
