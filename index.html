@@ -11634,28 +11634,31 @@
 
         /* New styled player info box - similar to nigun modal */
         .player-info-box {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            border-radius: 12px;
-            padding: 8px 15px 8px 8px;
-            min-width: 0;
             position: relative;
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            border-radius: 10px;
+            padding: 10px 15px 18px 75px;
+            margin-top: 15px;
+            margin-bottom: 8px;
             box-shadow: 0 3px 12px rgba(74, 124, 201, 0.3);
         }
 
         .player-mechaber-profile {
+            position: absolute;
+            top: -12px;
+            left: 8px;
             display: flex;
             flex-direction: column;
             align-items: center;
             background: var(--color-mechaber);
-            padding: 6px 8px;
-            border-radius: 8px;
+            padding: 6px 8px 4px 8px;
+            border-radius: 0 0 8px 8px;
             cursor: pointer;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
             text-decoration: none;
-            flex-shrink: 0;
+            z-index: 5;
         }
 
         .player-mechaber-profile:hover {
@@ -11664,8 +11667,8 @@
         }
 
         .player-mechaber-avatar {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: white;
             border: 2px solid white;
@@ -11690,8 +11693,8 @@
         }
 
         .player-mechaber-avatar .placeholder .mechaber-icon {
-            width: 14px;
-            height: 20px;
+            width: 16px;
+            height: 22px;
             background-color: var(--color-mechaber);
             -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
             mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
@@ -11703,23 +11706,22 @@
             color: white;
             text-align: center;
             margin-top: 3px;
-            max-width: 60px;
+            max-width: 55px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         .player-info-content {
-            flex: 1;
-            min-width: 0;
             display: flex;
-            flex-direction: column;
-            gap: 4px;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
         }
 
         .player-info-box .player-song-name {
             color: white;
-            font-size: 1em;
+            font-size: 1.05em;
             font-weight: 700;
             text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
@@ -11729,7 +11731,11 @@
             text-decoration: underline;
         }
 
+        /* Tags positioned at bottom edge - half on, half off */
         .player-info-tags {
+            position: absolute;
+            bottom: -8px;
+            right: 15px;
             display: flex;
             flex-wrap: wrap;
             gap: 5px;
@@ -11737,9 +11743,9 @@
         }
 
         .player-tag {
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7em;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.72em;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s ease;
@@ -11750,7 +11756,7 @@
         .player-tag-chatzer {
             background: var(--color-chatzer);
             color: white;
-            box-shadow: 0 1px 4px rgba(156, 91, 181, 0.3);
+            box-shadow: 0 2px 6px rgba(156, 91, 181, 0.35);
         }
 
         .player-tag-chatzer:hover {
@@ -11761,7 +11767,7 @@
         .player-tag-collection {
             background: var(--color-collection);
             color: white;
-            box-shadow: 0 1px 4px rgba(198, 40, 40, 0.3);
+            box-shadow: 0 2px 6px rgba(198, 40, 40, 0.35);
         }
 
         .player-tag-collection:hover {
@@ -11772,12 +11778,17 @@
         .player-tag-zman {
             background: var(--color-zman);
             color: white;
-            box-shadow: 0 1px 4px rgba(233, 106, 27, 0.3);
+            box-shadow: 0 2px 6px rgba(233, 106, 27, 0.35);
         }
 
         .player-tag-zman:hover {
             background: var(--color-zman-dark);
             transform: scale(1.05);
+        }
+
+        /* When no mechaber, reduce left padding */
+        .player-info-box.no-mechaber {
+            padding-left: 15px;
         }
 
         /* Hide old meta when using new box */
@@ -12773,26 +12784,29 @@
             }
 
             .player-info-box {
-                justify-content: center;
-                padding: 8px 12px;
+                padding: 8px 12px 16px 65px;
+                margin-top: 12px;
+                margin-bottom: 6px;
+            }
+
+            .player-info-box.no-mechaber {
+                padding-left: 12px;
             }
 
             .player-mechaber-profile {
-                padding: 5px 6px;
+                top: -10px;
+                left: 6px;
+                padding: 5px 6px 3px 6px;
             }
 
             .player-mechaber-avatar {
-                width: 32px;
-                height: 32px;
+                width: 34px;
+                height: 34px;
             }
 
             .player-mechaber-name {
                 font-size: 7px;
-                max-width: 50px;
-            }
-
-            .player-info-content {
-                text-align: right;
+                max-width: 48px;
             }
 
             .player-info-box .player-song-name {
@@ -12800,12 +12814,13 @@
             }
 
             .player-info-tags {
-                justify-content: flex-start;
+                right: 12px;
+                bottom: -6px;
             }
 
             .player-tag {
                 font-size: 0.65em;
-                padding: 2px 6px;
+                padding: 2px 7px;
             }
 
             .player-controls {
@@ -24179,8 +24194,10 @@
                 mechaberNameEl.textContent = displayName;
 
                 mechaberProfile.style.display = 'flex';
+                document.querySelector('.player-info-box').classList.remove('no-mechaber');
             } else {
                 mechaberProfile.style.display = 'none';
+                document.querySelector('.player-info-box').classList.add('no-mechaber');
             }
 
             // Build tags for player info box
