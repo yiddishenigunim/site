@@ -11615,6 +11615,13 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            cursor: pointer;
+            transition: color 0.2s ease;
+        }
+
+        .player-song-name:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
         }
 
         .player-song-meta {
@@ -14986,7 +14993,7 @@
         <button class="player-hide-btn" onclick="hidePlayerBanner()" title="באהאלט פלעיער">−</button>
         <div class="player-inner">
             <div class="player-info">
-                <div class="player-song-name" id="playerSongName">קליק אויף א ניגון צו שפילן</div>
+                <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א ניגון צו שפילן</div>
                 <div class="player-song-meta" id="playerSongMeta"></div>
                 <div class="player-wave-animation" id="playerWave">
                     <span class="wave-bar"></span>
@@ -23965,6 +23972,13 @@
             const playerShowWave = document.querySelector('#playerShowBtn .song-wave-animation');
             if (playerShowWave && !audioPlayer.paused) {
                 playerShowWave.classList.remove('paused');
+            }
+        }
+
+        // Open the current song details popup when clicking on player song name
+        function openCurrentSongDetails() {
+            if (currentSongIndex >= 0 && allSongs[currentSongIndex]) {
+                openNigunModal(currentSongIndex, allSongs[currentSongIndex]);
             }
         }
 
