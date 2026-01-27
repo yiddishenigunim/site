@@ -11632,6 +11632,164 @@
             text-overflow: ellipsis;
         }
 
+        /* New styled player info box - similar to nigun modal */
+        .player-info-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            border-radius: 12px;
+            padding: 8px 15px 8px 8px;
+            min-width: 0;
+            position: relative;
+            box-shadow: 0 3px 12px rgba(74, 124, 201, 0.3);
+        }
+
+        .player-mechaber-profile {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: var(--color-mechaber);
+            padding: 6px 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            text-decoration: none;
+            flex-shrink: 0;
+        }
+
+        .player-mechaber-profile:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(196, 53, 168, 0.4);
+        }
+
+        .player-mechaber-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: white;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .player-mechaber-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-mechaber-avatar .placeholder {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--color-mechaber-pale) 0%, var(--color-mechaber-light) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .player-mechaber-avatar .placeholder .mechaber-icon {
+            width: 14px;
+            height: 20px;
+            background-color: var(--color-mechaber);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+        }
+
+        .player-mechaber-name {
+            font-size: 8px;
+            font-weight: 600;
+            color: white;
+            text-align: center;
+            margin-top: 3px;
+            max-width: 60px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-info-content {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .player-info-box .player-song-name {
+            color: white;
+            font-size: 1em;
+            font-weight: 700;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .player-info-box .player-song-name:hover {
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: underline;
+        }
+
+        .player-info-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .player-tag {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.7em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .player-tag-chatzer {
+            background: var(--color-chatzer);
+            color: white;
+            box-shadow: 0 1px 4px rgba(156, 91, 181, 0.3);
+        }
+
+        .player-tag-chatzer:hover {
+            background: var(--color-chatzer-dark);
+            transform: scale(1.05);
+        }
+
+        .player-tag-collection {
+            background: var(--color-collection);
+            color: white;
+            box-shadow: 0 1px 4px rgba(198, 40, 40, 0.3);
+        }
+
+        .player-tag-collection:hover {
+            background: var(--color-collection-dark);
+            transform: scale(1.05);
+        }
+
+        .player-tag-zman {
+            background: var(--color-zman);
+            color: white;
+            box-shadow: 0 1px 4px rgba(233, 106, 27, 0.3);
+        }
+
+        .player-tag-zman:hover {
+            background: var(--color-zman-dark);
+            transform: scale(1.05);
+        }
+
+        /* Hide old meta when using new box */
+        .player-info-box .player-song-meta {
+            display: none;
+        }
+
+        /* White wave bars in the info box */
+        .player-info-box .player-wave-animation .wave-bar {
+            background: rgba(255, 255, 255, 0.9);
+        }
+
         .player-meta-link {
             color: var(--text-muted);
             text-decoration: none;
@@ -12612,6 +12770,42 @@
                 width: 100%;
                 text-align: center;
                 margin-bottom: 10px;
+            }
+
+            .player-info-box {
+                justify-content: center;
+                padding: 8px 12px;
+            }
+
+            .player-mechaber-profile {
+                padding: 5px 6px;
+            }
+
+            .player-mechaber-avatar {
+                width: 32px;
+                height: 32px;
+            }
+
+            .player-mechaber-name {
+                font-size: 7px;
+                max-width: 50px;
+            }
+
+            .player-info-content {
+                text-align: right;
+            }
+
+            .player-info-box .player-song-name {
+                font-size: 0.9em;
+            }
+
+            .player-info-tags {
+                justify-content: flex-start;
+            }
+
+            .player-tag {
+                font-size: 0.65em;
+                padding: 2px 6px;
             }
 
             .player-controls {
@@ -14993,14 +15187,25 @@
         <button class="player-hide-btn" onclick="hidePlayerBanner()" title="באהאלט פלעיער">−</button>
         <div class="player-inner">
             <div class="player-info">
-                <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א ניגון צו שפילן</div>
-                <div class="player-song-meta" id="playerSongMeta"></div>
-                <div class="player-wave-animation" id="playerWave">
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
+                <div class="player-info-box">
+                    <a class="player-mechaber-profile" id="playerMechaberProfile" style="display: none;">
+                        <div class="player-mechaber-avatar" id="playerMechaberAvatar">
+                            <div class="placeholder"><span class="mechaber-icon"></span></div>
+                        </div>
+                        <div class="player-mechaber-name" id="playerMechaberName"></div>
+                    </a>
+                    <div class="player-info-content">
+                        <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א ניגון צו שפילן</div>
+                        <div class="player-info-tags" id="playerInfoTags"></div>
+                    </div>
+                    <div class="player-wave-animation" id="playerWave">
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                        <span class="wave-bar"></span>
+                    </div>
                 </div>
+                <div class="player-song-meta" id="playerSongMeta" style="display: none;"></div>
             </div>
             <div class="player-controls">
                 <button class="player-btn" onclick="playPrevious()" title="פריערדיגע"><svg viewBox="0 0 24 24"
@@ -23939,7 +24144,74 @@
                 document.getElementById('showBtnSongName').textContent = song.name || 'ווייז פלעיער';
             }
 
-            // Create meta with links - using entity-specific colors
+            // Update mechaber profile in new player info box
+            const mechaberProfile = document.getElementById('playerMechaberProfile');
+            const mechaberAvatar = document.getElementById('playerMechaberAvatar');
+            const mechaberNameEl = document.getElementById('playerMechaberName');
+
+            if (song.mechaber) {
+                const firstMechaber = song.mechaber.split(',')[0].trim();
+                const mechaberInfo = mechabrimInfo[firstMechaber];
+                const mechaberId = mechaberInfo?.customId || firstMechaber;
+
+                // Set link
+                mechaberProfile.href = `#/mechabrim/${encodeURIComponent(mechaberId)}`;
+                mechaberProfile.setAttribute('data-action', 'detail');
+                mechaberProfile.setAttribute('data-category', 'mechabrim');
+                mechaberProfile.setAttribute('data-name', firstMechaber);
+
+                // Set avatar
+                if (mechaberInfo?.image) {
+                    mechaberAvatar.innerHTML = `<img src="${mechaberInfo.image}" alt="${firstMechaber}">`;
+                } else {
+                    mechaberAvatar.innerHTML = `<div class="placeholder"><span class="mechaber-icon"></span></div>`;
+                }
+
+                // Set name - use gerufen if available
+                let displayName = firstMechaber;
+                if (mechaberInfo) {
+                    if (mechaberInfo.gerufen) {
+                        displayName = mechaberInfo.gerufen;
+                    } else if (mechaberInfo.firstName) {
+                        displayName = mechaberInfo.firstName;
+                    }
+                }
+                mechaberNameEl.textContent = displayName;
+
+                mechaberProfile.style.display = 'flex';
+            } else {
+                mechaberProfile.style.display = 'none';
+            }
+
+            // Build tags for player info box
+            const tagsContainer = document.getElementById('playerInfoTags');
+            let tagsHtml = [];
+
+            // Add chatzer tags
+            if (song.category) {
+                song.category.split(',').forEach(chatzer => {
+                    const c = chatzer.trim();
+                    if (c) {
+                        const chatzerInfo = chatzerosInfo[c] || {};
+                        const chatzerId = chatzerInfo.customId || c;
+                        tagsHtml.push(`<a class="player-tag player-tag-chatzer" href="#/chatzeros/${encodeURIComponent(chatzerId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(c)}">${c}</a>`);
+                    }
+                });
+            }
+
+            // Add collection tag (only first one to save space)
+            if (song.collections) {
+                const firstCollection = song.collections.split(',')[0].trim();
+                if (firstCollection) {
+                    const collInfo = collectionsInfo[firstCollection] || {};
+                    const collId = collInfo.customId || firstCollection;
+                    tagsHtml.push(`<a class="player-tag player-tag-collection" href="#/collections/${encodeURIComponent(collId)}" data-action="detail" data-category="collections" data-name="${escapeHtml(firstCollection)}">${firstCollection}</a>`);
+                }
+            }
+
+            tagsContainer.innerHTML = tagsHtml.join('');
+
+            // Keep old meta for backwards compatibility (hidden)
             let metaParts = [];
             if (song.mechaber) {
                 metaParts.push(createPlayerMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
@@ -23949,7 +24221,7 @@
             }
             document.getElementById('playerSongMeta').innerHTML = metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>');
 
-            // Collection link
+            // Collection link (extra section)
             if (song.collections) {
                 document.getElementById('playerCollection').innerHTML = createPlayerMetaLinks(song.collections, 'collections', 'collection', 'collection');
             } else {
