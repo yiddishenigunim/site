@@ -6272,18 +6272,25 @@
             flex-shrink: 0;
         }
 
-        /* Stats at bottom */
+        /* Stats at bottom - white background */
         .page-theme-mechaber .category-card .card-stats {
-            background: var(--color-mechaber-pale);
+            background: white;
             margin: 0;
-            padding: 8px 15px;
+            padding: 10px 15px;
             justify-content: center;
-            border-top: 1px solid var(--color-mechaber-light);
+            gap: 15px;
+            border-top: 2px solid var(--color-mechaber-light);
+            flex-wrap: wrap;
         }
 
         .page-theme-mechaber .category-card .card-stat {
             color: var(--color-mechaber-dark);
             font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        .page-theme-mechaber .category-card .card-stat-icon {
+            margin-left: 3px;
         }
 
         /* Hover effect adjustments */
@@ -22451,6 +22458,21 @@
                 const deathDate = deathParts.join(' ');
                 const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
 
+                // Count recordings (songs with audio)
+                const songs = data[key] || [];
+                const recordingsCount = songs.filter(idx => {
+                    const song = allSongs[idx];
+                    return song && song.audioUrl && song.audioUrl.startsWith('http');
+                }).length;
+
+                // Count shaychus (songs where mechaber is in personalities but not main mechaber)
+                const songIndicesSet = new Set(songs);
+                const shaychusCount = allSongs.filter((song, idx) => {
+                    if (songIndicesSet.has(idx)) return false;
+                    if (!song.personalities) return false;
+                    return song.personalities.split(',').map(p => p.trim()).includes(key);
+                }).length;
+
                 let titleHtml;
                 if (info.gerufen) {
                     const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
@@ -22490,7 +22512,9 @@
                         </div>
                     </div>
                     <div class="card-stats">
-                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
+                        <span class="card-stat"><span class="card-stat-icon">🎵</span>${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
+                        ${recordingsCount > 0 ? `<span class="card-stat"><span class="card-stat-icon">🎧</span>${recordingsCount} רעקארדינג</span>` : ''}
+                        ${shaychusCount > 0 ? `<span class="card-stat"><span class="card-stat-icon">🔗</span>${shaychusCount} שייכות</span>` : ''}
                     </div>
                 </a>
             `;
