@@ -22475,17 +22475,14 @@
                             <div class="card-title">${titleHtml}</div>
                             ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
                             ${chatzeros.length > 0 ? `
-                                <div class="card-tags" onclick="event.stopPropagation();">
+                                <div class="card-tags">
                                     ${chatzeros.map(chatzer => {
                                         const cInfo = chatzerosInfo[chatzer] || {};
                                         const cId = cInfo.customId || chatzer;
-                                        return `<a class="card-chatzer-tag"
-                                              href="#/chatzeros/${encodeURIComponent(cId)}"
-                                              data-action="detail"
-                                              data-category="chatzeros"
-                                              data-name="${escapeHtml(chatzer)}"
+                                        return `<span class="card-chatzer-tag"
+                                              onclick="event.stopPropagation(); event.preventDefault(); navigateToDetail('chatzeros', '${escapeHtml(chatzer).replace(/'/g, "\\'")}');"
                                               data-tooltip-value="${escapeHtml(chatzer)}"
-                                              data-tooltip-type="chatzer">${chatzer}</a>`;
+                                              data-tooltip-type="chatzer">${chatzer}</span>`;
                                     }).join('')}
                                 </div>
                             ` : ''}
