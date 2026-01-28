@@ -6177,6 +6177,150 @@
             color: var(--color-mechaber-dark);
         }
 
+        /* ====== NEW MECHABER CARD REDESIGN ====== */
+        .page-theme-mechaber .category-card {
+            padding: 0;
+            overflow: hidden;
+            background: white;
+            border: none;
+            box-shadow: 0 4px 20px rgba(156, 91, 181, 0.15);
+        }
+
+        .page-theme-mechaber .category-card .card-header {
+            margin: 0;
+            gap: 0;
+            flex-direction: row-reverse;
+            align-items: stretch;
+        }
+
+        /* Purple banner section */
+        .page-theme-mechaber .category-card .card-header-text {
+            flex: 1;
+            background: linear-gradient(135deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
+            padding: 15px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .page-theme-mechaber .category-card .card-mechaber-formal {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.8em;
+            margin-bottom: 4px;
+        }
+
+        .page-theme-mechaber .category-card .card-mechaber-known {
+            color: white;
+            font-size: 1.15em;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-theme-mechaber .category-card .card-years {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.78em;
+            margin-top: 6px;
+        }
+
+        /* Tags attached to banner */
+        .page-theme-mechaber .category-card .card-tags {
+            margin-top: 8px;
+            gap: 5px;
+        }
+
+        .page-theme-mechaber .category-card .card-chatzer-tag {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .page-theme-mechaber .category-card .card-chatzer-tag:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: none;
+        }
+
+        /* Image section */
+        .page-theme-mechaber .category-card .card-image {
+            width: 100px;
+            height: 100%;
+            min-height: 100px;
+            border-radius: 0;
+            border: none;
+            object-fit: cover;
+            flex-shrink: 0;
+            box-shadow: none;
+        }
+
+        .page-theme-mechaber .category-card .card-icon {
+            width: 100px;
+            min-height: 100px;
+            height: 100%;
+            border-radius: 0;
+            background: var(--color-chatzer-pale);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2em;
+            flex-shrink: 0;
+        }
+
+        /* Stats at bottom */
+        .page-theme-mechaber .category-card .card-stats {
+            background: var(--color-chatzer-pale);
+            margin: 0;
+            padding: 10px 15px;
+            justify-content: center;
+            border-top: 1px solid var(--color-chatzer-light);
+        }
+
+        .page-theme-mechaber .category-card .card-stat {
+            color: var(--color-chatzer-dark);
+            font-weight: 600;
+        }
+
+        /* Hover effect adjustments */
+        .page-theme-mechaber .category-card::after {
+            border-color: var(--color-chatzer);
+            box-shadow: 0 0 20px rgba(156, 91, 181, 0.3);
+            border-radius: 16px;
+        }
+
+        .page-theme-mechaber .category-card:hover {
+            box-shadow: 0 8px 30px rgba(156, 91, 181, 0.25);
+        }
+
+        /* Mobile styles for mechaber cards */
+        @media (max-width: 480px) {
+            .page-theme-mechaber .category-card .card-image {
+                width: 80px;
+                min-height: 90px;
+            }
+
+            .page-theme-mechaber .category-card .card-icon {
+                width: 80px;
+                min-height: 90px;
+                font-size: 1.8em;
+            }
+
+            .page-theme-mechaber .category-card .card-header-text {
+                padding: 12px 14px;
+                min-height: 90px;
+            }
+
+            .page-theme-mechaber .category-card .card-mechaber-known {
+                font-size: 1em;
+            }
+
+            .page-theme-mechaber .category-card .card-mechaber-formal {
+                font-size: 0.75em;
+            }
+        }
+
         .card-count {
             background: var(--gradient-main);
             color: white;
@@ -22293,6 +22437,62 @@
                     }).length;
             }
 
+            // Special layout for mechabrim cards
+            if (categoryKey === 'mechabrim') {
+                const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
+
+                const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
+                const deathParts = [info.deathDay, info.deathMonth, info.deathYear].filter(Boolean);
+                const birthDate = birthParts.join(' ');
+                const deathDate = deathParts.join(' ');
+                const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
+
+                let titleHtml;
+                if (info.gerufen) {
+                    const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                    const knownName = knownParts.join(' ');
+                    titleHtml = `<span class="card-mechaber-formal">${formalName}</span><span class="card-mechaber-known">${knownName}</span>`;
+                } else {
+                    const fullNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
+                    const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : key;
+                    titleHtml = `<span class="card-mechaber-known">${fullName}</span>`;
+                }
+
+                return `
+                <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
+                    <div class="card-header">
+                        ${hasImage ? `
+                            <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="card-icon" style="display:none;">${icon}</div>
+                        ` : `
+                            <div class="card-icon">${icon}</div>
+                        `}
+                        <div class="card-header-text">
+                            <div class="card-title">${titleHtml}</div>
+                            ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
+                            ${chatzeros.length > 0 ? `
+                                <div class="card-tags" onclick="event.stopPropagation();">
+                                    ${chatzeros.map(chatzer => `
+                                        <span class="card-chatzer-tag"
+                                              data-action="detail"
+                                              data-category="chatzeros"
+                                              data-name="${escapeHtml(chatzer)}"
+                                              data-tooltip-value="${escapeHtml(chatzer)}"
+                                              data-tooltip-type="chatzer">${chatzer}</span>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
+                    </div>
+                </a>
+            `;
+            }
+
+            // Default layout for other categories
             return `
             <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
                 <div class="card-header">
@@ -22303,54 +22503,7 @@
                         <div class="card-icon">${icon}</div>
                     `}
                     <div class="card-header-text">
-                        ${(() => {
-                    if (categoryKey === 'mechabrim') {
-                        // Build name display:
-                        // If גערופן exists: formal name (small) + known name (big)
-                        // If גערופן is empty: just show formal name with suffix
-                        const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
-                        const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
-
-                        // Build full dates
-                        const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
-                        const deathParts = [info.deathDay, info.deathMonth, info.deathYear].filter(Boolean);
-                        const birthDate = birthParts.join(' ');
-                        const deathDate = deathParts.join(' ');
-                        const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
-
-                        let titleHtml;
-                        if (info.gerufen) {
-                            // Has גערופן - show two lines: formal (small) + known (big)
-                            const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
-                            const knownName = knownParts.join(' ');
-                            titleHtml = `<span class="card-mechaber-formal">${formalName}</span><span class="card-mechaber-known">${knownName}</span>`;
-                        } else {
-                            // No גערופן - show formal name with suffix in one line (still use mechaber color)
-                            const fullNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
-                            const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : key;
-                            titleHtml = `<span class="card-mechaber-known">${fullName}</span>`;
-                        }
-
-                        return `
-                                    <div class="card-title">${titleHtml}</div>
-                                    ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
-                                `;
-                    } else {
-                        return `<div class="card-title">${key}</div>`;
-                    }
-                })()}
-                        ${chatzeros.length > 0 ? `
-                            <div class="card-tags" onclick="event.stopPropagation();">
-                                ${chatzeros.map(chatzer => `
-                                    <span class="card-chatzer-tag"
-                                          data-action="detail"
-                                          data-category="chatzeros"
-                                          data-name="${escapeHtml(chatzer)}"
-                                          data-tooltip-value="${escapeHtml(chatzer)}"
-                                          data-tooltip-type="chatzer">${chatzer}</span>
-                                `).join('')}
-                            </div>
-                        ` : ''}
+                        <div class="card-title">${key}</div>
                         <div class="card-stats">
                             ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${pluralize(mechabrimCount, 'מחבר', 'מחברים')}</span>` : ''}
                             <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
