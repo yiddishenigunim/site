@@ -22477,9 +22477,10 @@
                             ${chatzeros.length > 0 ? `
                                 <div class="card-tags">
                                     ${chatzeros.map(chatzer => {
-                                        const cInfo = chatzerosInfo[chatzer] || {};
-                                        const cId = cInfo.customId || chatzer;
                                         return `<span class="card-chatzer-tag"
+                                              data-action="detail"
+                                              data-category="chatzeros"
+                                              data-name="${escapeHtml(chatzer)}"
                                               onclick="event.stopPropagation(); event.preventDefault(); navigateToDetail('chatzeros', '${escapeHtml(chatzer).replace(/'/g, "\\'")}');"
                                               data-tooltip-value="${escapeHtml(chatzer)}"
                                               data-tooltip-type="chatzer">${chatzer}</span>`;
