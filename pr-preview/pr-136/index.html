@@ -3624,13 +3624,13 @@
             border-radius: 0 0 30px 30px;
             /* Square top, rounded bottom */
             box-shadow: var(--card-shadow);
-            margin-bottom: 0;
-            overflow: visible;
+            margin-bottom: 25px;
+            overflow: hidden;
             position: sticky;
             top: 0;
             z-index: 99;
             text-align: center;
-            padding: 20px 25px 15px 25px;
+            padding: 40px 25px 50px 25px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -3677,250 +3677,6 @@
             width: 100%;
             order: 1;
             /* Show first */
-        }
-
-        /* Filters container inside page-title */
-        .page-title-filters {
-            display: none;
-        }
-
-        /* Sub-header bar for settings/filters */
-        .page-settings-bar {
-            background: var(--color-nigun-pale);
-            padding: 12px 40px;
-            display: flex;
-            justify-content: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            margin: 0 auto 25px auto;
-            border-radius: 0 0 25px 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: calc(100% - 40px);
-        }
-
-        .page-settings-bar .detail-filters-group {
-            background: transparent;
-            padding: 0;
-            gap: 12px;
-        }
-
-        .page-settings-bar .detail-filter-dropdown {
-            width: 130px;
-        }
-
-        .page-settings-bar .filter-panel-dropdown {
-            width: 130px;
-        }
-
-        .page-settings-bar .detail-filter-current {
-            background: white;
-            color: var(--color-nigun-dark);
-            padding: 7px 12px;
-            border-radius: 10px;
-            font-size: 0.85em;
-            font-weight: 600;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            justify-content: center;
-            text-align: center;
-            transition: all 0.15s ease;
-        }
-
-        .page-settings-bar .detail-filter-current:hover,
-        .page-settings-bar .detail-filter-dropdown:hover .detail-filter-current {
-            background: var(--color-nigun);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-
-        .page-settings-bar .filter-panel-btn {
-            background: white;
-            color: var(--color-nigun-dark);
-            border: none;
-            padding: 7px 12px;
-            border-radius: 10px;
-            font-size: 0.85em;
-            font-weight: 600;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            transition: all 0.15s ease;
-        }
-
-        .page-settings-bar .filter-panel-btn:hover,
-        .page-settings-bar .filter-panel-dropdown:hover .filter-panel-btn {
-            background: var(--color-nigun);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-
-        /* Search button - transparent with border */
-        .page-settings-bar .search-trigger-btn {
-            background: transparent;
-            color: var(--color-nigun-dark);
-            border: 2px solid var(--color-nigun);
-            padding: 7px 35px;
-            border-radius: 6px;
-            font-size: 0.85em;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            min-width: 140px;
-        }
-
-        .page-settings-bar .search-trigger-btn:hover {
-            background: var(--color-nigun);
-            color: white;
-        }
-
-        .page-settings-bar .search-trigger-btn.has-active {
-            background: var(--color-nigun);
-            color: white;
-        }
-
-        /* Expandable search container */
-        .page-settings-bar .expandable-search {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 12px;
-            z-index: 10;
-        }
-
-        .page-settings-bar .expandable-search-input {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px;
-            max-width: 100px;
-            opacity: 0;
-            background: var(--color-nigun);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            padding: 9px 40px 9px 15px;
-            font-size: 0.9em;
-            font-weight: 500;
-            transition: max-width 0.3s ease, opacity 0.2s ease;
-            pointer-events: none;
-            text-align: right;
-        }
-
-        .page-settings-bar .expandable-search-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .page-settings-bar .expandable-search.expanded .expandable-search-input {
-            max-width: 800px;
-            width: calc(90vw - 80px);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .page-settings-bar .expandable-search.expanded .search-trigger-btn {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .page-settings-bar .search-close-btn {
-            position: absolute;
-            left: calc(50% + 350px);
-            top: 50%;
-            transform: translateY(-50%);
-            background: transparent;
-            border: none;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.2em;
-            cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s ease;
-        }
-
-        .page-settings-bar .expandable-search.expanded .search-close-btn {
-            left: calc(50% + min(45vw - 40px, 400px) - 30px);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .page-settings-bar .search-close-btn:hover {
-            color: white;
-        }
-
-        .page-settings-bar .detail-filter-options,
-        .page-settings-bar .filter-panel-content {
-            z-index: 1000;
-        }
-
-        .page-title-filters .detail-filter-dropdown {
-            width: 120px;
-        }
-
-        .page-title-filters .filter-panel-dropdown {
-            width: 120px;
-        }
-
-        .page-title-filters #searchPanelDropdown {
-            width: 150px;
-        }
-
-        .page-title-filters .detail-filter-current {
-            background: var(--color-nigun-pale);
-            color: var(--color-nigun-dark);
-            padding: 10px 15px;
-            border-radius: 12px;
-            font-size: 0.9em;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            justify-content: center;
-            text-align: center;
-            transition: all 0.15s ease;
-        }
-
-        .page-title-filters .detail-filter-current:hover {
-            background: var(--color-nigun);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-
-        .page-title-filters .filter-panel-btn {
-            background: var(--color-nigun-pale);
-            color: var(--color-nigun-dark);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 12px;
-            font-size: 0.9em;
-            font-weight: 600;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            transition: all 0.15s ease;
-        }
-
-        .page-title-filters .filter-panel-btn:hover {
-            background: var(--color-nigun);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
-        }
-
-        .page-title-filters .detail-filter-options,
-        .page-title-filters .filter-panel-content {
-            z-index: 1000;
         }
 
         /* Make tiny loader white inside page-title */
@@ -4124,12 +3880,12 @@
 
         /* Ensure content is above the notes but below header */
         .page-theme-nigun .page-title {
-            z-index: 100;
+            z-index: 60;
         }
 
         .songs-page-layout {
             position: relative;
-            z-index: 50;
+            z-index: 60;
         }
 
         .page-theme-resource {
@@ -11615,13 +11371,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            cursor: pointer;
-            transition: color 0.2s ease;
-        }
-
-        .player-song-name:hover {
-            color: var(--primary-color);
-            text-decoration: underline;
         }
 
         .player-song-meta {
@@ -11630,176 +11379,6 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-
-        /* New styled player info box - similar to nigun modal */
-        .player-info-box {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            border-radius: 0 0 12px 12px;
-            padding: 8px 12px 14px 70px;
-            margin-bottom: 6px;
-            box-shadow: 0 4px 12px rgba(74, 124, 201, 0.25);
-            width: 240px;
-        }
-
-        .player-mechaber-profile {
-            position: absolute;
-            top: 0;
-            left: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: var(--color-mechaber);
-            padding: 5px 7px 4px 7px;
-            border-radius: 0 0 8px 8px;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            text-decoration: none;
-            z-index: 5;
-        }
-
-        .player-mechaber-profile:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(196, 53, 168, 0.4);
-        }
-
-        .player-mechaber-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .player-mechaber-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .player-mechaber-avatar .placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--color-mechaber-pale) 0%, var(--color-mechaber-light) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .player-mechaber-avatar .placeholder .mechaber-icon {
-            width: 14px;
-            height: 20px;
-            background-color: var(--color-mechaber);
-            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
-            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
-        }
-
-        .player-mechaber-name {
-            font-size: 7px;
-            font-weight: 600;
-            color: white;
-            text-align: center;
-            margin-top: 2px;
-            max-width: 50px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .player-info-content {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 0;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .player-info-box .player-song-name {
-            color: white;
-            font-size: 0.9em;
-            font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .player-info-box .player-song-name:hover {
-            color: rgba(255, 255, 255, 0.85);
-            text-decoration: underline;
-        }
-
-        /* Tags positioned at bottom edge - half on, half off */
-        .player-info-tags {
-            position: absolute;
-            bottom: -7px;
-            right: 12px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            align-items: center;
-        }
-
-        .player-tag {
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.68em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .player-tag-chatzer {
-            background: var(--color-chatzer);
-            color: white;
-            box-shadow: 0 2px 6px rgba(156, 91, 181, 0.35);
-        }
-
-        .player-tag-chatzer:hover {
-            background: var(--color-chatzer-dark);
-            transform: scale(1.05);
-        }
-
-        .player-tag-collection {
-            background: var(--color-collection);
-            color: white;
-            box-shadow: 0 2px 6px rgba(198, 40, 40, 0.35);
-        }
-
-        .player-tag-collection:hover {
-            background: var(--color-collection-dark);
-            transform: scale(1.05);
-        }
-
-        .player-tag-zman {
-            background: var(--color-zman);
-            color: white;
-            box-shadow: 0 2px 6px rgba(233, 106, 27, 0.35);
-        }
-
-        .player-tag-zman:hover {
-            background: var(--color-zman-dark);
-            transform: scale(1.05);
-        }
-
-        /* When no mechaber, reduce left padding */
-        .player-info-box.no-mechaber {
-            padding-left: 12px;
-        }
-
-        /* Hide old meta when using new box */
-        .player-info-box .player-song-meta {
-            display: none;
         }
 
         .player-meta-link {
@@ -12781,45 +12360,7 @@
                 order: 1;
                 width: 100%;
                 text-align: center;
-                margin-bottom: 8px;
-            }
-
-            .player-info-box {
-                padding: 6px 10px 12px 60px;
-                width: 200px;
-            }
-
-            .player-info-box.no-mechaber {
-                padding-left: 10px;
-            }
-
-            .player-mechaber-profile {
-                left: 8px;
-                padding: 4px 5px 3px 5px;
-            }
-
-            .player-mechaber-avatar {
-                width: 32px;
-                height: 32px;
-            }
-
-            .player-mechaber-name {
-                font-size: 6px;
-                max-width: 42px;
-            }
-
-            .player-info-box .player-song-name {
-                font-size: 0.85em;
-            }
-
-            .player-info-tags {
-                right: 10px;
-                bottom: -6px;
-            }
-
-            .player-tag {
-                font-size: 0.6em;
-                padding: 2px 6px;
+                margin-bottom: 10px;
             }
 
             .player-controls {
@@ -15201,25 +14742,14 @@
         <button class="player-hide-btn" onclick="hidePlayerBanner()" title="באהאלט פלעיער">−</button>
         <div class="player-inner">
             <div class="player-info">
-                <div class="player-info-box">
-                    <a class="player-mechaber-profile" id="playerMechaberProfile" style="display: none;">
-                        <div class="player-mechaber-avatar" id="playerMechaberAvatar">
-                            <div class="placeholder"><span class="mechaber-icon"></span></div>
-                        </div>
-                        <div class="player-mechaber-name" id="playerMechaberName"></div>
-                    </a>
-                    <div class="player-info-content">
-                        <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א ניגון צו שפילן</div>
-                        <div class="player-info-tags" id="playerInfoTags"></div>
-                    </div>
-                </div>
+                <div class="player-song-name" id="playerSongName">קליק אויף א ניגון צו שפילן</div>
+                <div class="player-song-meta" id="playerSongMeta"></div>
                 <div class="player-wave-animation" id="playerWave">
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
                 </div>
-                <div class="player-song-meta" id="playerSongMeta" style="display: none;"></div>
             </div>
             <div class="player-controls">
                 <button class="player-btn" onclick="playPrevious()" title="פריערדיגע"><svg viewBox="0 0 24 24"
@@ -18217,31 +17747,6 @@
             const hasActiveFilters = totalActiveFilters > 0 || hasSearch;
 
             return `
-                <!-- Display Mode Filter -->
-                <div class="detail-filter-dropdown">
-                    <div class="detail-filter-current">
-                        <span class="filter-icon">👁</span>
-                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
-                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                        'אלעס'
-                }</span>
-                    </div>
-                    <div class="detail-filter-options">
-                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
-                             onclick="changeDisplayMode('minimal');">
-                            קעפל
-                        </div>
-                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
-                             onclick="changeDisplayMode('recordings');">
-                            רעקארדירונגען
-                        </div>
-                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
-                             onclick="changeDisplayMode('full');">
-                            אלעס
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Sort Filter -->
                 <div class="detail-filter-dropdown">
                     <div class="detail-filter-current">
@@ -18267,56 +17772,27 @@
                     </div>
                 </div>
 
-                <!-- Search Button - Expandable -->
-                <div class="expandable-search" id="expandableSearch">
-                    <button class="search-trigger-btn ${hasSearch ? 'has-active' : ''}" onclick="toggleExpandableSearch(event)">
-                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
-                            <circle cx="11" cy="11" r="8"/>
-                            <path d="M21 21l-4.35-4.35"/>
-                        </svg>
-                        <span>זוך</span>
-                    </button>
-                    <input type="text"
-                           class="expandable-search-input"
-                           id="expandableSearchInput"
-                           placeholder="זוך א ניגון..."
-                           value="${searchQuery || ''}"
-                           oninput="handleLiveSearch(this.value)"
-                           onkeydown="if(event.key==='Escape')closeExpandableSearch()">
-                    <button class="search-close-btn" onclick="closeExpandableSearch()">×</button>
-                </div>
-
-                <!-- Filters Button -->
-                <div class="filter-panel-dropdown" id="filterPanelDropdown">
-                    <button class="filter-panel-btn ${totalActiveFilters > 0 ? 'has-active' : ''}" onclick="toggleFilterPanel(event)">
-                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M4 21v-7"/>
-                            <path d="M4 10V3"/>
-                            <path d="M12 21v-9"/>
-                            <path d="M12 8V3"/>
-                            <path d="M20 21v-5"/>
-                            <path d="M20 12V3"/>
-                            <circle cx="4" cy="13" r="2"/>
-                            <circle cx="12" cy="9" r="2"/>
-                            <circle cx="20" cy="15" r="2"/>
-                        </svg>
-                        <span>פילטער</span>
-                        ${totalActiveFilters > 0 ? `<span class="filter-count">${totalActiveFilters}</span>` : ''}
-                    </button>
-                    <div class="filter-panel-content" id="filterPanelContent">
-                        <div class="filter-panel-section-title">פילטערס:</div>
-                        <div class="filter-panel-filters">
-                            ${renderFilterPanelItem('collection', 'קאלעקשאנס', categories.collections)}
-                            ${renderFilterPanelItem('chatzer', 'חצר', categories.chatzeros)}
-                            ${renderFilterPanelItem('mechaber', 'מחבר', categories.mechabrim)}
-                            ${renderFilterPanelItem('verter', 'ווערטער', categories.verter)}
-                            ${renderFilterPanelItem('gezungen', 'געזינגען אויף', categories.gezungen)}
-                            ${renderFilterPanelItem('ritem', 'ריטעם', categories.ritem)}
-                            ${renderFilterPanelItem('scale', 'סקעיל', categories.scale)}
+                <!-- Display Mode Filter -->
+                <div class="detail-filter-dropdown">
+                    <div class="detail-filter-current">
+                        <span class="filter-icon">👁</span>
+                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
+                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
+                        'אלעס'
+                }</span>
+                    </div>
+                    <div class="detail-filter-options">
+                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
+                             onclick="changeDisplayMode('minimal');">
+                            קעפל
                         </div>
-                        
-                        <div class="filter-panel-active-tags" id="filterPanelActiveTags">
-                            ${getActiveFilterTagsHTML()}
+                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
+                             onclick="changeDisplayMode('recordings');">
+                            רעקארדירונגען
+                        </div>
+                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
+                             onclick="changeDisplayMode('full');">
+                            אלעס
                         </div>
                     </div>
                 </div>
@@ -18353,6 +17829,65 @@
                         <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
                              onclick="setMinQualityRating(5);">
                             ★★★★★ שיין, ניי און געשמאק
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Search Button -->
+                <div class="filter-panel-dropdown" id="searchPanelDropdown">
+                    <button class="filter-panel-btn ${hasSearch ? 'has-active' : ''}" onclick="toggleSearchPanel(event)">
+                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <span>זוך</span>
+                    </button>
+                    <div class="filter-panel-content search-panel-content" id="searchPanelContent">
+                        <div class="filter-panel-search">
+                            <input type="text"
+                                   id="filterPanelSearchInput"
+                                   class="filter-panel-search-input"
+                                   placeholder="זוך א ניגון..."
+                                   value="${searchQuery || ''}"
+                                   onkeypress="if(event.key==='Enter')handleFilterPanelSearch(this.value)">
+                            ${searchQuery ? '<button class="filter-panel-search-clear" onclick="clearSearch()">×</button>' : ''}
+                            <button class="filter-panel-search-btn" onclick="handleFilterPanelSearch(document.getElementById('filterPanelSearchInput').value)">🔍</button>
+                        </div>
+                        ${searchQuery ? `<div class="filter-panel-active-tags"><span class="filter-panel-tag">🔍 ${searchQuery}<button class="filter-panel-tag-remove" onclick="clearSearch()">×</button></span></div>` : ''}
+                    </div>
+                </div>
+
+                <!-- Filters Button -->
+                <div class="filter-panel-dropdown" id="filterPanelDropdown">
+                    <button class="filter-panel-btn ${totalActiveFilters > 0 ? 'has-active' : ''}" onclick="toggleFilterPanel(event)">
+                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M4 21v-7"/>
+                            <path d="M4 10V3"/>
+                            <path d="M12 21v-9"/>
+                            <path d="M12 8V3"/>
+                            <path d="M20 21v-5"/>
+                            <path d="M20 12V3"/>
+                            <circle cx="4" cy="13" r="2"/>
+                            <circle cx="12" cy="9" r="2"/>
+                            <circle cx="20" cy="15" r="2"/>
+                        </svg>
+                        <span>פילטער</span>
+                        ${totalActiveFilters > 0 ? `<span class="filter-count">${totalActiveFilters}</span>` : ''}
+                    </button>
+                    <div class="filter-panel-content" id="filterPanelContent">
+                        <div class="filter-panel-section-title">פילטערס:</div>
+                        <div class="filter-panel-filters">
+                            ${renderFilterPanelItem('collection', 'קאלעקשאנס', categories.collections)}
+                            ${renderFilterPanelItem('chatzer', 'חצר', categories.chatzeros)}
+                            ${renderFilterPanelItem('mechaber', 'מחבר', categories.mechabrim)}
+                            ${renderFilterPanelItem('verter', 'ווערטער', categories.verter)}
+                            ${renderFilterPanelItem('gezungen', 'געזינגען אויף', categories.gezungen)}
+                            ${renderFilterPanelItem('ritem', 'ריטעם', categories.ritem)}
+                            ${renderFilterPanelItem('scale', 'סקעיל', categories.scale)}
+                        </div>
+                        
+                        <div class="filter-panel-active-tags" id="filterPanelActiveTags">
+                            ${getActiveFilterTagsHTML()}
                         </div>
                     </div>
                 </div>
@@ -18480,7 +18015,7 @@
 
         // Update songs filters UI only (without re-rendering the whole page)
         function updateSongsFiltersUI() {
-            const filtersContainer = document.querySelector('.page-settings-bar .detail-filters-group');
+            const filtersContainer = document.querySelector('.songs-card .detail-filters-group');
             if (filtersContainer) {
                 filtersContainer.innerHTML = getSongsFiltersHTML();
             }
@@ -18539,15 +18074,15 @@
                         <div class="loading-wave-bar" id="loadingWaveBar"></div>
                     </div>
 
-                    <div class="page-settings-bar">
-                        <div class="detail-filters-group">
-                            ${getSongsFiltersHTML()}
-                        </div>
-                    </div>
-
                     <div class="songs-page-layout">
                         <div class="songs-main-content">
                             <div class="songs-card">
+                                <div style="padding: 15px 20px 10px 20px; display: flex; justify-content: center;">
+                                    <div class="detail-filters-group">
+                                        ${getSongsFiltersHTML()}
+                                    </div>
+                                </div>
+
                                 <div class="all-songs-grid" id="songsGrid">
                                     ${filteredSongs.length === 0 && !songsFullyLoaded ? `
                                         <div class="skeleton-song-row"></div>
@@ -20087,66 +19622,13 @@
             // Clear the input box
             const searchInput = document.getElementById('songsSearchInput');
             if (searchInput) searchInput.value = '';
-            const expandableInput = document.getElementById('expandableSearchInput');
-            if (expandableInput) expandableInput.value = '';
             applyFilters();
             // Re-render to remove the X button
             renderCurrentPage();
         }
 
-        // Expandable search functions
-        function toggleExpandableSearch(event) {
-            event.stopPropagation();
-            const container = document.getElementById('expandableSearch');
-            if (!container) return;
 
-            if (container.classList.contains('expanded')) {
-                closeExpandableSearch();
-            } else {
-                container.classList.add('expanded');
-                const input = document.getElementById('expandableSearchInput');
-                if (input) {
-                    setTimeout(() => input.focus(), 300);
-                }
-            }
-        }
 
-        function closeExpandableSearch() {
-            const container = document.getElementById('expandableSearch');
-            if (container) {
-                container.classList.remove('expanded');
-            }
-        }
-
-        function handleExpandableSearch(value) {
-            searchQuery = value.trim();
-            currentPage = 1;
-            closeExpandableSearch();
-            applyFilters();
-        }
-
-        // Live search with debounce
-        let liveSearchTimeout = null;
-        function handleLiveSearch(value) {
-            if (liveSearchTimeout) {
-                clearTimeout(liveSearchTimeout);
-            }
-            liveSearchTimeout = setTimeout(() => {
-                searchQuery = value.trim();
-                currentPage = 1;
-                applyFilters();
-            }, 200);
-        }
-
-        // Close expandable search when clicking outside
-        document.addEventListener('click', function (event) {
-            const container = document.getElementById('expandableSearch');
-            if (container && container.classList.contains('expanded')) {
-                if (!container.contains(event.target)) {
-                    closeExpandableSearch();
-                }
-            }
-        });
 
 
         // Current detail view
@@ -20917,9 +20399,9 @@
                                 ` : ''}
                                 ${(verterMakor || verterMarehMakom) ? `
                                     <div class="detail-subtitle">
-                                        ${verterMakor ? `<span class="detail-makor-text">${formatDescription(verterMakor)}</span>` : ''}
+                                        ${verterMakor ? `<span class="detail-makor-text">${verterMakor}</span>` : ''}
                                         ${(verterMakor && verterMarehMakom) ? '<span class="detail-separator">•</span>' : ''}
-                                        ${verterMarehMakom ? `<span class="detail-mareh-text">${formatDescription(verterMarehMakom)}</span>` : ''}
+                                        ${verterMarehMakom ? `<span class="detail-mareh-text">${verterMarehMakom}</span>` : ''}
                                     </div>
                                 ` : ''}
                                 ${piyutZmanim.length > 0 ? `
@@ -21637,7 +21119,7 @@
                     return '<div class="song-item-recording" onclick="event.stopPropagation(); playNigunRecording(' + songIdx + ', ' + i + ', this)" data-song-idx="' + songIdx + '" data-rec-idx="' + i + '" data-rating="' + (rec.rating || 0) + '">' +
                         '<div class="song-item-rec-num">' + (i + 1) + '</div>' +
                         '<div class="song-item-rec-info">' +
-                        '<div class="song-item-rec-name">' + formatDescription(displayName) + '</div>' +
+                        '<div class="song-item-rec-name">' + displayName + '</div>' +
                         (recTags.length > 0 ? '<div class="song-item-rec-tags">' + recTags.join('') + '</div>' : '') +
                         '</div>' +
                         recRating +
@@ -22996,9 +22478,9 @@
                             <div class="album-info">
                                 <div class="album-title clickable-title" data-action="detail" data-category="albums" data-name="${escapeHtml(key)}">${key}</div>
                                 ${info.chatzer ? `<div class="album-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}" data-tooltip-value="${escapeHtml(info.chatzer)}" data-tooltip-type="chatzer">${info.chatzer}</span></div>` : ''}
-                                ${serie ? `<div class="album-serie">${formatDescription(serie)}</div>` : ''}
+                                ${serie ? `<div class="album-serie">${serie}</div>` : ''}
                                 ${info.year ? `<div class="album-year">שנת ${info.year}</div>` : ''}
-                                ${notes ? `<div class="album-notes">${formatDescription(notes)}</div>` : ''}
+                                ${notes ? `<div class="album-notes">${notes}</div>` : ''}
                             </div>
                             <div class="album-actions">
                                 ${hasBooklet ? `
@@ -23060,7 +22542,7 @@
                             ${hasImage ? `<img class="detail-image" src="${coverUrl}" alt="${albumName}">` : ''}
                             <div class="detail-header-text">
                                 <h1 class="detail-title" style="color: var(--color-album-dark);">${albumName}</h1>
-                                ${producer ? `<div class="detail-subtitle">${formatDescription(producer)}</div>` : ''}
+                                ${producer ? `<div class="detail-subtitle">${producer}</div>` : ''}
                                 ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
                                 ${info.year ? `<div class="detail-year">שנת ${info.year}</div>` : ''}
                             </div>
@@ -23140,7 +22622,7 @@
                             <div class="detail-header-text">
                                 <h1 class="detail-title" style="color: var(--color-document-dark);">${docName}</h1>
                                 ${sortType ? `<div class="detail-type-badge" style="background: var(--color-document-pale); color: var(--color-document-dark);">${sortType}</div>` : ''}
-                                ${info.serie ? `<div class="detail-subtitle">${formatDescription(info.serie.replace(/\`\`\`/g, ''))}</div>` : ''}
+                                ${info.serie ? `<div class="detail-subtitle">${info.serie.replace(/\`\`\`/g, '')}</div>` : ''}
                                 ${info.chatzer ? `<div class="detail-chatzer"><span class="chatzer-tag" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(info.chatzer)}">${info.chatzer}</span></div>` : ''}
                             </div>
                         </div>
@@ -23642,7 +23124,7 @@
                                     <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
                                         <div class="song-item-rec-num">${i + 1}</div>
                                         <div class="song-item-rec-info">
-                                            <div class="song-item-rec-name">${formatDescription(displayName)}</div>
+                                            <div class="song-item-rec-name">${displayName}</div>
                                             ${recTags.length > 0 ? `<div class="song-item-rec-tags">${recTags.join('')}</div>` : ''}
                                         </div>
                                         ${recRating}
@@ -23805,7 +23287,7 @@
                                     <div class="song-item-recording ${isRecActive ? 'active-recording' : ''} ${!recMeetsQuality ? 'low-quality-rec' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${actualIndex}">
                                         <div class="song-item-rec-num">${actualIndex + 1}</div>
                                         <div class="song-item-rec-info">
-                                            <div class="song-item-rec-name">${formatDescription(displayName)}</div>
+                                            <div class="song-item-rec-name">${displayName}</div>
                                             ${recTags.length > 0 ? `<div class="song-item-rec-tags">${recTags.join('')}</div>` : ''}
                                         </div>
                                         ${recRating}
@@ -24158,76 +23640,7 @@
                 document.getElementById('showBtnSongName').textContent = song.name || 'ווייז פלעיער';
             }
 
-            // Update mechaber profile in new player info box
-            const mechaberProfile = document.getElementById('playerMechaberProfile');
-            const mechaberAvatar = document.getElementById('playerMechaberAvatar');
-            const mechaberNameEl = document.getElementById('playerMechaberName');
-
-            if (song.mechaber) {
-                const firstMechaber = song.mechaber.split(',')[0].trim();
-                const mechaberInfo = mechabrimInfo[firstMechaber];
-                const mechaberId = mechaberInfo?.customId || firstMechaber;
-
-                // Set link
-                mechaberProfile.href = `#/mechabrim/${encodeURIComponent(mechaberId)}`;
-                mechaberProfile.setAttribute('data-action', 'detail');
-                mechaberProfile.setAttribute('data-category', 'mechabrim');
-                mechaberProfile.setAttribute('data-name', firstMechaber);
-
-                // Set avatar
-                if (mechaberInfo?.image) {
-                    mechaberAvatar.innerHTML = `<img src="${mechaberInfo.image}" alt="${firstMechaber}">`;
-                } else {
-                    mechaberAvatar.innerHTML = `<div class="placeholder"><span class="mechaber-icon"></span></div>`;
-                }
-
-                // Set name - use gerufen if available
-                let displayName = firstMechaber;
-                if (mechaberInfo) {
-                    if (mechaberInfo.gerufen) {
-                        displayName = mechaberInfo.gerufen;
-                    } else if (mechaberInfo.firstName) {
-                        displayName = mechaberInfo.firstName;
-                    }
-                }
-                mechaberNameEl.textContent = displayName;
-
-                mechaberProfile.style.display = 'flex';
-                document.querySelector('.player-info-box').classList.remove('no-mechaber');
-            } else {
-                mechaberProfile.style.display = 'none';
-                document.querySelector('.player-info-box').classList.add('no-mechaber');
-            }
-
-            // Build tags for player info box
-            const tagsContainer = document.getElementById('playerInfoTags');
-            let tagsHtml = [];
-
-            // Add chatzer tags
-            if (song.category) {
-                song.category.split(',').forEach(chatzer => {
-                    const c = chatzer.trim();
-                    if (c) {
-                        const chatzerInfo = chatzerosInfo[c] || {};
-                        const chatzerId = chatzerInfo.customId || c;
-                        tagsHtml.push(`<a class="player-tag player-tag-chatzer" href="#/chatzeros/${encodeURIComponent(chatzerId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(c)}">${c}</a>`);
-                    }
-                });
-            }
-
-            // Add collection tag (only first one to save space)
-            if (song.collections) {
-                const firstCollection = song.collections.split(',')[0].trim();
-                if (firstCollection) {
-                    const collInfo = collectionsInfo[firstCollection] || {};
-                    const collId = collInfo.customId || firstCollection;
-                    tagsHtml.push(`<a class="player-tag player-tag-collection" href="#/collections/${encodeURIComponent(collId)}" data-action="detail" data-category="collections" data-name="${escapeHtml(firstCollection)}">${firstCollection}</a>`);
-                }
-            }
-
-            tagsContainer.innerHTML = tagsHtml.join('');
-
-            // Keep old meta for backwards compatibility (hidden)
+            // Create meta with links - using entity-specific colors
             let metaParts = [];
             if (song.mechaber) {
                 metaParts.push(createPlayerMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
@@ -24237,7 +23650,7 @@
             }
             document.getElementById('playerSongMeta').innerHTML = metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>');
 
-            // Collection link (extra section)
+            // Collection link
             if (song.collections) {
                 document.getElementById('playerCollection').innerHTML = createPlayerMetaLinks(song.collections, 'collections', 'collection', 'collection');
             } else {
@@ -24260,13 +23673,6 @@
             const playerShowWave = document.querySelector('#playerShowBtn .song-wave-animation');
             if (playerShowWave && !audioPlayer.paused) {
                 playerShowWave.classList.remove('paused');
-            }
-        }
-
-        // Open the current song details popup when clicking on player song name
-        function openCurrentSongDetails() {
-            if (currentSongIndex >= 0 && allSongs[currentSongIndex]) {
-                openNigunModal(currentSongIndex, allSongs[currentSongIndex]);
             }
         }
 

@@ -11632,176 +11632,6 @@
             text-overflow: ellipsis;
         }
 
-        /* New styled player info box - similar to nigun modal */
-        .player-info-box {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            border-radius: 0 0 12px 12px;
-            padding: 8px 12px 14px 70px;
-            margin-bottom: 6px;
-            box-shadow: 0 4px 12px rgba(74, 124, 201, 0.25);
-            width: 240px;
-        }
-
-        .player-mechaber-profile {
-            position: absolute;
-            top: 0;
-            left: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: var(--color-mechaber);
-            padding: 5px 7px 4px 7px;
-            border-radius: 0 0 8px 8px;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            text-decoration: none;
-            z-index: 5;
-        }
-
-        .player-mechaber-profile:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(196, 53, 168, 0.4);
-        }
-
-        .player-mechaber-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: white;
-            border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .player-mechaber-avatar img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .player-mechaber-avatar .placeholder {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, var(--color-mechaber-pale) 0%, var(--color-mechaber-light) 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .player-mechaber-avatar .placeholder .mechaber-icon {
-            width: 14px;
-            height: 20px;
-            background-color: var(--color-mechaber);
-            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
-            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
-        }
-
-        .player-mechaber-name {
-            font-size: 7px;
-            font-weight: 600;
-            color: white;
-            text-align: center;
-            margin-top: 2px;
-            max-width: 50px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .player-info-content {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 0;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .player-info-box .player-song-name {
-            color: white;
-            font-size: 0.9em;
-            font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .player-info-box .player-song-name:hover {
-            color: rgba(255, 255, 255, 0.85);
-            text-decoration: underline;
-        }
-
-        /* Tags positioned at bottom edge - half on, half off */
-        .player-info-tags {
-            position: absolute;
-            bottom: -7px;
-            right: 12px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            align-items: center;
-        }
-
-        .player-tag {
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.68em;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-decoration: none;
-            white-space: nowrap;
-        }
-
-        .player-tag-chatzer {
-            background: var(--color-chatzer);
-            color: white;
-            box-shadow: 0 2px 6px rgba(156, 91, 181, 0.35);
-        }
-
-        .player-tag-chatzer:hover {
-            background: var(--color-chatzer-dark);
-            transform: scale(1.05);
-        }
-
-        .player-tag-collection {
-            background: var(--color-collection);
-            color: white;
-            box-shadow: 0 2px 6px rgba(198, 40, 40, 0.35);
-        }
-
-        .player-tag-collection:hover {
-            background: var(--color-collection-dark);
-            transform: scale(1.05);
-        }
-
-        .player-tag-zman {
-            background: var(--color-zman);
-            color: white;
-            box-shadow: 0 2px 6px rgba(233, 106, 27, 0.35);
-        }
-
-        .player-tag-zman:hover {
-            background: var(--color-zman-dark);
-            transform: scale(1.05);
-        }
-
-        /* When no mechaber, reduce left padding */
-        .player-info-box.no-mechaber {
-            padding-left: 12px;
-        }
-
-        /* Hide old meta when using new box */
-        .player-info-box .player-song-meta {
-            display: none;
-        }
-
         .player-meta-link {
             color: var(--text-muted);
             text-decoration: none;
@@ -12781,45 +12611,7 @@
                 order: 1;
                 width: 100%;
                 text-align: center;
-                margin-bottom: 8px;
-            }
-
-            .player-info-box {
-                padding: 6px 10px 12px 60px;
-                width: 200px;
-            }
-
-            .player-info-box.no-mechaber {
-                padding-left: 10px;
-            }
-
-            .player-mechaber-profile {
-                left: 8px;
-                padding: 4px 5px 3px 5px;
-            }
-
-            .player-mechaber-avatar {
-                width: 32px;
-                height: 32px;
-            }
-
-            .player-mechaber-name {
-                font-size: 6px;
-                max-width: 42px;
-            }
-
-            .player-info-box .player-song-name {
-                font-size: 0.85em;
-            }
-
-            .player-info-tags {
-                right: 10px;
-                bottom: -6px;
-            }
-
-            .player-tag {
-                font-size: 0.6em;
-                padding: 2px 6px;
+                margin-bottom: 10px;
             }
 
             .player-controls {
@@ -15201,25 +14993,14 @@
         <button class="player-hide-btn" onclick="hidePlayerBanner()" title="באהאלט פלעיער">−</button>
         <div class="player-inner">
             <div class="player-info">
-                <div class="player-info-box">
-                    <a class="player-mechaber-profile" id="playerMechaberProfile" style="display: none;">
-                        <div class="player-mechaber-avatar" id="playerMechaberAvatar">
-                            <div class="placeholder"><span class="mechaber-icon"></span></div>
-                        </div>
-                        <div class="player-mechaber-name" id="playerMechaberName"></div>
-                    </a>
-                    <div class="player-info-content">
-                        <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א ניגון צו שפילן</div>
-                        <div class="player-info-tags" id="playerInfoTags"></div>
-                    </div>
-                </div>
+                <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א ניגון צו שפילן</div>
+                <div class="player-song-meta" id="playerSongMeta"></div>
                 <div class="player-wave-animation" id="playerWave">
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
                     <span class="wave-bar"></span>
                 </div>
-                <div class="player-song-meta" id="playerSongMeta" style="display: none;"></div>
             </div>
             <div class="player-controls">
                 <button class="player-btn" onclick="playPrevious()" title="פריערדיגע"><svg viewBox="0 0 24 24"
@@ -24158,76 +23939,7 @@
                 document.getElementById('showBtnSongName').textContent = song.name || 'ווייז פלעיער';
             }
 
-            // Update mechaber profile in new player info box
-            const mechaberProfile = document.getElementById('playerMechaberProfile');
-            const mechaberAvatar = document.getElementById('playerMechaberAvatar');
-            const mechaberNameEl = document.getElementById('playerMechaberName');
-
-            if (song.mechaber) {
-                const firstMechaber = song.mechaber.split(',')[0].trim();
-                const mechaberInfo = mechabrimInfo[firstMechaber];
-                const mechaberId = mechaberInfo?.customId || firstMechaber;
-
-                // Set link
-                mechaberProfile.href = `#/mechabrim/${encodeURIComponent(mechaberId)}`;
-                mechaberProfile.setAttribute('data-action', 'detail');
-                mechaberProfile.setAttribute('data-category', 'mechabrim');
-                mechaberProfile.setAttribute('data-name', firstMechaber);
-
-                // Set avatar
-                if (mechaberInfo?.image) {
-                    mechaberAvatar.innerHTML = `<img src="${mechaberInfo.image}" alt="${firstMechaber}">`;
-                } else {
-                    mechaberAvatar.innerHTML = `<div class="placeholder"><span class="mechaber-icon"></span></div>`;
-                }
-
-                // Set name - use gerufen if available
-                let displayName = firstMechaber;
-                if (mechaberInfo) {
-                    if (mechaberInfo.gerufen) {
-                        displayName = mechaberInfo.gerufen;
-                    } else if (mechaberInfo.firstName) {
-                        displayName = mechaberInfo.firstName;
-                    }
-                }
-                mechaberNameEl.textContent = displayName;
-
-                mechaberProfile.style.display = 'flex';
-                document.querySelector('.player-info-box').classList.remove('no-mechaber');
-            } else {
-                mechaberProfile.style.display = 'none';
-                document.querySelector('.player-info-box').classList.add('no-mechaber');
-            }
-
-            // Build tags for player info box
-            const tagsContainer = document.getElementById('playerInfoTags');
-            let tagsHtml = [];
-
-            // Add chatzer tags
-            if (song.category) {
-                song.category.split(',').forEach(chatzer => {
-                    const c = chatzer.trim();
-                    if (c) {
-                        const chatzerInfo = chatzerosInfo[c] || {};
-                        const chatzerId = chatzerInfo.customId || c;
-                        tagsHtml.push(`<a class="player-tag player-tag-chatzer" href="#/chatzeros/${encodeURIComponent(chatzerId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(c)}">${c}</a>`);
-                    }
-                });
-            }
-
-            // Add collection tag (only first one to save space)
-            if (song.collections) {
-                const firstCollection = song.collections.split(',')[0].trim();
-                if (firstCollection) {
-                    const collInfo = collectionsInfo[firstCollection] || {};
-                    const collId = collInfo.customId || firstCollection;
-                    tagsHtml.push(`<a class="player-tag player-tag-collection" href="#/collections/${encodeURIComponent(collId)}" data-action="detail" data-category="collections" data-name="${escapeHtml(firstCollection)}">${firstCollection}</a>`);
-                }
-            }
-
-            tagsContainer.innerHTML = tagsHtml.join('');
-
-            // Keep old meta for backwards compatibility (hidden)
+            // Create meta with links - using entity-specific colors
             let metaParts = [];
             if (song.mechaber) {
                 metaParts.push(createPlayerMetaLinks(song.mechaber, 'mechabrim', 'mechaber', 'mechaber'));
@@ -24237,7 +23949,7 @@
             }
             document.getElementById('playerSongMeta').innerHTML = metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>');
 
-            // Collection link (extra section)
+            // Collection link
             if (song.collections) {
                 document.getElementById('playerCollection').innerHTML = createPlayerMetaLinks(song.collections, 'collections', 'collection', 'collection');
             } else {
