@@ -22476,14 +22476,17 @@
                             ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
                             ${chatzeros.length > 0 ? `
                                 <div class="card-tags" onclick="event.stopPropagation();">
-                                    ${chatzeros.map(chatzer => `
-                                        <span class="card-chatzer-tag"
+                                    ${chatzeros.map(chatzer => {
+                                        const cInfo = chatzerosInfo[chatzer] || {};
+                                        const cId = cInfo.customId || chatzer;
+                                        return `<a class="card-chatzer-tag"
+                                              href="#/chatzeros/${encodeURIComponent(cId)}"
                                               data-action="detail"
                                               data-category="chatzeros"
                                               data-name="${escapeHtml(chatzer)}"
                                               data-tooltip-value="${escapeHtml(chatzer)}"
-                                              data-tooltip-type="chatzer">${chatzer}</span>
-                                    `).join('')}
+                                              data-tooltip-type="chatzer">${chatzer}</a>`;
+                                    }).join('')}
                                 </div>
                             ` : ''}
                         </div>
