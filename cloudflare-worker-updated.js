@@ -60,92 +60,120 @@ export default {
                     // Fetch directly with rowId
                     codaUrl = `https://coda.io/apis/v1/docs/${CODA_DOC_ID}/tables/${SONGS_TABLE_ID}/rows/${songId}?valueFormat=rich`;
                 } else {
-                    // For customId, we need to search
-                    // Coda's query parameter does full-text search
-                    // The customId in the table is stored as "#123" format
-                    const searchTerm = songId.startsWith('#') ? songId : `#${songId}`;
-                    const query = encodeURIComponent(searchTerm);
-                    codaUrl = `https://coda.io/apis/v1/docs/${CODA_DOC_ID}/tables/${SONGS_TABLE_ID}/rows?query=${query}&valueFormat=rich&limit=10`;
+                    // For customId, use multiple search strategies
+                    // Strategy 1: Try with hash prefix (most common format)
+                    // Strategy 2: Try without hash
+                    // Strategy 3: Try as plain number search
+                    const searchTerms = [
+                        `#${songId}`,  // With hash prefix
+                        songId,         // Plain number
+                        `"#${songId}"`, // Quoted with hash
+                    ];
+                    // Use first search term, we'll try others if this fails
+                    const query = encodeURIComponent(searchTerms[0]);
+                    codaUrl = `https://coda.io/apis/v1/docs/${CODA_DOC_ID}/tables/${SONGS_TABLE_ID}/rows?query=${query}&valueFormat=rich&limit=25`;
                 }
 
                 console.log(`Fetching single song: ${songId}, isRowId: ${isRowId}`);
 
-                const codaResponse = await fetchFromCoda(codaUrl, {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${env.CODA_API_KEY}`,
-                        'Content-Type': 'application/json',
-                    },
-                });
-
-                if (!codaResponse.ok) {
-                    const errorBody = await codaResponse.text();
-                    console.error('Single song fetch error:', {
-                        status: codaResponse.status,
-                        songId: songId,
-                        error: errorBody.substring(0, 200),
-                    });
-
-                    return new Response(JSON.stringify({
-                        error: 'Song not found',
-                        songId: songId,
-                        status: codaResponse.status,
-                    }), {
-                        status: codaResponse.status === 404 ? 404 : 500,
-                        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-                    });
-                }
-
-                const data = await codaResponse.json();
-
-                // Process the result
                 let song = null;
 
                 if (isRowId) {
-                    // Direct row fetch returns the row object
-                    song = data;
-                } else {
-                    // Query returns items array - find the exact match
-                    if (data.items && data.items.length > 0) {
-                        // Find the song with matching customId
-                        const targetId = songId.startsWith('#') ? songId : `#${songId}`;
+                    // Direct row fetch by rowId
+                    const codaResponse = await fetchFromCoda(codaUrl, {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${env.CODA_API_KEY}`,
+                            'Content-Type': 'application/json',
+                        },
+                    });
 
-                        song = data.items.find(item => {
-                            const values = item.values || {};
-                            // Check the customId column (c-DhElYWayZ-)
-                            const customIdValue = values['c-DhElYWayZ-'];
-                            if (customIdValue) {
-                                const extracted = typeof customIdValue === 'string'
-                                    ? customIdValue
-                                    : (customIdValue.value || customIdValue.name || customIdValue.display || '');
-                                return extracted === targetId || extracted === songId || extracted === `#${songId}`;
-                            }
-                            // Fallback: check all values
-                            for (const val of Object.values(values)) {
-                                const text = typeof val === 'string' ? val : (val?.value || val?.name || val?.display || '');
-                                if (text === targetId || text === `#${songId}`) {
-                                    return true;
-                                }
-                            }
-                            return false;
+                    if (codaResponse.ok) {
+                        song = await codaResponse.json();
+                    }
+                } else {
+                    // Try multiple search strategies for customId
+                    const searchStrategies = [
+                        songId,              // Plain number: 4054
+                        `#${songId}`,        // With hash: #4054
+                        `ID ${songId}`,      // With ID prefix
+                    ];
+
+                    for (const searchTerm of searchStrategies) {
+                        if (song) break; // Found it, stop searching
+
+                        const query = encodeURIComponent(searchTerm);
+                        const searchUrl = `https://coda.io/apis/v1/docs/${CODA_DOC_ID}/tables/${SONGS_TABLE_ID}/rows?query=${query}&valueFormat=rich&limit=50`;
+
+                        console.log(`Trying search: "${searchTerm}"`);
+
+                        const codaResponse = await fetchFromCoda(searchUrl, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Bearer ${env.CODA_API_KEY}`,
+                                'Content-Type': 'application/json',
+                            },
                         });
 
-                        // If no exact match, take the first result
-                        if (!song && data.items.length > 0) {
-                            song = data.items[0];
-                            console.log(`No exact customId match for ${songId}, using first search result`);
+                        if (!codaResponse.ok) {
+                            console.log(`Search failed for "${searchTerm}": ${codaResponse.status}`);
+                            continue;
+                        }
+
+                        const data = await codaResponse.json();
+
+                        if (data.items && data.items.length > 0) {
+                            // Find exact match by customId
+                            const targetIds = [songId, `#${songId}`, `#${songId} `];
+
+                            song = data.items.find(item => {
+                                const values = item.values || {};
+
+                                // Check all values for the ID
+                                for (const [colId, val] of Object.entries(values)) {
+                                    let text = '';
+                                    if (typeof val === 'string') {
+                                        text = val.trim();
+                                    } else if (val && typeof val === 'object') {
+                                        text = (val.value || val.name || val.display || '').toString().trim();
+                                    }
+
+                                    // Check if this looks like our ID
+                                    if (targetIds.includes(text) || text === `#${songId}`) {
+                                        console.log(`Found match in column ${colId}: "${text}"`);
+                                        return true;
+                                    }
+                                }
+                                return false;
+                            });
+
+                            if (song) {
+                                console.log(`Found song with search term: "${searchTerm}"`);
+                            }
                         }
                     }
 
                     if (!song) {
+                        console.log(`Song ${songId} not found after trying all search strategies`);
                         return new Response(JSON.stringify({
                             error: 'Song not found',
                             songId: songId,
+                            searchStrategies: searchStrategies,
                         }), {
                             status: 404,
                             headers: { 'Content-Type': 'application/json', ...corsHeaders },
                         });
                     }
+                }
+
+                if (!song) {
+                    return new Response(JSON.stringify({
+                        error: 'Song not found',
+                        songId: songId,
+                    }), {
+                        status: 404,
+                        headers: { 'Content-Type': 'application/json', ...corsHeaders },
+                    });
                 }
 
                 return new Response(JSON.stringify(song), {
