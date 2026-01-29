@@ -5352,16 +5352,6 @@
 
         /* Remove old hover border change - handled by ::after now */
 
-        .page-theme-chatzer .category-card {
-            background: var(--color-chatzer-pale);
-            border-color: var(--color-chatzer-light);
-        }
-
-        .page-theme-chatzer .category-card::after {
-            border-color: var(--color-chatzer);
-            box-shadow: 0 0 15px rgba(156, 91, 181, 0.15);
-        }
-
         /* Mechaber cards styled separately below */
 
         .page-theme-mechaber .category-card::after {
@@ -5369,48 +5359,291 @@
             box-shadow: 0 0 15px rgba(239, 83, 80, 0.15);
         }
 
+        /* ============================================
+           Redesigned Category Cards (mechaber-style)
+           ============================================ */
+
+        /* Base styles for all redesigned category cards */
+        .page-theme-chatzer .category-card,
+        .page-theme-verter .category-card,
+        .page-theme-zman .category-card,
+        .page-theme-collection .category-card,
+        .page-theme-piyut .category-card {
+            padding: 0;
+            background: white;
+            border: none;
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+            overflow: hidden;
+            min-height: 100px;
+        }
+
+        .page-theme-chatzer .category-card .card-header,
+        .page-theme-verter .category-card .card-header,
+        .page-theme-zman .category-card .card-header,
+        .page-theme-collection .category-card .card-header,
+        .page-theme-piyut .category-card .card-header {
+            margin: 0;
+            gap: 0;
+            flex-direction: row-reverse;
+            align-items: stretch;
+            flex: 1;
+        }
+
+        .page-theme-chatzer .category-card .card-header-text,
+        .page-theme-verter .category-card .card-header-text,
+        .page-theme-zman .category-card .card-header-text,
+        .page-theme-collection .category-card .card-header-text,
+        .page-theme-piyut .category-card .card-header-text {
+            flex: 1;
+            padding: 15px 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            min-height: 100px;
+        }
+
+        .page-theme-chatzer .category-card .card-title,
+        .page-theme-verter .category-card .card-title,
+        .page-theme-zman .category-card .card-title,
+        .page-theme-collection .category-card .card-title,
+        .page-theme-piyut .category-card .card-title {
+            color: white;
+            font-size: 1.15em;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        }
+
+        .page-theme-chatzer .category-card .card-image,
+        .page-theme-verter .category-card .card-image,
+        .page-theme-zman .category-card .card-image,
+        .page-theme-collection .category-card .card-image,
+        .page-theme-piyut .category-card .card-image {
+            width: 100px;
+            height: 100px;
+            min-height: 100px;
+            border-radius: 0;
+            border: none;
+            object-fit: cover;
+            flex-shrink: 0;
+            box-shadow: none;
+        }
+
+        .page-theme-chatzer .category-card .card-stats,
+        .page-theme-verter .category-card .card-stats,
+        .page-theme-zman .category-card .card-stats,
+        .page-theme-collection .category-card .card-stats,
+        .page-theme-piyut .category-card .card-stats {
+            background: white;
+            margin: 0;
+            padding: 10px 15px;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            min-height: 38px;
+            flex-shrink: 0;
+        }
+
+        /* Chatzer (Purple) */
+        .page-theme-chatzer .category-card {
+            box-shadow: 0 4px 20px rgba(156, 91, 181, 0.15);
+        }
+
+        .page-theme-chatzer .category-card .card-header-text {
+            background: linear-gradient(135deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
+        }
+
+        .page-theme-chatzer .category-card .card-stats {
+            border-top: 2px solid var(--color-chatzer-light);
+        }
+
+        .page-theme-chatzer .category-card .card-stat {
+            color: var(--color-chatzer-dark);
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        .page-theme-chatzer .category-card::after {
+            border-color: var(--color-chatzer);
+            box-shadow: 0 0 20px rgba(156, 91, 181, 0.3);
+            border-radius: 16px;
+        }
+
+        .page-theme-chatzer .category-card:hover {
+            box-shadow: 0 8px 30px rgba(156, 91, 181, 0.25);
+        }
+
+        /* Verter (Gray) */
         .page-theme-verter .category-card {
-            background: var(--color-verter-pale);
-            border-color: var(--color-verter-light);
+            box-shadow: 0 4px 20px rgba(107, 114, 128, 0.15);
+        }
+
+        .page-theme-verter .category-card .card-header-text {
+            background: linear-gradient(135deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
+        }
+
+        .page-theme-verter .category-card .card-stats {
+            border-top: 2px solid var(--color-verter-light);
+        }
+
+        .page-theme-verter .category-card .card-stat {
+            color: var(--color-verter-dark);
+            font-weight: 600;
+            font-size: 0.85em;
         }
 
         .page-theme-verter .category-card::after {
             border-color: var(--color-verter);
-            box-shadow: 0 0 15px rgba(255, 167, 38, 0.15);
+            box-shadow: 0 0 20px rgba(107, 114, 128, 0.3);
+            border-radius: 16px;
         }
 
+        .page-theme-verter .category-card:hover {
+            box-shadow: 0 8px 30px rgba(107, 114, 128, 0.25);
+        }
+
+        /* Zman (Orange) */
         .page-theme-zman .category-card {
-            background: var(--color-zman-pale);
-            border-color: var(--color-zman-light);
+            box-shadow: 0 4px 20px rgba(233, 106, 27, 0.15);
+        }
+
+        .page-theme-zman .category-card .card-header-text {
+            background: linear-gradient(135deg, var(--color-zman) 0%, var(--color-zman-dark) 100%);
+        }
+
+        .page-theme-zman .category-card .card-stats {
+            border-top: 2px solid var(--color-zman-light);
+        }
+
+        .page-theme-zman .category-card .card-stat {
+            color: var(--color-zman-dark);
+            font-weight: 600;
+            font-size: 0.85em;
         }
 
         .page-theme-zman .category-card::after {
             border-color: var(--color-zman);
-            box-shadow: 0 0 15px rgba(66, 165, 245, 0.15);
+            box-shadow: 0 0 20px rgba(233, 106, 27, 0.3);
+            border-radius: 16px;
         }
 
+        .page-theme-zman .category-card:hover {
+            box-shadow: 0 8px 30px rgba(233, 106, 27, 0.25);
+        }
+
+        /* Collection (Red) */
         .page-theme-collection .category-card {
-            background: var(--color-collection-pale);
-            border-color: var(--color-collection-light);
+            box-shadow: 0 4px 20px rgba(198, 40, 40, 0.15);
+        }
+
+        .page-theme-collection .category-card .card-header-text {
+            background: linear-gradient(135deg, var(--color-collection) 0%, var(--color-collection-dark) 100%);
+        }
+
+        .page-theme-collection .category-card .card-stats {
+            border-top: 2px solid var(--color-collection-light);
+        }
+
+        .page-theme-collection .category-card .card-stat {
+            color: var(--color-collection-dark);
+            font-weight: 600;
+            font-size: 0.85em;
         }
 
         .page-theme-collection .category-card::after {
             border-color: var(--color-collection);
-            box-shadow: 0 0 15px rgba(76, 175, 80, 0.15);
+            box-shadow: 0 0 20px rgba(198, 40, 40, 0.3);
+            border-radius: 16px;
         }
 
+        .page-theme-collection .category-card:hover {
+            box-shadow: 0 8px 30px rgba(198, 40, 40, 0.25);
+        }
+
+        /* Piyut (Green) */
         .page-theme-piyut .category-card {
-            background: var(--color-piyut-pale);
-            border-color: var(--color-piyut-light);
+            box-shadow: 0 4px 20px rgba(46, 139, 46, 0.15);
+        }
+
+        .page-theme-piyut .category-card .card-header-text {
+            background: linear-gradient(135deg, var(--color-piyut) 0%, var(--color-piyut-dark) 100%);
+        }
+
+        .page-theme-piyut .category-card .card-stats {
+            border-top: 2px solid var(--color-piyut-light);
+        }
+
+        .page-theme-piyut .category-card .card-stat {
+            color: var(--color-piyut-dark);
+            font-weight: 600;
+            font-size: 0.85em;
         }
 
         .page-theme-piyut .category-card::after {
             border-color: var(--color-piyut);
-            box-shadow: 0 0 15px rgba(46, 139, 46, 0.15);
+            box-shadow: 0 0 20px rgba(46, 139, 46, 0.3);
+            border-radius: 16px;
         }
 
-        .page-theme-piyut .category-card-title {
-            color: var(--color-piyut);
+        .page-theme-piyut .category-card:hover {
+            box-shadow: 0 8px 30px rgba(46, 139, 46, 0.25);
+        }
+
+        /* Mobile styles for redesigned category cards */
+        @media (max-width: 480px) {
+            .page-theme-chatzer .category-card .card-image,
+            .page-theme-verter .category-card .card-image,
+            .page-theme-zman .category-card .card-image,
+            .page-theme-collection .category-card .card-image,
+            .page-theme-piyut .category-card .card-image {
+                width: 70px;
+                height: 70px;
+                min-height: 70px;
+            }
+
+            .page-theme-chatzer .category-card .card-header-text,
+            .page-theme-verter .category-card .card-header-text,
+            .page-theme-zman .category-card .card-header-text,
+            .page-theme-collection .category-card .card-header-text,
+            .page-theme-piyut .category-card .card-header-text {
+                padding: 12px 14px;
+                min-height: 70px;
+            }
+
+            .page-theme-chatzer .category-card .card-title,
+            .page-theme-verter .category-card .card-title,
+            .page-theme-zman .category-card .card-title,
+            .page-theme-collection .category-card .card-title,
+            .page-theme-piyut .category-card .card-title {
+                font-size: 1em;
+            }
+        }
+
+        /* Tags inside redesigned category card banners */
+        .page-theme-chatzer .category-card .card-tags,
+        .page-theme-verter .category-card .card-tags,
+        .page-theme-zman .category-card .card-tags,
+        .page-theme-collection .category-card .card-tags,
+        .page-theme-piyut .category-card .card-tags {
+            margin-top: 8px;
+            gap: 5px;
+        }
+
+        .page-theme-piyut .category-card .card-zman-tag {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            font-size: 0.7em;
+            padding: 2px 8px;
+            border-radius: 10px;
+            border: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .page-theme-piyut .category-card .card-zman-tag:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: none;
         }
 
         .category-card:hover {
@@ -21575,14 +21808,13 @@
                 html += `
                     <a class="category-card" href="#/zman/${encodeURIComponent(zmanId)}" data-action="zman-detail" data-name="${escapeHtml(zmanName)}">
                         <div class="card-header">
-                            <div class="card-icon"></div>
                             <div class="card-header-text">
                                 <div class="card-title">${zmanName}</div>
-                                <div class="card-stats">
-                                    ${piyutimCount > 0 ? `<span class="card-stat">${pluralize(piyutimCount, 'פיוט', 'פיוטים')}</span>` : ''}
-                                    ${collectionsCount > 0 ? `<span class="card-stat">${pluralize(collectionsCount, 'קאלעקשאן', 'קאלעקשאנס')}</span>` : ''}
-                                </div>
                             </div>
+                        </div>
+                        <div class="card-stats">
+                            ${piyutimCount > 0 ? `<span class="card-stat">${pluralize(piyutimCount, 'פיוט', 'פיוטים')}</span>` : ''}
+                            ${collectionsCount > 0 ? `<span class="card-stat">${pluralize(collectionsCount, 'קאלעקשאן', 'קאלעקשאנס')}</span>` : ''}
                         </div>
                     </a>
                 `;
@@ -22215,7 +22447,6 @@
                     return `
                         <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
                             <div class="card-header">
-                                <div class="card-icon"></div>
                                 <div class="card-header-text">
                                     <div class="card-title">${piyutName}</div>
                                     ${zmanim.length > 0 ? `
@@ -22229,10 +22460,10 @@
                                             `).join('')}
                                         </div>
                                     ` : ''}
-                                    <div class="card-stats">
-                                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="card-stats">
+                                <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
                             </div>
                         </a>
                     `;
@@ -22271,7 +22502,6 @@
                 return `
                                 <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
                                     <div class="card-header">
-                                        <div class="card-icon"></div>
                                         <div class="card-header-text">
                                             <div class="card-title">${piyutName}</div>
                                             ${zmanim.length > 0 ? `
@@ -22285,10 +22515,10 @@
                                                     `).join('')}
                                                 </div>
                                             ` : ''}
-                                            <div class="card-stats">
-                                                <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
-                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="card-stats">
+                                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
                                     </div>
                                 </a>
                             `;
@@ -22521,23 +22751,18 @@
             `;
             }
 
-            // Default layout for other categories
+            // Default layout for other categories (redesigned mechaber-style)
             return `
             <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
                 <div class="card-header">
-                    ${hasImage ? `
-                        <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                        <div class="card-icon" style="display:none;">${icon}</div>
-                    ` : `
-                        <div class="card-icon">${icon}</div>
-                    `}
+                    ${hasImage ? `<img class="card-image" src="${info.image}" alt="${key}" onerror="this.parentElement.classList.add('no-image'); this.remove();">` : ''}
                     <div class="card-header-text">
                         <div class="card-title">${key}</div>
-                        <div class="card-stats">
-                            ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${pluralize(mechabrimCount, 'מחבר', 'מחברים')}</span>` : ''}
-                            <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
-                        </div>
                     </div>
+                </div>
+                <div class="card-stats">
+                    ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${pluralize(mechabrimCount, 'מחבר', 'מחברים')}</span>` : ''}
+                    <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
                 </div>
             </a>
         `;
