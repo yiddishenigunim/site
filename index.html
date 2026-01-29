@@ -20676,9 +20676,11 @@
 
                 // Show skeleton loader if data not loaded
                 // For songs: don't await, let background fetch populate the grid
-                if (hadSkeleton) {
+                // EXCEPTION: For nigun detail pages (idOrName present), skip this - let single song optimization handle it
+                const isNigunDetailPage = targetPage === 'songs' && idOrName;
+                if (hadSkeleton && !isNigunDetailPage) {
                     if (targetPage === 'songs') {
-                        // Songs: start loading in background, don't await
+                        // Songs list page: start loading in background, don't await
                         // The page will show skeleton, and fetchSongsInBackground will update the grid
                         ensureDataForPage(targetPage); // No await!
                     } else {
