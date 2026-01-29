@@ -24407,9 +24407,14 @@
                 }
             }
 
-            // Add gezungen tag
+            // Add gezungen tags
             if (song.gezungen) {
-                tagsHtml.push(`<span class="player-tag player-tag-gezungen" data-action="filter" data-page="nigunim" data-filter-key="gezungen" data-value="${escapeHtml(song.gezungen)}">${song.gezungen}</span>`);
+                song.gezungen.split(',').forEach(g => {
+                    const gezungen = g.trim();
+                    if (gezungen) {
+                        tagsHtml.push(`<span class="player-tag player-tag-gezungen" data-action="filter" data-page="nigunim" data-filter-key="gezungen" data-value="${escapeHtml(gezungen)}">${gezungen}</span>`);
+                    }
+                });
             }
 
             tagsContainer.innerHTML = tagsHtml.join('');
