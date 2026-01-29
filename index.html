@@ -16783,6 +16783,230 @@
         let songsCurrentlyLoading = false;
         let songsLoadingPromise = null;
 
+        // Process a single song row from API response
+        function processSingleSongRow(item, index = 0) {
+            const values = item.values;
+
+            // Find customId from any column ending with "ID"
+            let customId = null;
+            for (const [colId, value] of Object.entries(values)) {
+                const textVal = extractText(value);
+                if (textVal && /^#?\d+$/.test(textVal.trim())) {
+                    // This looks like an ID (e.g. "#781" or "781")
+                    customId = textVal.replace(/^#/, '').trim();
+                    break;
+                }
+            }
+
+            // Helper to check file type
+            const isAudioFile = (filename) => {
+                if (!filename) return false;
+                const ext = filename.toLowerCase().split('.').pop();
+                return ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'wma'].includes(ext);
+            };
+
+            const isImageFile = (filename) => {
+                if (!filename) return false;
+                const ext = filename.toLowerCase().split('.').pop();
+                return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
+            };
+
+            const isPdfFile = (filename) => {
+                if (!filename) return false;
+                const ext = filename.toLowerCase().split('.').pop();
+                return ext === 'pdf';
+            };
+
+            const isVideoFile = (filename) => {
+                if (!filename) return false;
+                const ext = filename.toLowerCase().split('.').pop();
+                return ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'].includes(ext);
+            };
+
+            // Recording slots configuration (5 recording slots)
+            const recordingSlots = [
+                { file: 'c-XmTlDf3xfw', personalities: 'c-s8sYskJc4M', details: 'c-SuWz2qu9B1', rating: 'c-v5V7PENdFy', album: 'c-FuDbL2XiAj' },
+                { file: 'c-oqB3imNNfk', personalities: 'c-jRuAfCbs28', details: 'c-_TOU9FXYYn', rating: 'c-YQ-aWW59ej', album: 'c-H0XAyaKkPl' },
+                { file: 'c-oGF6C78GZl', personalities: 'c-4trFKY_CK8', details: 'c-dr-m1GnYty', rating: 'c-gmz2rln2dD', album: 'c-HKBBDews5N' },
+                { file: 'c-pf9zW3wypK', personalities: 'c-x0WLb4j4wV', details: 'c-pbtldr4CXD', rating: 'c-_GlQy78PAc', album: 'c-imgRABw0tH' },
+                { file: 'c-aqbocjDGuL', personalities: 'c-ilrb-DW4dV', details: 'c-2T9FWsVE9h', rating: 'c-yuKHpnbHfM', album: 'c-5FSrRNb-Uw' }
+            ];
+
+            // Extract recordings with full metadata
+            const recordings = [];
+            let recordingCounter = 1;
+
+            recordingSlots.forEach((slot, slotIndex) => {
+                let fileAttachment = values[slot.file];
+
+                // Handle both array and single object formats from Coda
+                if (!fileAttachment) return;
+
+                // If it's a single object (not an array), wrap it in an array
+                if (!Array.isArray(fileAttachment)) {
+                    if (fileAttachment.url && fileAttachment.name) {
+                        fileAttachment = [fileAttachment];
+                    } else {
+                        return; // Not a valid file attachment
+                    }
+                }
+
+                if (fileAttachment.length === 0) return;
+
+                const personalities = extractText(values[slot.personalities]) || '';
+                const details = extractText(values[slot.details]) || '';
+                const ratingVal = extractText(values[slot.rating]) || '';
+                const album = extractText(values[slot.album]) || '';
+
+                // Parse rating (1-5 stars)
+                let rating = 0;
+                if (ratingVal) {
+                    const parsed = parseInt(ratingVal, 10);
+                    if (!isNaN(parsed) && parsed >= 1 && parsed <= 5) {
+                        rating = parsed;
+                    }
+                }
+
+                // Process all files in this attachment field (can have multiple)
+                fileAttachment.forEach((file, fileIdx) => {
+                    if (!file.url || !isAudioFile(file.name)) return;
+
+                    const suffix = fileAttachment.length > 1 ? ` (${fileIdx + 1})` : '';
+                    recordings.push({
+                        url: file.url,
+                        name: file.name || `רעקארדינג ${recordingCounter}`,
+                        details: details,
+                        personalities: personalities,
+                        album: album,
+                        rating: rating,
+                        displayName: details || personalities || album || `רעקארדינג ${recordingCounter}${suffix}`,
+                        slotIndex: slotIndex,
+                        fileIndex: fileIdx
+                    });
+                    recordingCounter++;
+                });
+            });
+
+            // Sort recordings by rating (highest first), then those without rating
+            recordings.sort((a, b) => {
+                if (a.rating && b.rating) return b.rating - a.rating;
+                if (a.rating && !b.rating) return -1;
+                if (!a.rating && b.rating) return 1;
+                return 0;
+            });
+
+            // Get main audio URL (first recording)
+            let mainAudioUrl = recordings.length > 0 ? recordings[0].url : null;
+
+            // 6th attachment slot - for other media (images, videos, PDFs, additional audio)
+            const otherMedia = {
+                text: extractText(values['c-l9TdqiWUNg']) || '',
+                audio: [],
+                files: [],
+                images: [],
+                videos: [],
+                pdfs: []
+            };
+
+            const attachment6 = values['c-_q44nnca44'];
+            if (Array.isArray(attachment6)) {
+                attachment6.forEach((file, idx) => {
+                    if (!file.url) return;
+                    const fileName = file.name || `קובץ ${idx + 1}`;
+
+                    if (isAudioFile(fileName)) {
+                        otherMedia.audio.push({ url: file.url, name: fileName });
+                    } else if (isImageFile(fileName)) {
+                        otherMedia.images.push({ url: file.url, name: fileName });
+                    } else if (isVideoFile(fileName)) {
+                        otherMedia.videos.push({ url: file.url, name: fileName });
+                    } else if (isPdfFile(fileName)) {
+                        otherMedia.pdfs.push({ url: file.url, name: fileName });
+                    } else {
+                        otherMedia.files.push({ url: file.url, name: fileName });
+                    }
+                });
+            }
+
+            // Legacy arrays for backward compatibility
+            const images = otherMedia.images;
+            const pdfs = otherMedia.pdfs;
+
+            // Find personality field (פערזענליכקייט) - column c-mxsPhpZeVM
+            const songName = extractText(values['c-6qqDF7NYmv']) || '';
+
+            // Extract personality from the known column
+            const personalityNames = extractText(values['c-6E02UJxxZW']) || ''; // פערזענליכקייט
+
+            // Also try the specific ID column if customId not found
+            if (!customId) {
+                const customIdVal = extractText(values['c-DhElYWayZ-']);
+                if (customIdVal) {
+                    customId = customIdVal.replace(/^#/, '').trim();
+                }
+            }
+
+            return {
+                rowId: item.id,
+                customId: customId,
+                name: songName || `ליד ${index + 1}`,
+                author: extractText(values['c-ujrTHeCJGo']),
+                category: extractText(values['c-u0H9G6FHoJ']), // חצר
+                verter: extractText(values['c-KAWfVfB4jq']),
+                mechaber: extractText(values['c-ujrTHeCJGo']),
+                personalities: personalityNames, // פערזענליכקייט
+                scale: extractText(values['c-wQZrHPVWog']),
+                ritem: extractText(values['c-OmWEZXO7Ys']),
+                gezungen: extractText(values['c-kiHIam57Z0']),
+                collections: extractText(values['c-pCBFiGU8ex']),
+                zugeleigt: extractText(values['c-iOlvD8H0n3']), // צוגעלייגט אום
+                pasigOif: extractText(values['c-mTtYp3FK9U']), // פאסיג אויף / זמנים
+                maure: extractText(values['c-J3q8mQIXBh']), // מאורע
+                info: extractText(values['c-0jFLHVYRL8']),
+                siman: extractText(values['c-jSVbHezFAS']),
+                notn: extractText(values['c-hodtA6zYsy']),
+                documents: extractText(values['c-nF5sRFoMkJ']), // דאקומענטן
+                albums: extractText(values['c-j8dujLHcnT']), // אלבומס
+                resources: extractText(values['c-KBb2Bgi6nM']), // רעסורסן
+                audioUrl: mainAudioUrl,
+                recordings: recordings,
+                images: images,
+                pdfs: pdfs,
+                otherMedia: otherMedia
+            };
+        }
+
+        // Fetch a single song by customId or rowId from the API
+        async function fetchSingleSong(songId) {
+            const SINGLE_SONG_API = 'https://api.oitzerhanigunim.org/api/song/';
+
+            try {
+                console.log(`🎵 Fetching single song: ${songId}`);
+                const response = await fetch(`${SINGLE_SONG_API}${encodeURIComponent(songId)}`);
+
+                if (!response.ok) {
+                    console.warn(`Single song fetch failed with status: ${response.status}`);
+                    return null;
+                }
+
+                const data = await response.json();
+
+                if (!data || !data.values) {
+                    console.warn('Single song response missing values');
+                    return null;
+                }
+
+                // Process the single song row
+                const song = processSingleSongRow(data);
+                console.log(`✅ Single song loaded: ${song.name} (customId: ${song.customId})`);
+
+                return song;
+            } catch (error) {
+                console.error('Error fetching single song:', error);
+                return null;
+            }
+        }
+
         // Fetch songs in background with pagination - OPTIMIZED: first 50 items initially
         async function fetchSongsInBackground() {
             // Prevent duplicate fetches - return existing promise if already loading
@@ -20496,9 +20720,59 @@
                     const detailPages = ['mechabrim', 'chatzeros', 'verter', 'zmanim', 'piyutim', 'zman', 'collections', 'albums', 'documents', 'resources', 'nigunim'];
                     const dataPage = page === 'zman' ? 'zmanim' : (page === 'piyutim' ? 'piyutim' : (page === 'nigunim' ? 'songs' : page));
 
-                    // Show loading indicator and ensure data is loaded for detail pages
-                    // For nigunim, need to check songsFullyLoaded, not just loadedCategories
-                    const needsLoading = page === 'nigunim' ? !songsFullyLoaded : !isDataLoadedForPage(dataPage);
+                    // OPTIMIZED: For nigun detail pages, try single song API first
+                    let singleSongLoaded = null;
+                    if (page === 'nigunim' && !songsFullyLoaded) {
+                        // First check if we already have this song in allSongs
+                        const existingSong = allSongs.find(s =>
+                            s.customId === idOrName || s.rowId === idOrName || s.name === idOrName
+                        );
+
+                        if (existingSong) {
+                            console.log('📦 Song already in allSongs, using cached version');
+                            singleSongLoaded = existingSong;
+                        } else {
+                            // Show brief loading indicator
+                            if (content) {
+                                content.innerHTML = `
+                                    <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
+                                        <div class="loading-wave-bar"></div>
+                                        <p style="color: var(--text-secondary); font-size: 14px;">לאָדן...</p>
+                                    </div>
+                                `;
+                            }
+
+                            // Try fetching single song from API
+                            const singleSong = await fetchSingleSong(idOrName);
+
+                            if (singleSong) {
+                                singleSongLoaded = singleSong;
+
+                                // Add to allSongs array at the beginning for quick access
+                                // Check if not already there (in case of race condition)
+                                const alreadyExists = allSongs.some(s =>
+                                    s.customId === singleSong.customId || s.rowId === singleSong.rowId
+                                );
+                                if (!alreadyExists) {
+                                    allSongs.unshift(singleSong);
+                                    console.log(`📥 Added single song to allSongs, total: ${allSongs.length}`);
+                                }
+
+                                // Start loading rest of songs in background (non-blocking)
+                                ensureDataForPage('songs', true).then(() => {
+                                    console.log('✅ Background songs loading complete');
+                                });
+                            } else {
+                                // Single song API failed, fallback to loading all songs
+                                console.log('⚠️ Single song API failed, falling back to full load');
+                                await ensureDataForPage('songs', true);
+                            }
+                        }
+                    }
+
+                    // Show loading indicator and ensure data is loaded for detail pages (non-nigunim)
+                    // For nigunim, we already handled it above
+                    const needsLoading = page === 'nigunim' ? false : !isDataLoadedForPage(dataPage);
                     if (detailPages.includes(page) && needsLoading) {
                         if (content) {
                             content.innerHTML = `
@@ -20511,12 +20785,20 @@
                                 </div>
                             `;
                         }
-                        // For nigunim, wait for ALL songs to load so we can find the specific one
-                        await ensureDataForPage(dataPage, page === 'nigunim');
+                        await ensureDataForPage(dataPage);
                     }
 
-                    // Find item by ID or name
-                    const item = findItemByIdOrName(page, idOrName);
+                    // Find item by ID or name (for nigunim, use singleSongLoaded if available)
+                    let item;
+                    if (page === 'nigunim' && singleSongLoaded) {
+                        item = {
+                            name: singleSongLoaded.name,
+                            id: singleSongLoaded.rowId,
+                            customId: singleSongLoaded.customId
+                        };
+                    } else {
+                        item = findItemByIdOrName(page, idOrName);
+                    }
                     console.log('Found item:', item);
 
                     // Redirect to proper numeric ID URL if we found the item
