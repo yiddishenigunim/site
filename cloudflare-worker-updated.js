@@ -92,20 +92,25 @@ export default {
                         song = await codaResponse.json();
                     }
                 } else {
-                    // Try multiple search strategies for customId
-                    const searchStrategies = [
-                        songId,              // Plain number: 4054
-                        `#${songId}`,        // With hash: #4054
-                        `ID ${songId}`,      // With ID prefix
+                    // The customId column is c-DhElYWayZ- and values are stored as "```#4054```"
+                    // Coda query format: columnId:"value"
+                    const CUSTOM_ID_COLUMN = 'c-DhElYWayZ-';
+
+                    // Try different value formats (with/without backticks and hash)
+                    const searchValues = [
+                        `\`\`\`#${songId}\`\`\``,  // With backticks: ```#4054```
+                        `#${songId}`,              // Just hash: #4054
+                        songId,                    // Plain number: 4054
                     ];
 
-                    for (const searchTerm of searchStrategies) {
-                        if (song) break; // Found it, stop searching
+                    for (const searchValue of searchValues) {
+                        if (song) break;
 
-                        const query = encodeURIComponent(searchTerm);
-                        const searchUrl = `https://coda.io/apis/v1/docs/${CODA_DOC_ID}/tables/${SONGS_TABLE_ID}/rows?query=${query}&valueFormat=rich&limit=50`;
+                        // Format: columnId:"value"
+                        const queryStr = `${CUSTOM_ID_COLUMN}:"${searchValue}"`;
+                        const searchUrl = `https://coda.io/apis/v1/docs/${CODA_DOC_ID}/tables/${SONGS_TABLE_ID}/rows?query=${encodeURIComponent(queryStr)}&valueFormat=rich&limit=5`;
 
-                        console.log(`Trying search: "${searchTerm}"`);
+                        console.log(`Trying query: ${queryStr}`);
 
                         const codaResponse = await fetchFromCoda(searchUrl, {
                             method: 'GET',
@@ -116,49 +121,26 @@ export default {
                         });
 
                         if (!codaResponse.ok) {
-                            console.log(`Search failed for "${searchTerm}": ${codaResponse.status}`);
+                            const errorText = await codaResponse.text();
+                            console.log(`Search failed for "${searchValue}": ${codaResponse.status} - ${errorText.substring(0, 100)}`);
                             continue;
                         }
 
                         const data = await codaResponse.json();
 
                         if (data.items && data.items.length > 0) {
-                            // Find exact match by customId
-                            const targetIds = [songId, `#${songId}`, `#${songId} `];
-
-                            song = data.items.find(item => {
-                                const values = item.values || {};
-
-                                // Check all values for the ID
-                                for (const [colId, val] of Object.entries(values)) {
-                                    let text = '';
-                                    if (typeof val === 'string') {
-                                        text = val.trim();
-                                    } else if (val && typeof val === 'object') {
-                                        text = (val.value || val.name || val.display || '').toString().trim();
-                                    }
-
-                                    // Check if this looks like our ID
-                                    if (targetIds.includes(text) || text === `#${songId}`) {
-                                        console.log(`Found match in column ${colId}: "${text}"`);
-                                        return true;
-                                    }
-                                }
-                                return false;
-                            });
-
-                            if (song) {
-                                console.log(`Found song with search term: "${searchTerm}"`);
-                            }
+                            // Take first match - query should be precise enough
+                            song = data.items[0];
+                            console.log(`Found song with query: ${queryStr}`);
                         }
                     }
 
                     if (!song) {
-                        console.log(`Song ${songId} not found after trying all search strategies`);
+                        console.log(`Song ${songId} not found after trying all query formats`);
                         return new Response(JSON.stringify({
                             error: 'Song not found',
                             songId: songId,
-                            searchStrategies: searchStrategies,
+                            triedFormats: searchValues,
                         }), {
                             status: 404,
                             headers: { 'Content-Type': 'application/json', ...corsHeaders },
