@@ -2727,26 +2727,6 @@
             animation: itemPopIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
         }
 
-        /* Category card specific pop-in - no max-height constraint */
-        @keyframes cardPopIn {
-            0% {
-                opacity: 0;
-                transform: scale(0.9);
-            }
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-
-        .card-pop-in {
-            animation: cardPopIn 0.3s ease-out forwards;
-        }
-
-        .card-stagger {
-            animation: cardPopIn 0.35s ease-out forwards;
-        }
-
         /* Make song items and category cards animate their position smoothly */
         .all-songs-grid .song-item,
         .category-grid .category-card {
@@ -5362,7 +5342,10 @@
             box-shadow: 0 0 15px rgba(156, 91, 181, 0.15);
         }
 
-        /* Mechaber cards styled separately below */
+        .page-theme-mechaber .category-card {
+            background: var(--color-mechaber-pale);
+            border-color: var(--color-mechaber-light);
+        }
 
         .page-theme-mechaber .category-card::after {
             border-color: var(--color-mechaber);
@@ -5449,7 +5432,10 @@
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
-        /* Mechaber card images styled in redesign section below */
+        /* Round images for mechabrim cards */
+        .page-theme-mechaber .card-image {
+            border-radius: 50%;
+        }
 
         .category-card.has-image .card-header {
             align-items: flex-start;
@@ -6189,170 +6175,6 @@
             font-size: 1.1em;
             font-weight: 700;
             color: var(--color-mechaber-dark);
-        }
-
-        /* ====== NEW MECHABER CARD REDESIGN ====== */
-        .page-theme-mechaber .category-grid {
-            grid-auto-rows: minmax(130px, auto);
-            align-items: stretch;
-        }
-
-        .page-theme-mechaber .category-card {
-            padding: 0;
-            background: white;
-            border: none;
-            box-shadow: 0 4px 20px rgba(156, 91, 181, 0.15);
-            display: flex;
-            flex-direction: column;
-            border-radius: 16px;
-            overflow: hidden;
-            min-height: 130px;
-        }
-
-        .page-theme-mechaber .category-card .card-header {
-            margin: 0;
-            gap: 0;
-            flex-direction: row-reverse;
-            align-items: stretch;
-            flex: 1;
-        }
-
-        /* Mechaber banner section (magenta/pink) */
-        .page-theme-mechaber .category-card .card-header-text {
-            flex: 1;
-            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
-            padding: 12px 15px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            height: 150px;
-            max-height: 150px;
-            overflow: hidden;
-        }
-
-        .page-theme-mechaber .category-card .card-mechaber-formal {
-            color: rgba(255, 255, 255, 0.85);
-            font-size: 0.8em;
-            margin-bottom: 4px;
-        }
-
-        .page-theme-mechaber .category-card .card-mechaber-known {
-            color: white;
-            font-size: 1.1em;
-            font-weight: 700;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-        }
-
-        .page-theme-mechaber .category-card .card-years {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 0.75em;
-            margin-top: 5px;
-        }
-
-        /* Chatzer tags (purple) attached to banner */
-        .page-theme-mechaber .category-card .card-tags {
-            margin-top: 8px;
-            gap: 5px;
-        }
-
-        .page-theme-mechaber .category-card .card-chatzer-tag {
-            background: var(--color-chatzer);
-            color: white;
-            font-size: 0.7em;
-            padding: 2px 8px;
-            border-radius: 10px;
-            border: none;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        .page-theme-mechaber .category-card .card-chatzer-tag:hover {
-            background: var(--color-chatzer-dark);
-            transform: none;
-        }
-
-        /* Image section */
-        .page-theme-mechaber .category-card .card-image {
-            width: 110px;
-            height: 150px;
-            max-height: 150px;
-            border-radius: 0;
-            border: none;
-            object-fit: cover;
-            flex-shrink: 0;
-            box-shadow: none;
-        }
-
-        .page-theme-mechaber .category-card .card-icon {
-            width: 110px;
-            height: 150px;
-            border-radius: 0;
-            background: var(--color-mechaber-pale);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.2em;
-            flex-shrink: 0;
-        }
-
-        /* Stats at bottom - white background */
-        .page-theme-mechaber .category-card .card-stats {
-            background: white;
-            margin: 0;
-            padding: 10px 15px;
-            justify-content: center;
-            gap: 15px;
-            border-top: 2px solid var(--color-mechaber-light);
-            flex-wrap: wrap;
-            min-height: 40px;
-            flex-shrink: 0;
-        }
-
-        .page-theme-mechaber .category-card .card-stat {
-            color: var(--color-mechaber-dark);
-            font-weight: 600;
-            font-size: 0.85em;
-        }
-
-        .page-theme-mechaber .category-card .card-stat-icon {
-            margin-left: 3px;
-        }
-
-        /* Hover effect adjustments */
-        .page-theme-mechaber .category-card::after {
-            border-color: var(--color-mechaber);
-            box-shadow: 0 0 20px rgba(196, 53, 168, 0.3);
-            border-radius: 16px;
-        }
-
-        .page-theme-mechaber .category-card:hover {
-            box-shadow: 0 8px 30px rgba(196, 53, 168, 0.25);
-        }
-
-        /* Mobile styles for mechaber cards */
-        @media (max-width: 480px) {
-            .page-theme-mechaber .category-card .card-image {
-                width: 75px;
-                min-height: 80px;
-            }
-
-            .page-theme-mechaber .category-card .card-icon {
-                width: 75px;
-                min-height: 80px;
-                font-size: 1.6em;
-            }
-
-            .page-theme-mechaber .category-card .card-header-text {
-                padding: 10px 12px;
-                min-height: 80px;
-            }
-
-            .page-theme-mechaber .category-card .card-mechaber-known {
-                font-size: 0.95em;
-            }
-
-            .page-theme-mechaber .category-card .card-mechaber-formal {
-                font-size: 0.7em;
-            }
         }
 
         .card-count {
@@ -11829,7 +11651,7 @@
             gap: 10px;
             background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
             border-radius: 0 0 12px 12px;
-            padding: 8px 12px 8px 70px;
+            padding: 8px 12px 14px 70px;
             margin-bottom: 6px;
             box-shadow: 0 4px 12px rgba(74, 124, 201, 0.25);
             width: 240px;
@@ -11926,15 +11748,15 @@
             text-decoration: underline;
         }
 
-        /* Player tags section */
-        .player-tags {
+        /* Tags positioned at bottom edge - half on, half off */
+        .player-info-tags {
+            position: absolute;
+            bottom: -7px;
+            right: 12px;
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 4px;
             align-items: center;
-            justify-content: flex-start;
-            direction: rtl;
-            max-width: 200px;
         }
 
         .player-tag {
@@ -11981,17 +11803,6 @@
             transform: scale(1.05);
         }
 
-        .player-tag-gezungen {
-            background: var(--color-piyut);
-            color: white;
-            box-shadow: 0 2px 6px rgba(46, 139, 46, 0.35);
-        }
-
-        .player-tag-gezungen:hover {
-            background: var(--color-piyut-dark);
-            transform: scale(1.05);
-        }
-
         /* When no mechaber, reduce left padding */
         .player-info-box.no-mechaber {
             padding-left: 12px;
@@ -12011,6 +11822,15 @@
         .player-meta-link:hover {
             color: var(--primary);
             text-decoration: underline;
+        }
+
+        #playerCollection .player-meta-link {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        #playerCollection .player-meta-link:hover {
+            color: var(--primary-deep);
         }
 
         /* Entity-specific player meta links */
@@ -12033,6 +11853,18 @@
 
         .player-meta-link-chatzer:hover {
             color: var(--color-chatzer);
+            text-decoration: underline;
+        }
+
+        .player-meta-link-collection {
+            color: var(--color-collection-dark);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .player-meta-link-collection:hover {
+            color: var(--color-collection);
             text-decoration: underline;
         }
 
@@ -12154,6 +11986,25 @@
             justify-content: space-between;
             font-size: 0.75em;
             color: var(--text-muted);
+        }
+
+        .player-extra {
+            flex: 1;
+            text-align: left;
+            direction: rtl;
+        }
+
+        .player-extra-line {
+            font-size: 0.75em;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #playerCollection {
+            font-weight: 600;
+            color: var(--primary);
         }
 
         /* Loading */
@@ -12945,7 +12796,7 @@
             }
 
             .player-info-box {
-                padding: 6px 10px 6px 60px;
+                padding: 6px 10px 12px 60px;
                 width: 200px;
             }
 
@@ -12972,6 +12823,16 @@
                 font-size: 0.85em;
             }
 
+            .player-info-tags {
+                right: 10px;
+                bottom: -6px;
+            }
+
+            .player-tag {
+                font-size: 0.6em;
+                padding: 2px 6px;
+            }
+
             .player-controls {
                 order: 2;
             }
@@ -12981,7 +12842,7 @@
                 flex: 1;
             }
 
-            .player-tags {
+            .player-extra {
                 display: none;
             }
         }
@@ -15360,6 +15221,7 @@
                     </a>
                     <div class="player-info-content">
                         <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א ניגון צו שפילן</div>
+                        <div class="player-info-tags" id="playerInfoTags"></div>
                     </div>
                 </div>
                 <div class="player-wave-animation" id="playerWave">
@@ -15397,7 +15259,10 @@
                     <span id="duration">0:00</span>
                 </div>
             </div>
-            <div class="player-tags" id="playerTags"></div>
+            <div class="player-extra">
+                <div class="player-extra-line" id="playerCollection"></div>
+                <div class="player-extra-line" id="playerGezungen"></div>
+            </div>
             <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט" style="display: none;">
                 <div class="player-rating-container">
                     <span class="player-rating-stars" id="playerRatingStars"></span>
@@ -22439,89 +22304,6 @@
                     }).length;
             }
 
-            // Special layout for mechabrim cards
-            if (categoryKey === 'mechabrim') {
-                const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
-                const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
-
-                const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
-                const deathParts = [info.deathDay, info.deathMonth, info.deathYear].filter(Boolean);
-                const birthDate = birthParts.join(' ');
-                const deathDate = deathParts.join(' ');
-                const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
-
-                // Count recordings where mechaber appears in personalities field
-                const songs = data[key] || [];
-                let recordingsCount = 0;
-                allSongs.forEach(song => {
-                    if (song.recordings && Array.isArray(song.recordings)) {
-                        song.recordings.forEach(rec => {
-                            if (rec.personalities) {
-                                const recPersonalities = rec.personalities.split(',').map(p => p.trim());
-                                if (recPersonalities.includes(key)) {
-                                    recordingsCount++;
-                                }
-                            }
-                        });
-                    }
-                });
-
-                // Count shaychus (songs where mechaber is in personalities but not main mechaber)
-                const songIndicesSet = new Set(songs);
-                const shaychusCount = allSongs.filter((song, idx) => {
-                    if (songIndicesSet.has(idx)) return false;
-                    if (!song.personalities) return false;
-                    return song.personalities.split(',').map(p => p.trim()).includes(key);
-                }).length;
-
-                let titleHtml;
-                if (info.gerufen) {
-                    const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
-                    const knownName = knownParts.join(' ');
-                    titleHtml = `<span class="card-mechaber-formal">${formalName}</span><span class="card-mechaber-known">${knownName}</span>`;
-                } else {
-                    const fullNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
-                    const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : key;
-                    titleHtml = `<span class="card-mechaber-known">${fullName}</span>`;
-                }
-
-                return `
-                <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
-                    <div class="card-header">
-                        ${hasImage ? `
-                            <img class="card-image" src="${info.image}" alt="${key}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                            <div class="card-icon" style="display:none;">${icon}</div>
-                        ` : `
-                            <div class="card-icon">${icon}</div>
-                        `}
-                        <div class="card-header-text">
-                            <div class="card-title">${titleHtml}</div>
-                            ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
-                            ${chatzeros.length > 0 ? `
-                                <div class="card-tags">
-                                    ${chatzeros.map(chatzer => {
-                                        return `<span class="card-chatzer-tag"
-                                              data-action="detail"
-                                              data-category="chatzeros"
-                                              data-name="${escapeHtml(chatzer)}"
-                                              onclick="event.stopPropagation(); event.preventDefault(); navigateToDetail('chatzeros', '${escapeHtml(chatzer).replace(/'/g, "\\'")}');"
-                                              data-tooltip-value="${escapeHtml(chatzer)}"
-                                              data-tooltip-type="chatzer">${chatzer}</span>`;
-                                    }).join('')}
-                                </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                    <div class="card-stats">
-                        <span class="card-stat"><span class="card-stat-icon">🎵</span>${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
-                        ${recordingsCount > 0 ? `<span class="card-stat"><span class="card-stat-icon">🎧</span>${recordingsCount} רעקארדינג</span>` : ''}
-                        ${shaychusCount > 0 ? `<span class="card-stat"><span class="card-stat-icon">🔗</span>${shaychusCount} שייכות</span>` : ''}
-                    </div>
-                </a>
-            `;
-            }
-
-            // Default layout for other categories
             return `
             <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
                 <div class="card-header">
@@ -22532,7 +22314,54 @@
                         <div class="card-icon">${icon}</div>
                     `}
                     <div class="card-header-text">
-                        <div class="card-title">${key}</div>
+                        ${(() => {
+                    if (categoryKey === 'mechabrim') {
+                        // Build name display:
+                        // If גערופן exists: formal name (small) + known name (big)
+                        // If גערופן is empty: just show formal name with suffix
+                        const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
+                        const formalName = formalParts.length > 0 ? formalParts.join(' ') : '';
+
+                        // Build full dates
+                        const birthParts = [info.birthDay, info.birthMonth, info.birthYear].filter(Boolean);
+                        const deathParts = [info.deathDay, info.deathMonth, info.deathYear].filter(Boolean);
+                        const birthDate = birthParts.join(' ');
+                        const deathDate = deathParts.join(' ');
+                        const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
+
+                        let titleHtml;
+                        if (info.gerufen) {
+                            // Has גערופן - show two lines: formal (small) + known (big)
+                            const knownParts = [info.gerufen, info.platz, info.suffix].filter(Boolean);
+                            const knownName = knownParts.join(' ');
+                            titleHtml = `<span class="card-mechaber-formal">${formalName}</span><span class="card-mechaber-known">${knownName}</span>`;
+                        } else {
+                            // No גערופן - show formal name with suffix in one line (still use mechaber color)
+                            const fullNameParts = [info.title, info.firstName, info.lastName, info.platz, info.suffix].filter(Boolean);
+                            const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : key;
+                            titleHtml = `<span class="card-mechaber-known">${fullName}</span>`;
+                        }
+
+                        return `
+                                    <div class="card-title">${titleHtml}</div>
+                                    ${dateStr ? `<div class="card-years">${dateStr}</div>` : ''}
+                                `;
+                    } else {
+                        return `<div class="card-title">${key}</div>`;
+                    }
+                })()}
+                        ${chatzeros.length > 0 ? `
+                            <div class="card-tags" onclick="event.stopPropagation();">
+                                ${chatzeros.map(chatzer => `
+                                    <span class="card-chatzer-tag"
+                                          data-action="detail"
+                                          data-category="chatzeros"
+                                          data-name="${escapeHtml(chatzer)}"
+                                          data-tooltip-value="${escapeHtml(chatzer)}"
+                                          data-tooltip-type="chatzer">${chatzer}</span>
+                                `).join('')}
+                            </div>
+                        ` : ''}
                         <div class="card-stats">
                             ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${pluralize(mechabrimCount, 'מחבר', 'מחברים')}</span>` : ''}
                             <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
@@ -22584,7 +22413,7 @@
             const newCards = Array.from(grid.children).slice(-newKeys.length);
             newCards.forEach((card, i) => {
                 card.style.animationDelay = `${i * 0.03}s`;
-                card.classList.add('card-pop-in');
+                card.classList.add('item-pop-in');
             });
 
             // Update count in header
@@ -22635,11 +22464,11 @@
                 const newCards = Array.from(grid.children).slice(existingCount);
                 newCards.forEach((card, i) => {
                     card.style.animationDelay = `${i * 0.04}s`;
-                    // Use card-stagger for initial load, card-pop-in for subsequent loads
+                    // Use card-stagger for initial load, pop-in for subsequent loads
                     if (categoryLazyState.isInitialLoad) {
                         card.classList.add('card-stagger');
                     } else {
-                        card.classList.add('card-pop-in');
+                        card.classList.add('item-pop-in');
                     }
                 });
                 // Mark initial load as complete after first batch
@@ -24381,8 +24210,8 @@
                 document.querySelector('.player-info-box').classList.add('no-mechaber');
             }
 
-            // Build tags for player tags section
-            const tagsContainer = document.getElementById('playerTags');
+            // Build tags for player info box
+            const tagsContainer = document.getElementById('playerInfoTags');
             let tagsHtml = [];
 
             // Add chatzer tags
@@ -24407,16 +24236,6 @@
                 }
             }
 
-            // Add gezungen tags
-            if (song.gezungen) {
-                song.gezungen.split(',').forEach(g => {
-                    const gezungen = g.trim();
-                    if (gezungen) {
-                        tagsHtml.push(`<span class="player-tag player-tag-gezungen" data-action="filter" data-page="nigunim" data-filter-key="gezungen" data-value="${escapeHtml(gezungen)}">${gezungen}</span>`);
-                    }
-                });
-            }
-
             tagsContainer.innerHTML = tagsHtml.join('');
 
             // Keep old meta for backwards compatibility (hidden)
@@ -24428,6 +24247,15 @@
                 metaParts.push(createPlayerMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
             }
             document.getElementById('playerSongMeta').innerHTML = metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>');
+
+            // Collection link (extra section)
+            if (song.collections) {
+                document.getElementById('playerCollection').innerHTML = createPlayerMetaLinks(song.collections, 'collections', 'collection', 'collection');
+            } else {
+                document.getElementById('playerCollection').textContent = '';
+            }
+
+            document.getElementById('playerGezungen').textContent = song.gezungen ? `געזונגען: ${song.gezungen}` : '';
 
             // Update rating from current recording (if in recordings mode) or first recording
             const currentRec = song.recordings && song.recordings[currentRecordingIndex];
@@ -26268,7 +26096,8 @@
             // Update player UI with generic info
             document.getElementById('playerSongName').textContent = 'אודיאו';
             document.getElementById('playerSongMeta').innerHTML = '';
-            document.getElementById('playerTags').innerHTML = '';
+            document.getElementById('playerCollection').textContent = '';
+            document.getElementById('playerGezungen').textContent = '';
 
             // Hide rating for other media audio
             const playerRating = document.getElementById('playerRating');

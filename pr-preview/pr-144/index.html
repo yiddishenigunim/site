@@ -11829,7 +11829,7 @@
             gap: 10px;
             background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
             border-radius: 0 0 12px 12px;
-            padding: 8px 12px 8px 70px;
+            padding: 8px 12px 14px 70px;
             margin-bottom: 6px;
             box-shadow: 0 4px 12px rgba(74, 124, 201, 0.25);
             width: 240px;
@@ -11926,15 +11926,15 @@
             text-decoration: underline;
         }
 
-        /* Player tags section */
-        .player-tags {
+        /* Tags positioned at bottom edge - half on, half off */
+        .player-info-tags {
+            position: absolute;
+            bottom: -7px;
+            right: 12px;
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
+            gap: 4px;
             align-items: center;
-            justify-content: flex-start;
-            direction: rtl;
-            max-width: 200px;
         }
 
         .player-tag {
@@ -11981,17 +11981,6 @@
             transform: scale(1.05);
         }
 
-        .player-tag-gezungen {
-            background: var(--color-piyut);
-            color: white;
-            box-shadow: 0 2px 6px rgba(46, 139, 46, 0.35);
-        }
-
-        .player-tag-gezungen:hover {
-            background: var(--color-piyut-dark);
-            transform: scale(1.05);
-        }
-
         /* When no mechaber, reduce left padding */
         .player-info-box.no-mechaber {
             padding-left: 12px;
@@ -12011,6 +12000,15 @@
         .player-meta-link:hover {
             color: var(--primary);
             text-decoration: underline;
+        }
+
+        #playerCollection .player-meta-link {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        #playerCollection .player-meta-link:hover {
+            color: var(--primary-deep);
         }
 
         /* Entity-specific player meta links */
@@ -12033,6 +12031,18 @@
 
         .player-meta-link-chatzer:hover {
             color: var(--color-chatzer);
+            text-decoration: underline;
+        }
+
+        .player-meta-link-collection {
+            color: var(--color-collection-dark);
+            font-weight: 600;
+            text-decoration: none;
+            transition: var(--transition-smooth);
+        }
+
+        .player-meta-link-collection:hover {
+            color: var(--color-collection);
             text-decoration: underline;
         }
 
@@ -12154,6 +12164,25 @@
             justify-content: space-between;
             font-size: 0.75em;
             color: var(--text-muted);
+        }
+
+        .player-extra {
+            flex: 1;
+            text-align: left;
+            direction: rtl;
+        }
+
+        .player-extra-line {
+            font-size: 0.75em;
+            color: var(--text-muted);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        #playerCollection {
+            font-weight: 600;
+            color: var(--primary);
         }
 
         /* Loading */
@@ -12945,7 +12974,7 @@
             }
 
             .player-info-box {
-                padding: 6px 10px 6px 60px;
+                padding: 6px 10px 12px 60px;
                 width: 200px;
             }
 
@@ -12972,6 +13001,16 @@
                 font-size: 0.85em;
             }
 
+            .player-info-tags {
+                right: 10px;
+                bottom: -6px;
+            }
+
+            .player-tag {
+                font-size: 0.6em;
+                padding: 2px 6px;
+            }
+
             .player-controls {
                 order: 2;
             }
@@ -12981,7 +13020,7 @@
                 flex: 1;
             }
 
-            .player-tags {
+            .player-extra {
                 display: none;
             }
         }
@@ -15360,6 +15399,7 @@
                     </a>
                     <div class="player-info-content">
                         <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א ניגון צו שפילן</div>
+                        <div class="player-info-tags" id="playerInfoTags"></div>
                     </div>
                 </div>
                 <div class="player-wave-animation" id="playerWave">
@@ -15397,7 +15437,10 @@
                     <span id="duration">0:00</span>
                 </div>
             </div>
-            <div class="player-tags" id="playerTags"></div>
+            <div class="player-extra">
+                <div class="player-extra-line" id="playerCollection"></div>
+                <div class="player-extra-line" id="playerGezungen"></div>
+            </div>
             <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט" style="display: none;">
                 <div class="player-rating-container">
                     <span class="player-rating-stars" id="playerRatingStars"></span>
@@ -24381,8 +24424,8 @@
                 document.querySelector('.player-info-box').classList.add('no-mechaber');
             }
 
-            // Build tags for player tags section
-            const tagsContainer = document.getElementById('playerTags');
+            // Build tags for player info box
+            const tagsContainer = document.getElementById('playerInfoTags');
             let tagsHtml = [];
 
             // Add chatzer tags
@@ -24407,16 +24450,6 @@
                 }
             }
 
-            // Add gezungen tags
-            if (song.gezungen) {
-                song.gezungen.split(',').forEach(g => {
-                    const gezungen = g.trim();
-                    if (gezungen) {
-                        tagsHtml.push(`<span class="player-tag player-tag-gezungen" data-action="filter" data-page="nigunim" data-filter-key="gezungen" data-value="${escapeHtml(gezungen)}">${gezungen}</span>`);
-                    }
-                });
-            }
-
             tagsContainer.innerHTML = tagsHtml.join('');
 
             // Keep old meta for backwards compatibility (hidden)
@@ -24428,6 +24461,15 @@
                 metaParts.push(createPlayerMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
             }
             document.getElementById('playerSongMeta').innerHTML = metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>');
+
+            // Collection link (extra section)
+            if (song.collections) {
+                document.getElementById('playerCollection').innerHTML = createPlayerMetaLinks(song.collections, 'collections', 'collection', 'collection');
+            } else {
+                document.getElementById('playerCollection').textContent = '';
+            }
+
+            document.getElementById('playerGezungen').textContent = song.gezungen ? `געזונגען: ${song.gezungen}` : '';
 
             // Update rating from current recording (if in recordings mode) or first recording
             const currentRec = song.recordings && song.recordings[currentRecordingIndex];
@@ -26268,7 +26310,8 @@
             // Update player UI with generic info
             document.getElementById('playerSongName').textContent = 'אודיאו';
             document.getElementById('playerSongMeta').innerHTML = '';
-            document.getElementById('playerTags').innerHTML = '';
+            document.getElementById('playerCollection').textContent = '';
+            document.getElementById('playerGezungen').textContent = '';
 
             // Hide rating for other media audio
             const playerRating = document.getElementById('playerRating');

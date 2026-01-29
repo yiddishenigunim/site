@@ -1,6 +1,6 @@
 // Service Worker for Oitzer Hanigunim
 const CACHE_NAME = 'oitzer-hanigunim-v1';
-const API_CACHE_NAME = 'oitzer-api-cache-v2'; // v2: normalized cache keys (without _cb param)
+const API_CACHE_NAME = 'oitzer-api-cache-v1';
 const API_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 // Files to cache immediately
@@ -62,18 +62,10 @@ self.addEventListener('fetch', (event) => {
     );
 });
 
-// Normalize URL by removing cache-busting parameters
-function getNormalizedCacheKey(url) {
-    const urlObj = new URL(url);
-    // Remove _cb parameter (cache buster) so requests with different timestamps match the same cache
-    urlObj.searchParams.delete('_cb');
-    return urlObj.toString();
-}
-
 // Handle API requests with cache-first strategy
 async function handleApiRequest(request) {
     const cache = await caches.open(API_CACHE_NAME);
-    const cacheKey = getNormalizedCacheKey(request.url);
+    const cacheKey = request.url;
     
     // Check if we have a cached response
     const cachedResponse = await cache.match(cacheKey);
@@ -84,15 +76,11 @@ async function handleApiRequest(request) {
         const now = Date.now();
         
         if (cachedTime && (now - parseInt(cachedTime)) < API_CACHE_DURATION) {
-            const ageSeconds = Math.round((now - parseInt(cachedTime)) / 1000);
-            console.log(`[SW] Cache HIT (${ageSeconds}s old):`, cacheKey);
+            console.log('[SW] Serving from cache:', cacheKey);
             return cachedResponse;
-        } else if (cachedTime) {
-            const ageMinutes = Math.round((now - parseInt(cachedTime)) / 1000 / 60);
-            console.log(`[SW] Cache STALE (${ageMinutes}min old), refreshing:`, cacheKey);
         }
     }
-
+    
     // Fetch from network
     try {
         console.log('[SW] Fetching from network:', cacheKey);
