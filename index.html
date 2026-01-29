@@ -22482,12 +22482,21 @@
                 const deathDate = deathParts.join(' ');
                 const dateStr = (birthDate || deathDate) ? `${birthDate || '?'} - ${deathDate || ''}` : '';
 
-                // Count recordings (songs with audio)
+                // Count recordings where mechaber appears in personalities field
                 const songs = data[key] || [];
-                const recordingsCount = songs.filter(idx => {
-                    const song = allSongs[idx];
-                    return song && song.audioUrl && song.audioUrl.startsWith('http');
-                }).length;
+                let recordingsCount = 0;
+                allSongs.forEach(song => {
+                    if (song.recordings && Array.isArray(song.recordings)) {
+                        song.recordings.forEach(rec => {
+                            if (rec.personalities) {
+                                const recPersonalities = rec.personalities.split(',').map(p => p.trim());
+                                if (recPersonalities.includes(key)) {
+                                    recordingsCount++;
+                                }
+                            }
+                        });
+                    }
+                });
 
                 // Count shaychus (songs where mechaber is in personalities but not main mechaber)
                 const songIndicesSet = new Set(songs);
