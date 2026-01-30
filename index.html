@@ -2733,6 +2733,7 @@
                 opacity: 0;
                 transform: scale(0.9);
             }
+
             100% {
                 opacity: 1;
                 transform: scale(1);
@@ -3706,43 +3707,941 @@
 
         /* Sub-header bar for settings/filters */
         .page-settings-bar {
-            background: var(--color-nigun-pale);
-            padding: 12px 40px;
-            display: flex;
-            justify-content: center;
             position: sticky;
             top: 0;
             z-index: 100;
+            background: var(--color-nigun-pale);
+            padding: 10px 40px;
+            display: flex;
+            justify-content: center;
             margin: 0 auto 25px auto;
             border-radius: 0 0 25px 25px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            /* Shadow going down + inset shadow from top (from main header) */
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 8px 12px -8px rgba(74, 124, 201, 0.3);
+            /* Border on sides and bottom in nigun color */
+            border: 2px solid var(--color-nigun-light);
+            border-top: none;
             width: 90%;
             max-width: calc(100% - 40px);
+            /* Transition for filter panel expand/collapse animation */
+            transition: padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .page-settings-bar .detail-filters-group {
-            background: transparent;
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
             padding: 0;
-            gap: 12px;
+            width: 100%;
+        }
+
+        /* Filter Mega-Menu - button stays in normal flow, static so expanded positions to settings bar */
+        .filter-mega-menu {
+            position: static;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            overflow: visible;
+            z-index: 50;
+        }
+
+        .filter-mega-trigger {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 16px;
+            height: 100%;
+            width: 100%;
+            cursor: pointer;
+            white-space: nowrap;
+            color: var(--color-nigun-dark);
+            font-weight: 600;
+            font-size: 0.9em;
+        }
+
+        .filter-mega-trigger .filter-btn-icon {
+            width: 18px;
+            height: 18px;
+            stroke: var(--color-nigun);
+        }
+
+        .filter-mega-trigger .filter-count {
+            background: var(--color-nigun);
+            color: white;
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .filter-mega-label {
+            transition: opacity 0.2s ease;
+        }
+
+        /* Active filter state - blue background */
+        .filter-mega-trigger.has-active {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .filter-mega-trigger.has-active .filter-btn-icon {
+            stroke: white;
+        }
+
+        .filter-mega-trigger.has-active .filter-count {
+            background: white;
+            color: var(--color-nigun);
+        }
+
+        .filter-mega-menu:has(.filter-mega-trigger.has-active) {
+            background: var(--color-nigun);
+        }
+
+        /* Expanded filter panel - ABSOLUTE for Phase 1 overlay, sub-header grows for Phase 2 */
+        .filter-mega-expanded {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 20px rgba(74, 124, 201, 0.25);
+            overflow: hidden;
+            z-index: 200;
+
+            /* Collapsed state - clip to center line */
+            visibility: hidden;
+            clip-path: inset(0 50% 0 50% round 12px);
+            transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s 0.4s;
+        }
+
+        /* The inner content - grid of columns */
+        .filter-mega-expanded-inner {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 8px;
+            width: 100%;
+            opacity: 0;
+            transition: opacity 0.25s ease;
+        }
+
+        /* Hide options initially for 2-phase animation */
+        .filter-mega-options {
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.25s ease;
+        }
+
+        .filter-mega-menu.expanded {
+            z-index: 199;
+            /* Below the expanded panel */
+        }
+
+        .filter-mega-menu.expanded .filter-mega-label {
+            opacity: 0;
+        }
+
+        /* Phase 1: Expand horizontally (clip-path) - shows just headers */
+        .filter-mega-expanded.expanded {
+            visibility: visible;
+            clip-path: inset(0 0 0 0 round 12px);
+            transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s;
+        }
+
+        .filter-mega-expanded.expanded .filter-mega-expanded-inner {
+            opacity: 1;
+            transition-delay: 0.15s;
+        }
+
+        /* Phase 2: Sub-header grows to make space, panel content expands */
+        .page-settings-bar.filter-expanded {
+            padding-bottom: 220px;
+            /* Make room for expanded options */
+            transition: padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .filter-mega-expanded.expanded.show-options .filter-mega-options {
+            max-height: 200px;
+            opacity: 1;
+            overflow-y: auto;
+            transition-delay: 0.1s;
+        }
+
+        /* Themed scrollbars for each category */
+        .filter-mega-options::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .filter-mega-options::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 3px;
+        }
+
+        .filter-mega-column[data-category="collection"] .filter-mega-options::-webkit-scrollbar-thumb {
+            background: var(--color-collection);
+            border-radius: 3px;
+        }
+
+        .filter-mega-column[data-category="chatzer"] .filter-mega-options::-webkit-scrollbar-thumb {
+            background: var(--color-chatzer);
+            border-radius: 3px;
+        }
+
+        .filter-mega-column[data-category="mechaber"] .filter-mega-options::-webkit-scrollbar-thumb {
+            background: var(--color-mechaber);
+            border-radius: 3px;
+        }
+
+        .filter-mega-column[data-category="verter"] .filter-mega-options::-webkit-scrollbar-thumb {
+            background: var(--color-verter);
+            border-radius: 3px;
+        }
+
+        .filter-mega-column[data-category="gezungen"] .filter-mega-options::-webkit-scrollbar-thumb {
+            background: var(--color-piyut);
+            border-radius: 3px;
+        }
+
+        .filter-mega-column[data-category="ritem"] .filter-mega-options::-webkit-scrollbar-thumb {
+            background: var(--color-music);
+            border-radius: 3px;
+        }
+
+        .filter-mega-column[data-category="skeyl"] .filter-mega-options::-webkit-scrollbar-thumb {
+            background: var(--color-music);
+            border-radius: 3px;
+        }
+
+        /* Each filter column */
+        .filter-mega-column {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        /* Category header - colored based on category */
+        .filter-mega-header {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 6px;
+            border-radius: 8px;
+            font-size: 0.85em;
+            font-weight: 600;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            min-height: 36px;
+            max-height: 36px;
+            overflow: hidden;
+        }
+
+        .filter-mega-header:hover {
+            filter: brightness(0.95);
+            transform: scale(1.02);
+        }
+
+        /* Search input in category header */
+        .filter-mega-search {
+            display: none;
+            width: 100%;
+            padding: 4px 8px;
+            border: none;
+            border-radius: 6px;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 0.8em;
+            text-align: center;
+            outline: none;
+        }
+
+        .filter-mega-header.searching .filter-mega-search {
+            display: block;
+        }
+
+        .filter-mega-header.searching .filter-mega-header-text {
+            display: none;
+        }
+
+        /* Search icon indicator */
+        .filter-mega-search-icon {
+            position: absolute;
+            left: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.75em;
+            opacity: 0.7;
+            color: currentColor;
+            font-style: normal;
+        }
+
+        /* Selected filter tags in header */
+        .filter-mega-header-tags {
+            display: flex;
+            flex-wrap: nowrap;
+            gap: 4px;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            max-width: 100%;
+        }
+
+        .filter-header-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.3);
+            color: inherit;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-header-tag:hover {
+            transform: scale(1.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-header-tag .tag-x {
+            font-size: 0.9em;
+            opacity: 0.6;
+            font-weight: 700;
+            margin-right: 2px;
+        }
+
+        .filter-header-tag:hover .tag-x {
+            opacity: 1;
+        }
+
+        .filter-mega-header.searching .filter-mega-header-tags {
+            display: none;
+        }
+
+        /* Legacy filter mini tags - kept for compatibility */
+        .filter-mini-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+            justify-content: center;
+        }
+
+        .filter-mini-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 6px;
+            border-radius: 12px;
+            font-size: 0.7em;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.9);
+            color: inherit;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .filter-mini-tag:hover {
+            transform: scale(1.05);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .filter-mini-tag .tag-x {
+            font-size: 0.9em;
+            opacity: 0.7;
+            font-weight: 700;
+        }
+
+        .filter-mini-tag:hover .tag-x {
+            opacity: 1;
+        }
+
+        /* Tags inside main filter button when closed */
+        .filter-button-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-right: 8px;
+        }
+
+        .filter-button-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.25);
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+
+        .filter-button-tag:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .filter-button-tag .tag-x {
+            font-size: 0.85em;
+            opacity: 0.7;
+        }
+
+        /* Category-specific header colors */
+        .filter-mega-column[data-category="collection"] .filter-mega-header {
+            background: var(--color-collection-pale);
+            color: var(--color-collection-dark);
+        }
+
+        .filter-mega-column[data-category="collection"] .filter-mega-header.has-active {
+            background: var(--color-collection);
+            color: white;
+        }
+
+        .filter-mega-column[data-category="chatzer"] .filter-mega-header {
+            background: var(--color-chatzer-pale);
+            color: var(--color-chatzer-dark);
+        }
+
+        .filter-mega-column[data-category="chatzer"] .filter-mega-header.has-active {
+            background: var(--color-chatzer);
+            color: white;
+        }
+
+        .filter-mega-column[data-category="mechaber"] .filter-mega-header {
+            background: var(--color-mechaber-pale);
+            color: var(--color-mechaber-dark);
+        }
+
+        .filter-mega-column[data-category="mechaber"] .filter-mega-header.has-active {
+            background: var(--color-mechaber);
+            color: white;
+        }
+
+        .filter-mega-column[data-category="verter"] .filter-mega-header {
+            background: var(--color-verter-pale);
+            color: var(--color-verter-dark);
+        }
+
+        .filter-mega-column[data-category="verter"] .filter-mega-header.has-active {
+            background: var(--color-verter);
+            color: white;
+        }
+
+        .filter-mega-column[data-category="gezungen"] .filter-mega-header {
+            background: var(--color-piyut-pale);
+            color: var(--color-piyut-dark);
+        }
+
+        .filter-mega-column[data-category="gezungen"] .filter-mega-header.has-active {
+            background: var(--color-piyut);
+            color: white;
+        }
+
+        .filter-mega-column[data-category="ritem"] .filter-mega-header {
+            background: var(--color-music-pale);
+            color: var(--color-music-dark);
+        }
+
+        .filter-mega-column[data-category="ritem"] .filter-mega-header.has-active {
+            background: var(--color-music);
+            color: white;
+        }
+
+        .filter-mega-column[data-category="scale"] .filter-mega-header {
+            background: var(--color-music-pale);
+            color: var(--color-music-dark);
+        }
+
+        .filter-mega-column[data-category="scale"] .filter-mega-header.has-active {
+            background: var(--color-music);
+            color: white;
+        }
+
+        .filter-mega-header .mega-cat-count {
+            background: white;
+            color: inherit;
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 8px;
+        }
+
+        /* Options container */
+        .filter-mega-options {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        /* Each option row - white bg, light theme text */
+        .filter-mega-option {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 8px;
+            border-radius: 6px;
+            font-size: 0.8em;
+            cursor: pointer;
+            background: white;
+            transition: all 0.15s ease;
+        }
+
+        .filter-mega-option input[type="checkbox"] {
+            width: 14px;
+            height: 14px;
+            margin: 0;
+            cursor: pointer;
+        }
+
+        /* Category-specific checkbox colors */
+        .filter-mega-column[data-category="collection"] .filter-mega-option input[type="checkbox"] {
+            accent-color: var(--color-collection);
+        }
+
+        .filter-mega-column[data-category="chatzer"] .filter-mega-option input[type="checkbox"] {
+            accent-color: var(--color-chatzer);
+        }
+
+        .filter-mega-column[data-category="mechaber"] .filter-mega-option input[type="checkbox"] {
+            accent-color: var(--color-mechaber);
+        }
+
+        .filter-mega-column[data-category="verter"] .filter-mega-option input[type="checkbox"] {
+            accent-color: var(--color-collection);
+            /* Green for verter */
+        }
+
+        .filter-mega-column[data-category="gezungen"] .filter-mega-option input[type="checkbox"] {
+            accent-color: var(--color-piyut);
+        }
+
+        .filter-mega-column[data-category="ritem"] .filter-mega-option input[type="checkbox"] {
+            accent-color: var(--color-mechaber);
+            /* Music theme yellow */
+        }
+
+        .filter-mega-column[data-category="scale"] .filter-mega-option input[type="checkbox"] {
+            accent-color: var(--color-mechaber);
+            /* Music theme yellow */
+        }
+
+        /* Category-specific option colors */
+        .filter-mega-column[data-category="collection"] .filter-mega-option {
+            color: var(--color-collection-light);
+        }
+
+        .filter-mega-column[data-category="collection"] .filter-mega-option:hover {
+            background: var(--color-collection-pale);
+            color: var(--color-collection-dark);
+        }
+
+        .filter-mega-column[data-category="collection"] .filter-mega-option.selected {
+            background: var(--color-collection-pale);
+            color: var(--color-collection);
+        }
+
+        .filter-mega-column[data-category="chatzer"] .filter-mega-option {
+            color: var(--color-chatzer-light);
+        }
+
+        .filter-mega-column[data-category="chatzer"] .filter-mega-option:hover {
+            background: var(--color-chatzer-pale);
+            color: var(--color-chatzer-dark);
+        }
+
+        .filter-mega-column[data-category="chatzer"] .filter-mega-option.selected {
+            background: var(--color-chatzer-pale);
+            color: var(--color-chatzer);
+        }
+
+        .filter-mega-column[data-category="mechaber"] .filter-mega-option {
+            color: var(--color-mechaber-light);
+        }
+
+        .filter-mega-column[data-category="mechaber"] .filter-mega-option:hover {
+            background: var(--color-mechaber-pale);
+            color: var(--color-mechaber-dark);
+        }
+
+        .filter-mega-column[data-category="mechaber"] .filter-mega-option.selected {
+            background: var(--color-mechaber-pale);
+            color: var(--color-mechaber);
+        }
+
+        .filter-mega-column[data-category="verter"] .filter-mega-option {
+            color: var(--color-verter-light);
+        }
+
+        .filter-mega-column[data-category="verter"] .filter-mega-option:hover {
+            background: var(--color-verter-pale);
+            color: var(--color-verter-dark);
+        }
+
+        .filter-mega-column[data-category="verter"] .filter-mega-option.selected {
+            background: var(--color-verter-pale);
+            color: var(--color-verter);
+        }
+
+        .filter-mega-column[data-category="gezungen"] .filter-mega-option {
+            color: var(--color-piyut-light);
+        }
+
+        .filter-mega-column[data-category="gezungen"] .filter-mega-option:hover {
+            background: var(--color-piyut-pale);
+            color: var(--color-piyut-dark);
+        }
+
+        .filter-mega-column[data-category="gezungen"] .filter-mega-option.selected {
+            background: var(--color-piyut-pale);
+            color: var(--color-piyut);
+        }
+
+        .filter-mega-column[data-category="ritem"] .filter-mega-option {
+            color: var(--color-music-light);
+        }
+
+        .filter-mega-column[data-category="ritem"] .filter-mega-option:hover {
+            background: var(--color-music-pale);
+            color: var(--color-music-dark);
+        }
+
+        .filter-mega-column[data-category="ritem"] .filter-mega-option.selected {
+            background: var(--color-music-pale);
+            color: var(--color-music);
+        }
+
+        .filter-mega-column[data-category="scale"] .filter-mega-option {
+            color: var(--color-music-light);
+        }
+
+        .filter-mega-column[data-category="scale"] .filter-mega-option:hover {
+            background: var(--color-music-pale);
+            color: var(--color-music-dark);
+        }
+
+        .filter-mega-column[data-category="scale"] .filter-mega-option.selected {
+            background: var(--color-music-pale);
+            color: var(--color-music);
+        }
+
+        /* "More..." link */
+        .filter-mega-more {
+            padding: 4px 8px;
+            font-size: 0.75em;
+            color: var(--text-muted);
+            text-align: center;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.15s ease;
+        }
+
+        .filter-mega-more:hover {
+            background: var(--color-nigun-pale);
+            color: var(--color-nigun-dark);
+        }
+
+        /* Filter Category Overlay Modal */
+        .filter-category-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .filter-category-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .filter-category-modal {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 400px;
+            max-height: 70vh;
+            display: flex;
+            flex-direction: column;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .filter-category-overlay.active .filter-category-modal {
+            transform: translateY(0);
+        }
+
+        .filter-category-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--color-nigun-pale);
+        }
+
+        .filter-category-modal-header h3 {
+            margin: 0;
+            color: var(--color-nigun-dark);
+            font-size: 1.1em;
+        }
+
+        .filter-category-modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5em;
+            color: var(--color-nigun);
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .filter-category-modal-close:hover {
+            background: var(--color-nigun-pale);
+        }
+
+        .filter-category-modal-body {
+            padding: 12px;
+            overflow-y: auto;
+            max-height: 50vh;
+        }
+
+        .filter-category-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .filter-category-option:hover {
+            background: var(--color-nigun-pale);
+        }
+
+        .filter-category-option.selected {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .filter-category-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--color-nigun);
+        }
+
+        .filter-category-option span {
+            font-size: 0.95em;
+        }
+
+        /* Slider Control Component */
+        .slider-control {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            cursor: pointer;
+            height: 48px;
+            transition: box-shadow 0.3s ease;
+        }
+
+        .slider-control:hover {
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Track container */
+        .slider-options-track {
+            display: flex;
+            align-items: stretch;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 3px;
+            gap: 2px;
+        }
+
+        /* Sliding blue indicator - HIDDEN by default, appears on hover */
+        .slider-indicator {
+            position: absolute;
+            top: 3px;
+            bottom: 3px;
+            right: 3px;
+            width: calc(100% - 6px);
+            background: var(--color-nigun);
+            border-radius: 7px;
+            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+            z-index: 1;
+            pointer-events: none;
+            opacity: 0;
+        }
+
+        /* Hover: indicator appears, shrinks to 1/3 and moves to position */
+        .slider-control:hover .slider-indicator {
+            opacity: 1;
+            width: calc(33.333% - 4px);
+        }
+
+        .slider-control:hover .slider-indicator[data-position="0"] {
+            right: 3px;
+        }
+
+        .slider-control:hover .slider-indicator[data-position="1"] {
+            right: calc(33.333% + 1px);
+        }
+
+        .slider-control:hover .slider-indicator[data-position="2"] {
+            right: calc(66.666% - 1px);
+        }
+
+        /* Each option slot */
+        .slider-option {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            border-radius: 7px;
+            cursor: pointer;
+            position: relative;
+            z-index: 2;
+            transition: flex 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
+            overflow: hidden;
+            flex: 0;
+            min-width: 0;
+            padding: 0 4px;
+        }
+
+        /* Default: icon is blue */
+        .slider-option svg {
+            width: 16px;
+            height: 16px;
+            fill: var(--color-nigun);
+            transition: fill 0.3s ease;
+            flex-shrink: 0;
+            order: -1;
+        }
+
+        /* Active option takes full width by default */
+        .slider-option.active {
+            flex: 1;
+        }
+
+        /* Non-active options: hidden by default */
+        .slider-option:not(.active) {
+            flex: 0;
+            padding: 0;
+        }
+
+        /* Default: label is blue */
+        .slider-option .slider-option-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--color-nigun-dark);
+            white-space: nowrap;
+            overflow: hidden;
+            /* Fade-in on collapse: delay the opacity slightly so width expands first */
+            transition: max-width 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.3s ease-in-out 0.1s,
+                color 0.2s ease,
+                transform 0.3s ease-out 0.05s;
+            transform: translateX(0);
+        }
+
+        .slider-option.active .slider-option-label {
+            max-width: 150px;
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .slider-option:not(.active) .slider-option-label {
+            max-width: 0;
+            opacity: 0;
+            transform: translateX(-5px);
+        }
+
+        /* On hover - all options become equal width */
+        .slider-control:hover .slider-option {
+            flex: 1;
+            padding: 0 6px;
+        }
+
+        /* On hover - hide all labels with fade (instant, no delay) */
+        .slider-control:hover .slider-option .slider-option-label {
+            max-width: 0;
+            opacity: 0;
+            transform: translateX(-5px);
+            /* Override delay for quick fade-out on hover */
+            transition: max-width 0.25s cubic-bezier(0.4, 0, 0.2, 1),
+                opacity 0.15s ease-out,
+                color 0.2s ease,
+                transform 0.2s ease-out;
+        }
+
+        /* On hover - active icon turns white (on blue indicator) */
+        .slider-control:hover .slider-option.active svg {
+            fill: white;
+        }
+
+        /* Hover effect on non-active options */
+        .slider-control:hover .slider-option:not(.active):hover {
+            background: var(--color-nigun-pale);
         }
 
         .page-settings-bar .detail-filter-dropdown {
-            width: 130px;
+            /* width: 130px; REMOVED fixed width */
+            flex: 1;
+            /* Match slider flex behavior */
         }
 
         .page-settings-bar .filter-panel-dropdown {
-            width: 130px;
+            /* width: 130px; REMOVED fixed width */
+            flex: 1;
+            /* Match slider flex behavior */
         }
 
         .page-settings-bar .detail-filter-current {
             background: white;
             color: var(--color-nigun-dark);
-            padding: 7px 12px;
-            border-radius: 10px;
-            font-size: 0.85em;
+            padding: 0 16px;
+            /* Adjusted padding for height */
+            border-radius: 12px;
+            font-size: 0.9em;
             font-weight: 600;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
+            height: 48px;
+            /* Match slider height */
+            display: flex;
+            /* Centering content */
+            align-items: center;
             justify-content: center;
             text-align: center;
             transition: all 0.15s ease;
@@ -3759,16 +4658,19 @@
             background: white;
             color: var(--color-nigun-dark);
             border: none;
-            padding: 7px 12px;
-            border-radius: 10px;
-            font-size: 0.85em;
+            padding: 0 16px;
+            /* Adjusted padding for height */
+            border-radius: 12px;
+            font-size: 0.9em;
             font-weight: 600;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
             width: 100%;
+            height: 48px;
+            /* Match slider height */
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 5px;
+            gap: 6px;
             transition: all 0.15s ease;
         }
 
@@ -3779,103 +4681,151 @@
             box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
-        /* Search button - transparent with border */
+        /* Search button - base style */
         .page-settings-bar .search-trigger-btn {
             background: transparent;
             color: var(--color-nigun-dark);
             border: 2px solid var(--color-nigun);
-            padding: 7px 35px;
-            border-radius: 6px;
-            font-size: 0.85em;
+            padding: 0 35px;
+            border-radius: 12px;
+            font-size: 0.9em;
             font-weight: 600;
+            height: 48px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 6px;
             cursor: pointer;
-            transition: all 0.2s ease;
-            min-width: 140px;
+            transition: all 0.3s ease;
+            min-width: 100px;
         }
 
         .page-settings-bar .search-trigger-btn:hover {
             background: var(--color-nigun);
             color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
+        /* When search is active - show the search text */
         .page-settings-bar .search-trigger-btn.has-active {
             background: var(--color-nigun);
             color: white;
+            border: 2px solid var(--color-nigun);
+            /* Match background or remove */
+            min-width: 140px;
+        }
+
+        .page-settings-bar .search-trigger-btn.has-active .search-icon,
+        .page-settings-bar .search-trigger-btn.has-active .search-label {
+            display: none;
+        }
+
+        .page-settings-bar .search-trigger-btn .search-text-display {
+            display: none;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .page-settings-bar .search-trigger-btn.has-active .search-text-display {
+            display: inline;
+        }
+
+        .page-settings-bar .search-trigger-btn .clear-search-x {
+            display: none;
+            margin-right: 6px;
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        .page-settings-bar .search-trigger-btn.has-active .clear-search-x {
+            display: inline;
         }
 
         /* Expandable search container */
         .page-settings-bar .expandable-search {
-            position: relative;
+            /* position: relative; REMOVED to allow child absolute positioning relative to bar */
             display: flex;
             align-items: center;
             justify-content: center;
-            margin: 0 12px;
-            z-index: 10;
+            z-index: 100;
+        }
+
+        /* The full-width input container */
+        .page-settings-bar .expandable-search-input-wrapper {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            right: 20px;
+            bottom: 10px;
+            background: var(--color-nigun);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 40px;
+
+            /* Animation state: Closed */
+            visibility: hidden;
+            clip-path: inset(0 42% 0 42% round 12px);
+            /* Start from center (approx button width) */
+            /* Transition for closing: animate clip first, then hide visibility */
+            transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0.4s;
+
+            z-index: 1000;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .page-settings-bar .expandable-search.expanded .expandable-search-input-wrapper {
+            /* Animation state: Open */
+            visibility: visible;
+            clip-path: inset(0 0 0 0 round 12px);
+            /* Transition for opening: show visibility immediately, then animate clip */
+            transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s;
         }
 
         .page-settings-bar .expandable-search-input {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-            width: 100px;
-            max-width: 100px;
-            opacity: 0;
-            background: var(--color-nigun);
+            width: 100%;
+            max-width: 800px;
+            background: transparent;
             color: white;
             border: none;
-            border-radius: 6px;
-            padding: 9px 40px 9px 15px;
-            font-size: 0.9em;
-            font-weight: 500;
-            transition: max-width 0.3s ease, opacity 0.2s ease;
+            font-size: 1.5em;
+            font-weight: 600;
+            text-align: center;
+            outline: none;
+        }
+
+        .page-settings-bar .expandable-search-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: rgba(255, 255, 255, 0.8);
             pointer-events: none;
-            text-align: right;
         }
 
         .page-settings-bar .expandable-search-input::placeholder {
-            color: rgba(255, 255, 255, 0.6);
-        }
-
-        .page-settings-bar .expandable-search.expanded .expandable-search-input {
-            max-width: 800px;
-            width: calc(90vw - 80px);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .page-settings-bar .expandable-search.expanded .search-trigger-btn {
-            opacity: 0;
-            pointer-events: none;
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .page-settings-bar .search-close-btn {
             position: absolute;
-            left: calc(50% + 350px);
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
             background: transparent;
             border: none;
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 1.2em;
+            color: white;
+            font-size: 2em;
             cursor: pointer;
-            opacity: 0;
-            pointer-events: none;
+            opacity: 0.7;
             transition: opacity 0.2s ease;
         }
 
-        .page-settings-bar .expandable-search.expanded .search-close-btn {
-            left: calc(50% + min(45vw - 40px, 400px) - 30px);
-            opacity: 1;
-            pointer-events: auto;
-        }
-
         .page-settings-bar .search-close-btn:hover {
-            color: white;
+            opacity: 1;
         }
 
         .page-settings-bar .detail-filter-options,
@@ -15359,7 +16309,8 @@
                         <div class="player-mechaber-name" id="playerMechaberName"></div>
                     </a>
                     <div class="player-info-content">
-                        <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א ניגון צו שפילן</div>
+                        <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א
+                            ניגון צו שפילן</div>
                     </div>
                 </div>
                 <div class="player-wave-animation" id="playerWave">
@@ -15543,7 +16494,12 @@
             { file: 'c-oqB3imNNfk', personalities: 'c-jRuAfCbs28', details: 'c-_TOU9FXYYn', rating: 'c-YQ-aWW59ej', album: 'c-H0XAyaKkPl' },
             { file: 'c-oGF6C78GZl', personalities: 'c-4trFKY_CK8', details: 'c-dr-m1GnYty', rating: 'c-gmz2rln2dD', album: 'c-HKBBDews5N' },
             { file: 'c-pf9zW3wypK', personalities: 'c-x0WLb4j4wV', details: 'c-pbtldr4CXD', rating: 'c-_GlQy78PAc', album: 'c-imgRABw0tH' },
-            { file: 'c-aqbocjDGuL', personalities: 'c-ilrb-DW4dV', details: 'c-2T9FWsVE9h', rating: 'c-yuKHpnbHfM', album: 'c-5FSrRNb-Uw' }
+            { file: 'c-aqbocjDGuL', personalities: 'c-ilrb-DW4dV', details: 'c-2T9FWsVE9h', rating: 'c-yuKHpnbHfM', album: 'c-5FSrRNb-Uw' },
+            { file: 'c-7I50D2psiX', personalities: 'c-K6YqT2KsoI', details: 'c-DnuzpLiKbT', rating: 'c-N2PvPrKB35', album: 'c-7tZ4Q8h1g0' },
+            { file: 'c-tacDsFSejH', personalities: 'c-WN3PHzoSUH', details: 'c-FUEdeMZ4To', rating: 'c-Ib5MeF651f', album: 'c-UBxa0H-Q8x' },
+            { file: 'c-ksizMXSqVT', personalities: 'c-Ym24EkM-YR', details: 'c-tVpeTBqPJC', rating: 'c-pRk0qe4piC', album: 'c-VFA3UXcRxk' },
+            { file: 'c-8eFWozy35-', personalities: 'c-m7D24vQIxt', details: 'c-ybpQ1pRsuT', rating: 'c-X4qHc0unPI', album: 'c-bNm83Rrxw5' },
+            { file: 'c-5eg5m7MTzF', personalities: 'c-q1DcajYwRt', details: 'c-5fdXOsRWdr', rating: 'c-XaQ_gvW9Xo', album: 'c-yk9NeTNLym' }
         ];
 
         // Rating descriptions for each star level
@@ -16805,6 +17761,7 @@
                         songsFullyLoaded = true; // Cached songs are complete
                         applyFiltersQuiet();  // Quiet version to avoid animation on load
                         buildCategoryIndices();
+                        updateFilterMegaMenuContent(); // Refresh filter mega-menu with populated data
                         updateNavCounts();
                         if (currentPageView === 'songs') {
                             // Only update the songs grid, not the whole page
@@ -16957,6 +17914,7 @@
                     // Final update - just refresh filters and count (no animation for background data)
                     applyFiltersQuiet();  // Update filteredSongs without animation
                     buildCategoryIndices();
+                    updateFilterMegaMenuContent(); // Refresh filter mega-menu with populated data
 
                     // Update category page if user is viewing one (categories grew as songs loaded)
                     const categoryPagesList = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections'];
@@ -17038,7 +17996,12 @@
                     { file: 'c-oqB3imNNfk', personalities: 'c-jRuAfCbs28', details: 'c-_TOU9FXYYn', rating: 'c-YQ-aWW59ej', album: 'c-H0XAyaKkPl' },
                     { file: 'c-oGF6C78GZl', personalities: 'c-4trFKY_CK8', details: 'c-dr-m1GnYty', rating: 'c-gmz2rln2dD', album: 'c-HKBBDews5N' },
                     { file: 'c-pf9zW3wypK', personalities: 'c-x0WLb4j4wV', details: 'c-pbtldr4CXD', rating: 'c-_GlQy78PAc', album: 'c-imgRABw0tH' },
-                    { file: 'c-aqbocjDGuL', personalities: 'c-ilrb-DW4dV', details: 'c-2T9FWsVE9h', rating: 'c-yuKHpnbHfM', album: 'c-5FSrRNb-Uw' }
+                    { file: 'c-aqbocjDGuL', personalities: 'c-ilrb-DW4dV', details: 'c-2T9FWsVE9h', rating: 'c-yuKHpnbHfM', album: 'c-5FSrRNb-Uw' },
+                    { file: 'c-7I50D2psiX', personalities: 'c-K6YqT2KsoI', details: 'c-DnuzpLiKbT', rating: 'c-N2PvPrKB35', album: 'c-7tZ4Q8h1g0' },
+                    { file: 'c-tacDsFSejH', personalities: 'c-WN3PHzoSUH', details: 'c-FUEdeMZ4To', rating: 'c-Ib5MeF651f', album: 'c-UBxa0H-Q8x' },
+                    { file: 'c-ksizMXSqVT', personalities: 'c-Ym24EkM-YR', details: 'c-tVpeTBqPJC', rating: 'c-pRk0qe4piC', album: 'c-VFA3UXcRxk' },
+                    { file: 'c-8eFWozy35-', personalities: 'c-m7D24vQIxt', details: 'c-ybpQ1pRsuT', rating: 'c-X4qHc0unPI', album: 'c-bNm83Rrxw5' },
+                    { file: 'c-5eg5m7MTzF', personalities: 'c-q1DcajYwRt', details: 'c-5fdXOsRWdr', rating: 'c-XaQ_gvW9Xo', album: 'c-yk9NeTNLym' }
                 ];
 
                 // Extract recordings with full metadata
@@ -18356,6 +19319,28 @@
             }
         }
 
+        // SVG Icon helpers for slider controls
+        function getDisplayModeIcon(mode) {
+            const icons = {
+                // 4 small boxes (compact)
+                minimal: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+                // 2 medium boxes (medium)
+                recordings: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/></svg>',
+                // 1 large box (full/expanded)
+                full: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>'
+            };
+            return icons[mode] || icons.minimal;
+        }
+
+        function getSortOrderIcon(order) {
+            const icons = {
+                random: '<svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>',
+                alphabetical: '<svg viewBox="0 0 24 24"><path d="M12.93 2h-2l-5 14h2.1l1.12-3.5h5.5l1.12 3.5h2.1l-5-14h.06zm-2.62 8.5L12 5l1.62 5.5h-3.24zM3 18h18v2H3v-2z"/></svg>',
+                recent: '<svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>'
+            };
+            return icons[order] || icons.random;
+        }
+
         // Get the HTML for songs page filters
         function getSongsFiltersHTML() {
             const totalActiveFilters = Object.values(activeFilters).reduce((sum, arr) => sum + arr.length, 0);
@@ -18363,52 +19348,40 @@
             const hasActiveFilters = totalActiveFilters > 0 || hasSearch;
 
             return `
-                <!-- Display Mode Filter -->
-                <div class="detail-filter-dropdown">
-                    <div class="detail-filter-current">
-                        <span class="filter-icon">👁</span>
-                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
-                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                        'אלעס'
-                }</span>
-                    </div>
-                    <div class="detail-filter-options">
-                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
-                             onclick="changeDisplayMode('minimal');">
-                            קעפל
+                <!-- Display Mode Slider -->
+                <div class="slider-control" data-type="displayMode">
+                    <div class="slider-options-track">
+                        <div class="slider-indicator" data-position="${currentDisplayMode === 'minimal' ? '0' : currentDisplayMode === 'recordings' ? '1' : '2'}"></div>
+                        <div class="slider-option ${currentDisplayMode === 'minimal' ? 'active' : ''}" data-value="minimal" onclick="selectSliderOption('displayMode', 'minimal', event)">
+                            <span class="slider-option-label">ניגונים</span>
+                            ${getDisplayModeIcon('minimal')}
                         </div>
-                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
-                             onclick="changeDisplayMode('recordings');">
-                            רעקארדירונגען
+                        <div class="slider-option ${currentDisplayMode === 'recordings' ? 'active' : ''}" data-value="recordings" onclick="selectSliderOption('displayMode', 'recordings', event)">
+                            <span class="slider-option-label">רעקארדירונגען</span>
+                            ${getDisplayModeIcon('recordings')}
                         </div>
-                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
-                             onclick="changeDisplayMode('full');">
-                            אלעס
+                        <div class="slider-option ${currentDisplayMode === 'full' ? 'active' : ''}" data-value="full" onclick="selectSliderOption('displayMode', 'full', event)">
+                            <span class="slider-option-label">אינפארמאציע</span>
+                            ${getDisplayModeIcon('full')}
                         </div>
                     </div>
                 </div>
 
-                <!-- Sort Filter -->
-                <div class="detail-filter-dropdown">
-                    <div class="detail-filter-current">
-                        <span class="filter-icon">⇅</span>
-                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
-                    currentSortOrder === 'alphabetical' ? 'א"ב' :
-                        'לעצט צוגעלייגט'
-                }</span>
-                    </div>
-                    <div class="detail-filter-options">
-                        <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
-                             onclick="changeSortOrder('random');">
-                            שאָפל
+                <!-- Sort Order Slider -->
+                <div class="slider-control" data-type="sortOrder">
+                    <div class="slider-options-track">
+                        <div class="slider-indicator" data-position="${currentSortOrder === 'random' ? '0' : currentSortOrder === 'alphabetical' ? '1' : '2'}"></div>
+                        <div class="slider-option ${currentSortOrder === 'random' ? 'active' : ''}" data-value="random" onclick="selectSliderOption('sortOrder', 'random', event)">
+                            <span class="slider-option-label">שאָפל</span>
+                            ${getSortOrderIcon('random')}
                         </div>
-                        <div class="detail-filter-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
-                             onclick="changeSortOrder('alphabetical');">
-                            א"ב
+                        <div class="slider-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}" data-value="alphabetical" onclick="selectSliderOption('sortOrder', 'alphabetical', event)">
+                            <span class="slider-option-label">א"ב</span>
+                            ${getSortOrderIcon('alphabetical')}
                         </div>
-                        <div class="detail-filter-option ${currentSortOrder === 'recent' ? 'active' : ''}"
-                             onclick="changeSortOrder('recent');">
-                            לעצט צוגעלייגט
+                        <div class="slider-option ${currentSortOrder === 'recent' ? 'active' : ''}" data-value="recent" onclick="selectSliderOption('sortOrder', 'recent', event)">
+                            <span class="slider-option-label">לעצט צוגעלייגט</span>
+                            ${getSortOrderIcon('recent')}
                         </div>
                     </div>
                 </div>
@@ -18416,25 +19389,33 @@
                 <!-- Search Button - Expandable -->
                 <div class="expandable-search" id="expandableSearch">
                     <button class="search-trigger-btn ${hasSearch ? 'has-active' : ''}" onclick="toggleExpandableSearch(event)">
-                        <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+                        <svg class="search-icon filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
                             <circle cx="11" cy="11" r="8"/>
                             <path d="M21 21l-4.35-4.35"/>
                         </svg>
-                        <span>זוך</span>
+                        <span class="search-label">זוך</span>
+                        <span class="search-text-display">${searchQuery || ''}</span>
+                        <span class="clear-search-x" onclick="clearSearch(event)">×</span>
                     </button>
-                    <input type="text"
-                           class="expandable-search-input"
-                           id="expandableSearchInput"
-                           placeholder="זוך א ניגון..."
-                           value="${searchQuery || ''}"
-                           oninput="handleLiveSearch(this.value)"
-                           onkeydown="if(event.key==='Escape')closeExpandableSearch()">
-                    <button class="search-close-btn" onclick="closeExpandableSearch()">×</button>
+                    <div class="expandable-search-input-wrapper">
+                        <svg class="expandable-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <input type="text"
+                               class="expandable-search-input"
+                               id="expandableSearchInput"
+                               placeholder="זוך א ניגון..."
+                               value="${searchQuery || ''}"
+                               oninput="handleLiveSearch(this.value)"
+                               onkeydown="if(event.key==='Escape')closeExpandableSearch()">
+                        <button class="search-close-btn" onclick="clearSearch(event)">×</button>
+                    </div>
                 </div>
 
-                <!-- Filters Button -->
-                <div class="filter-panel-dropdown" id="filterPanelDropdown">
-                    <button class="filter-panel-btn ${totalActiveFilters > 0 ? 'has-active' : ''}" onclick="toggleFilterPanel(event)">
+                <!-- Filter Mega-Menu Trigger -->
+                <div class="filter-mega-menu" id="filterMegaMenu" onmouseenter="showFilterExpanded()" onmouseleave="hideFilterExpanded()">
+                    <div class="filter-mega-trigger">
                         <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M4 21v-7"/>
                             <path d="M4 10V3"/>
@@ -18446,24 +19427,30 @@
                             <circle cx="12" cy="9" r="2"/>
                             <circle cx="20" cy="15" r="2"/>
                         </svg>
-                        <span>פילטער</span>
-                        ${totalActiveFilters > 0 ? `<span class="filter-count">${totalActiveFilters}</span>` : ''}
-                    </button>
-                    <div class="filter-panel-content" id="filterPanelContent">
-                        <div class="filter-panel-section-title">פילטערס:</div>
-                        <div class="filter-panel-filters">
-                            ${renderFilterPanelItem('collection', 'קאלעקשאנס', categories.collections)}
-                            ${renderFilterPanelItem('chatzer', 'חצר', categories.chatzeros)}
-                            ${renderFilterPanelItem('mechaber', 'מחבר', categories.mechabrim)}
-                            ${renderFilterPanelItem('verter', 'ווערטער', categories.verter)}
-                            ${renderFilterPanelItem('gezungen', 'געזינגען אויף', categories.gezungen)}
-                            ${renderFilterPanelItem('ritem', 'ריטעם', categories.ritem)}
-                            ${renderFilterPanelItem('scale', 'סקעיל', categories.scale)}
+                        <span class="filter-mega-label">פילטערס</span>
+                        ${totalActiveFilters > 0 ? `
+                        <div class="filter-button-tags" id="filterButtonTags">
+                            ${Object.entries(activeFilters).filter(([k, v]) => v && v.length > 0).map(([category, items]) =>
+                items.map(item => {
+                    const escapedItem = item.replace(/'/g, "\\'").replace(/"/g, '\\"');
+                    return `<span class="filter-button-tag" onclick="event.stopPropagation(); handleFilterChange('${category}', '${escapedItem}', false)">${item}<span class="tag-x">×</span></span>`;
+                }).join('')
+            ).join('')}
                         </div>
-                        
-                        <div class="filter-panel-active-tags" id="filterPanelActiveTags">
-                            ${getActiveFilterTagsHTML()}
-                        </div>
+                        ` : ''}
+                    </div>
+                </div>
+                
+                <!-- Filter Mega-Expanded Panel (sibling, positioned to settings bar) -->
+                <div class="filter-mega-expanded" id="filterMegaExpanded" onmouseenter="showFilterExpanded()" onmouseleave="hideFilterExpanded()">
+                    <div class="filter-mega-expanded-inner">
+                        ${renderMegaFilterCategory('collection', 'קאלעקשאנס', categories.collections)}
+                        ${renderMegaFilterCategory('chatzer', 'חצר', categories.chatzeros)}
+                        ${renderMegaFilterCategory('mechaber', 'מחבר', categories.mechabrim)}
+                        ${renderMegaFilterCategory('verter', 'ווערטער', categories.verter)}
+                        ${renderMegaFilterCategory('gezungen', 'פיוטים', categories.gezungen)}
+                        ${renderMegaFilterCategory('ritem', 'ריטעם', categories.ritem)}
+                        ${renderMegaFilterCategory('scale', 'סקעיל', categories.scale)}
                     </div>
                 </div>
 
@@ -18554,6 +19541,176 @@
             return html;
         }
 
+        // Render mega filter category for the mega-menu
+        function renderMegaFilterCategory(key, label, data) {
+            if (!data) data = {};
+            const options = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
+            const selectedCount = activeFilters[key]?.length || 0;
+            const hasActive = selectedCount > 0;
+            const selectedItems = activeFilters[key] || [];
+
+            return `
+                <div class="filter-mega-column" data-category="${key}">
+                    <div class="filter-mega-header ${hasActive ? 'has-active' : ''}" onclick="toggleFilterCategorySearch(this, '${key}')">
+                        ${hasActive ? `
+                        <span class="filter-mega-header-tags">
+                            ${selectedItems.map(item => {
+                const escapedItem = item.replace(/'/g, "\\'").replace(/"/g, '\\"');
+                return `<span class="filter-header-tag" onclick="event.stopPropagation(); handleFilterChange('${key}', '${escapedItem}', false)">${item}<span class="tag-x">×</span></span>`;
+            }).join('')}
+                        </span>
+                        ` : `
+                        <span class="filter-mega-header-text"><span class="filter-mega-search-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></span>${label}</span>
+                        `}
+                        <input type="text" class="filter-mega-search" placeholder="זוך..." 
+                               onclick="event.stopPropagation()" 
+                               oninput="filterCategoryOptions(this, '${key}')"
+                               onblur="setTimeout(() => closeFilterCategorySearch(this), 200)">
+                    </div>
+                    <div class="filter-mega-options">
+                        ${options.map(opt => {
+                const escapedOpt = opt.replace(/'/g, "\\'").replace(/"/g, '\\"');
+                const isSelected = activeFilters[key]?.includes(opt);
+                return `
+                            <label class="filter-mega-option ${isSelected ? 'selected' : ''}" data-option="${opt.toLowerCase()}" onclick="event.stopPropagation()">
+                                <input type="checkbox" 
+                                    value="${opt.replace(/"/g, '&quot;')}" 
+                                    ${isSelected ? 'checked' : ''}
+                                    onchange="handleFilterChange('${key}', '${escapedOpt}', this.checked)">
+                                <span>${opt}</span>
+                            </label>
+                        `;
+            }).join('')}
+                    </div>
+                </div>
+            `;
+        }
+
+        // Toggle search mode in category header
+        function toggleFilterCategorySearch(header, key) {
+            const isSearching = header.classList.contains('searching');
+            // Close any other open searches
+            document.querySelectorAll('.filter-mega-header.searching').forEach(h => {
+                if (h !== header) {
+                    h.classList.remove('searching');
+                }
+            });
+
+            if (!isSearching) {
+                header.classList.add('searching');
+                const input = header.querySelector('.filter-mega-search');
+                if (input) {
+                    input.value = '';
+                    setTimeout(() => input.focus(), 50);
+                }
+                // Show all options again
+                const column = header.closest('.filter-mega-column');
+                column.querySelectorAll('.filter-mega-option').forEach(opt => opt.style.display = '');
+            } else {
+                header.classList.remove('searching');
+            }
+        }
+
+        // Filter options as user types
+        function filterCategoryOptions(input, key) {
+            const query = input.value.toLowerCase().trim();
+            const column = input.closest('.filter-mega-column');
+            const options = column.querySelectorAll('.filter-mega-option');
+
+            options.forEach(opt => {
+                const text = opt.getAttribute('data-option') || '';
+                if (!query || text.includes(query)) {
+                    opt.style.display = '';
+                } else {
+                    opt.style.display = 'none';
+                }
+            });
+        }
+
+        // Close search mode
+        function closeFilterCategorySearch(input) {
+            const header = input.closest('.filter-mega-header');
+            if (header) {
+                header.classList.remove('searching');
+                // Show all options again
+                const column = header.closest('.filter-mega-column');
+                if (column) {
+                    column.querySelectorAll('.filter-mega-option').forEach(opt => opt.style.display = '');
+                }
+            }
+        }
+
+        // Filter Mega-Menu Expand/Collapse - 2-phase animation
+        let filterExpandTimer = null;
+        let filterPhase2Timer = null;
+
+        function showFilterExpanded() {
+            if (filterExpandTimer) {
+                clearTimeout(filterExpandTimer);
+                filterExpandTimer = null;
+            }
+            const panel = document.getElementById('filterMegaExpanded');
+            const trigger = document.getElementById('filterMegaMenu');
+
+            // Phase 1: Show headers (width/opacity)
+            if (panel) {
+                panel.classList.add('expanded');
+            }
+            if (trigger) {
+                trigger.classList.add('expanded');
+            }
+
+            // Phase 2: After headers animate in, expand height to show options
+            if (filterPhase2Timer) clearTimeout(filterPhase2Timer);
+            filterPhase2Timer = setTimeout(() => {
+                if (panel && panel.classList.contains('expanded')) {
+                    panel.classList.add('show-options');
+                    // Also expand the sub-header
+                    const subHeader = document.querySelector('.page-settings-bar');
+                    if (subHeader) subHeader.classList.add('filter-expanded');
+                }
+            }, 250); // Wait for phase 1 to complete
+        }
+
+        function hideFilterExpanded() {
+            // Clear phase 2 timer if still pending
+            if (filterPhase2Timer) {
+                clearTimeout(filterPhase2Timer);
+                filterPhase2Timer = null;
+            }
+
+            filterExpandTimer = setTimeout(() => {
+                const panel = document.getElementById('filterMegaExpanded');
+                const trigger = document.getElementById('filterMegaMenu');
+                const subHeader = document.querySelector('.page-settings-bar');
+                if (panel) {
+                    panel.classList.remove('expanded', 'show-options');
+                }
+                if (trigger) {
+                    trigger.classList.remove('expanded');
+                }
+                if (subHeader) {
+                    subHeader.classList.remove('filter-expanded');
+                }
+            }, 150); // Small delay to allow moving between trigger and panel
+        }
+
+        // Update filter mega-menu content (called when categories data is loaded)
+        function updateFilterMegaMenuContent() {
+            const inner = document.querySelector('.filter-mega-expanded-inner');
+            if (inner) {
+                inner.innerHTML = `
+                    ${renderMegaFilterCategory('collection', 'קאלעקשאנס', categories.collections)}
+                    ${renderMegaFilterCategory('chatzer', 'חצר', categories.chatzeros)}
+                    ${renderMegaFilterCategory('mechaber', 'מחבר', categories.mechabrim)}
+                    ${renderMegaFilterCategory('verter', 'ווערטער', categories.verter)}
+                    ${renderMegaFilterCategory('gezungen', 'געזונגען', categories.gezungen)}
+                    ${renderMegaFilterCategory('ritem', 'ריטעם', categories.ritem)}
+                    ${renderMegaFilterCategory('scale', 'סקעיל', categories.scale)}
+                `;
+            }
+        }
+
         // Toggle search panel
         function toggleSearchPanel(event) {
             event.stopPropagation();
@@ -18572,7 +19729,7 @@
             }
         }
 
-        // Toggle filter panel
+        // Toggle filter panel (old dropdown - now replaced by expansion row)
         function toggleFilterPanel(event) {
             event.stopPropagation();
             const panel = document.getElementById('filterPanelContent');
@@ -18581,6 +19738,102 @@
             if (panel) {
                 panel.classList.toggle('show');
             }
+        }
+
+        // Toggle filters expansion row (new inline expansion)
+        function toggleFiltersExpansion(event) {
+            event.stopPropagation();
+            const settingsBar = document.querySelector('.page-settings-bar');
+            if (settingsBar) {
+                settingsBar.classList.toggle('filters-expanded');
+            }
+        }
+
+        // Render filter category button for expansion row
+        function renderFilterCategoryButton(key, label, data) {
+            if (!data) data = {};
+            const selectedCount = activeFilters[key]?.length || 0;
+            const hasActive = selectedCount > 0;
+
+            return `
+                <button class="filter-category-btn ${hasActive ? 'has-active' : ''}" 
+                        onclick="openFilterCategoryModal('${key}', '${label}')">
+                    <span>${label}</span>
+                    ${hasActive ? `<span class="filter-category-count">${selectedCount}</span>` : ''}
+                </button>
+            `;
+        }
+
+        // Open filter category modal/dropdown
+        function openFilterCategoryModal(key, label) {
+            // For now, we'll use a simple approach - show the filter panel item dropdown
+            // This can be enhanced later with a proper modal
+            const data = {
+                'collection': categories.collections,
+                'chatzer': categories.chatzeros,
+                'mechaber': categories.mechabrim,
+                'verter': categories.verter,
+                'gezungen': categories.gezungen,
+                'ritem': categories.ritem,
+                'scale': categories.scale
+            }[key];
+
+            if (!data) return;
+
+            const options = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
+            const selectedValues = activeFilters[key] || [];
+
+            // Create a simple dropdown overlay
+            let overlay = document.getElementById('filterCategoryOverlay');
+            if (!overlay) {
+                overlay = document.createElement('div');
+                overlay.id = 'filterCategoryOverlay';
+                overlay.className = 'filter-category-overlay';
+                document.body.appendChild(overlay);
+            }
+
+            overlay.innerHTML = `
+                <div class="filter-category-modal">
+                    <div class="filter-category-modal-header">
+                        <h3>${label}</h3>
+                        <button class="filter-category-modal-close" onclick="closeFilterCategoryModal()">×</button>
+                    </div>
+                    <div class="filter-category-modal-body">
+                        ${options.map(opt => `
+                            <label class="filter-category-option ${selectedValues.includes(opt) ? 'selected' : ''}">
+                                <input type="checkbox" 
+                                       ${selectedValues.includes(opt) ? 'checked' : ''} 
+                                       onchange="toggleFilterValue('${key}', '${opt.replace(/'/g, "\\'")}')">
+                                <span>${opt}</span>
+                            </label>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            overlay.classList.add('active');
+        }
+
+        // Close filter category modal
+        function closeFilterCategoryModal() {
+            const overlay = document.getElementById('filterCategoryOverlay');
+            if (overlay) {
+                overlay.classList.remove('active');
+            }
+        }
+
+        // Toggle filter value
+        function toggleFilterValue(key, value) {
+            if (!activeFilters[key]) activeFilters[key] = [];
+
+            const index = activeFilters[key].indexOf(value);
+            if (index > -1) {
+                activeFilters[key].splice(index, 1);
+            } else {
+                activeFilters[key].push(value);
+            }
+
+            applyFilters();
+            updateSongsFiltersUI();
         }
 
         // Toggle filter panel item
@@ -18653,7 +19906,8 @@
             }
 
             // Update search button active state
-            const searchBtn = document.querySelector('#searchPanelDropdown .filter-panel-btn');
+            // Update search button active state
+            const searchBtn = document.querySelector('.page-settings-bar .search-trigger-btn');
             if (searchBtn) {
                 if (searchQuery) {
                     searchBtn.classList.add('has-active');
@@ -19020,7 +20274,127 @@
                 activeFilters[key] = activeFilters[key].filter(v => v !== value);
             }
 
+            // Update the mega menu header for this category
+            updateMegaMenuHeader(key);
+
             applyFilters();
+        }
+
+        // Update a single mega menu category header to show selected tags
+        function updateMegaMenuHeader(key) {
+            const column = document.querySelector(`.filter-mega-column[data-category="${key}"]`);
+            if (!column) return;
+
+            const header = column.querySelector('.filter-mega-header');
+            if (!header) return;
+
+            const selectedItems = activeFilters[key] || [];
+            const hasActive = selectedItems.length > 0;
+
+            // Get the label for this category
+            const labels = {
+                'collection': 'קאלעקשאנס',
+                'chatzer': 'חצר',
+                'mechaber': 'מחבר',
+                'verter': 'ווערטער',
+                'gezungen': 'פיוטים',
+                'ritem': 'ריטעם',
+                'scale': 'סקעיל'
+            };
+            const label = labels[key] || key;
+
+            // Update header class
+            if (hasActive) {
+                header.classList.add('has-active');
+            } else {
+                header.classList.remove('has-active');
+            }
+
+            // Find or create the content container (not the search input)
+            let headerText = header.querySelector('.filter-mega-header-text');
+            let headerTags = header.querySelector('.filter-mega-header-tags');
+
+            if (hasActive) {
+                // Show tags, hide label
+                if (headerText) headerText.style.display = 'none';
+
+                if (!headerTags) {
+                    headerTags = document.createElement('span');
+                    headerTags.className = 'filter-mega-header-tags';
+                    header.insertBefore(headerTags, header.querySelector('.filter-mega-search'));
+                }
+                headerTags.style.display = '';
+                headerTags.innerHTML = selectedItems.map(item => {
+                    const escapedItem = item.replace(/'/g, "\\'").replace(/"/g, '\\"');
+                    return `<span class="filter-header-tag" onclick="event.stopPropagation(); handleFilterChange('${key}', '${escapedItem}', false)">${item}<span class="tag-x">×</span></span>`;
+                }).join('');
+            } else {
+                // Show label, hide/remove tags
+                if (headerTags) headerTags.style.display = 'none';
+
+                if (!headerText) {
+                    headerText = document.createElement('span');
+                    headerText.className = 'filter-mega-header-text';
+                    headerText.innerHTML = `<span class="filter-mega-search-icon"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg></span>${label}`;
+                    header.insertBefore(headerText, header.querySelector('.filter-mega-search'));
+                }
+                headerText.style.display = '';
+            }
+
+            // Also update the checkbox state in options
+            const options = column.querySelectorAll('.filter-mega-option');
+            options.forEach(opt => {
+                const checkbox = opt.querySelector('input[type="checkbox"]');
+                if (checkbox) {
+                    const value = checkbox.value;
+                    const isSelected = selectedItems.includes(value);
+                    checkbox.checked = isSelected;
+                    if (isSelected) {
+                        opt.classList.add('selected');
+                    } else {
+                        opt.classList.remove('selected');
+                    }
+                }
+            });
+
+            // Also update the main filter button tags
+            updateMainFilterButton();
+        }
+
+        // Update the main filter button to show active filter count
+        function updateMainFilterButton() {
+            const trigger = document.querySelector('.filter-mega-trigger');
+            if (!trigger) return;
+
+            // Remove old tags container if exists
+            const oldTagsContainer = trigger.querySelector('.filter-button-tags');
+            if (oldTagsContainer) oldTagsContainer.remove();
+
+            // Count all active filters
+            let totalCount = 0;
+            Object.values(activeFilters).forEach(items => {
+                if (items && items.length > 0) {
+                    totalCount += items.length;
+                }
+            });
+
+            // Find or create count badge
+            let countBadge = trigger.querySelector('.filter-count');
+
+            if (totalCount > 0) {
+                trigger.classList.add('has-active');
+                if (!countBadge) {
+                    countBadge = document.createElement('span');
+                    countBadge.className = 'filter-count';
+                    trigger.appendChild(countBadge);
+                }
+                countBadge.textContent = totalCount;
+            } else {
+                trigger.classList.remove('has-active');
+                if (countBadge) {
+                    countBadge.remove();
+                }
+            }
         }
 
         // Sort filteredSongs based on current sort order
@@ -19063,10 +20437,9 @@
             // Update toggle UI
             updateSortToggleSlider(order);
 
-            // Update display with animation
+            // Update display with animation (sliders updated by selectSliderOption, not here)
             if (currentPageView === 'songs') {
                 updateSongsListWithAnimation();
-                updateSongsFiltersUI();
             } else {
                 renderCurrentPage();
             }
@@ -19196,6 +20569,45 @@
             window.addEventListener('scroll', handleScroll, { passive: true });
         }
 
+        // Select slider option - animate without re-render
+        function selectSliderOption(type, value, event) {
+            event.stopPropagation();
+
+            const sliderControl = event.target.closest('.slider-control');
+            if (!sliderControl) return;
+
+            const options = sliderControl.querySelectorAll('.slider-option');
+            const indicator = sliderControl.querySelector('.slider-indicator');
+
+            // Find the position of the clicked option
+            let newPosition = 0;
+            options.forEach((opt, index) => {
+                if (opt.dataset.value === value) {
+                    newPosition = index;
+                }
+            });
+
+            // Update indicator position attribute (triggers CSS transition)
+            if (indicator) {
+                indicator.dataset.position = newPosition.toString();
+            }
+
+            // Update active classes
+            options.forEach(opt => {
+                opt.classList.remove('active');
+                if (opt.dataset.value === value) {
+                    opt.classList.add('active');
+                }
+            });
+
+            // Call the actual change function (without re-rendering the slider)
+            if (type === 'displayMode') {
+                changeDisplayMode(value);
+            } else if (type === 'sortOrder') {
+                changeSortOrder(value);
+            }
+        }
+
         // Change display mode and re-render
         function changeDisplayMode(mode) {
             currentDisplayMode = mode;
@@ -19220,10 +20632,10 @@
                 pageContainer.classList.add('view-mode-' + mode);
             }
 
-            // Update display with animation
+            // Update display with animation (don't re-render sliders - they're updated by selectSliderOption)
             if (currentPageView === 'songs') {
                 updateSongsListWithAnimation();
-                updateSongsFiltersUI();
+                // Note: updateSongsFiltersUI skipped to preserve slider animation
             } else {
                 renderCurrentPage();
             }
@@ -19919,14 +21331,9 @@
                 let insertBeforePos = -1;
 
                 if (isShuffleMode) {
-                    // SHUFFLE MODE: Insert at random position, SLIGHTLY BIASED TOWARDS BEGINNING
+                    // SHUFFLE MODE: Insert at uniformly random position
                     const gridItems = Array.from(grid.children);
-                    // Expand visible range to first 70 items
-                    const maxPos = Math.min(gridItems.length, 70);
-                    // Use Math.pow(random, 1.3) for MILD bias towards beginning
-                    // This spreads inserts more evenly but still slightly favors visible area
-                    const weightedRandom = Math.pow(Math.random(), 1.3);
-                    const randomPos = Math.floor(weightedRandom * maxPos);
+                    const randomPos = Math.floor(Math.random() * gridItems.length);
                     if (randomPos < gridItems.length) {
                         insertBefore = gridItems[randomPos];
                         insertBeforePos = randomPos;
@@ -20226,20 +21633,6 @@
             applyFilters();
         }
 
-        // Clear search only
-        function clearSearch() {
-            searchQuery = '';
-            currentPage = 1;
-            // Clear the input box
-            const searchInput = document.getElementById('songsSearchInput');
-            if (searchInput) searchInput.value = '';
-            const expandableInput = document.getElementById('expandableSearchInput');
-            if (expandableInput) expandableInput.value = '';
-            applyFilters();
-            // Re-render to remove the X button
-            renderCurrentPage();
-        }
-
         // Expandable search functions
         function toggleExpandableSearch(event) {
             event.stopPropagation();
@@ -20261,7 +21654,42 @@
             const container = document.getElementById('expandableSearch');
             if (container) {
                 container.classList.remove('expanded');
+
+                // Temporarily disable pointer-events on the settings bar to prevent
+                // immediate hover effects on underlying buttons after close
+                const settingsBar = document.querySelector('.page-settings-bar');
+                if (settingsBar) {
+                    settingsBar.style.pointerEvents = 'none';
+                    setTimeout(() => {
+                        settingsBar.style.pointerEvents = '';
+                    }, 400); // Match the collapse animation duration
+                }
+
+                // Update trigger button state
+                const btn = container.querySelector('.search-trigger-btn');
+                if (btn) {
+                    if (searchQuery && searchQuery.length > 0) {
+                        btn.classList.add('has-active');
+                        // Update the display text
+                        const dp = btn.querySelector('.search-text-display');
+                        if (dp) dp.textContent = searchQuery;
+                    } else {
+                        btn.classList.remove('has-active');
+                    }
+                }
             }
+        }
+
+        // Clear search and collapse
+        function clearSearch(event) {
+            event.stopPropagation();
+            searchQuery = '';
+            const input = document.getElementById('expandableSearchInput');
+            if (input) input.value = '';
+            closeExpandableSearch();
+            currentPage = 1;
+            applyFilters();
+            updateSongsFiltersUI();
         }
 
         function handleExpandableSearch(value) {
@@ -22500,14 +23928,14 @@
                             ${chatzeros.length > 0 ? `
                                 <div class="card-tags">
                                     ${chatzeros.map(chatzer => {
-                                        return `<span class="card-chatzer-tag"
+                    return `<span class="card-chatzer-tag"
                                               data-action="detail"
                                               data-category="chatzeros"
                                               data-name="${escapeHtml(chatzer)}"
                                               onclick="event.stopPropagation(); event.preventDefault(); navigateToDetail('chatzeros', '${escapeHtml(chatzer).replace(/'/g, "\\'")}');"
                                               data-tooltip-value="${escapeHtml(chatzer)}"
                                               data-tooltip-type="chatzer">${chatzer}</span>`;
-                                    }).join('')}
+                }).join('')}
                                 </div>
                             ` : ''}
                         </div>
