@@ -3750,6 +3750,7 @@
         }
 
         .filter-mega-trigger {
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -3762,27 +3763,71 @@
             color: var(--color-nigun-dark);
             font-weight: 600;
             font-size: 0.9em;
+            border-radius: inherit;
+            transition: background 0.2s ease, color 0.2s ease;
         }
 
         .filter-mega-trigger .filter-btn-icon {
             width: 18px;
             height: 18px;
             stroke: var(--color-nigun);
+            transition: stroke 0.2s ease;
         }
 
-        .filter-mega-trigger .filter-count {
-            background: var(--color-nigun);
-            color: white;
+        /* Filter badge container - both count and X stack here */
+        .filter-mega-trigger .filter-count,
+        .filter-mega-trigger .filter-clear-btn {
+            position: absolute;
+            right: 8px;
+            background: white;
+            color: var(--color-nigun);
             font-size: 0.75em;
             font-weight: 700;
             padding: 2px 6px;
-            border-radius: 10px;
-            min-width: 18px;
+            border-radius: 8px;
+            min-width: 16px;
             text-align: center;
+            transition: opacity 0.2s ease;
+        }
+
+        /* Count visible by default */
+        .filter-mega-trigger .filter-count {
+            opacity: 1;
+        }
+
+        /* Clear button hidden by default */
+        .filter-mega-trigger .filter-clear-btn {
+            opacity: 0;
+            cursor: pointer;
+            pointer-events: none;
+        }
+
+        /* On hover: fade count out, fade X in */
+        .filter-mega-menu:hover .filter-mega-trigger.has-active .filter-count {
+            opacity: 0;
+        }
+
+        .filter-mega-menu:hover .filter-mega-trigger.has-active .filter-clear-btn {
+            opacity: 1;
+            pointer-events: auto;
         }
 
         .filter-mega-label {
-            transition: opacity 0.2s ease;
+            transition: opacity 0.2s ease, color 0.2s ease;
+        }
+
+        /* Hover state - blue background like search button */
+        .filter-mega-trigger:hover {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .filter-mega-trigger:hover .filter-btn-icon {
+            stroke: white;
+        }
+
+        .filter-mega-trigger:hover .filter-mega-label {
+            color: white;
         }
 
         /* Active filter state - blue background */
@@ -3800,8 +3845,13 @@
             color: var(--color-nigun);
         }
 
+        /* Keep menu rounded when filter is active */
         .filter-mega-menu:has(.filter-mega-trigger.has-active) {
-            background: var(--color-nigun);
+            background: transparent;
+        }
+
+        .filter-mega-trigger.has-active {
+            border-radius: 12px;
         }
 
         /* Expanded filter panel - ABSOLUTE for Phase 1 overlay, sub-header grows for Phase 2 */
@@ -3817,11 +3867,12 @@
             overflow: hidden;
             z-index: 200;
 
-            /* Collapsed state - clip to center line */
+            /* Collapsed state - clips from top */
             visibility: hidden;
-            clip-path: inset(0 50% 0 50% round 12px);
-            transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1),
-                visibility 0s 0.4s;
+            clip-path: inset(0 0 100% 0 round 12px);
+            /* Single combined transition - no delays */
+            transition: clip-path 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s 0.35s;
         }
 
         /* The inner content - grid of columns */
@@ -3830,15 +3881,15 @@
             grid-template-columns: repeat(7, 1fr);
             gap: 8px;
             width: 100%;
-            opacity: 0;
-            transition: opacity 0.25s ease;
+            /* Headers visible immediately - no opacity animation */
         }
 
-        /* Hide options initially for 2-phase animation */
+        /* Options animate with panel - no separate phase */
         .filter-mega-options {
             max-height: 0;
             overflow: hidden;
             opacity: 0;
+            /* Fade in/out with panel */
             transition: max-height 0.35s cubic-bezier(0.4, 0, 0.2, 1),
                 opacity 0.25s ease;
         }
@@ -3852,31 +3903,35 @@
             opacity: 0;
         }
 
-        /* Phase 1: Expand horizontally (clip-path) - shows just headers */
+        /* Expanded state - single phase animation */
         .filter-mega-expanded.expanded {
             visibility: visible;
             clip-path: inset(0 0 0 0 round 12px);
-            transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+            /* Single combined transition - no delays */
+            transition: clip-path 0.35s cubic-bezier(0.4, 0, 0.2, 1),
                 visibility 0s;
         }
 
-        .filter-mega-expanded.expanded .filter-mega-expanded-inner {
-            opacity: 1;
-            transition-delay: 0.15s;
-        }
+        /* Headers stay visible during entire animation - no opacity change needed */
 
-        /* Phase 2: Sub-header grows to make space, panel content expands */
+        /* Sub-header grows to make space for expanded panels */
         .page-settings-bar.filter-expanded {
             padding-bottom: 220px;
             /* Make room for expanded options */
             transition: padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        .page-settings-bar.quality-expanded {
+            padding-bottom: 50px;
+            /* Make room for quality options row */
+            transition: padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Options visible when expanded - no delay */
         .filter-mega-expanded.expanded.show-options .filter-mega-options {
             max-height: 200px;
             opacity: 1;
             overflow-y: auto;
-            transition-delay: 0.1s;
         }
 
         /* Themed scrollbars for each category */
@@ -4356,6 +4411,210 @@
             color: var(--color-nigun-dark);
         }
 
+        /* Quality Mega-Menu - same animation as Filter Mega-Menu */
+        .quality-mega-menu {
+            position: static;
+            height: 48px;
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            overflow: visible;
+            z-index: 50;
+        }
+
+        .quality-mega-trigger {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 0 16px;
+            height: 100%;
+            width: 100%;
+            cursor: pointer;
+            white-space: nowrap;
+            color: var(--color-nigun-dark);
+            font-weight: 600;
+            font-size: 0.9em;
+            border-radius: inherit;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .quality-mega-trigger .audio-icon {
+            width: 18px;
+            height: 18px;
+            stroke: var(--color-nigun);
+            transition: stroke 0.2s ease;
+        }
+
+        .quality-mega-trigger .quality-mega-label {
+            color: var(--color-nigun-dark);
+            font-weight: 600;
+            transition: color 0.2s ease;
+        }
+
+        /* Quality stars badge - matches filter count */
+        .quality-mega-trigger .quality-stars-badge {
+            position: absolute;
+            right: 8px;
+            background: white;
+            color: var(--color-nigun);
+            font-size: 0.6em;
+            font-weight: 700;
+            padding: 2px 5px;
+            border-radius: 8px;
+            letter-spacing: -1px;
+            line-height: 1;
+            text-align: center;
+            transition: opacity 0.2s ease;
+            opacity: 1;
+        }
+
+        /* Hover state - blue background like search button */
+        .quality-mega-trigger:hover {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .quality-mega-trigger:hover .audio-icon {
+            stroke: white;
+        }
+
+        .quality-mega-trigger:hover .quality-mega-label {
+            color: white;
+        }
+
+        /* Active quality state */
+        .quality-mega-trigger.has-active {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .quality-mega-trigger.has-active .audio-icon {
+            stroke: white;
+        }
+
+        .quality-mega-trigger.has-active .quality-mega-label {
+            color: white;
+        }
+
+        .quality-mega-menu:has(.quality-mega-trigger.has-active) {
+            background: transparent;
+        }
+
+        /* Quality clear button - matches filter clear btn */
+        .quality-clear-btn {
+            position: absolute;
+            right: 8px;
+            background: white;
+            color: var(--color-nigun);
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 8px;
+            min-width: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* On hover: fade stars out, fade X in */
+        .quality-mega-menu:hover .quality-mega-trigger.has-active .quality-stars-badge {
+            opacity: 0;
+        }
+
+        .quality-mega-menu:hover .quality-mega-trigger.has-active .quality-clear-btn {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* Expanded quality panel */
+        .quality-mega-expanded {
+            position: absolute;
+            top: 10px;
+            left: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 4px 20px rgba(74, 124, 201, 0.25);
+            overflow: hidden;
+            z-index: 200;
+
+            /* Collapsed state - starts from quality button position + collapsed vertically (clips from bottom) */
+            visibility: hidden;
+            clip-path: inset(0 95% 100% 5% round 12px);
+            /* When closing: collapse clip-path with delay */
+            transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1) 0.1s,
+                visibility 0s 0.5s;
+        }
+
+        /* Quality options row */
+        .quality-mega-expanded-inner {
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            width: 100%;
+        }
+
+        /* Each quality option */
+        .quality-mega-option {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            padding: 10px 8px;
+            border-radius: 10px;
+            cursor: pointer;
+            background: var(--color-nigun-pale);
+            color: var(--color-nigun-dark);
+            transition: all 0.2s ease;
+            text-align: center;
+        }
+
+        .quality-mega-option:hover {
+            background: rgba(74, 124, 201, 0.15);
+            transform: scale(1.03);
+        }
+
+        .quality-mega-option.active {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .quality-mega-option .quality-option-stars {
+            font-size: 1.1em;
+            letter-spacing: 1px;
+        }
+
+        .quality-mega-option .quality-option-label {
+            font-size: 0.7em;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .quality-mega-menu.expanded {
+            z-index: 199;
+        }
+
+        .quality-mega-menu.expanded .quality-mega-trigger {
+            opacity: 0;
+        }
+
+        /* When expanded: fully visible */
+        .quality-mega-expanded.expanded {
+            visibility: visible;
+            clip-path: inset(0 0 0 0 round 12px);
+            transition: clip-path 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0s;
+        }
+
         /* Filter Category Overlay Modal */
         .filter-category-overlay {
             position: fixed;
@@ -4468,11 +4727,12 @@
             overflow: hidden;
             cursor: pointer;
             height: 48px;
-            transition: box-shadow 0.3s ease;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
         }
 
         .slider-control:hover {
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            background: transparent;
+            box-shadow: none;
         }
 
         /* Track container */
@@ -4488,25 +4748,33 @@
             gap: 2px;
         }
 
-        /* Sliding blue indicator - HIDDEN by default, appears on hover */
+        /* Sliding WHITE indicator - visible always, creates the white button effect */
         .slider-indicator {
             position: absolute;
-            top: 3px;
-            bottom: 3px;
-            right: 3px;
-            width: calc(100% - 6px);
-            background: var(--color-nigun);
-            border-radius: 7px;
-            transition: right 0.3s cubic-bezier(0.4, 0, 0.2, 1), width 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease;
+            top: 0;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transition: top 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                right 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                width 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                border-radius 0.3s ease,
+                box-shadow 0.3s ease;
             z-index: 1;
             pointer-events: none;
-            opacity: 0;
+            opacity: 1;
         }
 
-        /* Hover: indicator appears, shrinks to 1/3 and moves to position */
+        /* Hover: indicator shrinks to selected position */
         .slider-control:hover .slider-indicator {
-            opacity: 1;
+            top: 3px;
+            bottom: 3px;
             width: calc(33.333% - 4px);
+            border-radius: 9px;
         }
 
         .slider-control:hover .slider-indicator[data-position="0"] {
@@ -4527,11 +4795,13 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            border-radius: 7px;
+            border-radius: 9px;
             cursor: pointer;
             position: relative;
             z-index: 2;
-            transition: flex 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: flex 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                background 0.3s ease,
+                box-shadow 0.3s ease;
             background: transparent;
             overflow: hidden;
             flex: 0;
@@ -4552,6 +4822,8 @@
         /* Active option takes full width by default */
         .slider-option.active {
             flex: 1;
+            background: transparent;
+            transition: flex 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Non-active options: hidden by default */
@@ -4605,14 +4877,18 @@
                 transform 0.2s ease-out;
         }
 
-        /* On hover - active icon turns white (on blue indicator) */
+        /* On hover - active icon stays blue (no change) */
         .slider-control:hover .slider-option.active svg {
-            fill: white;
+            fill: var(--color-nigun);
         }
 
-        /* Hover effect on non-active options */
+        /* Non-active options on hover: transparent to blend with control bg */
+        .slider-control:hover .slider-option:not(.active) {
+            background: transparent;
+        }
+
         .slider-control:hover .slider-option:not(.active):hover {
-            background: var(--color-nigun-pale);
+            background: rgba(255, 255, 255, 0.5);
         }
 
         .page-settings-bar .detail-filter-dropdown {
@@ -19322,21 +19598,24 @@
         // SVG Icon helpers for slider controls
         function getDisplayModeIcon(mode) {
             const icons = {
-                // 4 small boxes (compact)
-                minimal: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
-                // 2 medium boxes (medium)
-                recordings: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/></svg>',
-                // 1 large box (full/expanded)
-                full: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>'
+                // 9 small dots (3x3 grid - compact)
+                minimal: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="4" height="4" rx="1"/><rect x="10" y="3" width="4" height="4" rx="1"/><rect x="17" y="3" width="4" height="4" rx="1"/><rect x="3" y="10" width="4" height="4" rx="1"/><rect x="10" y="10" width="4" height="4" rx="1"/><rect x="17" y="10" width="4" height="4" rx="1"/><rect x="3" y="17" width="4" height="4" rx="1"/><rect x="10" y="17" width="4" height="4" rx="1"/><rect x="17" y="17" width="4" height="4" rx="1"/></svg>',
+                // 4 dots (2x2 - medium)
+                recordings: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>',
+                // 2 horizontal bars (full/expanded)
+                full: '<svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="7" rx="1.5"/><rect x="3" y="14" width="18" height="7" rx="1.5"/></svg>'
             };
             return icons[mode] || icons.minimal;
         }
 
         function getSortOrderIcon(order) {
             const icons = {
+                // Bulky shuffle arrows
                 random: '<svg viewBox="0 0 24 24"><path d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.46 20 9.5V4h-5.5zm.33 9.41l-1.41 1.41 3.13 3.13L14.5 20H20v-5.5l-2.04 2.04-3.13-3.13z"/></svg>',
-                alphabetical: '<svg viewBox="0 0 24 24"><path d="M12.93 2h-2l-5 14h2.1l1.12-3.5h5.5l1.12 3.5h2.1l-5-14h.06zm-2.62 8.5L12 5l1.62 5.5h-3.24zM3 18h18v2H3v-2z"/></svg>',
-                recent: '<svg viewBox="0 0 24 24"><path d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm.5-13H11v6l5.25 3.15.75-1.23-4.5-2.67V7z"/></svg>'
+                // Hebrew אבג letter - bigger and thinner
+                alphabetical: '<svg viewBox="0 0 24 24"><text x="12" y="20" font-size="28" font-weight="400" text-anchor="middle" font-family="Arial, sans-serif">א</text></svg>',
+                // Bulky clock with fill
+                recent: '<svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/><path d="M12.5 7H11v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>'
             };
             return icons[order] || icons.random;
         }
@@ -19414,8 +19693,8 @@
                 </div>
 
                 <!-- Filter Mega-Menu Trigger -->
-                <div class="filter-mega-menu" id="filterMegaMenu" onmouseenter="showFilterExpanded()" onmouseleave="hideFilterExpanded()">
-                    <div class="filter-mega-trigger">
+                <div class="filter-mega-menu" id="filterMegaMenu" onclick="toggleFilterExpanded()">
+                    <div class="filter-mega-trigger ${totalActiveFilters > 0 ? 'has-active' : ''}">
                         <svg class="filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M4 21v-7"/>
                             <path d="M4 10V3"/>
@@ -19429,20 +19708,14 @@
                         </svg>
                         <span class="filter-mega-label">פילטערס</span>
                         ${totalActiveFilters > 0 ? `
-                        <div class="filter-button-tags" id="filterButtonTags">
-                            ${Object.entries(activeFilters).filter(([k, v]) => v && v.length > 0).map(([category, items]) =>
-                items.map(item => {
-                    const escapedItem = item.replace(/'/g, "\\'").replace(/"/g, '\\"');
-                    return `<span class="filter-button-tag" onclick="event.stopPropagation(); handleFilterChange('${category}', '${escapedItem}', false)">${item}<span class="tag-x">×</span></span>`;
-                }).join('')
-            ).join('')}
-                        </div>
+                        <span class="filter-count">${totalActiveFilters}</span>
+                        <span class="filter-clear-btn" onclick="event.stopPropagation(); clearAllFilters();" title="קלער אלע">✕</span>
                         ` : ''}
                     </div>
                 </div>
                 
                 <!-- Filter Mega-Expanded Panel (sibling, positioned to settings bar) -->
-                <div class="filter-mega-expanded" id="filterMegaExpanded" onmouseenter="showFilterExpanded()" onmouseleave="hideFilterExpanded()">
+                <div class="filter-mega-expanded" id="filterMegaExpanded">
                     <div class="filter-mega-expanded-inner">
                         ${renderMegaFilterCategory('collection', 'קאלעקשאנס', categories.collections)}
                         ${renderMegaFilterCategory('chatzer', 'חצר', categories.chatzeros)}
@@ -19454,38 +19727,44 @@
                     </div>
                 </div>
 
-                <!-- Quality Filter -->
-                <div class="detail-filter-dropdown detail-filter-quality">
-                    <div class="detail-filter-current">
-                        <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
+                <!-- Quality Mega-Menu -->
+                <div class="quality-mega-menu" id="qualityMegaMenu" onclick="toggleQualityExpanded()">
+                    <div class="quality-mega-trigger ${minQualityRating > 0 ? 'has-active' : ''}">
+                        <svg class="audio-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3Z"/>
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+                            <line x1="12" x2="12" y1="19" y2="23"/>
                         </svg>
-                        <span class="filter-label">קוואליטעט${minQualityRating > 0 ? ' ' + '★'.repeat(minQualityRating) : ''}</span>
+                        <span class="quality-mega-label">קוואליטעט</span>
+                        ${minQualityRating > 0 ? `
+                            <span class="quality-stars-badge">${minQualityRating <= 3 ? '★'.repeat(minQualityRating) : (minQualityRating === 4 ? '★★<br>★★' : '★★<br>★★★')}</span>
+                            <span class="quality-clear-btn" onclick="event.stopPropagation(); setMinQualityRating(0); updateSongsFiltersUI();" title="קלער">✕</span>
+                        ` : ''}
                     </div>
-                    <div class="detail-filter-options">
-                        <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
-                             onclick="setMinQualityRating(0);">
-                            אלע
+                </div>
+                
+                <!-- Quality Mega-Expanded Panel -->
+                <div class="quality-mega-expanded" id="qualityMegaExpanded">
+                    <div class="quality-mega-expanded-inner">
+                        <div class="quality-mega-option ${minQualityRating === 1 ? 'active' : ''}" onclick="setMinQualityRating(1);">
+                            <span class="quality-option-stars">★</span>
+                            <span class="quality-option-label">פשוט געזינגען</span>
                         </div>
-                        <div class="detail-filter-option ${minQualityRating === 1 ? 'active' : ''}"
-                             onclick="setMinQualityRating(1);">
-                            ★ א מענטש זינגט פאר זיך
+                        <div class="quality-mega-option ${minQualityRating === 2 ? 'active' : ''}" onclick="setMinQualityRating(2);">
+                            <span class="quality-option-stars">★★</span>
+                            <span class="quality-option-label">אראפגעזינגען אן מוזיק</span>
                         </div>
-                        <div class="detail-filter-option ${minQualityRating === 2 ? 'active' : ''}"
-                             onclick="setMinQualityRating(2);">
-                            ★★ אראפגעזינגען אן מוזיק
+                        <div class="quality-mega-option ${minQualityRating === 3 ? 'active' : ''}" onclick="setMinQualityRating(3);">
+                            <span class="quality-option-stars">★★★</span>
+                            <span class="quality-option-label">אלטע מוזיק</span>
                         </div>
-                        <div class="detail-filter-option ${minQualityRating === 3 ? 'active' : ''}"
-                             onclick="setMinQualityRating(3);">
-                            ★★★ אלטע מוזיק
+                        <div class="quality-mega-option ${minQualityRating === 4 ? 'active' : ''}" onclick="setMinQualityRating(4);">
+                            <span class="quality-option-stars">★★★★</span>
+                            <span class="quality-option-label">שיין און ניי</span>
                         </div>
-                        <div class="detail-filter-option ${minQualityRating === 4 ? 'active' : ''}"
-                             onclick="setMinQualityRating(4);">
-                            ★★★★ שיין און ניי
-                        </div>
-                        <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
-                             onclick="setMinQualityRating(5);">
-                            ★★★★★ שיין, ניי און געשמאק
+                        <div class="quality-mega-option ${minQualityRating === 5 ? 'active' : ''}" onclick="setMinQualityRating(5);">
+                            <span class="quality-option-stars">★★★★★</span>
+                            <span class="quality-option-label">שיין און געשמאק</span>
                         </div>
                     </div>
                 </div>
@@ -19652,24 +19931,19 @@
             const panel = document.getElementById('filterMegaExpanded');
             const trigger = document.getElementById('filterMegaMenu');
 
-            // Phase 1: Show headers (width/opacity)
+            // Phase 1: Show headers (width/opacity) + expand sub-header immediately
             if (panel) {
                 panel.classList.add('expanded');
             }
             if (trigger) {
                 trigger.classList.add('expanded');
             }
+            // Expand sub-header immediately
+            const subHeader = document.querySelector('.page-settings-bar');
+            if (subHeader) subHeader.classList.add('filter-expanded');
 
-            // Phase 2: After headers animate in, expand height to show options
-            if (filterPhase2Timer) clearTimeout(filterPhase2Timer);
-            filterPhase2Timer = setTimeout(() => {
-                if (panel && panel.classList.contains('expanded')) {
-                    panel.classList.add('show-options');
-                    // Also expand the sub-header
-                    const subHeader = document.querySelector('.page-settings-bar');
-                    if (subHeader) subHeader.classList.add('filter-expanded');
-                }
-            }, 250); // Wait for phase 1 to complete
+            // Add show-options immediately - no separate phase
+            if (panel) panel.classList.add('show-options');
         }
 
         function hideFilterExpanded() {
@@ -19692,8 +19966,122 @@
                 if (subHeader) {
                     subHeader.classList.remove('filter-expanded');
                 }
-            }, 150); // Small delay to allow moving between trigger and panel
+            }, 0); // No delay for click-based
         }
+
+        // Quality Mega-Menu Expand/Collapse - single phase animation (no dropdown, just horizontal expand)
+        let qualityExpandTimer = null;
+
+        function showQualityExpanded() {
+            if (qualityExpandTimer) {
+                clearTimeout(qualityExpandTimer);
+                qualityExpandTimer = null;
+            }
+            const panel = document.getElementById('qualityMegaExpanded');
+            const trigger = document.getElementById('qualityMegaMenu');
+
+            if (panel) {
+                panel.classList.add('expanded');
+            }
+            if (trigger) {
+                trigger.classList.add('expanded');
+            }
+            // Expand sub-header to make room for quality options
+            const subHeader = document.querySelector('.page-settings-bar');
+            if (subHeader) subHeader.classList.add('quality-expanded');
+        }
+
+        function hideQualityExpanded() {
+            qualityExpandTimer = setTimeout(() => {
+                const panel = document.getElementById('qualityMegaExpanded');
+                const trigger = document.getElementById('qualityMegaMenu');
+                if (panel) {
+                    panel.classList.remove('expanded');
+                }
+                if (trigger) {
+                    trigger.classList.remove('expanded');
+                }
+                // Collapse sub-header
+                const subHeader = document.querySelector('.page-settings-bar');
+                if (subHeader) subHeader.classList.remove('quality-expanded');
+            }, 0); // No delay for click-based
+        }
+
+        // Toggle functions for click-based operation
+        function toggleFilterExpanded() {
+            const panel = document.getElementById('filterMegaExpanded');
+            if (panel && panel.classList.contains('expanded')) {
+                hideFilterExpanded();
+            } else {
+                // Close quality if open
+                hideQualityExpandedImmediate();
+                showFilterExpanded();
+            }
+        }
+
+        function toggleQualityExpanded() {
+            const panel = document.getElementById('qualityMegaExpanded');
+            if (panel && panel.classList.contains('expanded')) {
+                hideQualityExpanded();
+            } else {
+                // Close filter if open
+                hideFilterExpandedImmediate();
+                showQualityExpanded();
+            }
+        }
+
+        // Immediate hide functions (no delay)
+        function hideFilterExpandedImmediate() {
+            if (filterPhase2Timer) {
+                clearTimeout(filterPhase2Timer);
+                filterPhase2Timer = null;
+            }
+            if (filterExpandTimer) {
+                clearTimeout(filterExpandTimer);
+                filterExpandTimer = null;
+            }
+            const panel = document.getElementById('filterMegaExpanded');
+            const trigger = document.getElementById('filterMegaMenu');
+            const subHeader = document.querySelector('.page-settings-bar');
+            if (panel) panel.classList.remove('expanded', 'show-options');
+            if (trigger) trigger.classList.remove('expanded');
+            if (subHeader) subHeader.classList.remove('filter-expanded');
+        }
+
+        function hideQualityExpandedImmediate() {
+            if (qualityExpandTimer) {
+                clearTimeout(qualityExpandTimer);
+                qualityExpandTimer = null;
+            }
+            const panel = document.getElementById('qualityMegaExpanded');
+            const trigger = document.getElementById('qualityMegaMenu');
+            const subHeader = document.querySelector('.page-settings-bar');
+            if (panel) panel.classList.remove('expanded');
+            if (trigger) trigger.classList.remove('expanded');
+            if (subHeader) subHeader.classList.remove('quality-expanded');
+        }
+
+        // Close panels when clicking outside
+        document.addEventListener('click', function (e) {
+            const filterMenu = document.getElementById('filterMegaMenu');
+            const filterPanel = document.getElementById('filterMegaExpanded');
+            const qualityMenu = document.getElementById('qualityMegaMenu');
+            const qualityPanel = document.getElementById('qualityMegaExpanded');
+
+            // Check if click is outside filter menu and panel
+            if (filterPanel && filterPanel.classList.contains('expanded')) {
+                if (!filterMenu?.contains(e.target) && !filterPanel?.contains(e.target)) {
+                    hideFilterExpandedImmediate();
+                }
+            }
+
+            // Check if click is outside quality menu and panel
+            if (qualityPanel && qualityPanel.classList.contains('expanded')) {
+                if (!qualityMenu?.contains(e.target) && !qualityPanel?.contains(e.target)) {
+                    hideQualityExpandedImmediate();
+                }
+            }
+        });
 
         // Update filter mega-menu content (called when categories data is loaded)
         function updateFilterMegaMenuContent() {
@@ -20389,11 +20777,28 @@
                     trigger.appendChild(countBadge);
                 }
                 countBadge.textContent = totalCount;
+
+                // Also ensure clear button exists
+                let clearBtn = trigger.querySelector('.filter-clear-btn');
+                if (!clearBtn) {
+                    clearBtn = document.createElement('span');
+                    clearBtn.className = 'filter-clear-btn';
+                    clearBtn.textContent = '✕';
+                    clearBtn.title = 'קלער אלע';
+                    clearBtn.onclick = function (e) {
+                        e.stopPropagation();
+                        clearAllFilters();
+                    };
+                    trigger.appendChild(clearBtn);
+                }
             } else {
                 trigger.classList.remove('has-active');
                 if (countBadge) {
                     countBadge.remove();
                 }
+                // Also remove clear button
+                const clearBtn = trigger.querySelector('.filter-clear-btn');
+                if (clearBtn) clearBtn.remove();
             }
         }
 
@@ -20649,6 +21054,14 @@
             } else {
                 minQualityRating = rating;
             }
+
+            // Close quality panel immediately
+            const panel = document.getElementById('qualityMegaExpanded');
+            const trigger = document.getElementById('qualityMegaMenu');
+            const subHeader = document.querySelector('.page-settings-bar');
+            if (panel) panel.classList.remove('expanded');
+            if (trigger) trigger.classList.remove('expanded');
+            if (subHeader) subHeader.classList.remove('quality-expanded');
 
             // Update the stars UI
             updateQualityStarsUI();
@@ -21606,8 +22019,13 @@
             };
             searchQuery = '';
 
-            // Uncheck all filter checkboxes
+            // Uncheck all filter checkboxes (sidebar)
             document.querySelectorAll('.sidebar-dropdown-content input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+
+            // Uncheck all mega-menu checkboxes
+            document.querySelectorAll('.filter-mega-expanded input[type="checkbox"]').forEach(cb => {
                 cb.checked = false;
             });
 
@@ -21618,6 +22036,8 @@
 
             applyFilters();
             renderActiveFilterTags();
+            updateMainFilterButton();
+            updateMegaMenuHeaders();
         }
 
         // Check if any filters are active
