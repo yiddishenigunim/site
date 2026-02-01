@@ -3647,14 +3647,48 @@
             box-shadow: var(--card-shadow);
             margin-bottom: 0;
             overflow: visible;
-            position: sticky;
-            top: 0;
+            position: relative;
             z-index: 99;
             text-align: center;
             padding: 20px 25px 15px 25px;
             display: flex;
             flex-direction: column;
             align-items: center;
+            /* Smooth transitions for compact mode */
+            transition: padding 0.4s ease, box-shadow 0.4s ease, border-radius 0.4s ease;
+        }
+
+        /* Fixed mode - JavaScript controlled */
+        .page-title.is-fixed {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            border-radius: 0 0 20px 20px;
+            /* Compact mode - smaller when fixed */
+            padding: 8px 25px 10px 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            /* Smooth transition for top when main-header hides/shows */
+            transition: top 0.4s ease, padding 0.4s ease, box-shadow 0.4s ease, border-radius 0.4s ease;
+        }
+
+        /* When main header is hidden, page-title moves to top */
+        .page-title.is-fixed.main-hidden {
+            top: 0 !important;
+            border-radius: 0 0 20px 20px;
+        }
+
+        /* Compact title text when fixed */
+        .page-title.is-fixed .page-title-bar {
+            font-size: 2.5em;
+            margin-top: 0;
+        }
+
+        /* Hide subtitle when fixed - using opacity/max-height for smooth animation */
+        .page-title.is-fixed .subtitle {
+            opacity: 0;
+            max-height: 0;
         }
 
         /* Wave bar at bottom of colored box */
@@ -3677,6 +3711,7 @@
             order: 2;
             /* Show second */
             margin-top: 10px;
+            transition: font-size 0.4s ease, margin-top 0.4s ease;
         }
 
         /* Hide the white content area */
@@ -3698,6 +3733,10 @@
             width: 100%;
             order: 1;
             /* Show first */
+            transition: opacity 0.3s ease, max-height 0.4s ease;
+            max-height: 50px;
+            opacity: 1;
+            overflow: hidden;
         }
 
         /* Filters container inside page-title */
@@ -3707,9 +3746,9 @@
 
         /* Sub-header bar for settings/filters */
         .page-settings-bar {
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            position: relative;
+            /* Changed from sticky - JS manages fixed */
+            z-index: 98;
             background: var(--color-nigun-pale);
             padding: 10px 40px;
             display: flex;
@@ -3724,14 +3763,269 @@
             border-top: none;
             width: 90%;
             max-width: calc(100% - 40px);
-            /* Transition for filter panel expand/collapse animation */
-            transition: padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            /* Transition for filter panel expand/collapse animation + merge animation */
+            transition: padding-bottom 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+                top 0.4s ease,
+                transform 0.4s ease,
+                margin-top 0.4s ease,
+                border-radius 0.4s ease;
+        }
+
+        /* Note: settings-bar stays in normal flow, only page-title becomes fixed */
+
+        /* ========== Scroll-Aware Sticky Headers ========== */
+        /* When main header is hidden, page-title moves to top */
+        .page-title.main-hidden {
+            top: 0 !important;
+            /* Takes over top position when main header hides */
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        /* Settings-bar styling when merged with page-title */
+        .page-settings-bar.merged {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-title.sub-merged {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        /* ========== Category-Themed Settings Bars ========== */
+        /* Mechaber theme */
+        .page-theme-mechaber .page-settings-bar {
+            background: var(--color-mechaber-pale);
+            border-color: var(--color-mechaber-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 8px 12px -8px rgba(196, 53, 168, 0.3);
+        }
+
+        .page-theme-mechaber .page-settings-bar .slider-option svg,
+        .page-theme-mechaber .page-settings-bar .slider-control:hover .slider-option svg,
+        .page-theme-mechaber .page-settings-bar .slider-control:hover .slider-option.active svg {
+            fill: var(--color-mechaber);
+        }
+
+        .page-theme-mechaber .page-settings-bar .slider-option .slider-option-label {
+            color: var(--color-mechaber-dark);
+        }
+
+        .page-theme-mechaber .page-settings-bar .search-trigger-btn {
+            border-color: var(--color-mechaber);
+            color: var(--color-mechaber-dark);
+        }
+
+        .page-theme-mechaber .page-settings-bar .search-trigger-btn:hover,
+        .page-theme-mechaber .page-settings-bar .search-trigger-btn.has-active {
+            background: var(--color-mechaber);
+            border-color: var(--color-mechaber);
+        }
+
+        .page-theme-mechaber .page-settings-bar .expandable-search-input-wrapper {
+            background: var(--color-mechaber);
+        }
+
+        .page-theme-mechaber .page-settings-bar .search-trigger-btn .search-text-display {
+            color: var(--color-mechaber);
+        }
+
+        .page-theme-mechaber .page-settings-bar .search-trigger-btn .clear-search-x {
+            color: var(--color-mechaber);
+        }
+
+        /* Chatzer theme */
+        .page-theme-chatzer .page-settings-bar {
+            background: var(--color-chatzer-pale);
+            border-color: var(--color-chatzer-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 8px 12px -8px rgba(156, 91, 181, 0.3);
+        }
+
+        .page-theme-chatzer .page-settings-bar .slider-option svg,
+        .page-theme-chatzer .page-settings-bar .slider-control:hover .slider-option svg,
+        .page-theme-chatzer .page-settings-bar .slider-control:hover .slider-option.active svg {
+            fill: var(--color-chatzer);
+        }
+
+        .page-theme-chatzer .page-settings-bar .slider-option .slider-option-label {
+            color: var(--color-chatzer-dark);
+        }
+
+        .page-theme-chatzer .page-settings-bar .search-trigger-btn {
+            border-color: var(--color-chatzer);
+            color: var(--color-chatzer-dark);
+        }
+
+        .page-theme-chatzer .page-settings-bar .search-trigger-btn:hover,
+        .page-theme-chatzer .page-settings-bar .search-trigger-btn.has-active {
+            background: var(--color-chatzer);
+            border-color: var(--color-chatzer);
+        }
+
+        .page-theme-chatzer .page-settings-bar .expandable-search-input-wrapper {
+            background: var(--color-chatzer);
+        }
+
+        .page-theme-chatzer .page-settings-bar .search-trigger-btn .search-text-display {
+            color: var(--color-chatzer);
+        }
+
+        .page-theme-chatzer .page-settings-bar .search-trigger-btn .clear-search-x {
+            color: var(--color-chatzer);
+        }
+
+        /* Verter theme */
+        .page-theme-verter .page-settings-bar {
+            background: var(--color-verter-pale);
+            border-color: var(--color-verter-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 8px 12px -8px rgba(107, 114, 128, 0.3);
+        }
+
+        .page-theme-verter .page-settings-bar .search-trigger-btn {
+            border-color: var(--color-verter);
+            color: var(--color-verter-dark);
+        }
+
+        .page-theme-verter .page-settings-bar .search-trigger-btn:hover,
+        .page-theme-verter .page-settings-bar .search-trigger-btn.has-active {
+            background: var(--color-verter);
+            border-color: var(--color-verter);
+        }
+
+        .page-theme-verter .page-settings-bar .expandable-search-input-wrapper {
+            background: var(--color-verter);
+        }
+
+        .page-theme-verter .page-settings-bar .search-trigger-btn .search-text-display {
+            color: var(--color-verter);
+        }
+
+        .page-theme-verter .page-settings-bar .slider-option svg,
+        .page-theme-verter .page-settings-bar .slider-control:hover .slider-option svg,
+        .page-theme-verter .page-settings-bar .slider-control:hover .slider-option.active svg {
+            fill: var(--color-verter);
+        }
+
+        .page-theme-verter .page-settings-bar .slider-option .slider-option-label {
+            color: var(--color-verter-dark);
+        }
+
+        .page-theme-verter .page-settings-bar .search-trigger-btn .clear-search-x {
+            color: var(--color-verter);
+        }
+
+        /* Zman theme */
+        .page-theme-zman .page-settings-bar {
+            background: var(--color-zman-pale);
+            border-color: var(--color-zman-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 8px 12px -8px rgba(233, 106, 27, 0.3);
+        }
+
+        .page-theme-zman .page-settings-bar .search-trigger-btn {
+            border-color: var(--color-zman);
+            color: var(--color-zman-dark);
+        }
+
+        .page-theme-zman .page-settings-bar .search-trigger-btn:hover,
+        .page-theme-zman .page-settings-bar .search-trigger-btn.has-active {
+            background: var(--color-zman);
+            border-color: var(--color-zman);
+        }
+
+        .page-theme-zman .page-settings-bar .expandable-search-input-wrapper {
+            background: var(--color-zman);
+        }
+
+        .page-theme-zman .page-settings-bar .search-trigger-btn .search-text-display {
+            color: var(--color-zman);
+        }
+
+        .page-theme-zman .page-settings-bar .search-trigger-btn .clear-search-x {
+            color: var(--color-zman);
+        }
+
+        /* Collection theme */
+        .page-theme-collection .page-settings-bar {
+            background: var(--color-collection-pale);
+            border-color: var(--color-collection-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 8px 12px -8px rgba(198, 40, 40, 0.3);
+        }
+
+        .page-theme-collection .page-settings-bar .search-trigger-btn {
+            border-color: var(--color-collection);
+            color: var(--color-collection-dark);
+        }
+
+        .page-theme-collection .page-settings-bar .search-trigger-btn:hover,
+        .page-theme-collection .page-settings-bar .search-trigger-btn.has-active {
+            background: var(--color-collection);
+            border-color: var(--color-collection);
+        }
+
+        .page-theme-collection .page-settings-bar .expandable-search-input-wrapper {
+            background: var(--color-collection);
+        }
+
+        .page-theme-collection .page-settings-bar .search-trigger-btn .search-text-display {
+            color: var(--color-collection);
+        }
+
+        .page-theme-collection .page-settings-bar .search-trigger-btn .clear-search-x {
+            color: var(--color-collection);
+        }
+
+        /* Piyut theme */
+        .page-theme-piyut .page-settings-bar {
+            background: var(--color-piyut-pale);
+            border-color: var(--color-piyut-light);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1),
+                inset 0 8px 12px -8px rgba(46, 139, 46, 0.3);
+        }
+
+        .page-theme-piyut .page-settings-bar .search-trigger-btn {
+            border-color: var(--color-piyut);
+            color: var(--color-piyut-dark);
+        }
+
+        .page-theme-piyut .page-settings-bar .search-trigger-btn:hover,
+        .page-theme-piyut .page-settings-bar .search-trigger-btn.has-active {
+            background: var(--color-piyut);
+            border-color: var(--color-piyut);
+        }
+
+        .page-theme-piyut .page-settings-bar .expandable-search-input-wrapper {
+            background: var(--color-piyut);
+        }
+
+        .page-theme-piyut .page-settings-bar .search-trigger-btn .search-text-display {
+            color: var(--color-piyut);
+        }
+
+        .page-theme-piyut .page-settings-bar .search-trigger-btn .clear-search-x {
+            color: var(--color-piyut);
+        }
+
+        /* Grid layout variants for different button counts */
+        .page-settings-bar .detail-filters-group.cols-3 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .page-settings-bar .detail-filters-group.cols-1 {
+            grid-template-columns: 1fr;
+            max-width: 300px;
         }
 
         .page-settings-bar .detail-filters-group {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
             gap: 10px;
+
             padding: 0;
             width: 100%;
         }
@@ -4776,6 +5070,27 @@
 
         .slider-control:hover .slider-indicator[data-position="2"] {
             right: calc(66.666% - 1px);
+        }
+
+        /* 2-option slider modifier */
+        /* Active option takes full width (default behavior inherited) */
+        /* Non-active options hidden by default (inherited from base rules) */
+
+        /* On hover: both options visible with 50% width each */
+        .slider-control.slider-2-options:hover .slider-option {
+            flex: 1;
+        }
+
+        .slider-control.slider-2-options:hover .slider-indicator {
+            width: calc(50% - 4px);
+        }
+
+        .slider-control.slider-2-options:hover .slider-indicator[data-position="0"] {
+            right: 3px;
+        }
+
+        .slider-control.slider-2-options:hover .slider-indicator[data-position="1"] {
+            right: calc(50% + 1px);
         }
 
         /* Each option slot */
@@ -6629,6 +6944,138 @@
             right: -2px;
             bottom: -2px;
             transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        /* Compact list view for mechabrim - flow/wrap layout */
+        .mechaber-list-compact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 4px;
+            justify-content: flex-start;
+            grid-column: 1 / -1;
+            /* Span full width of grid */
+            width: 100%;
+        }
+
+        .mechaber-pill {
+            display: inline-flex;
+            align-items: center;
+            background: var(--color-mechaber);
+            border-radius: 50px;
+            padding: 6px 16px 6px 6px;
+            text-decoration: none;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .mechaber-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            filter: brightness(1.1);
+        }
+
+        .mechaber-pill-image {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background-size: cover;
+            background-position: center top;
+            background-color: rgba(255, 255, 255, 0.3);
+            margin-left: 10px;
+            flex-shrink: 0;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .mechaber-pill-name {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Compact list view for chatzeros - flow/wrap layout */
+        .chatzer-list-compact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 4px;
+            justify-content: flex-start;
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        .chatzer-pill {
+            display: inline-flex;
+            align-items: center;
+            background: var(--color-chatzer);
+            border-radius: 50px;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .chatzer-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            filter: brightness(1.1);
+        }
+
+        .chatzer-pill-name {
+            color: white;
+            font-weight: 600;
+        }
+
+        /* Compact list view for verter - flow/wrap layout */
+        .verter-list-compact {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 4px;
+            justify-content: flex-start;
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        .verter-pill {
+            display: inline-flex;
+            align-items: center;
+            background: var(--color-verter);
+            border-radius: 50px;
+            padding: 10px 20px;
+            text-decoration: none;
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            white-space: nowrap;
+            flex-grow: 1;
+            justify-content: center;
+        }
+
+        .verter-pill:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .verter-pill-name {
+            color: white;
+            font-weight: 600;
         }
 
         /* Remove old hover border change - handled by ::after now */
@@ -17097,6 +17544,21 @@
         let seenSongIds = new Set(); // Track song IDs from previous batches for FLIP animation
         let isFlipping = false; // Block loadMoreSongs during FLIP animation
 
+        // Category page state (for mechabrim/chatzeros/verter with display/sort controls)
+        // Per-category display modes and sort orders so each page keeps its own settings
+        let categoryDisplayModes = {
+            mechabrim: 'cards',
+            chatzeros: 'cards',
+            verter: 'cards'
+        };
+        let categorySortOrders = {
+            mechabrim: 'years',
+            chatzeros: 'alphabetical',
+            verter: 'alphabetical'
+        };
+        let categorySearchQuery = ''; // Search query for category pages
+        let currentCategoryKey = null; // Track current category for search updates
+
         // Category data
         let categories = {
             chatzeros: {},
@@ -19822,6 +20284,546 @@
                     </div>
                 </div>
             `;
+        }
+
+        // Get the HTML for category page filters (mechaber/chatzer/verter - 2-3 buttons)
+        function getCategoryFiltersHTML(categoryKey) {
+            const hasSearch = categorySearchQuery && categorySearchQuery.length > 0;
+            const placeholderText = categoryKey === 'mechabrim' ? 'זוך א מחבר...' : categoryKey === 'chatzeros' ? 'זוך א חצר...' : 'זוך ווערטער...';
+
+            return `
+                <!-- Display Mode Slider - 2 options for mechabrim, chatzeros, and verter -->
+                ${(categoryKey === 'mechabrim' || categoryKey === 'chatzeros' || categoryKey === 'verter') ? `
+                <div class="slider-control slider-2-options" data-type="categoryDisplayMode">
+                    <div class="slider-options-track">
+                        <div class="slider-indicator" data-position="${categoryDisplayModes[categoryKey] === 'list' ? '0' : '1'}"></div>
+                        <div class="slider-option ${categoryDisplayModes[categoryKey] === 'list' ? 'active' : ''}" data-value="list" onclick="selectCategorySliderOption('categoryDisplayMode', 'list', event)">
+                            <span class="slider-option-label">ליסטע</span>
+                            <svg viewBox="0 0 24 24"><circle cx="5" cy="5" r="2"/><circle cx="12" cy="5" r="2"/><circle cx="19" cy="5" r="2"/><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/><circle cx="5" cy="19" r="2"/><circle cx="12" cy="19" r="2"/><circle cx="19" cy="19" r="2"/></svg>
+                        </div>
+                        <div class="slider-option ${categoryDisplayModes[categoryKey] === 'cards' ? 'active' : ''}" data-value="cards" onclick="selectCategorySliderOption('categoryDisplayMode', 'cards', event)">
+                            <span class="slider-option-label">קעסטלעך</span>
+                            <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3V3zm10 0h8v8h-8V3zM3 13h8v8H3v-8zm10 0h8v8h-8v-8z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                ` : `
+                <div class="slider-control" data-type="categoryDisplayMode">
+                    <div class="slider-options-track">
+                        <div class="slider-indicator" data-position="${categoryDisplayModes[categoryKey] === 'minimal' ? '0' : categoryDisplayModes[categoryKey] === 'recordings' ? '1' : '2'}"></div>
+                        <div class="slider-option ${categoryDisplayModes[categoryKey] === 'minimal' ? 'active' : ''}" data-value="minimal" onclick="selectCategorySliderOption('categoryDisplayMode', 'minimal', event)">
+                            <span class="slider-option-label">קעפל</span>
+                            ${getDisplayModeIcon('minimal')}
+                        </div>
+                        <div class="slider-option ${categoryDisplayModes[categoryKey] === 'recordings' ? 'active' : ''}" data-value="recordings" onclick="selectCategorySliderOption('categoryDisplayMode', 'recordings', event)">
+                            <span class="slider-option-label">קארטן</span>
+                            ${getDisplayModeIcon('recordings')}
+                        </div>
+                        <div class="slider-option ${categoryDisplayModes[categoryKey] === 'full' ? 'active' : ''}" data-value="full" onclick="selectCategorySliderOption('categoryDisplayMode', 'full', event)">
+                            <span class="slider-option-label">ליסט</span>
+                            ${getDisplayModeIcon('full')}
+                        </div>
+                    </div>
+                </div>
+                `}
+
+                <!-- Search Button - Expandable (in the middle) -->
+                <div class="expandable-search" id="categoryExpandableSearch">
+                    <button class="search-trigger-btn ${hasSearch ? 'has-active' : ''}" onclick="toggleCategoryExpandableSearch(event)">
+                        <svg class="search-icon filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <span class="search-label">זוך</span>
+                        <span class="search-text-display">${categorySearchQuery || ''}</span>
+                        <span class="clear-search-x" onclick="clearCategorySearch(event)">×</span>
+                    </button>
+                    <div class="expandable-search-input-wrapper">
+                        <svg class="expandable-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <input type="text"
+                               class="expandable-search-input"
+                               id="categoryExpandableSearchInput"
+                               placeholder="${placeholderText}"
+                               value="${categorySearchQuery || ''}"
+                               oninput="handleCategoryLiveSearch(this.value)"
+                               onkeydown="if(event.key==='Escape')closeCategoryExpandableSearch()">
+                        <button class="search-close-btn" onclick="clearCategorySearch(event)">×</button>
+                    </div>
+                </div>
+
+                <!-- Sort Order Slider (only for mechabrim and chatzeros, not verter) -->
+                ${categoryKey === 'mechabrim' ? `
+                <div class="slider-control" data-type="categorySortOrder">
+                    <div class="slider-options-track">
+                        <div class="slider-indicator" data-position="${categorySortOrders[categoryKey] === 'years' ? '0' : categorySortOrders[categoryKey] === 'alphabetical' ? '1' : '2'}"></div>
+                        <div class="slider-option ${categorySortOrders[categoryKey] === 'years' ? 'active' : ''}" data-value="years" onclick="selectCategorySliderOption('categorySortOrder', 'years', event)">
+                            <span class="slider-option-label">יארן</span>
+                            <svg viewBox="0 0 24 24"><path d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11zM7 11h5v5H7z"/></svg>
+                        </div>
+                        <div class="slider-option ${categorySortOrders[categoryKey] === 'alphabetical' ? 'active' : ''}" data-value="alphabetical" onclick="selectCategorySliderOption('categorySortOrder', 'alphabetical', event)">
+                            <span class="slider-option-label">א"ב</span>
+                            ${getSortOrderIcon('alphabetical')}
+                        </div>
+                        <div class="slider-option ${categorySortOrders[categoryKey] === 'songcount' ? 'active' : ''}" data-value="songcount" onclick="selectCategorySliderOption('categorySortOrder', 'songcount', event)">
+                            <span class="slider-option-label">ניגונים</span>
+                            <svg viewBox="0 0 24 24"><path d="M4 19h4v-5H4v5zm6 0h4V9h-4v10zm6 0h4V4h-4v15z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                ` : (categoryKey === 'chatzeros' || categoryKey === 'verter') ? `
+                <div class="slider-control" data-type="categorySortOrder">
+                    <div class="slider-options-track">
+                        <div class="slider-indicator" data-position="${categorySortOrders[categoryKey] === 'random' ? '0' : categorySortOrders[categoryKey] === 'alphabetical' ? '1' : '2'}"></div>
+                        <div class="slider-option ${categorySortOrders[categoryKey] === 'random' ? 'active' : ''}" data-value="random" onclick="selectCategorySliderOption('categorySortOrder', 'random', event)">
+                            <span class="slider-option-label">שאָפל</span>
+                            ${getSortOrderIcon('random')}
+                        </div>
+                        <div class="slider-option ${categorySortOrders[categoryKey] === 'alphabetical' ? 'active' : ''}" data-value="alphabetical" onclick="selectCategorySliderOption('categorySortOrder', 'alphabetical', event)">
+                            <span class="slider-option-label">א"ב</span>
+                            ${getSortOrderIcon('alphabetical')}
+                        </div>
+                        <div class="slider-option ${categorySortOrders[categoryKey] === 'songcount' ? 'active' : ''}" data-value="songcount" onclick="selectCategorySliderOption('categorySortOrder', 'songcount', event)">
+                            <span class="slider-option-label">ניגונים</span>
+                            <svg viewBox="0 0 24 24"><path d="M4 19h4v-5H4v5zm6 0h4V9h-4v10zm6 0h4V4h-4v15z"/></svg>
+                        </div>
+                    </div>
+                </div>
+                ` : ''}
+            `;
+        }
+
+        // Get the HTML for simple search-only pages (verter, zmanim, collections, piyutim)
+        function getSimpleSearchHTML(categoryKey) {
+            const hasSearch = categorySearchQuery && categorySearchQuery.length > 0;
+            const placeholderMap = {
+                'verter': 'זוך ווערטער...',
+                'zmanim': 'זוך א זמן...',
+                'collections': 'זוך א קאלעקשאן...',
+                'piyutim': 'זוך א פיוט...'
+            };
+            const placeholderText = placeholderMap[categoryKey] || 'זוך...';
+
+            return `
+                <!-- Search Button - Expandable -->
+                <div class="expandable-search" id="categoryExpandableSearch">
+                    <button class="search-trigger-btn ${hasSearch ? 'has-active' : ''}" onclick="toggleCategoryExpandableSearch(event)">
+                        <svg class="search-icon filter-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:16px;height:16px;">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <span class="search-label">זוך</span>
+                        <span class="search-text-display">${categorySearchQuery || ''}</span>
+                        <span class="clear-search-x" onclick="clearCategorySearch(event)">×</span>
+                    </button>
+                    <div class="expandable-search-input-wrapper">
+                        <svg class="expandable-search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:24px;height:24px;">
+                            <circle cx="11" cy="11" r="8"/>
+                            <path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <input type="text"
+                               class="expandable-search-input"
+                               id="categoryExpandableSearchInput"
+                               placeholder="${placeholderText}"
+                               value="${categorySearchQuery || ''}"
+                               oninput="handleCategoryLiveSearch(this.value)"
+                               onkeydown="if(event.key==='Escape')closeCategoryExpandableSearch()">
+                        <button class="search-close-btn" onclick="clearCategorySearch(event)">×</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Category slider option selection handler
+        function selectCategorySliderOption(type, value, event) {
+            if (event) event.stopPropagation();
+
+            if (type === 'categoryDisplayMode') {
+                categoryDisplayModes[currentCategoryKey] = value;
+            } else if (type === 'categorySortOrder') {
+                categorySortOrders[currentCategoryKey] = value;
+            }
+
+            // Update slider UI
+            const sliderControl = document.querySelector(`.slider-control[data-type="${type}"]`);
+            if (sliderControl) {
+                // Update active class on options
+                sliderControl.querySelectorAll('.slider-option').forEach(opt => {
+                    if (opt.dataset.value === value) {
+                        opt.classList.add('active');
+                    } else {
+                        opt.classList.remove('active');
+                    }
+                });
+
+                // Update indicator position
+                const options = Array.from(sliderControl.querySelectorAll('.slider-option'));
+                const activeIndex = options.findIndex(opt => opt.dataset.value === value);
+                const indicator = sliderControl.querySelector('.slider-indicator');
+                if (indicator && activeIndex >= 0) {
+                    indicator.dataset.position = activeIndex.toString();
+                }
+            }
+
+            // Re-render the category grid with new sort or display mode
+            if (currentCategoryKey && (type === 'categorySortOrder' || type === 'categoryDisplayMode')) {
+                filterAndRenderCategoryGrid();
+            }
+        }
+
+        // Toggle category expandable search
+        function toggleCategoryExpandableSearch(event) {
+            if (event) event.stopPropagation();
+            const searchContainer = document.getElementById('categoryExpandableSearch');
+            if (!searchContainer) return;
+
+            const isExpanded = searchContainer.classList.contains('expanded');
+            if (isExpanded) {
+                closeCategoryExpandableSearch();
+            } else {
+                searchContainer.classList.add('expanded');
+                setTimeout(() => {
+                    const input = document.getElementById('categoryExpandableSearchInput');
+                    if (input) input.focus();
+                }, 100);
+            }
+        }
+
+        // Close category expandable search
+        function closeCategoryExpandableSearch() {
+            const searchContainer = document.getElementById('categoryExpandableSearch');
+            if (searchContainer) {
+                searchContainer.classList.remove('expanded');
+
+                // Update button state after closing
+                updateCategorySearchUI();
+            }
+        }
+
+        // Document-level click handler to close category search when clicking outside
+        document.addEventListener('click', function (event) {
+            const categorySearch = document.getElementById('categoryExpandableSearch');
+            if (categorySearch && categorySearch.classList.contains('expanded')) {
+                // Check if click is outside the search container
+                if (!categorySearch.contains(event.target)) {
+                    closeCategoryExpandableSearch();
+                }
+            }
+
+            // Also close songs page expandable search
+            const songsSearch = document.getElementById('expandableSearch');
+            if (songsSearch && songsSearch.classList.contains('expanded')) {
+                if (!songsSearch.contains(event.target)) {
+                    closeExpandableSearch();
+                }
+            }
+        });
+
+        // Handle live search for category pages
+        function handleCategoryLiveSearch(query) {
+            categorySearchQuery = query.trim();
+            if (currentCategoryKey) {
+                filterAndRenderCategoryGrid();
+            }
+        }
+
+        // Clear category search
+        function clearCategorySearch(event) {
+            if (event) event.stopPropagation();
+            categorySearchQuery = '';
+            closeCategoryExpandableSearch();
+            if (currentCategoryKey) {
+                filterAndRenderCategoryGrid();
+            }
+            // Update the search button UI
+            updateCategorySearchUI();
+        }
+
+        // Update category search button UI
+        function updateCategorySearchUI() {
+            const searchContainer = document.getElementById('categoryExpandableSearch');
+            if (!searchContainer) return;
+            const btn = searchContainer.querySelector('.search-trigger-btn');
+            const textDisplay = searchContainer.querySelector('.search-text-display');
+            if (btn) {
+                if (categorySearchQuery) {
+                    btn.classList.add('has-active');
+                } else {
+                    btn.classList.remove('has-active');
+                }
+            }
+            if (textDisplay) {
+                textDisplay.textContent = categorySearchQuery || '';
+            }
+        }
+
+        // Filter and re-render category grid based on search
+        function filterAndRenderCategoryGrid() {
+            const grid = document.getElementById('categoryGrid');
+            if (!grid) return;
+
+            let sortedKeys = [];
+            let data = {};
+
+            // Handle different category types
+            if (currentCategoryKey === 'zmanim') {
+                // Use zmaninInfo for zmanim
+                sortedKeys = Object.keys(zmaninInfo);
+            } else if (currentCategoryKey === 'piyutim') {
+                // Use piyutimInfo for piyutim
+                sortedKeys = Object.keys(piyutimInfo);
+            } else if (currentCategoryKey === 'collections') {
+                data = categories.collections || {};
+                sortedKeys = Object.keys(data);
+            } else {
+                data = categories[currentCategoryKey] || {};
+                sortedKeys = Object.keys(data);
+            }
+
+            // Apply search filter
+            if (categorySearchQuery) {
+                const query = categorySearchQuery.toLowerCase();
+                sortedKeys = sortedKeys.filter(key => key.toLowerCase().includes(query));
+            }
+
+            // Apply sort - use per-category sort order
+            const sortOrder = categorySortOrders[currentCategoryKey] || 'alphabetical';
+            if (sortOrder === 'random') {
+                sortedKeys = sortedKeys.sort(() => Math.random() - 0.5);
+            } else if (sortOrder === 'alphabetical') {
+                sortedKeys = sortedKeys.sort((a, b) => a.localeCompare(b, 'he'));
+            } else if (sortOrder === 'years' && currentCategoryKey === 'mechabrim') {
+                // Sort by birth year (earliest first)
+                const parseHebrewYear = (yearStr) => {
+                    if (!yearStr) return 9999;
+                    const hebrewValues = {
+                        'א': 1, 'ב': 2, 'ג': 3, 'ד': 4, 'ה': 5, 'ו': 6, 'ז': 7, 'ח': 8, 'ט': 9,
+                        'י': 10, 'כ': 20, 'ך': 20, 'ל': 30, 'מ': 40, 'ם': 40, 'נ': 50, 'ן': 50,
+                        'ס': 60, 'ע': 70, 'פ': 80, 'ף': 80, 'צ': 90, 'ץ': 90, 'ק': 100, 'ר': 200,
+                        'ש': 300, 'ת': 400
+                    };
+                    let total = 0;
+                    for (const char of yearStr) {
+                        if (hebrewValues[char]) total += hebrewValues[char];
+                    }
+                    return total || 9999;
+                };
+                sortedKeys = sortedKeys.sort((a, b) => {
+                    const infoA = mechabrimInfo[a] || {};
+                    const infoB = mechabrimInfo[b] || {};
+                    const yearA = parseHebrewYear(infoA.birthYear);
+                    const yearB = parseHebrewYear(infoB.birthYear);
+                    return yearA - yearB;
+                });
+            } else if (sortOrder === 'songcount' && currentCategoryKey === 'mechabrim') {
+                // Sort by number of songs (most first)
+                sortedKeys = sortedKeys.sort((a, b) => {
+                    const countA = (data[a] || []).length;
+                    const countB = (data[b] || []).length;
+                    return countB - countA;
+                });
+            } else if (sortOrder === 'songcount' && (currentCategoryKey === 'chatzeros' || currentCategoryKey === 'verter')) {
+                // Sort by number of songs (most first)
+                sortedKeys = sortedKeys.sort((a, b) => {
+                    const countA = (data[a] || []).length;
+                    const countB = (data[b] || []).length;
+                    return countB - countA;
+                });
+            }
+            // 'recent' - keep original order or implement if we have date data
+
+            // Get info object for this category
+            let infoObj = {};
+            switch (currentCategoryKey) {
+                case 'chatzeros': infoObj = chatzerosInfo; break;
+                case 'mechabrim': infoObj = mechabrimInfo; break;
+                case 'verter': infoObj = verterInfo; break;
+                case 'zmanim': infoObj = zmaninInfo; break;
+                case 'collections': infoObj = collectionsInfo; break;
+                case 'piyutim': infoObj = piyutimInfo; break;
+            }
+
+            // Re-render grid based on category type
+            let html = '';
+            if (currentCategoryKey === 'zmanim') {
+                html = sortedKeys.map(zmanName => {
+                    const zmanData = zmaninInfo[zmanName];
+                    if (!zmanData) return '';
+                    const piyutimCount = zmanData.piyutim?.length || 0;
+                    const collectionsCount = zmanData.collections?.length || 0;
+                    const zmanId = zmanData.rowId || zmanName;
+                    return `
+                        <a class="category-card" href="#/zman/${encodeURIComponent(zmanId)}" data-action="zman-detail" data-name="${escapeHtml(zmanName)}">
+                            <div class="card-header">
+                                <div class="card-icon"></div>
+                                <div class="card-header-text">
+                                    <div class="card-title">${zmanName}</div>
+                                    <div class="card-stats">
+                                        ${piyutimCount > 0 ? `<span class="card-stat">${pluralize(piyutimCount, 'פיוט', 'פיוטים')}</span>` : ''}
+                                        ${collectionsCount > 0 ? `<span class="card-stat">${pluralize(collectionsCount, 'קאלעקשאן', 'קאלעקשאנס')}</span>` : ''}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } else if (currentCategoryKey === 'collections') {
+                html = sortedKeys.map(key => {
+                    const info = collectionsInfo[key] || {};
+                    const colData = categories.collections[key] || [];
+                    const songCount = colData.length;
+                    const zmanim = info.zmanim || [];
+                    return `
+                        <div class="collection-card">
+                            <div class="collection-card-header" data-action="detail" data-category="collections" data-name="${escapeHtml(key)}">
+                                <div class="collection-icon">♫</div>
+                                <div class="collection-info">
+                                    <div class="collection-title">${key}</div>
+                                    <div class="collection-meta">${pluralize(songCount, 'ניגון', 'ניגונים')}</div>
+                                    ${zmanim.length > 0 ? `
+                                        <div class="collection-zmanim" onclick="event.stopPropagation();">
+                                            ${zmanim.slice(0, 3).map(zman => `<span class="collection-zman-tag"
+                                                data-action="zman-detail"
+                                                data-name="${escapeHtml(zman)}"
+                                                data-tooltip-value="${escapeHtml(zman)}"
+                                                data-tooltip-type="zman">${zman}</span>`).join('')}
+                                            ${zmanim.length > 3 ? `<span class="collection-zman-more">+${zmanim.length - 3}</span>` : ''}
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                <button class="collection-play-btn" data-action="play-collection" data-name="${escapeHtml(key)}">
+                                    ▶
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } else if (currentCategoryKey === 'piyutim') {
+                html = sortedKeys.map(piyutName => {
+                    const info = piyutimInfo[piyutName] || {};
+                    const songCount = allSongs.filter(song => {
+                        if (song.pasigOif && song.pasigOif.includes(piyutName)) return true;
+                        if (song.maure && song.maure.includes(piyutName)) return true;
+                        return false;
+                    }).length;
+                    const piyutId = info.customId || piyutName;
+                    const zmanim = info.zmanim || [];
+                    return `
+                        <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
+                            <div class="card-header">
+                                <div class="card-icon"></div>
+                                <div class="card-header-text">
+                                    <div class="card-title">${piyutName}</div>
+                                    ${zmanim.length > 0 ? `
+                                        <div class="card-tags" onclick="event.stopPropagation();">
+                                            ${zmanim.map(zman => `
+                                                <span class="card-zman-tag"
+                                                      data-action="zman-detail"
+                                                      data-name="${escapeHtml(zman)}"
+                                                      data-tooltip-value="${escapeHtml(zman)}"
+                                                      data-tooltip-type="zman">${zman}</span>
+                                            `).join('')}
+                                        </div>
+                                    ` : ''}
+                                    <div class="card-stats">
+                                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                }).join('');
+            } else if (currentCategoryKey === 'mechabrim' && categoryDisplayModes[currentCategoryKey] === 'list') {
+                // Compact list mode for mechabrim - horizontal pills
+                html = `<div class="mechaber-list-compact">` + sortedKeys.map(key => {
+                    const info = infoObj[key] || {};
+                    const imageKey = key.trim();
+                    const imageUrl = info.imageUrl || `https://storage.googleapis.com/zemirot-israel.appspot.com/mechabrimPics/${encodeURIComponent(imageKey)}.png`;
+                    return `
+                        <a class="mechaber-pill" href="#/mechabrim/${encodeURIComponent(key)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(key)}">
+                            <span class="mechaber-pill-image" style="background-image: url('${imageUrl}')"></span>
+                            <span class="mechaber-pill-name">${key}</span>
+                        </a>
+                    `;
+                }).join('') + `</div>`;
+            } else if (currentCategoryKey === 'chatzeros' && categoryDisplayModes[currentCategoryKey] === 'list') {
+                // Compact list mode for chatzeros - horizontal pills (no images)
+                html = `<div class="chatzer-list-compact">` + sortedKeys.map(key => {
+                    return `
+                        <a class="chatzer-pill" href="#/chatzeros/${encodeURIComponent(key)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(key)}">
+                            <span class="chatzer-pill-name">${key}</span>
+                        </a>
+                    `;
+                }).join('') + `</div>`;
+            } else if (currentCategoryKey === 'verter' && categoryDisplayModes[currentCategoryKey] === 'list') {
+                // Compact list mode for verter - horizontal pills
+                html = `<div class="verter-list-compact">` + sortedKeys.map(key => {
+                    return `
+                        <a class="verter-pill" href="#/verter/${encodeURIComponent(key)}" data-action="detail" data-category="verter" data-name="${escapeHtml(key)}">
+                            <span class="verter-pill-name">${key}</span>
+                        </a>
+                    `;
+                }).join('') + `</div>`;
+            } else {
+                // Default category cards (mechabrim, chatzeros, verter)
+                html = sortedKeys.map(key => renderCategoryCard(key, currentCategoryKey, '', infoObj, data)).join('');
+            }
+
+            // Fade out existing cards, then replace and fade in new ones
+            grid.style.opacity = '0';
+            grid.style.transition = 'opacity 0.2s ease-out';
+
+            setTimeout(() => {
+                grid.innerHTML = html;
+
+                // Reset opacity and fade in
+                grid.style.opacity = '1';
+                grid.style.transition = 'opacity 0.3s ease-in';
+
+                // Apply staggered pop-in animation to new cards
+                const cards = grid.querySelectorAll('.category-card');
+                cards.forEach((card, i) => {
+                    card.style.opacity = '0';
+                    card.style.animationDelay = `${i * 0.03}s`;
+                    card.classList.add('card-pop-in');
+                    // Set opacity to allow animation to take over
+                    requestAnimationFrame(() => {
+                        card.style.opacity = '';
+                    });
+                });
+
+                // Update count
+                const countEl = document.querySelector('.subtitle-count');
+                if (countEl) {
+                    countEl.textContent = sortedKeys.length;
+                }
+
+                // Update search UI
+                updateCategorySearchUI();
+            }, 200); // Match fade-out duration
+        }
+
+        // Refresh category page (re-render with current settings)
+        function refreshCategoryPage() {
+            const content = document.getElementById('content');
+            if (!content) return;
+
+            // Reset search when changing display/sort modes
+            categorySearchQuery = '';
+
+            // Get category info
+            const categoryInfo = {
+                'chatzeros': { title: 'חצרות', icon: '', subtitle: '' },
+                'mechabrim': { title: 'מחברים', icon: '<div class="mechaber-icon"></div>', subtitle: '' },
+                'verter': { title: 'ווערטער', icon: '', subtitle: '' }
+            };
+
+            if (categoryInfo[currentCategoryKey]) {
+                const info = categoryInfo[currentCategoryKey];
+                renderCategoryPage(content, currentCategoryKey, info.title, info.icon, info.subtitle);
+            }
         }
 
         // Render filter panel item
@@ -23559,6 +24561,10 @@
         function renderZmanimPage(container) {
             const data = categories.zmanim;
 
+            // Set current category key for search operations
+            currentCategoryKey = 'zmanim';
+            categorySearchQuery = ''; // Reset search when navigating to page
+
             // Build zmanim order
             const zmanOrder = ['שבת', 'מוצאי שבת', 'ראש חודש', 'ימים נוראים', 'סוכות', 'שמחת תורה',
                 'שמחת בית השואבה', 'חנוכה', 'פורים', 'פסח', 'שבועות', 'בין המצרים',
@@ -23588,7 +24594,13 @@
                         <div class="loading-wave-bar active" id="zmanLoader"></div>
                     </div>
                     
-                    <div class="category-grid">
+                    <div class="page-settings-bar">
+                        <div class="detail-filters-group cols-1">
+                            ${getSimpleSearchHTML('zmanim')}
+                        </div>
+                    </div>
+
+                    <div class="category-grid" id="categoryGrid">
             `;
 
             // Show each zman as a card
@@ -24157,6 +25169,10 @@
             const data = categories.collections;
             const sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
 
+            // Set current category key for search operations
+            currentCategoryKey = 'collections';
+            categorySearchQuery = ''; // Reset search when navigating to page
+
             container.innerHTML = `
                 <div class="page-theme-collection">
                     <div class="page-title">
@@ -24165,7 +25181,13 @@
                         <div class="loading-wave-bar active" id="collectionLoader"></div>
                     </div>
 
-                    <div class="collections-grid">
+                    <div class="page-settings-bar">
+                        <div class="detail-filters-group cols-1">
+                            ${getSimpleSearchHTML('collections')}
+                        </div>
+                    </div>
+
+                    <div class="collections-grid" id="categoryGrid">
                         ${sortedKeys.map(key => {
                 const info = collectionsInfo[key] || {};
                 const songCount = data[key].length;
@@ -24214,6 +25236,10 @@
             // Get all piyutim from piyutimInfo
             const sortedPiyutim = Object.keys(piyutimInfo).sort((a, b) => a.localeCompare(b, 'he'));
 
+            // Set current category key for search operations
+            currentCategoryKey = 'piyutim';
+            categorySearchQuery = ''; // Reset search when navigating to page
+
             // Check if we're coming from skeleton (skeleton-grid exists)
             const existingSkeletonGrid = container.querySelector('.skeleton-grid');
             const existingCountEl = container.querySelector('.subtitle-count');
@@ -24221,6 +25247,12 @@
             if (existingSkeletonGrid && existingCountEl) {
                 // Coming from skeleton - just update count and replace grid, keep header
                 animateCountUp(existingCountEl, sortedPiyutim.length);
+
+                // Add settings bar after page-title (before skeleton-grid)
+                const settingsBarDiv = document.createElement('div');
+                settingsBarDiv.className = 'page-settings-bar';
+                settingsBarDiv.innerHTML = `<div class="detail-filters-group cols-1">${getSimpleSearchHTML('piyutim')}</div>`;
+                existingSkeletonGrid.before(settingsBarDiv);
 
                 // Replace skeleton-grid with category-grid
                 const categoryGrid = document.createElement('div');
@@ -24282,6 +25314,12 @@
                         <div class="page-title-bar">פיוטים</div>
                         <div class="subtitle"><span class="subtitle-count">0</span></div>
                         <div class="loading-wave-bar active" id="piyutimLoader"></div>
+                    </div>
+
+                    <div class="page-settings-bar">
+                        <div class="detail-filters-group cols-1">
+                            ${getSimpleSearchHTML('piyutim')}
+                        </div>
                     </div>
 
                     <div class="category-grid" id="piyutimGrid">
@@ -24580,6 +25618,12 @@
             const data = categories[categoryKey];
             if (!data) return;
 
+            // For mechabrim/chatzeros/verter in list mode, use the filter/render function which handles the list layout
+            if ((categoryKey === 'mechabrim' || categoryKey === 'chatzeros' || categoryKey === 'verter') && categoryDisplayModes[categoryKey] === 'list') {
+                filterAndRenderCategoryGrid();
+                return;
+            }
+
             const sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
 
             // Get existing card keys
@@ -24640,6 +25684,10 @@
 
         // Load more category cards (lazy loading)
         function loadMoreCategoryCards(categoryKey, icon, infoObj, data) {
+            // Skip if in list mode for mechabrim/chatzeros/verter (list mode renders all at once)
+            if ((categoryKey === 'mechabrim' || categoryKey === 'chatzeros' || categoryKey === 'verter') && categoryDisplayModes[categoryKey] === 'list') {
+                return;
+            }
             if (categoryLazyState.isLoading) return;
             if (categoryLazyState.currentIndex >= categoryLazyState.allKeys.length) return;
 
@@ -24690,48 +25738,62 @@
         function renderCategoryPage(container, categoryKey, title, icon, subtitle) {
             const data = categories[categoryKey];
 
-            // Sort keys - for mechabrim, sort by birthYear; otherwise alphabetically
-            let sortedKeys;
-            if (categoryKey === 'mechabrim') {
-                // Helper to parse Hebrew year to numeric value
-                const parseHebrewYear = (yearStr) => {
-                    if (!yearStr) return 9999;
-                    // Hebrew letter values
-                    const hebrewValues = {
-                        'א': 1, 'ב': 2, 'ג': 3, 'ד': 4, 'ה': 5, 'ו': 6, 'ז': 7, 'ח': 8, 'ט': 9,
-                        'י': 10, 'כ': 20, 'ך': 20, 'ל': 30, 'מ': 40, 'ם': 40, 'נ': 50, 'ן': 50,
-                        'ס': 60, 'ע': 70, 'פ': 80, 'ף': 80, 'צ': 90, 'ץ': 90,
-                        'ק': 100, 'ר': 200, 'ש': 300, 'ת': 400
-                    };
-                    // Sum all Hebrew letter values
-                    let total = 0;
-                    for (const char of yearStr) {
-                        if (hebrewValues[char]) {
-                            total += hebrewValues[char];
-                        }
-                    }
-                    // Only consider it a valid year if >= 500 (like תק"_ = 5500+)
-                    // This excludes month names (אב=3, אייר=221, ניסן=170, etc.)
-                    return total >= 500 ? total : 9999;
-                };
+            // Set current category key for search/filter operations
+            currentCategoryKey = categoryKey;
+            categorySearchQuery = ''; // Reset search when navigating to page
 
-                // Sort by birthYear, fallback to deathYear-70, empty dates at end
-                sortedKeys = Object.keys(data).sort((a, b) => {
-                    const infoA = mechabrimInfo[a] || {};
-                    const infoB = mechabrimInfo[b] || {};
-                    // Get birth year, or estimate from death year - 70
-                    let yearA = parseHebrewYear(infoA.birthYear);
-                    if (yearA === 9999 && infoA.deathYear) {
-                        const deathA = parseHebrewYear(infoA.deathYear);
-                        if (deathA !== 9999) yearA = deathA - 70;
+            // Sort keys based on categorySortOrder for mechabrim, or alphabetically for others
+            let sortedKeys;
+
+            // Helper to parse Hebrew year to numeric value
+            const parseHebrewYear = (yearStr) => {
+                if (!yearStr) return 9999;
+                const hebrewValues = {
+                    'א': 1, 'ב': 2, 'ג': 3, 'ד': 4, 'ה': 5, 'ו': 6, 'ז': 7, 'ח': 8, 'ט': 9,
+                    'י': 10, 'כ': 20, 'ך': 20, 'ל': 30, 'מ': 40, 'ם': 40, 'נ': 50, 'ן': 50,
+                    'ס': 60, 'ע': 70, 'פ': 80, 'ף': 80, 'צ': 90, 'ץ': 90,
+                    'ק': 100, 'ר': 200, 'ש': 300, 'ת': 400
+                };
+                let total = 0;
+                for (const char of yearStr) {
+                    if (hebrewValues[char]) {
+                        total += hebrewValues[char];
                     }
-                    let yearB = parseHebrewYear(infoB.birthYear);
-                    if (yearB === 9999 && infoB.deathYear) {
-                        const deathB = parseHebrewYear(infoB.deathYear);
-                        if (deathB !== 9999) yearB = deathB - 70;
-                    }
-                    return yearA - yearB;
-                });
+                }
+                // Only consider it a valid year if >= 500
+                return total >= 500 ? total : 9999;
+            };
+
+            if (categoryKey === 'mechabrim') {
+                sortedKeys = Object.keys(data);
+                const sortOrder = categorySortOrders[categoryKey] || 'years';
+
+                if (sortOrder === 'years') {
+                    // Sort by birthYear, fallback to deathYear-70, empty dates at end
+                    sortedKeys = sortedKeys.sort((a, b) => {
+                        const infoA = mechabrimInfo[a] || {};
+                        const infoB = mechabrimInfo[b] || {};
+                        let yearA = parseHebrewYear(infoA.birthYear);
+                        if (yearA === 9999 && infoA.deathYear) {
+                            const deathA = parseHebrewYear(infoA.deathYear);
+                            if (deathA !== 9999) yearA = deathA - 70;
+                        }
+                        let yearB = parseHebrewYear(infoB.birthYear);
+                        if (yearB === 9999 && infoB.deathYear) {
+                            const deathB = parseHebrewYear(infoB.deathYear);
+                            if (deathB !== 9999) yearB = deathB - 70;
+                        }
+                        return yearA - yearB;
+                    });
+                } else if (sortOrder === 'alphabetical') {
+                    sortedKeys = sortedKeys.sort((a, b) => a.localeCompare(b, 'he'));
+                } else if (sortOrder === 'songcount') {
+                    sortedKeys = sortedKeys.sort((a, b) => {
+                        const countA = (data[a] || []).length;
+                        const countB = (data[b] || []).length;
+                        return countB - countA;
+                    });
+                }
             } else {
                 sortedKeys = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
             }
@@ -24756,6 +25818,19 @@
                 case 'collections': infoObj = collectionsInfo; themeClass = 'page-theme-collection'; break;
             }
 
+            // Determine which controls to show based on category
+            // mechaber/chatzer: 3 buttons (display, sort, search)
+            // verter: 1 button (search only)
+            let settingsBarHTML = '';
+            let colsClass = '';
+            if (categoryKey === 'mechabrim' || categoryKey === 'chatzeros') {
+                settingsBarHTML = getCategoryFiltersHTML(categoryKey);
+                colsClass = 'cols-3';
+            } else if (categoryKey === 'verter') {
+                settingsBarHTML = getCategoryFiltersHTML(categoryKey);
+                colsClass = 'cols-3'; // Display mode + search + sort
+            }
+
             // Check if we're coming from skeleton (skeleton-grid exists)
             const existingSkeletonGrid = container.querySelector('.skeleton-grid');
             const existingCountEl = container.querySelector('.subtitle-count');
@@ -24763,6 +25838,14 @@
             if (existingSkeletonGrid && existingCountEl) {
                 // Coming from skeleton - just update count and replace grid, keep header
                 animateCountUp(existingCountEl, sortedKeys.length);
+
+                // Add settings bar after page-title (before skeleton-grid)
+                if (settingsBarHTML) {
+                    const settingsBarDiv = document.createElement('div');
+                    settingsBarDiv.className = 'page-settings-bar';
+                    settingsBarDiv.innerHTML = `<div class="detail-filters-group ${colsClass}">${settingsBarHTML}</div>`;
+                    existingSkeletonGrid.before(settingsBarDiv);
+                }
 
                 // Replace skeleton-grid with category-grid
                 const categoryGrid = document.createElement('div');
@@ -24782,16 +25865,20 @@
                     if (loader) loader.classList.add('active');
                 }
 
-                // Load first batch of cards
-                loadMoreCategoryCards(categoryKey, icon, infoObj, data);
+                // Load first batch of cards (or list if in list mode)
+                if ((categoryKey === 'mechabrim' || categoryKey === 'chatzeros' || categoryKey === 'verter') && categoryDisplayModes[categoryKey] === 'list') {
+                    filterAndRenderCategoryGrid();
+                } else {
+                    loadMoreCategoryCards(categoryKey, icon, infoObj, data);
 
-                // Setup infinite scroll for skeleton path too
-                const observer = new IntersectionObserver((entries) => {
-                    if (entries[0].isIntersecting) {
-                        loadMoreCategoryCards(categoryKey, icon, infoObj, data);
-                    }
-                }, { rootMargin: '200px' });
-                if (indicator) observer.observe(indicator);
+                    // Setup infinite scroll for skeleton path too
+                    const observer = new IntersectionObserver((entries) => {
+                        if (entries[0].isIntersecting) {
+                            loadMoreCategoryCards(categoryKey, icon, infoObj, data);
+                        }
+                    }, { rootMargin: '200px' });
+                    if (indicator) observer.observe(indicator);
+                }
             } else {
                 // Fresh render - create everything
                 container.innerHTML = `
@@ -24801,6 +25888,14 @@
                             <div class="subtitle"><span class="subtitle-count">0</span></div>
                             <div class="loading-wave-bar category-loader" id="categoryLoader"></div>
                         </div>
+
+                        ${settingsBarHTML ? `
+                        <div class="page-settings-bar">
+                            <div class="detail-filters-group ${colsClass}">
+                                ${settingsBarHTML}
+                            </div>
+                        </div>
+                        ` : ''}
 
                         <div class="category-grid" id="categoryGrid">
                         </div>
@@ -24819,18 +25914,22 @@
                 loader.classList.add('active');
             }
 
-            // Load first batch
-            loadMoreCategoryCards(categoryKey, icon, infoObj, data);
+            // Load first batch (or list if in list mode)
+            if ((categoryKey === 'mechabrim' || categoryKey === 'chatzeros' || categoryKey === 'verter') && categoryDisplayModes[categoryKey] === 'list') {
+                filterAndRenderCategoryGrid();
+            } else {
+                loadMoreCategoryCards(categoryKey, icon, infoObj, data);
 
-            // Setup infinite scroll
-            const observer = new IntersectionObserver((entries) => {
-                if (entries[0].isIntersecting) {
-                    loadMoreCategoryCards(categoryKey, icon, infoObj, data);
-                }
-            }, { rootMargin: '200px' });
+                // Setup infinite scroll
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        loadMoreCategoryCards(categoryKey, icon, infoObj, data);
+                    }
+                }, { rootMargin: '200px' });
 
-            const indicator = document.getElementById('loadMoreIndicator');
-            if (indicator) observer.observe(indicator);
+                const indicator = document.getElementById('loadMoreIndicator');
+                if (indicator) observer.observe(indicator);
+            }
         }
 
         // OLD CODE BELOW - keeping structure for reference
@@ -28680,28 +29779,116 @@
         }, 500);
 
         // Header hide on scroll down, show on scroll up
+        // Also manages page-title fixed positioning and sub-header behavior
         (function () {
             const header = document.querySelector('.main-header');
             if (!header) return;
 
             let lastScrollY = window.scrollY;
             let ticking = false;
+            let isHeaderHidden = false;
+            let pageTitleOriginalTop = null;
+            const SCROLL_THRESHOLD = 5;
+            const HEADER_HEIGHT = 74;
 
             function updateHeader() {
                 const currentScrollY = window.scrollY;
+                const scrollDelta = currentScrollY - lastScrollY;
 
-                // Only hide if scrolled past 100px
-                if (currentScrollY > 100) {
-                    if (currentScrollY > lastScrollY) {
-                        // Scrolling down - hide header
-                        header.classList.add('header-hidden');
-                    } else {
-                        // Scrolling up - show header
-                        header.classList.remove('header-hidden');
+                // Query dynamically since these elements are generated when navigating to pages
+                const pageTitle = document.querySelector('.page-title');
+                const settingsBar = document.querySelector('.page-settings-bar');
+
+                // Cache the original position of page-title (when it's not fixed)
+                if (pageTitle && !pageTitle.classList.contains('is-fixed') && pageTitleOriginalTop === null) {
+                    pageTitleOriginalTop = pageTitle.getBoundingClientRect().top + currentScrollY;
+                    console.log('[HEADER] Cached page-title original top:', pageTitleOriginalTop);
+                }
+
+                // Reset cache if page-title doesn't exist (page changed)
+                if (!pageTitle) {
+                    pageTitleOriginalTop = null;
+                }
+
+                // Manage page-title fixed positioning based on scroll
+                // Only become fixed when the page-title would scroll above the main header
+                if (pageTitle && pageTitleOriginalTop !== null) {
+                    const isCurrentlyFixed = pageTitle.classList.contains('is-fixed');
+
+                    // Hysteresis: different thresholds for becoming fixed vs unfixed
+                    // This prevents rapid toggling when scrolling near the threshold
+                    const fixThreshold = 50;  // Must scroll past 50px to become fixed
+                    const unfixThreshold = 10; // Must scroll above 10px to become unfixed
+
+                    const shouldBecomeFixed = !isCurrentlyFixed && currentScrollY > fixThreshold;
+                    const shouldBecomeUnfixed = isCurrentlyFixed && currentScrollY < unfixThreshold;
+
+                    if (shouldBecomeFixed) {
+                        console.log('[HEADER] Making page-title fixed at scrollY:', currentScrollY);
+
+                        // Create placeholder to maintain layout when page-title becomes fixed
+                        let placeholder = document.getElementById('page-title-placeholder');
+                        if (!placeholder) {
+                            placeholder = document.createElement('div');
+                            placeholder.id = 'page-title-placeholder';
+                            placeholder.style.height = pageTitle.offsetHeight + 'px';
+                            placeholder.style.width = '100%';
+                            pageTitle.parentNode.insertBefore(placeholder, pageTitle);
+                        }
+                        placeholder.style.display = 'block';
+
+                        pageTitle.classList.add('is-fixed');
+                    } else if (shouldBecomeUnfixed) {
+                        console.log('[HEADER] Removing page-title fixed at scrollY:', currentScrollY);
+                        pageTitle.classList.remove('is-fixed');
+                        pageTitleOriginalTop = null; // Recache on next scroll
+
+                        // Hide placeholder
+                        const placeholder = document.getElementById('page-title-placeholder');
+                        if (placeholder) {
+                            placeholder.style.display = 'none';
+                        }
                     }
-                } else {
-                    // At top - always show header
-                    header.classList.remove('header-hidden');
+                }
+
+                // Note: settings-bar stays in normal flow, does not become fixed
+
+                // At top - always show everything
+                if (currentScrollY <= 100) {
+                    if (isHeaderHidden) {
+                        console.log('[HEADER] At top - showing all');
+                        isHeaderHidden = false;
+                        header.classList.remove('header-hidden');
+                        if (pageTitle) {
+                            pageTitle.classList.remove('main-hidden');
+                            pageTitle.classList.remove('sub-merged');
+                        }
+                        if (settingsBar) settingsBar.classList.remove('merged');
+                    }
+                }
+                // Only change state if scroll delta exceeds threshold
+                else if (Math.abs(scrollDelta) > SCROLL_THRESHOLD) {
+                    if (scrollDelta > 0 && !isHeaderHidden) {
+                        // Scrolling down significantly - hide main header
+                        console.log('[HEADER] Scrolling DOWN - hiding (delta: ' + scrollDelta + ')');
+                        isHeaderHidden = true;
+                        header.classList.add('header-hidden');
+                        if (pageTitle) {
+                            pageTitle.classList.add('main-hidden');
+                            if (settingsBar) pageTitle.classList.add('sub-merged');
+                        }
+                        if (settingsBar) settingsBar.classList.add('merged');
+                    } else if (scrollDelta < 0 && isHeaderHidden) {
+                        // Scrolling up significantly - show main header
+                        console.log('[HEADER] Scrolling UP - showing (delta: ' + scrollDelta + ')');
+                        isHeaderHidden = false;
+                        header.classList.remove('header-hidden');
+                        if (pageTitle) {
+                            pageTitle.classList.remove('main-hidden');
+                            pageTitle.classList.remove('sub-merged');
+                        }
+                        if (settingsBar) settingsBar.classList.remove('merged');
+                    }
                 }
 
                 lastScrollY = currentScrollY;
