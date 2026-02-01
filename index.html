@@ -3778,7 +3778,7 @@
         .filter-mega-trigger .filter-count,
         .filter-mega-trigger .filter-clear-btn {
             position: absolute;
-            right: 8px;
+            left: 8px;
             background: white;
             color: var(--color-nigun);
             font-size: 0.75em;
@@ -3816,18 +3816,9 @@
             transition: opacity 0.2s ease, color 0.2s ease;
         }
 
-        /* Hover state - blue background like search button */
+        /* Hover state - subtle effect */
         .filter-mega-trigger:hover {
-            background: var(--color-nigun);
-            color: white;
-        }
-
-        .filter-mega-trigger:hover .filter-btn-icon {
-            stroke: white;
-        }
-
-        .filter-mega-trigger:hover .filter-mega-label {
-            color: white;
+            background: rgba(74, 124, 201, 0.15);
         }
 
         /* Active filter state - blue background */
@@ -4257,6 +4248,13 @@
             transition: all 0.15s ease;
         }
 
+        /* Unavailable filter options (cascading filters) */
+        .filter-mega-option.unavailable {
+            opacity: 0.35;
+            pointer-events: none;
+            order: 999;
+        }
+
         .filter-mega-option input[type="checkbox"] {
             width: 14px;
             height: 14px;
@@ -4278,7 +4276,7 @@
         }
 
         .filter-mega-column[data-category="verter"] .filter-mega-option input[type="checkbox"] {
-            accent-color: var(--color-collection);
+            accent-color: var(--color-verter);
             /* Green for verter */
         }
 
@@ -4287,12 +4285,12 @@
         }
 
         .filter-mega-column[data-category="ritem"] .filter-mega-option input[type="checkbox"] {
-            accent-color: var(--color-mechaber);
+            accent-color: var(--color-music);
             /* Music theme yellow */
         }
 
         .filter-mega-column[data-category="scale"] .filter-mega-option input[type="checkbox"] {
-            accent-color: var(--color-mechaber);
+            accent-color: var(--color-music);
             /* Music theme yellow */
         }
 
@@ -4458,32 +4456,23 @@
         /* Quality stars badge - matches filter count */
         .quality-mega-trigger .quality-stars-badge {
             position: absolute;
-            right: 8px;
+            left: 8px;
             background: white;
             color: var(--color-nigun);
             font-size: 0.6em;
             font-weight: 700;
-            padding: 2px 5px;
+            padding: 3px 5px 2px;
             border-radius: 8px;
             letter-spacing: -1px;
-            line-height: 1;
+            line-height: 1.1;
             text-align: center;
             transition: opacity 0.2s ease;
             opacity: 1;
         }
 
-        /* Hover state - blue background like search button */
+        /* Hover state - subtle effect */
         .quality-mega-trigger:hover {
-            background: var(--color-nigun);
-            color: white;
-        }
-
-        .quality-mega-trigger:hover .audio-icon {
-            stroke: white;
-        }
-
-        .quality-mega-trigger:hover .quality-mega-label {
-            color: white;
+            background: rgba(74, 124, 201, 0.15);
         }
 
         /* Active quality state */
@@ -4507,7 +4496,7 @@
         /* Quality clear button - matches filter clear btn */
         .quality-clear-btn {
             position: absolute;
-            right: 8px;
+            left: 8px;
             background: white;
             color: var(--color-nigun);
             font-size: 0.75em;
@@ -4973,7 +4962,7 @@
             gap: 6px;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 100px;
+            min-width: 140px;
         }
 
         .page-settings-bar .search-trigger-btn:hover {
@@ -4987,36 +4976,90 @@
             background: var(--color-nigun);
             color: white;
             border: 2px solid var(--color-nigun);
-            /* Match background or remove */
             min-width: 140px;
+            position: relative;
+            font-size: 1em;
         }
 
+        /* Default state: icon and label visible */
+        .page-settings-bar .search-trigger-btn .search-icon,
+        .page-settings-bar .search-trigger-btn .search-label {
+            opacity: 1;
+            visibility: visible;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        /* Active state: icon and label fade out */
         .page-settings-bar .search-trigger-btn.has-active .search-icon,
         .page-settings-bar .search-trigger-btn.has-active .search-label {
-            display: none;
+            opacity: 0;
+            visibility: hidden;
+            position: absolute;
+            pointer-events: none;
         }
 
+        /* Text display - hidden by default */
         .page-settings-bar .search-trigger-btn .search-text-display {
-            display: none;
-            max-width: 120px;
+            position: absolute;
+            opacity: 0;
+            visibility: hidden;
+            max-width: 150px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
+            background: white;
+            color: var(--color-nigun);
+            padding: 3px 8px;
+            border-radius: 8px;
+            font-size: 0.8em;
+            font-weight: 600;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            pointer-events: none;
         }
 
+        /* Active state: text display fades in */
         .page-settings-bar .search-trigger-btn.has-active .search-text-display {
-            display: inline;
+            opacity: 1;
+            visibility: visible;
+            position: static;
+            pointer-events: auto;
+        }
+
+        /* Preparing for fade - set up text display but keep it invisible */
+        .page-settings-bar .search-trigger-btn.fade-preparing .search-text-display {
+            position: static;
+            opacity: 0;
+            visibility: visible;
+        }
+
+        .page-settings-bar .search-trigger-btn.fade-preparing .search-icon,
+        .page-settings-bar .search-trigger-btn.fade-preparing .search-label {
+            opacity: 0;
+            visibility: hidden;
         }
 
         .page-settings-bar .search-trigger-btn .clear-search-x {
             display: none;
-            margin-right: 6px;
-            font-size: 1.1em;
-            opacity: 0.8;
+            position: absolute;
+            left: 8px;
+            background: white;
+            color: var(--color-nigun);
+            font-size: 0.75em;
+            font-weight: 700;
+            padding: 2px 6px;
+            border-radius: 8px;
+            min-width: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
         }
 
         .page-settings-bar .search-trigger-btn.has-active .clear-search-x {
-            display: inline;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 1;
+            pointer-events: auto;
         }
 
         /* Expandable search container */
@@ -5026,6 +5069,18 @@
             align-items: center;
             justify-content: center;
             z-index: 100;
+        }
+
+        /* When search is expanded, fade out the trigger button */
+        .page-settings-bar .expandable-search.expanded .search-trigger-btn {
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        /* When collapsing, fade in the trigger button */
+        .page-settings-bar .expandable-search:not(.expanded) .search-trigger-btn {
+            opacity: 1;
+            transition: opacity 0.3s ease 0.2s;
         }
 
         /* The full-width input container */
@@ -12723,7 +12778,6 @@
         .all-songs-grid {
             display: grid;
             gap: 16px;
-            min-height: 300px;
             grid-template-columns: minmax(0, 1fr);
             /* Default: full mode - 1 per row */
         }
@@ -19714,14 +19768,13 @@
                     </div>
                 </div>
                 
-                <!-- Filter Mega-Expanded Panel (sibling, positioned to settings bar) -->
                 <div class="filter-mega-expanded" id="filterMegaExpanded">
                     <div class="filter-mega-expanded-inner">
-                        ${renderMegaFilterCategory('collection', 'קאלעקשאנס', categories.collections)}
-                        ${renderMegaFilterCategory('chatzer', 'חצר', categories.chatzeros)}
                         ${renderMegaFilterCategory('mechaber', 'מחבר', categories.mechabrim)}
-                        ${renderMegaFilterCategory('verter', 'ווערטער', categories.verter)}
+                        ${renderMegaFilterCategory('chatzer', 'חצר', categories.chatzeros)}
                         ${renderMegaFilterCategory('gezungen', 'פיוטים', categories.gezungen)}
+                        ${renderMegaFilterCategory('collection', 'קאלעקשאנס', categories.collections)}
+                        ${renderMegaFilterCategory('verter', 'ווערטער', categories.verter)}
                         ${renderMegaFilterCategory('ritem', 'ריטעם', categories.ritem)}
                         ${renderMegaFilterCategory('scale', 'סקעיל', categories.scale)}
                     </div>
@@ -20668,6 +20721,106 @@
             applyFilters();
         }
 
+        // Get available filter values based on currently filtered songs (for cascading filters)
+        function getAvailableFilterValues() {
+            const sourceData = hasAnyFilters() ? filteredSongs : allSongs;
+            const available = {
+                collection: new Set(),
+                chatzer: new Set(),
+                mechaber: new Set(),
+                verter: new Set(),
+                gezungen: new Set(),
+                ritem: new Set(),
+                scale: new Set()
+            };
+
+            sourceData.forEach(song => {
+                // Collection
+                if (song.collections) {
+                    song.collections.split(',').forEach(c => {
+                        const trimmed = c.trim();
+                        if (trimmed) available.collection.add(trimmed);
+                    });
+                }
+                // Chatzer (category)
+                if (song.category) {
+                    song.category.split(',').forEach(c => {
+                        const trimmed = c.trim();
+                        if (trimmed) available.chatzer.add(trimmed);
+                    });
+                }
+                // Mechaber
+                if (song.mechaber) {
+                    song.mechaber.split(',').forEach(m => {
+                        const trimmed = m.trim();
+                        if (trimmed) available.mechaber.add(trimmed);
+                    });
+                }
+                // Verter
+                if (song.verter) {
+                    song.verter.split(',').forEach(v => {
+                        const trimmed = v.trim();
+                        if (trimmed) available.verter.add(trimmed);
+                    });
+                }
+                // Gezungen
+                if (song.gezungen) {
+                    song.gezungen.split(',').forEach(g => {
+                        const trimmed = g.trim();
+                        if (trimmed) available.gezungen.add(trimmed);
+                    });
+                }
+                // Ritem
+                if (song.ritem) {
+                    song.ritem.split(',').forEach(r => {
+                        const trimmed = r.trim();
+                        if (trimmed) available.ritem.add(trimmed);
+                    });
+                }
+                // Scale
+                if (song.scale) {
+                    song.scale.split(',').forEach(s => {
+                        const trimmed = s.trim();
+                        if (trimmed) available.scale.add(trimmed);
+                    });
+                }
+            });
+
+            return available;
+        }
+
+        // Update filter options to show available/unavailable state
+        function updateAvailableFilterOptions() {
+            const available = getAvailableFilterValues();
+
+            // For each filter category column in the mega menu
+            document.querySelectorAll('.filter-mega-column').forEach(column => {
+                const categoryKey = column.dataset.category;
+                if (!categoryKey || !available[categoryKey]) return;
+
+                const availableSet = available[categoryKey];
+
+                // Update each option
+                column.querySelectorAll('.filter-mega-option').forEach(option => {
+                    const checkbox = option.querySelector('input[type="checkbox"]');
+                    if (!checkbox) return;
+
+                    const value = checkbox.value;
+                    const isAvailable = availableSet.has(value);
+                    const isSelected = checkbox.checked;
+
+                    // Don't mark selected items as unavailable
+                    if (isSelected) {
+                        option.classList.remove('unavailable');
+                    } else if (!isAvailable) {
+                        option.classList.add('unavailable');
+                    } else {
+                        option.classList.remove('unavailable');
+                    }
+                });
+            });
+        }
+
         // Update a single mega menu category header to show selected tags
         function updateMegaMenuHeader(key) {
             const column = document.querySelector(`.filter-mega-column[data-category="${key}"]`);
@@ -21066,11 +21219,9 @@
             // Update the stars UI
             updateQualityStarsUI();
 
-            // Re-render songs list
-            if (currentPageView === 'songs') {
-                updateSongsListWithAnimation();
-                updateSongsFiltersUI();
-            }
+            // Re-apply filters (will re-shuffle in random mode)
+            applyFilters();
+            updateSongsFiltersUI();
         }
 
         // Toggle recordings collapse in full mode
@@ -21263,7 +21414,8 @@
                     if (!activeFilters.maure.some(f => song.maure?.includes(f))) return false;
                 }
                 if (activeFilters.verter.length > 0) {
-                    if (!activeFilters.verter.some(f => song.verter?.includes(f))) return false;
+                    const songVerter = song.verter?.split(',').map(v => v.trim()).filter(Boolean) || [];
+                    if (!activeFilters.verter.some(f => songVerter.includes(f))) return false;
                 }
                 if (activeFilters.chatzer.length > 0) {
                     if (!activeFilters.chatzer.some(f => song.chatzer?.includes(f))) return false;
@@ -21328,6 +21480,11 @@
                 if (activeFilters.maure.length > 0) {
                     if (!activeFilters.maure.some(f => song.maure?.includes(f))) return false;
                 }
+                // Check verter
+                if (activeFilters.verter.length > 0) {
+                    const songVerter = song.verter?.split(',').map(v => v.trim()).filter(Boolean) || [];
+                    if (!activeFilters.verter.some(f => songVerter.includes(f))) return false;
+                }
                 return true;
             });
 
@@ -21340,6 +21497,7 @@
                 updateSongsCount();
                 renderActiveFilterTags();
                 updateSidebarFilterValues();
+                updateAvailableFilterOptions(); // Update cascading filter options
             } else {
                 renderCurrentPage();
             }
@@ -21452,6 +21610,18 @@
                                 item.style.transform = 'translateY(0)';
                             }, i * 20);
                         });
+
+                        // Load remaining songs after first one appears
+                        setTimeout(() => {
+                            const remainingSongs = filteredSongs.filter(s => {
+                                const id = s.rowId || s.name;
+                                return !seenSongIds.has(id);
+                            });
+                            if (remainingSongs.length > 0 && grid.children.length > 0) {
+                                console.log(`Shuffle mode: loading ${remainingSongs.length} remaining songs`);
+                                updateSongsListWithNewSongs(remainingSongs);
+                            }
+                        }, 100);
                     });
                 }
             }, 250);
@@ -22062,6 +22232,11 @@
             if (container.classList.contains('expanded')) {
                 closeExpandableSearch();
             } else {
+                // Expanding - fade out the button first
+                const btn = container.querySelector('.search-trigger-btn');
+                if (btn) {
+                    btn.style.opacity = '0';
+                }
                 container.classList.add('expanded');
                 const input = document.getElementById('expandableSearchInput');
                 if (input) {
@@ -22085,17 +22260,22 @@
                     }, 400); // Match the collapse animation duration
                 }
 
-                // Update trigger button state
+                // Update trigger button state with fade animation
                 const btn = container.querySelector('.search-trigger-btn');
                 if (btn) {
                     if (searchQuery && searchQuery.length > 0) {
-                        btn.classList.add('has-active');
-                        // Update the display text
+                        // Update the display text and set up classes
                         const dp = btn.querySelector('.search-text-display');
                         if (dp) dp.textContent = searchQuery;
+                        btn.classList.add('has-active');
                     } else {
                         btn.classList.remove('has-active');
                     }
+
+                    // Fade in the button after a delay
+                    setTimeout(() => {
+                        btn.style.opacity = '1';
+                    }, 250);
                 }
             }
         }
