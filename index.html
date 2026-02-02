@@ -26768,8 +26768,22 @@
         }
 
         // Render zman detail page
-        function renderZmanDetailPage(container, zmanName) {
-            const zmanData = zmaninInfo[zmanName];
+        function renderZmanDetailPage(container, zmanNameOrId) {
+            // Find the zman by name, rowId, or customId
+            let zmanName = zmanNameOrId;
+            let zmanData = zmaninInfo[zmanNameOrId];
+
+            // If not found by direct name, try finding by rowId or customId
+            if (!zmanData) {
+                for (const [key, info] of Object.entries(zmaninInfo)) {
+                    if (info.rowId === zmanNameOrId || info.customId === zmanNameOrId) {
+                        zmanName = key;
+                        zmanData = info;
+                        break;
+                    }
+                }
+            }
+
             if (!zmanData) {
                 container.innerHTML = '<p>זמן נישט געפונען</p>';
                 return;
