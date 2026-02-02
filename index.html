@@ -23931,14 +23931,13 @@
                         return `
                         <a class="category-card" href="#/zman/${encodeURIComponent(zmanId)}" data-action="zman-detail" data-name="${escapeHtml(zmanName)}">
                             <div class="card-header">
-                                <div class="card-icon"></div>
                                 <div class="card-header-text">
                                     <div class="card-title">${zmanName}</div>
-                                    <div class="card-stats">
-                                        ${piyutimCount > 0 ? `<span class="card-stat">${pluralize(piyutimCount, 'פיוט', 'פיוטים')}</span>` : ''}
-                                        ${collectionsCount > 0 ? `<span class="card-stat">${pluralize(collectionsCount, 'קאלעקשאן', 'קאלעקשאנס')}</span>` : ''}
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="card-stats">
+                                ${piyutimCount > 0 ? `<span class="card-stat">${pluralize(piyutimCount, 'פיוט', 'פיוטים')}</span>` : ''}
+                                ${collectionsCount > 0 ? `<span class="card-stat">${pluralize(collectionsCount, 'קאלעקשאן', 'קאלעקשאנס')}</span>` : ''}
                             </div>
                         </a>
                     `;
