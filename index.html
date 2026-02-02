@@ -5127,6 +5127,7 @@
         .slider-control:hover {
             background: transparent;
             box-shadow: none;
+            overflow: visible;
         }
 
         /* Track container */
@@ -5304,6 +5305,27 @@
 
         .slider-control:hover .slider-option:not(.active):hover {
             background: rgba(255, 255, 255, 0.5);
+        }
+
+        /* Slider tooltip - appears above on hover */
+        .slider-tooltip {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.75em;
+            font-weight: 600;
+            color: var(--color-nigun-dark);
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease, top 0.2s ease;
+            z-index: 10;
+        }
+
+        .slider-control:hover .slider-tooltip {
+            opacity: 1;
+            top: -20px;
         }
 
         .page-settings-bar .detail-filter-dropdown {
@@ -21459,6 +21481,7 @@
             return `
                 <!-- Display Mode Slider -->
                 <div class="slider-control" data-type="displayMode">
+                    <span class="slider-tooltip">ווייז</span>
                     <div class="slider-options-track">
                         <div class="slider-indicator" data-position="${currentDisplayMode === 'minimal' ? '0' : currentDisplayMode === 'recordings' ? '1' : '2'}"></div>
                         <div class="slider-option ${currentDisplayMode === 'minimal' ? 'active' : ''}" data-value="minimal" onclick="selectSliderOption('displayMode', 'minimal', event)">
@@ -21478,6 +21501,7 @@
 
                 <!-- Sort Order Slider -->
                 <div class="slider-control" data-type="sortOrder">
+                    <span class="slider-tooltip">סארטיר</span>
                     <div class="slider-options-track">
                         <div class="slider-indicator" data-position="${currentSortOrder === 'random' ? '0' : currentSortOrder === 'alphabetical' ? '1' : '2'}"></div>
                         <div class="slider-option ${currentSortOrder === 'random' ? 'active' : ''}" data-value="random" onclick="selectSliderOption('sortOrder', 'random', event)">
@@ -21609,6 +21633,7 @@
                 <!-- Display Mode Slider - 2 options for mechabrim, chatzeros, and verter -->
                 ${(categoryKey === 'mechabrim' || categoryKey === 'chatzeros' || categoryKey === 'verter') ? `
                 <div class="slider-control slider-2-options" data-type="categoryDisplayMode">
+                    <span class="slider-tooltip">ווייז</span>
                     <div class="slider-options-track">
                         <div class="slider-indicator" data-position="${categoryDisplayModes[categoryKey] === 'list' ? '0' : '1'}"></div>
                         <div class="slider-option ${categoryDisplayModes[categoryKey] === 'list' ? 'active' : ''}" data-value="list" onclick="selectCategorySliderOption('categoryDisplayMode', 'list', event)">
@@ -21623,6 +21648,7 @@
                 </div>
                 ` : `
                 <div class="slider-control" data-type="categoryDisplayMode">
+                    <span class="slider-tooltip">ווייז</span>
                     <div class="slider-options-track">
                         <div class="slider-indicator" data-position="${categoryDisplayModes[categoryKey] === 'minimal' ? '0' : categoryDisplayModes[categoryKey] === 'recordings' ? '1' : '2'}"></div>
                         <div class="slider-option ${categoryDisplayModes[categoryKey] === 'minimal' ? 'active' : ''}" data-value="minimal" onclick="selectCategorySliderOption('categoryDisplayMode', 'minimal', event)">
@@ -21671,6 +21697,7 @@
                 <!-- Sort Order Slider (only for mechabrim and chatzeros, not verter) -->
                 ${categoryKey === 'mechabrim' ? `
                 <div class="slider-control" data-type="categorySortOrder">
+                    <span class="slider-tooltip">סארטיר</span>
                     <div class="slider-options-track">
                         <div class="slider-indicator" data-position="${categorySortOrders[categoryKey] === 'years' ? '0' : categorySortOrders[categoryKey] === 'alphabetical' ? '1' : '2'}"></div>
                         <div class="slider-option ${categorySortOrders[categoryKey] === 'years' ? 'active' : ''}" data-value="years" onclick="selectCategorySliderOption('categorySortOrder', 'years', event)">
@@ -21689,6 +21716,7 @@
                 </div>
                 ` : (categoryKey === 'chatzeros' || categoryKey === 'verter') ? `
                 <div class="slider-control" data-type="categorySortOrder">
+                    <span class="slider-tooltip">סארטיר</span>
                     <div class="slider-options-track">
                         <div class="slider-indicator" data-position="${categorySortOrders[categoryKey] === 'random' ? '0' : categorySortOrders[categoryKey] === 'alphabetical' ? '1' : '2'}"></div>
                         <div class="slider-option ${categorySortOrders[categoryKey] === 'random' ? 'active' : ''}" data-value="random" onclick="selectCategorySliderOption('categorySortOrder', 'random', event)">
