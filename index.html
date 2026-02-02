@@ -5319,10 +5319,10 @@
             background: rgba(255, 255, 255, 0.5);
         }
 
-        /* Slider tooltip - appears above on hover */
+        /* Slider tooltip - appears below on hover */
         .slider-tooltip {
             position: absolute;
-            top: -22px;
+            bottom: -18px;
             left: 50%;
             transform: translateX(-50%);
             font-size: 0.75em;
@@ -5331,13 +5331,13 @@
             white-space: nowrap;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.2s ease, top 0.2s ease;
+            transition: opacity 0.2s ease, bottom 0.2s ease;
             z-index: 100;
         }
 
         .slider-control:hover .slider-tooltip {
             opacity: 1;
-            top: -20px;
+            bottom: -16px;
         }
 
         .page-settings-bar .detail-filter-dropdown {
