@@ -8435,7 +8435,7 @@
             text-align: center;
         }
 
-        /* Zman tags inside piyut cards */
+        /* Zman tags inside piyut cards - keep original zman color */
         .page-theme-piyut .category-card .card-tags {
             margin-top: 8px;
             gap: 5px;
@@ -8443,17 +8443,18 @@
         }
 
         .page-theme-piyut .category-card .card-zman-tag {
-            background: rgba(255, 255, 255, 0.25);
+            background: var(--color-zman);
             color: white;
             font-size: 0.75em;
             padding: 3px 10px;
             border-radius: 10px;
-            border: 1px solid rgba(255, 255, 255, 0.4);
+            border: none;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
         }
 
         .page-theme-piyut .category-card .card-zman-tag:hover {
-            background: rgba(255, 255, 255, 0.4);
-            transform: none;
+            background: var(--color-zman-dark);
+            transform: scale(1.05);
         }
 
         /* Stats at bottom - white background */
@@ -23994,6 +23995,7 @@
                                                 <span class="card-zman-tag"
                                                       data-action="zman-detail"
                                                       data-name="${escapeHtml(zman)}"
+                                                      onclick="event.stopPropagation(); event.preventDefault(); navigateToDetail('zman', '${escapeHtml(zman).replace(/'/g, "\\'")}');"
                                                       data-tooltip-value="${escapeHtml(zman)}"
                                                       data-tooltip-type="zman">${zman}</span>
                                             `).join('')}
@@ -27846,14 +27848,13 @@
                     html += `
                     <a class="category-card" href="#/zman/${encodeURIComponent(zmanId)}" data-action="zman-detail" data-name="${escapeHtml(zmanName)}">
                         <div class="card-header">
-                            <div class="card-icon"></div>
                             <div class="card-header-text">
                                 <div class="card-title">${zmanName}</div>
-                                <div class="card-stats">
-                                    ${piyutimCount > 0 ? `<span class="card-stat">${pluralize(piyutimCount, 'פיוט', 'פיוטים')}</span>` : ''}
-                                    ${collectionsCount > 0 ? `<span class="card-stat">${pluralize(collectionsCount, 'קאלעקשאן', 'קאלעקשאנס')}</span>` : ''}
-                                </div>
                             </div>
+                        </div>
+                        <div class="card-stats">
+                            ${piyutimCount > 0 ? `<span class="card-stat">${pluralize(piyutimCount, 'פיוט', 'פיוטים')}</span>` : ''}
+                            ${collectionsCount > 0 ? `<span class="card-stat">${pluralize(collectionsCount, 'קאלעקשאן', 'קאלעקשאנס')}</span>` : ''}
                         </div>
                     </a>
                 `;
@@ -28757,6 +28758,7 @@
                                                 <span class="card-zman-tag"
                                                       data-action="zman-detail"
                                                       data-name="${escapeHtml(zman)}"
+                                                      onclick="event.stopPropagation(); event.preventDefault(); navigateToDetail('zman', '${escapeHtml(zman).replace(/'/g, "\\'")}');"
                                                       data-tooltip-value="${escapeHtml(zman)}"
                                                       data-tooltip-type="zman">${zman}</span>
                                             `).join('')}
@@ -28810,7 +28812,6 @@
                     return `
                                 <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
                                     <div class="card-header">
-                                        <div class="card-icon"></div>
                                         <div class="card-header-text">
                                             <div class="card-title">${piyutName}</div>
                                             ${zmanim.length > 0 ? `
@@ -28819,15 +28820,16 @@
                                                         <span class="card-zman-tag"
                                                               data-action="zman-detail"
                                                               data-name="${escapeHtml(zman)}"
+                                                              onclick="event.stopPropagation(); event.preventDefault(); navigateToDetail('zman', '${escapeHtml(zman).replace(/'/g, "\\'")}');"
                                                               data-tooltip-value="${escapeHtml(zman)}"
                                                               data-tooltip-type="zman">${zman}</span>
                                                     `).join('')}
                                                 </div>
                                             ` : ''}
-                                            <div class="card-stats">
-                                                <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
-                                            </div>
                                         </div>
+                                    </div>
+                                    <div class="card-stats">
+                                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
                                     </div>
                                 </a>
                             `;
