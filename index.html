@@ -808,6 +808,117 @@
             color: #333;
         }
 
+        /* Play All button - on right side of header, vertically centered */
+        .play-all-btn {
+            position: absolute;
+            top: 50%;
+            right: 50px;
+            transform: translateY(-50%);
+            width: 42px;
+            height: 42px;
+            background: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.3em;
+            color: var(--color-nigun);
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+            z-index: 20;
+            transition: all 0.2s ease;
+        }
+
+        .play-all-btn:hover {
+            background: #f0f0f0;
+            transform: translateY(-50%) scale(1.05);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .play-all-btn.playing {
+            background: var(--color-nigun);
+            color: white;
+        }
+
+        .play-all-btn.playing:hover {
+            background: var(--color-nigun-dark);
+        }
+
+        .play-all-btn svg {
+            width: 18px;
+            height: 18px;
+            fill: currentColor;
+        }
+
+        /* Category-specific play-all colors */
+        .theme-mechaber .play-all-btn {
+            color: var(--color-mechaber);
+        }
+
+        .theme-mechaber .play-all-btn.playing {
+            background: var(--color-mechaber);
+            color: white;
+        }
+
+        .theme-mechaber .play-all-btn.playing:hover {
+            background: var(--color-mechaber-dark);
+        }
+
+        .theme-chatzer .play-all-btn {
+            color: var(--color-chatzer);
+        }
+
+        .theme-chatzer .play-all-btn.playing {
+            background: var(--color-chatzer);
+            color: white;
+        }
+
+        .theme-chatzer .play-all-btn.playing:hover {
+            background: var(--color-chatzer-dark);
+        }
+
+        .theme-verter .play-all-btn {
+            color: var(--color-verter);
+        }
+
+        .theme-verter .play-all-btn.playing {
+            background: var(--color-verter);
+            color: white;
+        }
+
+        .theme-verter .play-all-btn.playing:hover {
+            background: var(--color-verter-dark);
+        }
+
+        .theme-piyut .play-all-btn {
+            color: var(--color-piyut);
+        }
+
+        .theme-piyut .play-all-btn.playing {
+            background: var(--color-piyut);
+            color: white;
+        }
+
+        .theme-piyut .play-all-btn.playing:hover {
+            background: var(--color-piyut-dark);
+        }
+
+        .theme-collection .play-all-btn {
+            color: var(--color-collection);
+        }
+
+        .theme-collection .play-all-btn.playing {
+            background: var(--color-collection);
+            color: white;
+        }
+
+        .theme-collection .play-all-btn.playing:hover {
+            background: var(--color-collection-dark);
+        }
+
         /* Tags bar - below hero, centered */
         .nigun-modal-hero-bottom {
             display: flex;
@@ -6986,12 +7097,36 @@
             width: 32px;
             height: 32px;
             border-radius: 50%;
-            background-size: cover;
-            background-position: center top;
-            background-color: rgba(255, 255, 255, 0.3);
+            overflow: hidden;
             margin-left: 10px;
             flex-shrink: 0;
             border: 2px solid rgba(255, 255, 255, 0.5);
+            background-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .mechaber-pill-image img {
+            display: block;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+        }
+
+        .mechaber-pill-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .mechaber-pill-placeholder .mechaber-icon {
+            width: 20px;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
+            mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
         }
 
         .mechaber-pill-name {
@@ -8377,6 +8512,540 @@
             background: var(--color-resource-dark);
             transform: scale(1.05);
         }
+
+        /* Theme inheritance for SONG ITEMS inside detail pages/modals */
+        /* Make song item play buttons, borders, backgrounds, and text use the parent theme color */
+
+        /* Mechaber theme */
+        .theme-mechaber .song-item .song-play-btn-new {
+            background: var(--color-mechaber) !important;
+        }
+
+        .theme-mechaber .song-item .song-play-btn-new:hover {
+            background: var(--color-mechaber-dark) !important;
+        }
+
+        .theme-mechaber .song-item {
+            border-color: var(--color-mechaber) !important;
+            background: var(--color-mechaber-pale) !important;
+        }
+
+        .theme-mechaber .song-item:hover {
+            border-color: var(--color-mechaber-dark) !important;
+        }
+
+        .theme-mechaber .song-item .song-name {
+            color: var(--color-mechaber-dark) !important;
+        }
+
+        .theme-mechaber .song-item .song-number {
+            color: var(--color-mechaber) !important;
+        }
+
+        /* Chatzer theme */
+        .theme-chatzer .song-item .song-play-btn-new {
+            background: var(--color-chatzer) !important;
+        }
+
+        .theme-chatzer .song-item .song-play-btn-new:hover {
+            background: var(--color-chatzer-dark) !important;
+        }
+
+        .theme-chatzer .song-item {
+            border-color: var(--color-chatzer) !important;
+            background: var(--color-chatzer-pale) !important;
+        }
+
+        .theme-chatzer .song-item:hover {
+            border-color: var(--color-chatzer-dark) !important;
+        }
+
+        .theme-chatzer .song-item .song-name {
+            color: var(--color-chatzer-dark) !important;
+        }
+
+        .theme-chatzer .song-item .song-number {
+            color: var(--color-chatzer) !important;
+        }
+
+        /* Verter theme */
+        .theme-verter .song-item .song-play-btn-new {
+            background: var(--color-verter) !important;
+        }
+
+        .theme-verter .song-item .song-play-btn-new:hover {
+            background: var(--color-verter-dark) !important;
+        }
+
+        .theme-verter .song-item {
+            border-color: var(--color-verter) !important;
+            background: var(--color-verter-pale) !important;
+        }
+
+        .theme-verter .song-item:hover {
+            border-color: var(--color-verter-dark) !important;
+        }
+
+        .theme-verter .song-item .song-name {
+            color: var(--color-verter-dark) !important;
+        }
+
+        .theme-verter .song-item .song-number {
+            color: var(--color-verter) !important;
+        }
+
+        /* Zman theme */
+        .theme-zman .song-item .song-play-btn-new {
+            background: var(--color-zman) !important;
+        }
+
+        .theme-zman .song-item .song-play-btn-new:hover {
+            background: var(--color-zman-dark) !important;
+        }
+
+        .theme-zman .song-item {
+            border-color: var(--color-zman) !important;
+            background: var(--color-zman-pale) !important;
+        }
+
+        .theme-zman .song-item:hover {
+            border-color: var(--color-zman-dark) !important;
+        }
+
+        .theme-zman .song-item .song-name {
+            color: var(--color-zman-dark) !important;
+        }
+
+        .theme-zman .song-item .song-number {
+            color: var(--color-zman) !important;
+        }
+
+        /* Piyut theme */
+        .theme-piyut .song-item .song-play-btn-new {
+            background: var(--color-piyut) !important;
+        }
+
+        .theme-piyut .song-item .song-play-btn-new:hover {
+            background: var(--color-piyut-dark) !important;
+        }
+
+        .theme-piyut .song-item {
+            border-color: var(--color-piyut) !important;
+            background: var(--color-piyut-pale) !important;
+        }
+
+        .theme-piyut .song-item:hover {
+            border-color: var(--color-piyut-dark) !important;
+        }
+
+        .theme-piyut .song-item .song-name {
+            color: var(--color-piyut-dark) !important;
+        }
+
+        .theme-piyut .song-item .song-number {
+            color: var(--color-piyut) !important;
+        }
+
+        /* Collection theme */
+        .theme-collection .song-item .song-play-btn-new {
+            background: var(--color-collection) !important;
+        }
+
+        .theme-collection .song-item .song-play-btn-new:hover {
+            background: var(--color-collection-dark) !important;
+        }
+
+        .theme-collection .song-item {
+            border-color: var(--color-collection) !important;
+            background: var(--color-collection-pale) !important;
+        }
+
+        .theme-collection .song-item:hover {
+            border-color: var(--color-collection-dark) !important;
+        }
+
+        .theme-collection .song-item .song-name {
+            color: var(--color-collection-dark) !important;
+        }
+
+        .theme-collection .song-item .song-number {
+            color: var(--color-collection) !important;
+        }
+
+        /* Album theme */
+        .theme-album .song-item .song-play-btn-new {
+            background: var(--color-album) !important;
+        }
+
+        .theme-album .song-item .song-play-btn-new:hover {
+            background: var(--color-album-dark) !important;
+        }
+
+        .theme-album .song-item {
+            border-color: var(--color-album) !important;
+            background: var(--color-album-pale) !important;
+        }
+
+        .theme-album .song-item:hover {
+            border-color: var(--color-album-dark) !important;
+        }
+
+        .theme-album .song-item .song-name {
+            color: var(--color-album-dark) !important;
+        }
+
+        .theme-album .song-item .song-number {
+            color: var(--color-album) !important;
+        }
+
+        /* Document theme */
+        .theme-document .song-item .song-play-btn-new {
+            background: var(--color-document) !important;
+        }
+
+        .theme-document .song-item .song-play-btn-new:hover {
+            background: var(--color-document-dark) !important;
+        }
+
+        .theme-document .song-item {
+            border-color: var(--color-document) !important;
+            background: var(--color-document-pale) !important;
+        }
+
+        .theme-document .song-item:hover {
+            border-color: var(--color-document-dark) !important;
+        }
+
+        .theme-document .song-item .song-name {
+            color: var(--color-document-dark) !important;
+        }
+
+        .theme-document .song-item .song-number {
+            color: var(--color-document) !important;
+        }
+
+        /* Resource theme */
+        .theme-resource .song-item .song-play-btn-new {
+            background: var(--color-resource) !important;
+        }
+
+        .theme-resource .song-item .song-play-btn-new:hover {
+            background: var(--color-resource-dark) !important;
+        }
+
+        .theme-resource .song-item {
+            border-color: var(--color-resource) !important;
+            background: var(--color-resource-pale) !important;
+        }
+
+        .theme-resource .song-item:hover {
+            border-color: var(--color-resource-dark) !important;
+        }
+
+        .theme-resource .song-item .song-name {
+            color: var(--color-resource-dark) !important;
+        }
+
+        .theme-resource .song-item .song-number {
+            color: var(--color-resource) !important;
+        }
+
+        /* Active song state - use theme color for playing songs */
+        .theme-mechaber .song-item.active::before {
+            background: var(--color-mechaber) !important;
+        }
+
+        .theme-mechaber .song-item.active {
+            box-shadow: 0 4px 15px rgba(196, 53, 168, 0.4) !important;
+        }
+
+        .theme-chatzer .song-item.active::before {
+            background: var(--color-chatzer) !important;
+        }
+
+        .theme-chatzer .song-item.active {
+            box-shadow: 0 4px 15px rgba(156, 91, 181, 0.4) !important;
+        }
+
+        .theme-verter .song-item.active::before {
+            background: var(--color-verter) !important;
+        }
+
+        .theme-verter .song-item.active {
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4) !important;
+        }
+
+        .theme-zman .song-item.active::before {
+            background: var(--color-zman) !important;
+        }
+
+        .theme-zman .song-item.active {
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4) !important;
+        }
+
+        .theme-piyut .song-item.active::before {
+            background: var(--color-piyut) !important;
+        }
+
+        .theme-piyut .song-item.active {
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4) !important;
+        }
+
+        .theme-collection .song-item.active::before {
+            background: var(--color-collection) !important;
+        }
+
+        .theme-collection .song-item.active {
+            box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4) !important;
+        }
+
+        .theme-album .song-item.active::before {
+            background: var(--color-album) !important;
+        }
+
+        .theme-album .song-item.active {
+            box-shadow: 0 4px 15px rgba(139, 195, 74, 0.4) !important;
+        }
+
+        .theme-document .song-item.active::before {
+            background: var(--color-document) !important;
+        }
+
+        .theme-document .song-item.active {
+            box-shadow: 0 4px 15px rgba(121, 85, 72, 0.4) !important;
+        }
+
+        .theme-resource .song-item.active::before {
+            background: var(--color-resource) !important;
+        }
+
+        .theme-resource .song-item.active {
+            box-shadow: 0 4px 15px rgba(255, 183, 77, 0.4) !important;
+        }
+
+        /* Hover border effect - override the ::after pseudo-element border color */
+        .theme-mechaber .song-item::after {
+            border-color: var(--color-mechaber) !important;
+            box-shadow: 0 0 15px rgba(196, 53, 168, 0.2) !important;
+        }
+
+        .theme-chatzer .song-item::after {
+            border-color: var(--color-chatzer) !important;
+            box-shadow: 0 0 15px rgba(156, 91, 181, 0.2) !important;
+        }
+
+        .theme-verter .song-item::after {
+            border-color: var(--color-verter) !important;
+            box-shadow: 0 0 15px rgba(107, 114, 128, 0.2) !important;
+        }
+
+        .theme-zman .song-item::after {
+            border-color: var(--color-zman) !important;
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.2) !important;
+        }
+
+        .theme-piyut .song-item::after {
+            border-color: var(--color-piyut) !important;
+            box-shadow: 0 0 15px rgba(233, 30, 99, 0.2) !important;
+        }
+
+        .theme-collection .song-item::after {
+            border-color: var(--color-collection) !important;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.2) !important;
+        }
+
+        .theme-album .song-item::after {
+            border-color: var(--color-album) !important;
+            box-shadow: 0 0 15px rgba(139, 195, 74, 0.2) !important;
+        }
+
+        .theme-document .song-item::after {
+            border-color: var(--color-document) !important;
+            box-shadow: 0 0 15px rgba(121, 85, 72, 0.2) !important;
+        }
+
+        .theme-resource .song-item::after {
+            border-color: var(--color-resource) !important;
+            box-shadow: 0 0 15px rgba(255, 183, 77, 0.2) !important;
+        }
+
+        /* Theme overrides for nested cards (mechaber cards inside other detail pages) */
+        .theme-chatzer .nigun-mechaber-card {
+            background: var(--color-chatzer) !important;
+        }
+
+        .theme-chatzer .nigun-mechaber-card:hover {
+            box-shadow: 0 4px 15px rgba(156, 91, 181, 0.4) !important;
+        }
+
+        .theme-chatzer .mechaber-card::after,
+        .theme-chatzer .nigun-mechaber-card::after {
+            border-color: var(--color-chatzer-light) !important;
+            box-shadow: 0 0 15px rgba(156, 91, 181, 0.25) !important;
+        }
+
+        .theme-chatzer .nigun-mechaber-placeholder {
+            background: linear-gradient(135deg, var(--color-chatzer-pale) 0%, var(--color-chatzer-light) 100%) !important;
+        }
+
+        .theme-chatzer .nigun-mechaber-placeholder .mechaber-icon {
+            background-color: var(--color-chatzer) !important;
+        }
+
+        .theme-verter .nigun-mechaber-card {
+            background: var(--color-verter) !important;
+        }
+
+        .theme-verter .nigun-mechaber-card:hover {
+            box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4) !important;
+        }
+
+        .theme-verter .mechaber-card::after,
+        .theme-verter .nigun-mechaber-card::after {
+            border-color: var(--color-verter-light) !important;
+            box-shadow: 0 0 15px rgba(107, 114, 128, 0.25) !important;
+        }
+
+        .theme-verter .nigun-mechaber-placeholder {
+            background: linear-gradient(135deg, var(--color-verter-pale) 0%, var(--color-verter-light) 100%) !important;
+        }
+
+        .theme-verter .nigun-mechaber-placeholder .mechaber-icon {
+            background-color: var(--color-verter) !important;
+        }
+
+        .theme-zman .nigun-mechaber-card {
+            background: var(--color-zman) !important;
+        }
+
+        .theme-zman .nigun-mechaber-card:hover {
+            box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4) !important;
+        }
+
+        .theme-zman .mechaber-card::after,
+        .theme-zman .nigun-mechaber-card::after {
+            border-color: var(--color-zman-light) !important;
+            box-shadow: 0 0 15px rgba(255, 152, 0, 0.25) !important;
+        }
+
+        .theme-zman .nigun-mechaber-placeholder {
+            background: linear-gradient(135deg, var(--color-zman-pale) 0%, var(--color-zman-light) 100%) !important;
+        }
+
+        .theme-zman .nigun-mechaber-placeholder .mechaber-icon {
+            background-color: var(--color-zman) !important;
+        }
+
+        .theme-piyut .nigun-mechaber-card {
+            background: var(--color-piyut) !important;
+        }
+
+        .theme-piyut .nigun-mechaber-card:hover {
+            box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4) !important;
+        }
+
+        .theme-piyut .mechaber-card::after,
+        .theme-piyut .nigun-mechaber-card::after {
+            border-color: var(--color-piyut-light) !important;
+            box-shadow: 0 0 15px rgba(233, 30, 99, 0.25) !important;
+        }
+
+        .theme-piyut .nigun-mechaber-placeholder {
+            background: linear-gradient(135deg, var(--color-piyut-pale) 0%, var(--color-piyut-light) 100%) !important;
+        }
+
+        .theme-piyut .nigun-mechaber-placeholder .mechaber-icon {
+            background-color: var(--color-piyut) !important;
+        }
+
+        .theme-collection .nigun-mechaber-card {
+            background: var(--color-collection) !important;
+        }
+
+        .theme-collection .nigun-mechaber-card:hover {
+            box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4) !important;
+        }
+
+        .theme-collection .mechaber-card::after,
+        .theme-collection .nigun-mechaber-card::after {
+            border-color: var(--color-collection-light) !important;
+            box-shadow: 0 0 15px rgba(0, 188, 212, 0.25) !important;
+        }
+
+        .theme-collection .nigun-mechaber-placeholder {
+            background: linear-gradient(135deg, var(--color-collection-pale) 0%, var(--color-collection-light) 100%) !important;
+        }
+
+        .theme-collection .nigun-mechaber-placeholder .mechaber-icon {
+            background-color: var(--color-collection) !important;
+        }
+
+        .theme-album .nigun-mechaber-card {
+            background: var(--color-album) !important;
+        }
+
+        .theme-album .nigun-mechaber-card:hover {
+            box-shadow: 0 4px 15px rgba(139, 195, 74, 0.4) !important;
+        }
+
+        .theme-album .mechaber-card::after,
+        .theme-album .nigun-mechaber-card::after {
+            border-color: var(--color-album-light) !important;
+            box-shadow: 0 0 15px rgba(139, 195, 74, 0.25) !important;
+        }
+
+        .theme-album .nigun-mechaber-placeholder {
+            background: linear-gradient(135deg, var(--color-album-pale) 0%, var(--color-album-light) 100%) !important;
+        }
+
+        .theme-album .nigun-mechaber-placeholder .mechaber-icon {
+            background-color: var(--color-album) !important;
+        }
+
+        .theme-document .nigun-mechaber-card {
+            background: var(--color-document) !important;
+        }
+
+        .theme-document .nigun-mechaber-card:hover {
+            box-shadow: 0 4px 15px rgba(121, 85, 72, 0.4) !important;
+        }
+
+        .theme-document .mechaber-card::after,
+        .theme-document .nigun-mechaber-card::after {
+            border-color: var(--color-document-light) !important;
+            box-shadow: 0 0 15px rgba(121, 85, 72, 0.25) !important;
+        }
+
+        .theme-document .nigun-mechaber-placeholder {
+            background: linear-gradient(135deg, var(--color-document-pale) 0%, var(--color-document-light) 100%) !important;
+        }
+
+        .theme-document .nigun-mechaber-placeholder .mechaber-icon {
+            background-color: var(--color-document) !important;
+        }
+
+        .theme-resource .nigun-mechaber-card {
+            background: var(--color-resource) !important;
+        }
+
+        .theme-resource .nigun-mechaber-card:hover {
+            box-shadow: 0 4px 15px rgba(255, 183, 77, 0.4) !important;
+        }
+
+        .theme-resource .mechaber-card::after,
+        .theme-resource .nigun-mechaber-card::after {
+            border-color: var(--color-resource-light) !important;
+            box-shadow: 0 0 15px rgba(255, 183, 77, 0.25) !important;
+        }
+
+        .theme-resource .nigun-mechaber-placeholder {
+            background: linear-gradient(135deg, var(--color-resource-pale) 0%, var(--color-resource-light) 100%) !important;
+        }
+
+        .theme-resource .nigun-mechaber-placeholder .mechaber-icon {
+            background-color: var(--color-resource) !important;
+        }
+
 
         /* Tags container for displaying multiple tags */
         .tags-container {
@@ -20743,7 +21412,10 @@
                     const imageUrl = info.imageUrl || `https://storage.googleapis.com/zemirot-israel.appspot.com/mechabrimPics/${encodeURIComponent(imageKey)}.png`;
                     return `
                         <a class="mechaber-pill" href="#/mechabrim/${encodeURIComponent(key)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(key)}">
-                            <span class="mechaber-pill-image" style="background-image: url('${imageUrl}')"></span>
+                            <span class="mechaber-pill-image">
+                                <img src="${imageUrl}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                                <span class="mechaber-pill-placeholder" style="display:none;"><span class="mechaber-icon"></span></span>
+                            </span>
                             <span class="mechaber-pill-name">${key}</span>
                         </a>
                     `;
@@ -23654,7 +24326,19 @@
         // NOTE: popstate listener is now in the nigun modal section to handle modal closing
 
         // Listen to hash changes (from anchor link clicks)
+        // Note: We use a separate flag for hashchange since popstate and hashchange
+        // can both fire when history.back() is called
+        let skipNextHashChange = false;
+
         window.addEventListener('hashchange', function () {
+            console.log('[DEBUG HASHCHANGE] hashchange event fired, hash:', window.location.hash);
+            console.log('[DEBUG HASHCHANGE] skipNextHashChange:', skipNextHashChange);
+
+            if (skipNextHashChange) {
+                console.log('[DEBUG HASHCHANGE] Skipping because skipNextHashChange = true');
+                skipNextHashChange = false;
+                return;
+            }
             hideAllDropdowns();
             handleURLChange();
         });
@@ -23784,6 +24468,7 @@
         // Render detail page for a specific item
         async function renderDetailPage() {
             console.log('renderDetailPage called, currentDetailView:', currentDetailView);
+
             const { type, name } = currentDetailView;
             const container = document.getElementById('mainContent');
 
@@ -23905,8 +24590,8 @@
                 songIndices = categories[categoryKey]?.[name] || [];
                 songs = songIndices.map(idx => allSongs[idx]).filter(Boolean);
             }
-            // Apply current sort order to songs
-            songs = sortSongsByOrder(songs);
+            // Always sort alphabetically for detail pages
+            songs = songs.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'he'));
 
             // For mechabrim: find songs where name appears in personalities field
             let personalitySongs = [];
@@ -23919,7 +24604,7 @@
                     if (!song.personalities) return false;
                     return song.personalities.split(',').map(p => p.trim()).includes(name);
                 });
-                personalitySongs = sortSongsByOrder(personalitySongs);
+                personalitySongs = personalitySongs.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'he'));
 
                 // Recordings where mechaber is in personalities field
                 allSongs.forEach((song, songIdx) => {
@@ -24064,6 +24749,10 @@
                     <div class="detail-header">
                         <div class="detail-category-bar">${typeName}</div>
                         <div class="detail-header-content ${(info.image || type === 'mechabrim') ? '' : 'no-image'}">
+                            <button class="play-all-btn" title="שפיל אלע" onclick="event.stopPropagation(); playAllFromDetailPage('${type}', '${escapeHtml(name).replace(/'/g, "\\'")}')" data-detail-type="${type}" data-detail-name="${escapeHtml(name)}">
+                                <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                                <svg class="pause-icon" style="display:none" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                            </button>
                             <div class="detail-header-left">
                                 ${info.image ? `
                                     <img class="detail-image" src="${info.image}" alt="${name}">
@@ -24177,101 +24866,6 @@
                     <div class="detail-songs-section">
                         <div class="detail-section-header">
                             <h3>${type === 'mechabrim' ? 'מחבר געווען ' : ''}${songs.length} ניגונים</h3>
-                            <div class="detail-filters-group">
-                                <!-- Sort Filter -->
-                                <div class="detail-filter-dropdown">
-                                    <div class="detail-filter-current">
-                                        <span class="filter-icon">⇅</span>
-                                        <span class="filter-label">${currentSortOrder === 'random' ? 'שאָפל' :
-                    currentSortOrder === 'alphabetical' ? 'א"ב' :
-                        'לעצט צוגעלייגט'
-                }</span>
-                                    </div>
-                                    <div class="detail-filter-options">
-                                        <div class="detail-filter-option ${currentSortOrder === 'random' ? 'active' : ''}"
-                                             onclick="changeSortOrder('random'); updateDetailView();">
-                                            שאָפל
-                                        </div>
-                                        <div class="detail-filter-option ${currentSortOrder === 'alphabetical' ? 'active' : ''}"
-                                             onclick="changeSortOrder('alphabetical'); updateDetailView();">
-                                            א"ב
-                                        </div>
-                                        <div class="detail-filter-option ${currentSortOrder === 'recent' ? 'active' : ''}"
-                                             onclick="changeSortOrder('recent'); updateDetailView();">
-                                            לעצט צוגעלייגט
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Display Mode Filter -->
-                                <div class="detail-filter-dropdown">
-                                    <div class="detail-filter-current">
-                                        <span class="filter-icon">👁</span>
-                                        <span class="filter-label">${currentDisplayMode === 'minimal' ? 'קעפל' :
-                    currentDisplayMode === 'recordings' ? 'רעקארדירונגען' :
-                        'אלעס'
-                }</span>
-                                    </div>
-                                    <div class="detail-filter-options">
-                                        <div class="detail-filter-option ${currentDisplayMode === 'minimal' ? 'active' : ''}"
-                                             onclick="changeDisplayMode('minimal'); updateDetailView();">
-                                            קעפל
-                                        </div>
-                                        <div class="detail-filter-option ${currentDisplayMode === 'recordings' ? 'active' : ''}"
-                                             onclick="changeDisplayMode('recordings'); updateDetailView();">
-                                            רעקארדירונגען
-                                        </div>
-                                        <div class="detail-filter-option ${currentDisplayMode === 'full' ? 'active' : ''}"
-                                             onclick="changeDisplayMode('full'); updateDetailView();">
-                                            אלעס
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Quality Filter -->
-                                <div class="detail-filter-dropdown detail-filter-quality">
-                                    <div class="detail-filter-current quality-filter-spread">
-                                        <span class="filter-label-left">
-                                            <svg class="audio-icon" viewBox="0 0 24 24" fill="currentColor">
-                                                <path d="M3 18h2v-6H3v6zm4-10h2v10H7V8zm4-5h2v15h-2V3zm4 5h2v10h-2V8zm4 2h2v6h-2v-6z"/>
-                                            </svg>
-                                        </span>
-                                        <span class="filter-stars-right">${minQualityRating === 0 ? '' :
-                    minQualityRating === 1 ? '★' :
-                        minQualityRating === 2 ? '★★' :
-                            minQualityRating === 3 ? '★★★' :
-                                minQualityRating === 4 ? '★★★★' :
-                                    '★★★★★'
-                }</span>
-                                    </div>
-                                    <div class="detail-filter-options">
-                                        <div class="detail-filter-option ${minQualityRating === 0 ? 'active' : ''}"
-                                             onclick="setMinQualityRating(0); updateDetailView();">
-                                            אלע
-                                        </div>
-                                        <div class="detail-filter-option ${minQualityRating === 1 ? 'active' : ''}"
-                                             onclick="setMinQualityRating(1); updateDetailView();">
-                                            ★ א מענטש זינגט פאר זיך
-                                        </div>
-                                        <div class="detail-filter-option ${minQualityRating === 2 ? 'active' : ''}"
-                                             onclick="setMinQualityRating(2); updateDetailView();">
-                                            ★★ אראפגעזינגען אן מוזיק
-                                        </div>
-                                        <div class="detail-filter-option ${minQualityRating === 3 ? 'active' : ''}"
-                                             onclick="setMinQualityRating(3); updateDetailView();">
-                                            ★★★ אלטע מוזיק
-                                        </div>
-                                        <div class="detail-filter-option ${minQualityRating === 4 ? 'active' : ''}"
-                                             onclick="setMinQualityRating(4); updateDetailView();">
-                                            ★★★★ שיין און ניי
-                                        </div>
-                                        <div class="detail-filter-option ${minQualityRating === 5 ? 'active' : ''}"
-                                             onclick="setMinQualityRating(5); updateDetailView();">
-                                            ★★★★★ שיין, ניי און געשמאק
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         ${songs.length > 5 ? `
                             <div class="songs-list-wrapper collapsed">
@@ -24280,7 +24874,7 @@
                         const playlistIndices = songs.map(song => allSongs.indexOf(song));
                         return songs.map((song, i) => {
                             const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices, { hideMechaber: type === 'mechabrim' });
+                            return renderSongItem(song, globalIdx, i + 1, playlistIndices, { hideMechaber: type === 'mechabrim', forceMinimal: true });
                         }).join('');
                     })()}
                                 </div>
@@ -24295,7 +24889,7 @@
                     const playlistIndices = songs.map(song => allSongs.indexOf(song));
                     return songs.map((song, i) => {
                         const globalIdx = allSongs.indexOf(song);
-                        return renderSongItem(song, globalIdx, i + 1, playlistIndices, { hideMechaber: type === 'mechabrim' });
+                        return renderSongItem(song, globalIdx, i + 1, playlistIndices, { hideMechaber: type === 'mechabrim', forceMinimal: true });
                     }).join('');
                 })()}
                             </div>
@@ -24317,7 +24911,7 @@
                                             <div class="detail-songs-list">
                                                 ${personalitySongs.map((song, i) => {
                             const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                            return renderSongItem(song, globalIdx, i + 1, playlistIndices, { forceMinimal: true });
                         }).join('')}
                                             </div>
                                             <div class="songs-fade-overlay"></div>
@@ -24329,7 +24923,7 @@
                                         <div class="detail-songs-list">
                                             ${personalitySongs.map((song, i) => {
                             const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                            return renderSongItem(song, globalIdx, i + 1, playlistIndices, { forceMinimal: true });
                         }).join('')}
                                         </div>
                                     `}
@@ -25052,6 +25646,9 @@
             updatePlayerUI(song);
             updateActiveSongInList();
 
+            // Trigger visual effects immediately (wave animation, active state)
+            updatePlayState(true);
+
             // Update rating display in player
             updatePlayerRating(recording.rating);
 
@@ -25070,6 +25667,139 @@
             if (activeRecBtn) {
                 activeRecBtn.classList.add('playing');
             }
+
+            // Update play-all button state
+            updatePlayAllBtnState();
+        }
+
+        // Toggle play all from modal - plays first recording or toggles pause
+        function togglePlayAllFromModal(songIdx) {
+            const song = allSongs[songIdx];
+            if (!song || !song.recordings || song.recordings.length === 0) return;
+
+            // If this song is already playing, toggle play/pause
+            if (songIdx === currentSongIndex && audioPlayer.src) {
+                togglePlayPause();
+                return;
+            }
+
+            // Otherwise, play the first recording
+            playNigunRecording(songIdx, 0, null);
+        }
+
+        // Update play-all button state based on player state
+        function updatePlayAllBtnState() {
+            const playAllBtns = document.querySelectorAll('.play-all-btn');
+            const isCurrentlyPlaying = audioPlayer.src && !audioPlayer.paused;
+
+            playAllBtns.forEach(btn => {
+                const playIcon = btn.querySelector('.play-icon');
+                const pauseIcon = btn.querySelector('.pause-icon');
+
+                // For nigun modal buttons (single song)
+                const songIdx = parseInt(btn.dataset.songIdx);
+                if (!isNaN(songIdx)) {
+                    if (songIdx === currentSongIndex && isCurrentlyPlaying) {
+                        btn.classList.add('playing');
+                        if (playIcon) playIcon.style.display = 'none';
+                        if (pauseIcon) pauseIcon.style.display = 'block';
+                    } else {
+                        btn.classList.remove('playing');
+                        if (playIcon) playIcon.style.display = 'block';
+                        if (pauseIcon) pauseIcon.style.display = 'none';
+                    }
+                    return;
+                }
+
+                // For detail page buttons - check if currently playing song is from this page
+                const detailType = btn.dataset.detailType;
+                const detailName = btn.dataset.detailName;
+                if (detailType && detailName && currentSongIndex >= 0) {
+                    const currentSong = allSongs[currentSongIndex];
+                    let isFromThisPage = false;
+
+                    if (currentSong) {
+                        if (detailType === 'mechabrim' && currentSong.mechaber) {
+                            isFromThisPage = currentSong.mechaber.split(',').map(m => m.trim()).includes(detailName);
+                        } else if (detailType === 'chatzeros' && currentSong.category) {
+                            isFromThisPage = currentSong.category.split(',').map(c => c.trim()).includes(detailName);
+                        } else if (detailType === 'verter' && currentSong.name) {
+                            isFromThisPage = currentSong.name === detailName;
+                        } else if (detailType === 'piyutim' && currentSong.maure) {
+                            isFromThisPage = currentSong.maure.split(',').map(m => m.trim()).includes(detailName);
+                        } else if (detailType === 'collections' && currentSong.collection) {
+                            isFromThisPage = currentSong.collection.split(',').map(c => c.trim()).includes(detailName);
+                        }
+                    }
+
+                    if (isFromThisPage && isCurrentlyPlaying) {
+                        btn.classList.add('playing');
+                        if (playIcon) playIcon.style.display = 'none';
+                        if (pauseIcon) pauseIcon.style.display = 'block';
+                    } else {
+                        btn.classList.remove('playing');
+                        if (playIcon) playIcon.style.display = 'block';
+                        if (pauseIcon) pauseIcon.style.display = 'none';
+                    }
+                }
+            });
+        }
+
+        // Play all from detail page - plays first song in the category
+        function playAllFromDetailPage(type, name) {
+            // Find songs for this detail page
+            let songs = [];
+
+            allSongs.forEach((song, idx) => {
+                let matches = false;
+
+                if (type === 'mechabrim' && song.mechaber) {
+                    matches = song.mechaber.split(',').map(m => m.trim()).includes(name);
+                } else if (type === 'chatzeros' && song.category) {
+                    matches = song.category.split(',').map(c => c.trim()).includes(name);
+                } else if (type === 'piyutim' && song.maure) {
+                    matches = song.maure.split(',').map(m => m.trim()).includes(name);
+                } else if (type === 'collections' && song.collection) {
+                    matches = song.collection.split(',').map(c => c.trim()).includes(name);
+                }
+
+                if (matches && song.recordings && song.recordings.length > 0) {
+                    songs.push({ song, idx });
+                }
+            });
+
+            if (songs.length === 0) return;
+
+            // Sort alphabetically to match displayed order
+            songs.sort((a, b) => (a.song.name || '').localeCompare(b.song.name || '', 'he'));
+
+            // Check if currently playing is from this page - if so, toggle pause
+            if (currentSongIndex >= 0 && audioPlayer.src) {
+                const currentSong = allSongs[currentSongIndex];
+                let isFromThisPage = false;
+
+                if (currentSong) {
+                    if (type === 'mechabrim' && currentSong.mechaber) {
+                        isFromThisPage = currentSong.mechaber.split(',').map(m => m.trim()).includes(name);
+                    } else if (type === 'chatzeros' && currentSong.category) {
+                        isFromThisPage = currentSong.category.split(',').map(c => c.trim()).includes(name);
+                    } else if (type === 'piyutim' && currentSong.maure) {
+                        isFromThisPage = currentSong.maure.split(',').map(m => m.trim()).includes(name);
+                    } else if (type === 'collections' && currentSong.collection) {
+                        isFromThisPage = currentSong.collection.split(',').map(c => c.trim()).includes(name);
+                    }
+                }
+
+                if (isFromThisPage) {
+                    togglePlayPause();
+                    return;
+                }
+            }
+
+            // Play first song
+            const first = songs[0];
+            const playlistIndices = songs.map(s => s.idx);
+            playNigunRecording(first.idx, 0, null, playlistIndices);
         }
 
         // Render zman detail page
@@ -26492,7 +27222,7 @@
                         const playlistIndices = relatedNigunim.map(song => allSongs.indexOf(song));
                         return relatedNigunim.map((song, idx) => {
                             const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, idx + 1, playlistIndices);
+                            return renderSongItem(song, globalIdx, idx + 1, playlistIndices, { forceMinimal: true });
                         }).join('');
                     })()}
                                 </div>
@@ -26573,7 +27303,7 @@
                         const playlistIndices = relatedNigunim.map(song => allSongs.indexOf(song));
                         return relatedNigunim.map((song, idx) => {
                             const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, idx + 1, playlistIndices);
+                            return renderSongItem(song, globalIdx, idx + 1, playlistIndices, { forceMinimal: true });
                         }).join('');
                     })()}
                                 </div>
@@ -26858,7 +27588,7 @@
         function renderSongItem(song, globalIdx, displayNum, playlistIndices = null, options = {}) {
             const isActive = globalIdx === currentSongIndex;
             const hasAudio = songHasQualityAudio(song); // Uses quality filter
-            const displayMode = options.forceRecordingsMode ? 'recordings' : (currentDisplayMode || 'minimal');
+            const displayMode = options.forceMinimal ? 'minimal' : (options.forceRecordingsMode ? 'recordings' : (currentDisplayMode || 'minimal'));
 
             // Create meta with links - using entity-specific colors
             let metaParts = [];
@@ -27909,6 +28639,9 @@
                     }
                 }
             }
+
+            // Update play-all button states
+            updatePlayAllBtnState();
         }
 
         // Create clickable link for a field value
@@ -28156,6 +28889,8 @@
             }
 
             // Go back in history to restore previous URL
+            skipNextPopstateHandler = true;
+            skipNextHashChange = true;
             history.back();
         }
 
@@ -28164,10 +28899,15 @@
         let currentDetailModalType = null;
         let currentDetailModalName = null;
 
+        // Flag to skip next popstate handler call (when we're closing a modal ourselves)
+        let skipNextPopstateHandler = false;
+
         // Open generic detail modal
         async function openDetailModal(type, name, skipHistory = false) {
+            console.log('[DEBUG MODAL] openDetailModal called:', { type, name, skipHistory });
             // Save current scroll position
             savedScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
+            console.log('[DEBUG MODAL] savedScrollPosition:', savedScrollPosition);
             detailModalOpen = true;
             currentDetailModalType = type;
             currentDetailModalName = name;
@@ -28272,11 +29012,15 @@
             setTimeout(initCollapsibleSections, 50);
         }
 
-        // Close the topmost detail modal only
         function closeTopDetailModal() {
+            console.log('[DEBUG MODAL] closeTopDetailModal called');
+            console.log('[DEBUG MODAL] modalStack before:', JSON.stringify(modalStack.map(m => ({ type: m.type, overlayId: m.overlayId }))));
             // Find the topmost detail modal in the stack
             const detailModals = modalStack.filter(m => m.type === 'detail');
-            if (detailModals.length === 0) return;
+            if (detailModals.length === 0) {
+                console.log('[DEBUG MODAL] No detail modals in stack, returning');
+                return;
+            }
 
             const topModal = detailModals[detailModals.length - 1];
             const overlay = document.getElementById(topModal.overlayId);
@@ -28311,6 +29055,11 @@
                 document.body.style.overflow = '';
             }
 
+            console.log('[DEBUG MODAL] About to call history.back(), setting skipNextPopstateHandler = true');
+            console.log('[DEBUG MODAL] modalStack after close:', JSON.stringify(modalStack.map(m => ({ type: m.type, overlayId: m.overlayId }))));
+            console.log('[DEBUG MODAL] detailModalOpen:', detailModalOpen, 'nigunModalOpen:', nigunModalOpen);
+            skipNextPopstateHandler = true;
+            skipNextHashChange = true;
             history.back();
         }
 
@@ -28436,14 +29185,24 @@
                 }
             }
 
-            // Generate hero header
+            // Generate hero header with play-all button
+            const playAllBtnHTML = ['mechabrim', 'chatzeros', 'piyutim', 'collections'].includes(type) ? `
+                <button class="play-all-btn" title="שפיל אלע" onclick="event.stopPropagation(); playAllFromDetailPage('${type}', '${escapeHtml(name).replace(/'/g, "\\'")}')" data-detail-type="${type}" data-detail-name="${escapeHtml(name)}">
+                    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                    <svg class="pause-icon" style="display:none" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                </button>
+            ` : '';
+
             const heroHTML = `
                 <div class="modal-hero-wrapper">
                     <div class="modal-hero ${themeClass}">
+                        ${playAllBtnHTML}
+                        ${profileImageHTML || mechaberLifeDates ? `
                         <div class="modal-hero-left">
                             ${profileImageHTML}
                             ${mechaberLifeDates ? `<div class="modal-hero-dates">${mechaberLifeDates}</div>` : ''}
                         </div>
+                        ` : ''}
                         <h1 class="modal-hero-title">${type === 'mechabrim' ? mechaberFullName : name}</h1>
                     </div>
                     ${chatzerBadgesHTML ? `<div class="modal-hero-border-badges">${chatzerBadgesHTML}</div>` : ''}
@@ -28453,9 +29212,19 @@
             // Create a temporary container for the body content
             const tempContainer = document.createElement('div');
             const mainContent = document.getElementById('mainContent');
-            const savedMainHTML = mainContent.innerHTML;
 
-            // Call the appropriate render function
+            // Create a completely hidden/detached render target to prevent ANY flash
+            // This element is never added to the DOM, so nothing is visible
+            const hiddenRenderTarget = document.createElement('div');
+            hiddenRenderTarget.id = 'mainContent'; // Temporarily give it the same ID
+            hiddenRenderTarget.style.cssText = 'position:absolute;left:-9999px;visibility:hidden;';
+            document.body.appendChild(hiddenRenderTarget);
+
+            // Temporarily rename mainContent so render functions find our hidden target
+            const originalId = mainContent.id;
+            mainContent.id = 'mainContent_hidden_temp';
+
+            // Call the appropriate render function (it will render to hiddenRenderTarget)
             switch (type) {
                 case 'mechabrim':
                 case 'chatzeros':
@@ -28465,16 +29234,13 @@
                     // Set currentDetailView for the render function
                     currentDetailView = { type, name };
                     await renderDetailPage();
-                    // Get the rendered content
-                    tempContainer.innerHTML = mainContent.innerHTML;
-                    // Restore mainContent
-                    mainContent.innerHTML = savedMainHTML;
+                    // Get the rendered content from hidden target
+                    tempContainer.innerHTML = hiddenRenderTarget.innerHTML;
                     break;
                 case 'zmanim':
                     currentDetailView = { type: 'zman', name };
                     await renderDetailPage();
-                    tempContainer.innerHTML = mainContent.innerHTML;
-                    mainContent.innerHTML = savedMainHTML;
+                    tempContainer.innerHTML = hiddenRenderTarget.innerHTML;
                     break;
                 case 'albums':
                     renderAlbumDetailPage(tempContainer, name);
@@ -28506,6 +29272,10 @@
 
             // Clear the currentDetailView since we don't actually want to navigate
             currentDetailView = null;
+
+            // Restore mainContent ID and remove hidden render target
+            mainContent.id = originalId;
+            hiddenRenderTarget.remove();
         }
 
         // Expand modal to full page view
@@ -28624,6 +29394,26 @@
 
         // Handle browser back/forward for nigun modal
         window.addEventListener('popstate', (e) => {
+            console.log('[DEBUG POPSTATE] popstate event fired');
+            console.log('[DEBUG POPSTATE] skipNextPopstateHandler:', skipNextPopstateHandler);
+            console.log('[DEBUG POPSTATE] nigunModalOpen:', nigunModalOpen, 'detailModalOpen:', detailModalOpen);
+            console.log('[DEBUG POPSTATE] e.state:', JSON.stringify(e.state));
+            console.log('[DEBUG POPSTATE] current hash:', window.location.hash);
+
+            // Check if we should skip this handler (modal was closed programmatically)
+            if (skipNextPopstateHandler) {
+                console.log('[DEBUG POPSTATE] Skipping handler because skipNextPopstateHandler = true');
+                skipNextPopstateHandler = false;
+                // Still restore scroll position
+                if (e.state && e.state.scrollPos !== undefined) {
+                    console.log('[DEBUG POPSTATE] Restoring scroll to e.state.scrollPos:', e.state.scrollPos);
+                    window.scrollTo(0, e.state.scrollPos);
+                } else if (savedScrollPosition) {
+                    console.log('[DEBUG POPSTATE] Restoring scroll to savedScrollPosition:', savedScrollPosition);
+                    window.scrollTo(0, savedScrollPosition);
+                }
+                return;
+            }
             // Check if we're closing the nigun modal
             if (nigunModalOpen) {
                 // Close modal without triggering another history change
@@ -29099,7 +29889,7 @@
                         const playlistIndices = displaySongs.map(song => allSongs.indexOf(song));
                         return displaySongs.map((song, i) => {
                             const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices);
+                            return renderSongItem(song, globalIdx, i + 1, playlistIndices, { forceMinimal: true });
                         }).join('');
                     })()}
                         </div>
