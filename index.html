@@ -7213,43 +7213,11 @@
             font-weight: 600;
         }
 
-        /* Remove old hover border change - handled by ::after now */
-
-        .page-theme-chatzer .category-card {
-            background: var(--color-chatzer-pale);
-            border-color: var(--color-chatzer-light);
-        }
-
-        .page-theme-chatzer .category-card::after {
-            border-color: var(--color-chatzer);
-            box-shadow: 0 0 15px rgba(156, 91, 181, 0.15);
-        }
-
         /* Mechaber cards styled separately below */
 
         .page-theme-mechaber .category-card::after {
             border-color: var(--color-mechaber);
             box-shadow: 0 0 15px rgba(239, 83, 80, 0.15);
-        }
-
-        .page-theme-verter .category-card {
-            background: var(--color-verter-pale);
-            border-color: var(--color-verter-light);
-        }
-
-        .page-theme-verter .category-card::after {
-            border-color: var(--color-verter);
-            box-shadow: 0 0 15px rgba(255, 167, 38, 0.15);
-        }
-
-        .page-theme-zman .category-card {
-            background: var(--color-zman-pale);
-            border-color: var(--color-zman-light);
-        }
-
-        .page-theme-zman .category-card::after {
-            border-color: var(--color-zman);
-            box-shadow: 0 0 15px rgba(66, 165, 245, 0.15);
         }
 
         .page-theme-collection .category-card {
@@ -7260,20 +7228,6 @@
         .page-theme-collection .category-card::after {
             border-color: var(--color-collection);
             box-shadow: 0 0 15px rgba(76, 175, 80, 0.15);
-        }
-
-        .page-theme-piyut .category-card {
-            background: var(--color-piyut-pale);
-            border-color: var(--color-piyut-light);
-        }
-
-        .page-theme-piyut .category-card::after {
-            border-color: var(--color-piyut);
-            box-shadow: 0 0 15px rgba(46, 139, 46, 0.15);
-        }
-
-        .page-theme-piyut .category-card-title {
-            color: var(--color-piyut);
         }
 
         .category-card:hover {
@@ -8009,19 +7963,7 @@
             text-align: center;
         }
 
-        /* Category-specific dark colors for card titles (not mechabrim) */
-        .page-theme-verter .card-title {
-            color: var(--color-verter-dark, #2e7d32);
-        }
-
-        .page-theme-zman .card-title {
-            color: var(--color-zman-dark, #5d4037);
-        }
-
-        .page-theme-chatzer .card-title {
-            color: var(--color-chatzer-dark, #0d47a1);
-        }
-
+        /* Category-specific dark colors for card titles (collection, album, document, resource only) */
         .page-theme-collection .card-title {
             color: var(--color-collection-dark, #4a148c);
         }
@@ -8428,18 +8370,136 @@
             box-shadow: 0 8px 30px rgba(66, 165, 245, 0.25);
         }
 
-        /* Mobile styles for chatzer, verter, zman cards */
+        /* Hover ::after effects for chatzer, verter, zman */
+        .page-theme-chatzer .category-card::after {
+            border-color: var(--color-chatzer);
+            box-shadow: 0 0 20px rgba(156, 91, 181, 0.3);
+            border-radius: 16px;
+        }
+
+        .page-theme-verter .category-card::after {
+            border-color: var(--color-verter);
+            box-shadow: 0 0 20px rgba(255, 167, 38, 0.3);
+            border-radius: 16px;
+        }
+
+        .page-theme-zman .category-card::after {
+            border-color: var(--color-zman);
+            box-shadow: 0 0 20px rgba(66, 165, 245, 0.3);
+            border-radius: 16px;
+        }
+
+        /* ====== PIYUT CARD REDESIGN ====== */
+        .page-theme-piyut .category-grid {
+            grid-auto-rows: minmax(100px, auto);
+            align-items: stretch;
+        }
+
+        .page-theme-piyut .category-card {
+            padding: 0;
+            background: white;
+            border: none;
+            box-shadow: 0 4px 20px rgba(46, 139, 46, 0.15);
+            display: flex;
+            flex-direction: column;
+            border-radius: 16px;
+            overflow: hidden;
+            min-height: 100px;
+        }
+
+        .page-theme-piyut .category-card .card-header {
+            margin: 0;
+            gap: 0;
+            flex-direction: column;
+            align-items: stretch;
+            flex: 1;
+        }
+
+        /* Piyut banner section (green gradient) */
+        .page-theme-piyut .category-card .card-header-text {
+            flex: 1;
+            background: linear-gradient(135deg, var(--color-piyut) 0%, var(--color-piyut-dark) 100%);
+            padding: 15px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 70px;
+        }
+
+        .page-theme-piyut .category-card .card-title {
+            color: white;
+            font-size: 1.4em;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+            text-align: center;
+        }
+
+        /* Zman tags inside piyut cards */
+        .page-theme-piyut .category-card .card-tags {
+            margin-top: 8px;
+            gap: 5px;
+            justify-content: center;
+        }
+
+        .page-theme-piyut .category-card .card-zman-tag {
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            font-size: 0.75em;
+            padding: 3px 10px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+        }
+
+        .page-theme-piyut .category-card .card-zman-tag:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: none;
+        }
+
+        /* Stats at bottom - white background */
+        .page-theme-piyut .category-card .card-stats {
+            background: white;
+            margin: 0;
+            padding: 10px 15px;
+            justify-content: center;
+            gap: 15px;
+            border-top: 2px solid var(--color-piyut-light);
+            flex-wrap: wrap;
+            min-height: 40px;
+            flex-shrink: 0;
+        }
+
+        .page-theme-piyut .category-card .card-stat {
+            color: var(--color-piyut-dark);
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+
+        /* Hover effect adjustments */
+        .page-theme-piyut .category-card::after {
+            border-color: var(--color-piyut);
+            box-shadow: 0 0 20px rgba(46, 139, 46, 0.3);
+            border-radius: 16px;
+        }
+
+        .page-theme-piyut .category-card:hover {
+            box-shadow: 0 8px 30px rgba(46, 139, 46, 0.25);
+        }
+
+        /* Mobile styles for chatzer, verter, zman, piyut cards */
         @media (max-width: 480px) {
             .page-theme-chatzer .category-card .card-header-text,
             .page-theme-verter .category-card .card-header-text,
-            .page-theme-zman .category-card .card-header-text {
+            .page-theme-zman .category-card .card-header-text,
+            .page-theme-piyut .category-card .card-header-text {
                 padding: 12px 15px;
                 min-height: 60px;
             }
 
             .page-theme-chatzer .category-card .card-title,
             .page-theme-verter .category-card .card-title,
-            .page-theme-zman .category-card .card-title {
+            .page-theme-zman .category-card .card-title,
+            .page-theme-piyut .category-card .card-title {
                 font-size: 1.2em;
             }
         }
@@ -23926,7 +23986,6 @@
                         return `
                         <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
                             <div class="card-header">
-                                <div class="card-icon"></div>
                                 <div class="card-header-text">
                                     <div class="card-title">${piyutName}</div>
                                     ${zmanim.length > 0 ? `
@@ -23940,10 +23999,10 @@
                                             `).join('')}
                                         </div>
                                     ` : ''}
-                                    <div class="card-stats">
-                                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="card-stats">
+                                <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
                             </div>
                         </a>
                     `;
@@ -28690,7 +28749,6 @@
                         return `
                         <a class="category-card" href="#/piyutim/${encodeURIComponent(piyutId)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(piyutName)}">
                             <div class="card-header">
-                                <div class="card-icon"></div>
                                 <div class="card-header-text">
                                     <div class="card-title">${piyutName}</div>
                                     ${zmanim.length > 0 ? `
@@ -28704,10 +28762,10 @@
                                             `).join('')}
                                         </div>
                                     ` : ''}
-                                    <div class="card-stats">
-                                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
-                                    </div>
                                 </div>
+                            </div>
+                            <div class="card-stats">
+                                <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
                             </div>
                         </a>
                     `;
@@ -28868,9 +28926,34 @@
                                 </div>
                             `;
                 }).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
                     </div>
-                </div>
+                    <div class="card-stats">
+                        <span class="card-stat"><span class="card-stat-icon">🎵</span>${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
+                        ${recordingsCount > 0 ? `<span class="card-stat"><span class="card-stat-icon">🎧</span>${recordingsCount} רעקארדינג</span>` : ''}
+                        ${shaychusCount > 0 ? `<span class="card-stat"><span class="card-stat-icon">🔗</span>${shaychusCount} שייכות</span>` : ''}
+                    </div>
+                </a>
             `;
+                }
+
+                // Default layout for other categories (chatzer, verter, zman - mechaber-like style)
+                return `
+                <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
+                    <div class="card-header">
+                        <div class="card-header-text">
+                            <div class="card-title">${key}</div>
+                        </div>
+                    </div>
+                    <div class="card-stats">
+                        ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${pluralize(mechabrimCount, 'מחבר', 'מחברים')}</span>` : ''}
+                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
+                    </div>
+                </a>
+                `;
+            }
 
                 // Hide loading wave bar
                 setTimeout(() => {
