@@ -2,6 +2,7 @@ name: PR Preview
 
 permissions:
   contents: write
+  pull-requests: write
 
 on:
   pull_request_target:
@@ -12,33 +13,64 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # Checkout the PR code (NOT main)
+      - name: Checkout PR
+        if: github.event.action != 'closed'
+        uses: actions/checkout@v4
         with:
-          ref: main
+          ref: ${{ github.event.pull_request.head.sha }}
 
+      # Create preview folder
       - name: Create preview
         if: github.event.action != 'closed'
         run: |
-          mkdir -p pr-preview/pr-${{ github.event.number }}
+          PREVIEW_DIR="pr-preview/pr-${{ github.event.number }}"
+          mkdir -p "$PREVIEW_DIR"
           rsync -av \
             --exclude=.git \
             --exclude=.github \
             --exclude=pr-preview \
-            ./ pr-preview/pr-${{ github.event.number }}/
+            ./ "$PREVIEW_DIR/"
 
+      # Commit & push preview to main
       - name: Commit preview
         if: github.event.action != 'closed'
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
           git add pr-preview
-          git commit -m "Add PR preview #${{ github.event.number }}" || echo "No changes"
-          git push
+          git commit -m "PR preview #${{ github.event.number }}" || echo "No changes"
+          git push origin HEAD:main
 
+      # Comment preview link on PR
+      - name: Comment preview link
+        if: github.event.action != 'closed'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const pr = context.payload.pull_request.number;
+            const url = `https://yiddishenigunim.github.io/site/pr-preview/pr-${pr}/`;
+
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: pr,
+              body: `🔍 **PR Preview:**\n\n👉 ${url}`
+            });
+
+      # Remove preview when PR is closed
       - name: Remove preview on close
+        if: github.event.action == 'closed'
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Cleanup preview
         if: github.event.action == 'closed'
         run: |
           rm -rf pr-preview/pr-${{ github.event.number }}
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
           git add pr-preview
           git commit -m "Remove PR preview #${{ github.event.number }}" || echo "No changes"
           git push
