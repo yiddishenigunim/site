@@ -8375,6 +8375,8 @@
         .chatzer-tag:hover {
             background: var(--color-chatzer-dark);
             transform: scale(1.05);
+            position: relative;
+            z-index: 100;
         }
 
         /* Standalone mechaber tag for use in cards */
@@ -8392,6 +8394,8 @@
         .mechaber-tag:hover {
             background: var(--color-mechaber-dark);
             transform: scale(1.05);
+            position: relative;
+            z-index: 100;
         }
 
         /* Standalone verter tag for use in cards */
@@ -8759,12 +8763,22 @@
             box-shadow: 0 4px 15px rgba(196, 53, 168, 0.4) !important;
         }
 
+        .theme-mechaber .song-item.active .song-name,
+        .theme-mechaber .song-item.active .song-number {
+            color: white !important;
+        }
+
         .theme-chatzer .song-item.active::before {
             background: var(--color-chatzer) !important;
         }
 
         .theme-chatzer .song-item.active {
             box-shadow: 0 4px 15px rgba(156, 91, 181, 0.4) !important;
+        }
+
+        .theme-chatzer .song-item.active .song-name,
+        .theme-chatzer .song-item.active .song-number {
+            color: white !important;
         }
 
         .theme-verter .song-item.active::before {
@@ -8775,12 +8789,22 @@
             box-shadow: 0 4px 15px rgba(107, 114, 128, 0.4) !important;
         }
 
+        .theme-verter .song-item.active .song-name,
+        .theme-verter .song-item.active .song-number {
+            color: white !important;
+        }
+
         .theme-zman .song-item.active::before {
             background: var(--color-zman) !important;
         }
 
         .theme-zman .song-item.active {
             box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4) !important;
+        }
+
+        .theme-zman .song-item.active .song-name,
+        .theme-zman .song-item.active .song-number {
+            color: white !important;
         }
 
         .theme-piyut .song-item.active::before {
@@ -8791,12 +8815,22 @@
             box-shadow: 0 4px 15px rgba(233, 30, 99, 0.4) !important;
         }
 
+        .theme-piyut .song-item.active .song-name,
+        .theme-piyut .song-item.active .song-number {
+            color: white !important;
+        }
+
         .theme-collection .song-item.active::before {
             background: var(--color-collection) !important;
         }
 
         .theme-collection .song-item.active {
             box-shadow: 0 4px 15px rgba(0, 188, 212, 0.4) !important;
+        }
+
+        .theme-collection .song-item.active .song-name,
+        .theme-collection .song-item.active .song-number {
+            color: white !important;
         }
 
         .theme-album .song-item.active::before {
@@ -8807,6 +8841,11 @@
             box-shadow: 0 4px 15px rgba(139, 195, 74, 0.4) !important;
         }
 
+        .theme-album .song-item.active .song-name,
+        .theme-album .song-item.active .song-number {
+            color: white !important;
+        }
+
         .theme-document .song-item.active::before {
             background: var(--color-document) !important;
         }
@@ -8815,12 +8854,22 @@
             box-shadow: 0 4px 15px rgba(121, 85, 72, 0.4) !important;
         }
 
+        .theme-document .song-item.active .song-name,
+        .theme-document .song-item.active .song-number {
+            color: white !important;
+        }
+
         .theme-resource .song-item.active::before {
             background: var(--color-resource) !important;
         }
 
         .theme-resource .song-item.active {
             box-shadow: 0 4px 15px rgba(255, 183, 77, 0.4) !important;
+        }
+
+        .theme-resource .song-item.active .song-name,
+        .theme-resource .song-item.active .song-number {
+            color: white !important;
         }
 
         /* Hover border effect - override the ::after pseudo-element border color */
@@ -8867,6 +8916,91 @@
         .theme-resource .song-item::after {
             border-color: var(--color-resource) !important;
             box-shadow: 0 0 15px rgba(255, 183, 77, 0.2) !important;
+        }
+
+        /* Theme overrides for song-item-recording in mechaber theme */
+        .theme-mechaber .song-item-recording {
+            background: var(--color-mechaber-pale) !important;
+        }
+
+        .theme-mechaber .song-item-recording::after {
+            border-color: var(--color-mechaber) !important;
+            box-shadow: 0 0 15px rgba(196, 53, 168, 0.2) !important;
+        }
+
+        .theme-mechaber .song-item-recording:hover {
+            box-shadow: 0 6px 20px rgba(196, 53, 168, 0.35) !important;
+        }
+
+        .theme-mechaber .song-item-recording:not(.active-recording):hover {
+            background: var(--color-mechaber-pale) !important;
+        }
+
+        .theme-mechaber .song-item-rec-num {
+            background: var(--color-mechaber-pale) !important;
+            color: var(--color-mechaber-dark) !important;
+        }
+
+        .theme-mechaber .song-item-recording.active-recording {
+            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%) !important;
+        }
+
+        .theme-mechaber .song-item-recording.active-recording::before {
+            background: var(--color-mechaber) !important;
+        }
+
+        .theme-mechaber .song-item-recording.active-recording::after {
+            border-color: var(--color-mechaber) !important;
+        }
+
+        .theme-mechaber .song-item-recording.active-recording .song-item-rec-num {
+            background: rgba(255, 255, 255, 0.2) !important;
+            color: white !important;
+        }
+
+
+        /* Mechaber theme: song-item-header uses mechaber gradient */
+        .theme-mechaber .song-item-expanded .song-item-header,
+        .theme-mechaber .song-item-full .song-item-header {
+            background: linear-gradient(135deg, var(--color-mechaber-dark) 0%, var(--color-mechaber) 100%) !important;
+        }
+
+        /* Mechaber theme: song-item-header text should be white */
+        .theme-mechaber .song-item-expanded .song-item-header .song-name,
+        .theme-mechaber .song-item-full .song-item-header .song-name {
+            color: white !important;
+        }
+
+        .theme-mechaber .song-item-expanded .song-item-header .song-meta,
+        .theme-mechaber .song-item-full .song-item-header .song-meta,
+        .theme-mechaber .song-item-expanded .song-item-header .song-meta span,
+        .theme-mechaber .song-item-full .song-item-header .song-meta span,
+        .theme-mechaber .song-item-expanded .song-item-header .song-meta-tag,
+        .theme-mechaber .song-item-full .song-item-header .song-meta-tag {
+            color: rgba(255, 255, 255, 0.9) !important;
+        }
+
+        .theme-mechaber .song-item-expanded .song-item-header .song-number,
+        .theme-mechaber .song-item-full .song-item-header .song-number {
+            background: rgba(255, 255, 255, 0.25) !important;
+            color: white !important;
+        }
+
+        .theme-mechaber .song-item-expanded .song-item-header .song-play-btn-new,
+        .theme-mechaber .song-item-full .song-item-header .song-play-btn-new {
+            background: rgba(255, 255, 255, 0.25) !important;
+            color: white !important;
+        }
+
+        .theme-mechaber .song-item-expanded .song-item-header .song-play-btn-new:hover,
+        .theme-mechaber .song-item-full .song-item-header .song-play-btn-new:hover {
+            background: white !important;
+            color: var(--color-mechaber-dark) !important;
+        }
+
+        .theme-mechaber .song-item-expanded .song-item-header .song-wave-animation .wave-bar,
+        .theme-mechaber .song-item-full .song-item-header .song-wave-animation .wave-bar {
+            background: white !important;
         }
 
         /* Theme overrides for nested cards (mechaber cards inside other detail pages) */
@@ -9247,10 +9381,9 @@
 
         /* Nigun sections */
         .nigun-section {
-            background: white;
+            background: transparent;
             border-radius: 15px;
             padding: 25px;
-            box-shadow: var(--card-shadow);
             margin-bottom: 20px;
         }
 
@@ -10275,6 +10408,42 @@
             filter: brightness(1.05);
         }
 
+        /* Theme-specific star colors */
+        .theme-mechaber .player-rating-stars .player-rating-star {
+            background: linear-gradient(90deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
+            background-size: 500% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .theme-chatzer .player-rating-stars .player-rating-star {
+            background: linear-gradient(90deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
+            background-size: 500% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .theme-nigun .player-rating-stars .player-rating-star {
+            background: linear-gradient(90deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            background-size: 500% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .theme-verter .player-rating-stars .player-rating-star {
+            background: linear-gradient(90deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
+            background-size: 500% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
+        .theme-zman .player-rating-stars .player-rating-star {
+            background: linear-gradient(90deg, var(--color-zman) 0%, var(--color-zman-dark) 100%);
+            background-size: 500% 100%;
+            -webkit-background-clip: text;
+            background-clip: text;
+        }
+
         /* Saving state */
         .player-rating.saving {
             pointer-events: none;
@@ -10974,8 +11143,13 @@
             font-weight: 600;
             cursor: pointer;
             transition: var(--transition-smooth);
-            margin-bottom: 25px;
             font-family: inherit;
+            /* Position at top-right corner, overlapping the header */
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            z-index: 10;
+            margin-bottom: 0;
         }
 
         .back-button:hover {
@@ -10983,11 +11157,120 @@
             border-color: var(--primary);
         }
 
+        /* Theme-specific back button styles */
+        .theme-mechaber .back-button {
+            color: var(--color-mechaber);
+            border-color: var(--color-mechaber-pale);
+        }
+
+        .theme-mechaber .back-button:hover {
+            background: var(--color-mechaber-pale);
+            border-color: var(--color-mechaber);
+        }
+
+        .theme-chatzer .back-button {
+            color: var(--color-chatzer);
+            border-color: var(--color-chatzer-pale);
+        }
+
+        .theme-chatzer .back-button:hover {
+            background: var(--color-chatzer-pale);
+            border-color: var(--color-chatzer);
+        }
+
+        .theme-verter .back-button {
+            color: var(--color-verter);
+            border-color: var(--color-verter-pale);
+        }
+
+        .theme-verter .back-button:hover {
+            background: var(--color-verter-pale);
+            border-color: var(--color-verter);
+        }
+
+        .theme-zman .back-button {
+            color: var(--color-zman);
+            border-color: var(--color-zman-pale);
+        }
+
+        .theme-zman .back-button:hover {
+            background: var(--color-zman-pale);
+            border-color: var(--color-zman);
+        }
+
+        .theme-piyut .back-button {
+            color: var(--color-piyut);
+            border-color: var(--color-piyut-pale);
+        }
+
+        .theme-piyut .back-button:hover {
+            background: var(--color-piyut-pale);
+            border-color: var(--color-piyut);
+        }
+
+        .theme-collection .back-button {
+            color: var(--color-collection);
+            border-color: var(--color-collection-pale);
+        }
+
+        .theme-collection .back-button:hover {
+            background: var(--color-collection-pale);
+            border-color: var(--color-collection);
+        }
+
+        .theme-album .back-button {
+            color: var(--color-album);
+            border-color: var(--color-album-pale);
+        }
+
+        .theme-album .back-button:hover {
+            background: var(--color-album-pale);
+            border-color: var(--color-album);
+        }
+
+        .theme-document .back-button {
+            color: var(--color-document);
+            border-color: var(--color-document-pale);
+        }
+
+        .theme-document .back-button:hover {
+            background: var(--color-document-pale);
+            border-color: var(--color-document);
+        }
+
+        .theme-resource .back-button {
+            color: var(--color-resource);
+            border-color: var(--color-resource-pale);
+        }
+
+        .theme-resource .back-button:hover {
+            background: var(--color-resource-pale);
+            border-color: var(--color-resource);
+        }
+
+        .theme-nigun .back-button {
+            color: var(--color-nigun);
+            border-color: var(--color-nigun-pale);
+        }
+
+        .theme-nigun .back-button:hover {
+            background: var(--color-nigun-pale);
+            border-color: var(--color-nigun);
+        }
+
         .detail-header {
             display: flex;
             flex-direction: column;
-            position: relative;
+            position: sticky;
+            top: 0;
+            z-index: 100;
             margin-bottom: 40px;
+            background: white;
+            /* Ensure it has a background when sticky */
+        }
+
+        .detail-page {
+            position: relative;
         }
 
         .detail-category-bar {
@@ -11062,8 +11345,8 @@
         /* Mechaber-specific: add padding for image clearance on full page */
         .detail-page.theme-mechaber .detail-header-text {
             padding: 0 100px;
-            align-items: flex-end;
-            text-align: right;
+            align-items: center;
+            text-align: center;
         }
 
         .detail-title {
@@ -11483,20 +11766,117 @@
         }
 
         .detail-description-section {
-            background: white;
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: var(--card-shadow);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            padding: 20px 25px 15px 25px;
+            background: var(--color-nigun-pale);
+            border-radius: 12px;
             margin-bottom: 25px;
+            max-width: 700px;
+            position: relative;
+            border: 1.5px solid var(--color-nigun);
+            box-shadow: none;
         }
 
         .detail-description-section h3 {
-            color: var(--primary);
-            font-size: 1.2em;
-            margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--primary-pale);
+            font-size: 0;
+            color: transparent;
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            background: var(--color-nigun);
+            border-radius: 50%;
+            margin: -38px 0 10px 0;
+            border: 3px solid var(--color-nigun-pale);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-bottom: none;
         }
+
+        .detail-description-section h3::before {
+            content: "i";
+            font-size: 1.2rem;
+            font-weight: bold;
+            font-style: italic;
+            color: white;
+        }
+
+        /* Theme-specific description section */
+        .theme-mechaber .detail-description-section {
+            background: var(--color-mechaber-pale);
+            border-color: var(--color-mechaber);
+        }
+
+        .theme-mechaber .detail-description-section h3 {
+            background: var(--color-mechaber);
+            border-color: var(--color-mechaber-pale);
+        }
+
+        .theme-mechaber .detail-description-section .description-fade-overlay {
+            background: linear-gradient(to bottom, transparent, var(--color-mechaber-pale));
+        }
+
+        .theme-chatzer .detail-description-section {
+            background: var(--color-chatzer-pale);
+            border-color: var(--color-chatzer);
+        }
+
+        .theme-chatzer .detail-description-section h3 {
+            background: var(--color-chatzer);
+            border-color: var(--color-chatzer-pale);
+        }
+
+        .theme-chatzer .detail-description-section .description-fade-overlay {
+            background: linear-gradient(to bottom, transparent, var(--color-chatzer-pale));
+        }
+
+        .theme-verter .detail-description-section {
+            background: var(--color-verter-pale);
+            border-color: var(--color-verter);
+        }
+
+        .theme-verter .detail-description-section h3 {
+            background: var(--color-verter);
+            border-color: var(--color-verter-pale);
+        }
+
+        .theme-verter .detail-description-section .description-fade-overlay {
+            background: linear-gradient(to bottom, transparent, var(--color-verter-pale));
+        }
+
+        .theme-zman .detail-description-section {
+            background: var(--color-zman-pale);
+            border-color: var(--color-zman);
+        }
+
+        .theme-zman .detail-description-section h3 {
+            background: var(--color-zman);
+            border-color: var(--color-zman-pale);
+        }
+
+        .theme-zman .detail-description-section .description-fade-overlay {
+            background: linear-gradient(to bottom, transparent, var(--color-zman-pale));
+        }
+
+        .theme-nigun .detail-description-section {
+            background: var(--color-nigun-pale);
+            border-color: var(--color-nigun);
+        }
+
+        .theme-nigun .detail-description-section h3 {
+            background: var(--color-nigun);
+            border-color: var(--color-nigun-pale);
+        }
+
+        .theme-nigun .detail-description-section .description-fade-overlay {
+            background: linear-gradient(to bottom, transparent, var(--color-nigun-pale));
+        }
+
 
         .detail-description-content {
             font-size: 1em;
@@ -11619,18 +11999,24 @@
 
         .expand-arrow {
             display: inline-block;
-            transition: transform 0.4s ease;
+            width: 14px;
+            height: 14px;
+            border-right: 3px solid currentColor;
+            border-bottom: 3px solid currentColor;
+            transform: rotate(45deg);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin-bottom: 5px;
         }
 
         .description-expand-btn.expanded .expand-arrow {
-            transform: rotate(180deg);
+            transform: rotate(-135deg);
+            margin-bottom: -5px;
         }
 
         .detail-songs-section {
-            background: white;
+            background: transparent;
             padding: 25px;
             border-radius: 20px;
-            box-shadow: var(--card-shadow);
         }
 
         /* Collapsible songs list */
@@ -11638,100 +12024,139 @@
             position: relative;
         }
 
+        .songs-section-container {
+            position: relative;
+        }
+
         .songs-list-wrapper {
             position: relative;
             overflow: hidden;
             transition: max-height 0.5s ease-out;
+            /* Padding to prevent hover effects from being clipped */
+            padding: 12px 12px 0 12px;
+            margin: -12px -12px 0 -12px;
         }
 
         .songs-list-wrapper.collapsed {
-            max-height: 400px;
+            max-height: 350px;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            -webkit-mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 0%, black 60%, transparent 100%);
         }
 
         .songs-list-wrapper.expanded {
             max-height: 10000px;
+            transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .songs-fade-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            height: 80px;
-            background: linear-gradient(to bottom, transparent, rgba(37, 99, 235, 0.03));
-            pointer-events: none;
-            opacity: 1;
-            transition: opacity 0.3s ease;
+            display: none;
+            /* Now using mask-image on wrapper instead */
         }
 
-        .theme-mechaber .songs-fade-overlay {
-            background: linear-gradient(to bottom, transparent, rgba(233, 30, 99, 0.03));
+        /* All themes fade to white since that's the page background */
+        .theme-mechaber .songs-fade-overlay,
+        .theme-chatzer .songs-fade-overlay,
+        .theme-nigun .songs-fade-overlay {
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 1) 40%, #fff 100%);
         }
 
-        .theme-mechaber .detail-related-songs .songs-fade-overlay,
-        .detail-related-songs .songs-fade-overlay {
-            background: linear-gradient(to bottom, transparent, rgba(37, 99, 235, 0.03));
-        }
-
-        .detail-related-recordings .songs-fade-overlay {
-            background: linear-gradient(to bottom, transparent, rgba(16, 185, 129, 0.03));
-        }
 
         .songs-list-wrapper.expanded .songs-fade-overlay {
             opacity: 0;
+            pointer-events: none;
         }
 
         .songs-expand-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 6px;
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
+            padding: 15px;
             background: transparent;
             border: none;
-            border-radius: 8px;
             cursor: pointer;
             color: var(--color-nigun);
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            font-size: 2rem;
+            transition: all 0.3s ease;
+            margin-top: -60px;
+            position: relative;
+            z-index: 10;
         }
 
         .songs-expand-btn:hover {
-            background: var(--color-nigun-pale);
             color: var(--color-nigun-dark);
+            transform: scale(1.1);
         }
 
         .songs-expand-btn .expand-arrow {
             display: inline-block;
-            transition: transform 0.4s ease;
+            width: 16px;
+            height: 16px;
+            border-right: 3px solid currentColor;
+            border-bottom: 3px solid currentColor;
+            transform: rotate(45deg);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin-bottom: 6px;
         }
 
         .songs-expand-btn.expanded .expand-arrow {
-            transform: rotate(180deg);
+            transform: rotate(-135deg);
+            margin-bottom: -6px;
         }
+
+        /* Theme-specific expand buttons */
+        .theme-mechaber .songs-expand-btn {
+            color: var(--color-mechaber);
+        }
+
+        .theme-mechaber .songs-expand-btn:hover {
+            color: var(--color-mechaber-dark);
+        }
+
+        .theme-chatzer .songs-expand-btn {
+            color: var(--color-chatzer);
+        }
+
+        .theme-chatzer .songs-expand-btn:hover {
+            color: var(--color-chatzer-dark);
+        }
+
+        .theme-verter .songs-expand-btn {
+            color: var(--color-verter);
+        }
+
+        .theme-verter .songs-expand-btn:hover {
+            color: var(--color-verter-dark);
+        }
+
+        .theme-zman .songs-expand-btn {
+            color: var(--color-zman);
+        }
+
+        .theme-zman .songs-expand-btn:hover {
+            color: var(--color-zman-dark);
+        }
+
 
         .detail-songs-section.detail-related-songs {
             margin-top: 25px;
-            background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
-            border: 1px solid var(--color-mechaber-pale);
+            background: transparent;
         }
 
         .detail-songs-section.detail-related-recordings {
             margin-top: 25px;
         }
 
-        .detail-songs-section.detail-related-songs h3 {
+        .detail-songs-section.detail-related-songs h3,
+        .detail-songs-section.detail-related-recordings h3 {
             color: var(--color-mechaber-dark);
         }
 
         .detail-mechabrim-section {
-            background: white;
+            background: transparent;
             padding: 25px;
             border-radius: 20px;
-            box-shadow: var(--card-shadow);
             margin-bottom: 25px;
         }
 
@@ -11744,18 +12169,36 @@
         }
 
         .detail-mechabrim-box {
-            background: var(--color-mechaber-pale);
+            background: transparent;
             border-radius: 16px;
             padding: 20px;
-            border: 2px solid var(--color-mechaber-light);
         }
 
         .detail-mechabrim-header {
-            color: var(--color-mechaber-dark);
-            font-size: 1.1em;
-            font-weight: 600;
-            text-align: center;
-            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            gap: 20px;
+            padding: 10px 0;
+            color: var(--color-chatzer-dark);
+            font-size: 1.4em;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .detail-mechabrim-header::before {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-chatzer), transparent);
+        }
+
+        .detail-mechabrim-header::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-chatzer));
         }
 
         .mechabrim-grid {
@@ -11962,12 +12405,18 @@
 
         .verter-expand-btn .expand-arrow {
             display: inline-block;
-            transition: transform 0.4s ease;
-            margin-right: 5px;
+            width: 14px;
+            height: 14px;
+            border-right: 3px solid currentColor;
+            border-bottom: 3px solid currentColor;
+            transform: rotate(45deg);
+            transition: transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            margin-bottom: 5px;
         }
 
         .verter-expand-btn.expanded .expand-arrow {
-            transform: rotate(180deg);
+            transform: rotate(-135deg);
+            margin-bottom: -5px;
         }
 
         .detail-songs-section h3 {
@@ -11979,40 +12428,176 @@
             border-bottom: none;
         }
 
-        /* Background colors for different section types - very pale versions */
+        /* Background colors for different section types - now transparent */
         .detail-songs-section {
-            background: rgba(37, 99, 235, 0.03);
-            /* Very pale nigun blue (default) */
+            background: transparent;
         }
 
-        /* Mechaber modal: first songs list uses mechaber pink */
+        /* Mechaber modal: first songs list - now transparent */
         .theme-mechaber .detail-songs-section:not(.detail-related-songs):not(.detail-related-recordings) {
-            background: rgba(233, 30, 99, 0.03);
-            /* Very pale mechaber pink */
+            background: transparent;
         }
 
         .detail-songs-section.detail-related-songs {
-            background: rgba(37, 99, 235, 0.03);
-            /* Very pale nigun blue */
+            background: transparent;
         }
 
         .detail-songs-section.detail-related-recordings {
-            background: rgba(16, 185, 129, 0.03);
-            /* Very pale resource green */
+            background: transparent;
         }
 
-        /* Detail Section Header with Filters */
+        /* Detail Section Header with Filters - Modern centered text with lines */
         .detail-section-header {
             display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 0;
-            gap: 15px;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            gap: 20px;
+            padding: 10px 0;
+        }
+
+        .detail-section-header::before {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, var(--color-nigun), transparent);
+        }
+
+        .detail-section-header::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--color-nigun));
         }
 
         .detail-section-header h3 {
-            margin-bottom: 0;
-            flex: 1;
+            margin: 0;
+            color: var(--color-nigun-dark);
+            font-size: 1.4em;
+            font-weight: 700;
+            white-space: nowrap;
+            padding: 0 10px;
+        }
+
+        /* Theme-specific section headers */
+        .theme-mechaber .detail-section-header::before {
+            background: linear-gradient(90deg, var(--color-mechaber), transparent);
+        }
+
+        .theme-mechaber .detail-section-header::after {
+            background: linear-gradient(90deg, transparent, var(--color-mechaber));
+        }
+
+        .theme-mechaber .detail-section-header h3 {
+            color: var(--color-mechaber-dark);
+        }
+
+        .theme-chatzer .detail-section-header::before {
+            background: linear-gradient(90deg, var(--color-chatzer), transparent);
+        }
+
+        .theme-chatzer .detail-section-header::after {
+            background: linear-gradient(90deg, transparent, var(--color-chatzer));
+        }
+
+        .theme-chatzer .detail-section-header h3 {
+            color: var(--color-chatzer-dark);
+        }
+
+        .theme-verter .detail-section-header::before {
+            background: linear-gradient(90deg, var(--color-verter), transparent);
+        }
+
+        .theme-verter .detail-section-header::after {
+            background: linear-gradient(90deg, transparent, var(--color-verter));
+        }
+
+        .theme-verter .detail-section-header h3 {
+            color: var(--color-verter-dark);
+        }
+
+        .theme-zman .detail-section-header::before {
+            background: linear-gradient(90deg, var(--color-zman), transparent);
+        }
+
+        .theme-zman .detail-section-header::after {
+            background: linear-gradient(90deg, transparent, var(--color-zman));
+        }
+
+        .theme-zman .detail-section-header h3 {
+            color: var(--color-zman-dark);
+        }
+
+        .theme-piyut .detail-section-header::before {
+            background: linear-gradient(90deg, var(--color-piyut), transparent);
+        }
+
+        .theme-piyut .detail-section-header::after {
+            background: linear-gradient(90deg, transparent, var(--color-piyut));
+        }
+
+        .theme-piyut .detail-section-header h3 {
+            color: var(--color-piyut-dark);
+        }
+
+        .theme-collection .detail-section-header::before {
+            background: linear-gradient(90deg, var(--color-collection), transparent);
+        }
+
+        .theme-collection .detail-section-header::after {
+            background: linear-gradient(90deg, transparent, var(--color-collection));
+        }
+
+        .theme-collection .detail-section-header h3 {
+            color: var(--color-collection-dark);
+        }
+
+        .theme-album .detail-section-header::before {
+            background: linear-gradient(90deg, var(--color-album), transparent);
+        }
+
+        .theme-album .detail-section-header::after {
+            background: linear-gradient(90deg, transparent, var(--color-album));
+        }
+
+        .theme-album .detail-section-header h3 {
+            color: var(--color-album-dark);
+        }
+
+        .theme-document .detail-section-header::before {
+            background: linear-gradient(90deg, var(--color-document), transparent);
+        }
+
+        .theme-document .detail-section-header::after {
+            background: linear-gradient(90deg, transparent, var(--color-document));
+        }
+
+        .theme-document .detail-section-header h3 {
+            color: var(--color-document-dark);
+        }
+
+        .theme-resource .detail-section-header::before {
+            background: linear-gradient(90deg, var(--color-resource), transparent);
+        }
+
+        .theme-resource .detail-section-header::after {
+            background: linear-gradient(90deg, transparent, var(--color-resource));
+        }
+
+        .theme-resource .detail-section-header h3 {
+            color: var(--color-resource-dark);
+        }
+
+        .theme-nigun .detail-section-header::before {
+            background: linear-gradient(90deg, var(--color-nigun), transparent);
+        }
+
+        .theme-nigun .detail-section-header::after {
+            background: linear-gradient(90deg, transparent, var(--color-nigun));
+        }
+
+        .theme-nigun .detail-section-header h3 {
+            color: var(--color-nigun-dark);
         }
 
         /* Filters Group Container */
@@ -12831,8 +13416,20 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             box-shadow: 0 2px 8px rgba(74, 124, 201, 0.3);
+        }
+
+        /* Larger clickable area around play button */
+        .song-play-btn-new::before {
+            content: '';
+            position: absolute;
+            top: -18px;
+            left: -18px;
+            right: -18px;
+            bottom: -18px;
+            border-radius: 50%;
+            cursor: pointer;
         }
 
         .song-play-btn-new:hover {
@@ -13702,6 +14299,26 @@
             margin-left: 8px;
         }
 
+        .theme-mechaber .rec-rating-display {
+            color: var(--color-mechaber);
+        }
+
+        .theme-chatzer .rec-rating-display {
+            color: var(--color-chatzer);
+        }
+
+        .theme-nigun .rec-rating-display {
+            color: var(--color-nigun);
+        }
+
+        .theme-verter .rec-rating-display {
+            color: var(--color-verter);
+        }
+
+        .theme-zman .rec-rating-display {
+            color: var(--color-zman);
+        }
+
         .song-item-rec-play {
             width: 28px;
             height: 28px;
@@ -13967,7 +14584,7 @@
             flex-direction: column;
             align-items: flex-start;
             gap: 2px;
-            overflow: hidden;
+            overflow: visible;
         }
 
         .view-mode-minimal .song-item .song-name {
@@ -14014,9 +14631,34 @@
             color: var(--color-nigun-dark);
         }
 
-        /* Hide separator in minimal mode (single line layout) */
+        /* Theme overrides for separator color */
+        .theme-mechaber .song-meta-separator {
+            color: var(--color-mechaber-dark);
+        }
+
+        .theme-chatzer .song-meta-separator {
+            color: var(--color-chatzer-dark);
+        }
+
+        .theme-verter .song-meta-separator {
+            color: var(--color-verter-dark);
+        }
+
+        .theme-zman .song-meta-separator {
+            color: var(--color-zman-dark);
+        }
+
+        .theme-collection .song-meta-separator {
+            color: var(--color-collection-dark);
+        }
+
+        /* Separator hidden by default, shown via JS when tags are on same row */
         .view-mode-minimal .song-item .song-meta-separator {
             display: none;
+        }
+
+        .view-mode-minimal .song-item .song-meta-separator.same-row {
+            display: inline;
         }
 
         .all-songs-controls {
@@ -22250,7 +22892,43 @@
             }
 
             console.log(`Loaded ${batch.length} songs (${songsLazyState.currentIndex}/${filteredSongs.length})`);
+
+            // Check separators after DOM update and animations complete
+            requestAnimationFrame(() => {
+                updateMetaSeparators();
+                // Also check after animations complete
+                setTimeout(updateMetaSeparators, 400);
+            });
         }
+
+        // Check if mechaber and chatzer tags are on same row and show/hide separator
+        function updateMetaSeparators() {
+            const songMetas = document.querySelectorAll('.song-meta');
+            songMetas.forEach(meta => {
+                const separator = meta.querySelector('.song-meta-separator');
+                if (!separator) return;
+
+                // Get the mechaber tag (before separator) and first chatzer tag (after separator)
+                const mechaberTag = meta.querySelector('.mechaber-tag');
+                const chatzerTag = meta.querySelector('.chatzer-tag');
+
+                if (!mechaberTag || !chatzerTag) {
+                    separator.classList.remove('same-row');
+                    return;
+                }
+
+                // Check if mechaber and first chatzer tag are on same row (same offsetTop)
+                const sameRow = Math.abs(mechaberTag.offsetTop - chatzerTag.offsetTop) < 5;
+
+                separator.classList.toggle('same-row', sameRow);
+            });
+        }
+
+        // Update separators on resize
+        window.addEventListener('resize', () => {
+            clearTimeout(window._separatorResizeTimer);
+            window._separatorResizeTimer = setTimeout(updateMetaSeparators, 100);
+        });
 
         // Render sidebar filter dropdown
         function renderSidebarFilter(key, label, data) {
@@ -24389,37 +25067,33 @@
         // Toggle verter expand/collapse
         function toggleVerterExpand(btn) {
             const wrapper = btn.parentElement.querySelector('.verter-wrapper');
-            const textSpan = btn.querySelector('.expand-text');
             const isExpanded = wrapper.classList.contains('expanded');
 
             if (isExpanded) {
                 wrapper.classList.remove('expanded');
                 wrapper.classList.add('collapsed');
                 btn.classList.remove('expanded');
-                textSpan.textContent = 'מער';
             } else {
                 wrapper.classList.remove('collapsed');
                 wrapper.classList.add('expanded');
                 btn.classList.add('expanded');
-                textSpan.textContent = 'ווייניגער';
             }
         }
 
         // Toggle songs list expand/collapse
         function toggleSongsExpand(btn) {
-            const wrapper = btn.parentElement.querySelector('.songs-list-wrapper');
+            const container = btn.closest('.songs-section-container');
+            const wrapper = container.querySelector('.songs-list-wrapper');
             const isExpanded = wrapper.classList.contains('expanded');
 
             if (isExpanded) {
                 wrapper.classList.remove('expanded');
                 wrapper.classList.add('collapsed');
                 btn.classList.remove('expanded');
-                btn.innerHTML = '<span>ווייז מער</span><span class="expand-arrow">▼</span>';
             } else {
                 wrapper.classList.remove('collapsed');
                 wrapper.classList.add('expanded');
                 btn.classList.add('expanded');
-                btn.innerHTML = '<span>ווייז ווייניגער</span><span class="expand-arrow">▼</span>';
             }
         }
 
@@ -24821,7 +25495,7 @@
                                 <div class="description-fade-overlay"></div>
                             </div>
                             <button class="description-expand-btn" onclick="toggleDescriptionExpand(this)">
-                                <span class="expand-arrow">▼</span>
+                                <span class="expand-arrow"></span>
                             </button>
                         </div>
                     ` : ''}
@@ -24857,68 +25531,81 @@
                                 <div class="verter-fade-overlay"></div>
                             </div>
                             <button class="verter-expand-btn" onclick="toggleVerterExpand(this)">
-                                <span class="expand-arrow">▼</span>
-                                <span class="expand-text">מער</span>
+                                <span class="expand-arrow"></span>
                             </button>
                         </div>
                     ` : ''}
                     
+                    ${(() => {
+                    // Check if there are additional sections below this one
+                    const hasMoreSections = (type === 'mechabrim' && (personalitySongs.length > 0 || personalityRecordings.length > 0));
+                    // Only show collapse/expand if there are more sections AND more than 5 songs
+                    const shouldCollapse = hasMoreSections && songs.length > 5;
+
+                    return `
                     <div class="detail-songs-section">
                         <div class="detail-section-header">
                             <h3>${type === 'mechabrim' ? 'מחבר געווען ' : ''}${songs.length} ניגונים</h3>
                         </div>
-                        ${songs.length > 5 ? `
-                            <div class="songs-list-wrapper collapsed">
-                                <div class="detail-songs-list">
-                                    ${(() => {
-                        const playlistIndices = songs.map(song => allSongs.indexOf(song));
-                        return songs.map((song, i) => {
-                            const globalIdx = allSongs.indexOf(song);
-                            return renderSongItem(song, globalIdx, i + 1, playlistIndices, { hideMechaber: type === 'mechabrim', forceMinimal: true });
-                        }).join('');
-                    })()}
+                        ${shouldCollapse ? `
+                            <div class="songs-section-container">
+                                <div class="songs-list-wrapper collapsed">
+                                    <div class="detail-songs-list">
+                                        ${(() => {
+                                const playlistIndices = songs.map(song => allSongs.indexOf(song));
+                                return songs.map((song, i) => {
+                                    const globalIdx = allSongs.indexOf(song);
+                                    return renderSongItem(song, globalIdx, i + 1, playlistIndices, { hideMechaber: type === 'mechabrim', forceMinimal: true });
+                                }).join('');
+                            })()}
+                                    </div>
+                                    <div class="songs-fade-overlay"></div>
                                 </div>
-                                <div class="songs-fade-overlay"></div>
+                                <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
+                                    <span class="expand-arrow"></span>
+                                </button>
                             </div>
-                            <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
-                                <span>ווייז מער</span><span class="expand-arrow">▼</span>
-                            </button>
                         ` : `
                             <div class="detail-songs-list">
                                 ${(() => {
-                    const playlistIndices = songs.map(song => allSongs.indexOf(song));
-                    return songs.map((song, i) => {
-                        const globalIdx = allSongs.indexOf(song);
-                        return renderSongItem(song, globalIdx, i + 1, playlistIndices, { hideMechaber: type === 'mechabrim', forceMinimal: true });
-                    }).join('');
-                })()}
+                            const playlistIndices = songs.map(song => allSongs.indexOf(song));
+                            return songs.map((song, i) => {
+                                const globalIdx = allSongs.indexOf(song);
+                                return renderSongItem(song, globalIdx, i + 1, playlistIndices, { hideMechaber: type === 'mechabrim', forceMinimal: true });
+                            }).join('');
+                        })()}
                             </div>
                         `}
-                    </div>
+                    </div>`;
+                })()}
                     
                     ${(() => {
                     // For mechabrim, show songs where they have a שייכות (personality)
                     if (type === 'mechabrim' && personalitySongs.length > 0) {
                         const playlistIndices = personalitySongs.map(song => allSongs.indexOf(song));
-                        const isCollapsible = personalitySongs.length > 5;
+                        // Only collapse if there are more sections after this AND more than 5 items
+                        const hasMoreSections = personalityRecordings.length > 0;
+                        const isCollapsible = hasMoreSections && personalitySongs.length > 5;
                         return `
                                 <div class="detail-songs-section detail-related-songs ${isCollapsible ? 'collapsible-songs' : ''}">
                                     <div class="detail-section-header">
                                         <h3>געהאט שייכות מיט ${personalitySongs.length} ניגונים</h3>
                                     </div>
                                     ${isCollapsible ? `
-                                        <div class="songs-list-wrapper collapsed">
-                                            <div class="detail-songs-list">
-                                                ${personalitySongs.map((song, i) => {
+                                        <div class="songs-section-container">
+                                            <div class="songs-list-wrapper collapsed">
+                                                <div class="detail-songs-list">
+                                                    ${personalitySongs.map((song, i) => {
                             const globalIdx = allSongs.indexOf(song);
                             return renderSongItem(song, globalIdx, i + 1, playlistIndices, { forceMinimal: true });
                         }).join('')}
+                                                </div>
+                                                <div class="songs-fade-overlay"></div>
                                             </div>
-                                            <div class="songs-fade-overlay"></div>
+                                            <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
+                                                <span class="expand-arrow"></span>
+                                            </button>
                                         </div>
-                                        <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
-                                            <span>ווייז מער</span><span class="expand-arrow">▼</span>
-                                        </button>
                                     ` : `
                                         <div class="detail-songs-list">
                                             ${personalitySongs.map((song, i) => {
@@ -24935,34 +25622,19 @@
                     
                     ${(() => {
                     // For mechabrim, show recordings where they appear in personalities
+                    // This is always the last section, so never collapse it
                     if (type === 'mechabrim' && personalityRecordings.length > 0) {
-                        const isCollapsible = personalityRecordings.length > 5;
                         return `
-                                <div class="detail-songs-section detail-related-recordings ${isCollapsible ? 'collapsible-songs' : ''}">
+                                <div class="detail-songs-section detail-related-recordings">
                                     <div class="detail-section-header">
                                         <h3>רעקארדירט ${personalityRecordings.length} ניגונים</h3>
                                     </div>
-                                    ${isCollapsible ? `
-                                        <div class="songs-list-wrapper collapsed">
-                                            <div class="detail-songs-list">
-                                                ${personalityRecordings.map((item, i) => {
+                                    <div class="detail-songs-list">
+                                        ${personalityRecordings.map((item, i) => {
                             const { song, songIdx } = item;
                             return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx), { forceRecordingsMode: true });
                         }).join('')}
-                                            </div>
-                                            <div class="songs-fade-overlay"></div>
-                                        </div>
-                                        <button class="songs-expand-btn" onclick="toggleSongsExpand(this)">
-                                            <span>ווייז מער</span><span class="expand-arrow">▼</span>
-                                        </button>
-                                    ` : `
-                                        <div class="detail-songs-list">
-                                            ${personalityRecordings.map((item, i) => {
-                            const { song, songIdx } = item;
-                            return renderSongItem(song, songIdx, i + 1, personalityRecordings.map(r => r.songIdx), { forceRecordingsMode: true });
-                        }).join('')}
-                                        </div>
-                                    `}
+                                    </div>
                                 </div>
                             `;
                     }
