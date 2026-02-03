@@ -8277,13 +8277,55 @@
             margin-right: calc(-50vw + 50%);
             padding-left: calc(50vw - 50%);
             padding-right: calc(50vw - 50%);
-            background: white;
+            /* Match nigunim main page gradient background */
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
+            min-height: 100vh;
         }
 
         .nigun-detail-page>* {
             max-width: 700px;
             margin-left: auto;
             margin-right: auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Floating notes container for nigun detail page - full viewport */
+        .nigun-detail-notes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: visible;
+        }
+
+        .nigun-detail-notes .note-wrapper {
+            position: absolute;
+            animation: songsNoteFlight linear infinite;
+        }
+
+        .nigun-detail-notes .musical-note {
+            color: rgba(74, 124, 201, 0.15);
+            text-shadow: 0 0 20px rgba(74, 124, 201, 0.1);
+            font-size: inherit;
+            display: block;
+        }
+
+        .nigun-detail-notes .musical-note.wander-1 {
+            animation: wander1 ease-in-out infinite alternate;
+        }
+
+        .nigun-detail-notes .musical-note.wander-2 {
+            animation: wander2 ease-in-out infinite alternate;
+        }
+
+        .nigun-detail-notes .musical-note.wander-3 {
+            animation: wander3 ease-in-out infinite alternate;
         }
 
         .nigun-detail-header {
@@ -11166,6 +11208,16 @@
         .theme-mechaber .back-button:hover {
             background: var(--color-mechaber-pale);
             border-color: var(--color-mechaber);
+        }
+
+        .theme-nigun .back-button {
+            color: var(--color-nigun);
+            border-color: var(--color-nigun-pale);
+        }
+
+        .theme-nigun .back-button:hover {
+            background: var(--color-nigun-pale);
+            border-color: var(--color-nigun);
         }
 
         .theme-chatzer .back-button {
@@ -15420,7 +15472,8 @@
         }
 
         .nigun-modal-content {
-            background: white;
+            /* Match nigunim main page gradient background */
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, color-mix(in srgb, var(--color-nigun-pale) 30%, #f8fafc) 300px, #f8fafc 100%);
             border-radius: 20px;
             max-width: 850px;
             width: 100%;
@@ -15501,8 +15554,8 @@
         /* Nigun modal expand button */
         .nigun-modal-expand {
             position: absolute;
-            top: 12px;
-            left: 12px;
+            top: 56px;
+            right: 12px;
             width: 36px;
             height: 36px;
             background: white;
@@ -15525,6 +15578,174 @@
             background: var(--color-nigun-pale);
             color: var(--color-nigun-dark);
             transform: scale(1.15);
+        }
+
+        /* Nigun modal report button - octagon shape */
+        .nigun-modal-report {
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: none;
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            transition: all 0.25s ease;
+            /* Octagon shape (stop sign) */
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+        }
+
+        .nigun-modal-report:hover {
+            background: #fff3e0;
+            color: #e65100;
+            transform: scale(1.15);
+        }
+
+        /* Nigun modal add-info button - boxy shape with plus icon */
+        .nigun-modal-addinfo {
+            position: absolute;
+            top: 56px;
+            left: 12px;
+            width: 36px;
+            height: 36px;
+            background: white;
+            border: none;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #666;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            transition: all 0.25s ease;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .nigun-modal-addinfo:hover {
+            background: #e8f5e9;
+            color: #2e7d32;
+            transform: scale(1.15);
+        }
+
+        /* Full page report button - matching back button style exactly */
+        .nigun-fullpage-report {
+            top: 30px !important;
+            left: auto !important;
+            right: 145px !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: 46px;
+            padding: 10px 14px !important;
+            background: white;
+            border: 2px solid var(--color-nigun-pale) !important;
+            border-radius: 25px;
+            box-shadow: none;
+            font-size: 1.2em !important;
+            font-weight: bold;
+            color: #e65100;
+            clip-path: none;
+        }
+
+        .nigun-fullpage-report:hover {
+            background: #fff3e0;
+            border-color: #e65100 !important;
+            color: #c62828;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Full page add-info button - next to report button */
+        .nigun-fullpage-addinfo {
+            top: 30px !important;
+            left: auto !important;
+            right: 215px !important;
+            width: auto !important;
+            height: auto !important;
+            min-width: 46px;
+            padding: 10px 14px !important;
+            background: white;
+            border: 2px solid var(--color-nigun-pale) !important;
+            border-radius: 25px;
+            box-shadow: none;
+            font-size: 1.2em !important;
+            font-weight: bold;
+            color: #2e7d32;
+        }
+
+        .nigun-fullpage-addinfo:hover {
+            background: #e8f5e9;
+            border-color: #2e7d32 !important;
+            color: #1b5e20;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Shadow for octagon report button - placed on parent to avoid clip-path */
+        .nigun-modal-content::before {
+            content: '';
+            position: absolute;
+            top: 12px;
+            left: 12px;
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.12);
+            clip-path: polygon(30% 0%, 70% 0%, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0% 70%, 0% 30%);
+            filter: blur(4px);
+            z-index: 19;
+            pointer-events: none;
+            transform: translate(0, 2px);
+        }
+
+        /* Floating notes container for nigun modal */
+        .nigun-modal-notes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+            border-radius: 20px;
+        }
+
+        .nigun-modal-notes .note-wrapper {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            animation: songsNoteFlight linear infinite;
+        }
+
+        .nigun-modal-notes .musical-note {
+            color: rgba(74, 124, 201, 0.12);
+            text-shadow: 0 0 15px rgba(74, 124, 201, 0.08);
+            font-size: inherit;
+            display: block;
+        }
+
+        .nigun-modal-notes .musical-note.wander-1 {
+            animation: wander1 ease-in-out infinite alternate;
+        }
+
+        .nigun-modal-notes .musical-note.wander-2 {
+            animation: wander2 ease-in-out infinite alternate;
+        }
+
+        .nigun-modal-notes .musical-note.wander-3 {
+            animation: wander3 ease-in-out infinite alternate;
         }
 
         /* Hide back button inside modal since we have our own close */
@@ -15552,6 +15773,974 @@
                 max-height: 95vh;
                 border-radius: 15px;
             }
+        }
+
+        /* Report Modal Styles */
+        .report-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .report-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .report-modal-content {
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, white 100%);
+            border-radius: 24px;
+            max-width: 480px;
+            width: 90%;
+            padding: 0;
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            border: 3px solid var(--color-nigun);
+            overflow: hidden;
+        }
+
+        .report-modal-overlay.active .report-modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .report-modal-header {
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            color: white;
+            padding: 24px 28px;
+            text-align: center;
+            position: relative;
+        }
+
+        .report-modal-header h3 {
+            margin: 0;
+            font-size: 1.5em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .report-modal-header h3::before {
+            content: '⚠';
+            font-size: 1.2em;
+        }
+
+        .report-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.3em;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .report-modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .report-modal-song-name {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 12px;
+            display: inline-block;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .report-modal-body {
+            padding: 28px;
+        }
+
+        .report-form-group {
+            margin-bottom: 20px;
+        }
+
+        .report-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--color-nigun-dark);
+            font-size: 0.95em;
+        }
+
+        .report-form-group select,
+        .report-form-group textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--color-nigun-pale);
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: inherit;
+            background: white;
+            color: var(--color-nigun-dark);
+            transition: all 0.25s ease;
+            direction: rtl;
+        }
+
+        .report-form-group select:focus,
+        .report-form-group textarea:focus {
+            outline: none;
+            border-color: var(--color-nigun);
+            box-shadow: 0 0 0 4px rgba(74, 124, 201, 0.2), 0 4px 12px rgba(74, 124, 201, 0.15);
+        }
+
+        .report-form-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234a7cc9' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 20px;
+            padding-left: 44px;
+            font-weight: 500;
+        }
+
+        .report-form-group select:hover {
+            border-color: var(--color-nigun);
+        }
+
+        .report-form-group select option {
+            background: white;
+            color: var(--color-nigun-dark);
+            padding: 12px;
+        }
+
+        .report-form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .report-form-group textarea::placeholder {
+            color: var(--color-nigun);
+            opacity: 0.6;
+        }
+
+        .report-submit-btn {
+            width: auto;
+            padding: 12px 32px;
+            margin: 0 auto;
+            display: block;
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.3);
+        }
+
+        .report-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 124, 201, 0.4);
+        }
+
+        .report-submit-btn:active {
+            transform: translateY(0);
+        }
+
+        @media (max-width: 480px) {
+            .report-modal-content {
+                width: 95%;
+                border-radius: 20px;
+            }
+
+            .report-modal-header {
+                padding: 20px;
+            }
+
+            .report-modal-body {
+                padding: 20px;
+            }
+        }
+
+        /* Report Success State */
+        .report-modal-content.success .report-modal-body {
+            display: none;
+        }
+
+        .report-success-message {
+            display: none;
+            padding: 40px 28px;
+            text-align: center;
+            color: var(--color-nigun-dark);
+        }
+
+        .report-modal-content.success .report-success-message {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .report-success-message .success-icon {
+            font-size: 3em;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .report-success-message h4 {
+            font-size: 1.4em;
+            margin: 0 0 12px 0;
+            color: var(--color-nigun);
+        }
+
+        .report-success-message p {
+            font-size: 1em;
+            line-height: 1.6;
+            margin: 0;
+            color: #666;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .report-modal-overlay.fade-out .report-modal-content {
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
+        }
+
+        .report-modal-overlay.fade-out {
+            opacity: 0;
+        }
+
+        /* ============================================
+           Add Info Modal Styles (Nigun Theme)
+           ============================================ */
+        .addinfo-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 99999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 20px;
+        }
+
+        .addinfo-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .addinfo-modal-content {
+            background: linear-gradient(180deg, var(--color-nigun-pale) 0%, white 100%);
+            border-radius: 24px;
+            max-width: 700px;
+            width: 95%;
+            max-height: 85vh;
+            padding: 0;
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+            border: 3px solid var(--color-nigun);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .addinfo-modal-overlay.active .addinfo-modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .addinfo-modal-header {
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            color: white;
+            padding: 20px 28px;
+            text-align: center;
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .addinfo-modal-header h3 {
+            margin: 0;
+            font-size: 1.5em;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .addinfo-modal-header h3::before {
+            content: '+';
+            font-size: 1.2em;
+            background: rgba(255, 255, 255, 0.2);
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .addinfo-modal-close {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 50%;
+            font-size: 1.3em;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .addinfo-modal-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .addinfo-modal-song-name {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin-top: 12px;
+            display: inline-block;
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+
+        .addinfo-modal-body {
+            padding: 24px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        /* Minimal scrollbar for add-info modal */
+        .addinfo-modal-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .addinfo-modal-body::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .addinfo-modal-body::-webkit-scrollbar-thumb {
+            background: var(--color-nigun);
+            border-radius: 10px;
+        }
+
+        .addinfo-modal-body::-webkit-scrollbar-thumb:hover {
+            background: var(--color-nigun-dark);
+        }
+
+        /* Section styles - no section titles, just clean dividers */
+        .addinfo-section {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--color-nigun-pale);
+        }
+
+        .addinfo-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .addinfo-section-title {
+            font-size: 0.85em;
+            font-weight: 500;
+            color: var(--color-nigun);
+            margin-bottom: 10px;
+            padding: 0 4px;
+            border-right: 2px solid var(--color-nigun);
+            direction: rtl;
+            letter-spacing: 0.3px;
+        }
+
+        .addinfo-row {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .addinfo-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .addinfo-field {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .addinfo-field.full-width {
+            flex: 1 1 100%;
+        }
+
+        .addinfo-field label {
+            display: none;
+            /* Hide labels - using placeholders instead */
+        }
+
+        .addinfo-field input[type="text"],
+        .addinfo-field textarea,
+        .addinfo-field select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--color-nigun-pale);
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-family: inherit;
+            background: white;
+            color: var(--color-nigun-dark);
+            transition: all 0.25s ease;
+            direction: rtl;
+        }
+
+        .addinfo-field input[type="text"]:focus,
+        .addinfo-field textarea:focus,
+        .addinfo-field select:focus {
+            outline: none;
+            border-color: var(--color-nigun);
+            box-shadow: 0 0 0 4px rgba(74, 124, 201, 0.2), 0 4px 12px rgba(74, 124, 201, 0.15);
+        }
+
+        .addinfo-field input[type="text"]::placeholder,
+        .addinfo-field textarea::placeholder {
+            color: var(--color-nigun);
+            opacity: 0.6;
+        }
+
+        .addinfo-field textarea {
+            min-height: 80px;
+            resize: vertical;
+        }
+
+        .addinfo-field select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%234a7cc9' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 18px;
+            padding-left: 40px;
+        }
+
+        /* File upload styling */
+        .addinfo-file-upload {
+            border: 2px dashed var(--color-nigun-pale);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            background: rgba(74, 124, 201, 0.05);
+        }
+
+        .addinfo-file-upload:hover {
+            border-color: var(--color-nigun);
+            background: rgba(74, 124, 201, 0.1);
+        }
+
+        .addinfo-file-upload input[type="file"] {
+            display: none;
+        }
+
+        .addinfo-file-upload-icon {
+            font-size: 2em;
+            color: var(--color-nigun);
+            margin-bottom: 8px;
+        }
+
+        .addinfo-file-upload-text {
+            color: var(--color-nigun-dark);
+            font-weight: 500;
+            font-size: 0.9em;
+        }
+
+        .addinfo-file-upload-hint {
+            color: var(--color-nigun);
+            opacity: 0.7;
+            font-size: 0.8em;
+            margin-top: 4px;
+        }
+
+        /* Checkbox styling */
+        .addinfo-checkbox-wrapper {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(74, 124, 201, 0.08);
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .addinfo-checkbox-wrapper input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--color-nigun);
+            cursor: pointer;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .addinfo-checkbox-wrapper label {
+            margin: 0;
+            font-size: 0.85em;
+            line-height: 1.4;
+            cursor: pointer;
+            color: var(--color-nigun-dark);
+            display: block !important;
+            /* Keep checkbox label visible */
+        }
+
+        /* Submit button */
+        .addinfo-submit-btn {
+            width: auto;
+            padding: 14px 40px;
+            margin: 20px auto 0;
+            display: block;
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.3);
+        }
+
+        .addinfo-submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 124, 201, 0.4);
+        }
+
+        .addinfo-submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* Success state */
+        .addinfo-modal-content.success .addinfo-modal-body {
+            display: none;
+        }
+
+        .addinfo-success-message {
+            display: none;
+            padding: 40px 28px;
+            text-align: center;
+            color: var(--color-nigun-dark);
+        }
+
+        .addinfo-modal-content.success .addinfo-success-message {
+            display: block;
+            animation: fadeInUp 0.4s ease;
+        }
+
+        .addinfo-success-message .success-icon {
+            font-size: 3em;
+            margin-bottom: 16px;
+            display: block;
+            color: var(--color-nigun);
+        }
+
+        .addinfo-success-message h4 {
+            font-size: 1.4em;
+            margin: 0 0 12px 0;
+            color: var(--color-nigun);
+        }
+
+        .addinfo-success-message p {
+            font-size: 1em;
+            line-height: 1.6;
+            margin: 0;
+            color: #666;
+        }
+
+        /* Fade out animation */
+        .addinfo-modal-overlay.fade-out .addinfo-modal-content {
+            transform: scale(0.9) translateY(20px);
+            opacity: 0;
+        }
+
+        .addinfo-modal-overlay.fade-out {
+            opacity: 0;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 600px) {
+            .addinfo-modal-content {
+                width: 98%;
+                max-height: 90vh;
+                border-radius: 20px;
+            }
+
+            .addinfo-modal-header {
+                padding: 16px 20px;
+            }
+
+            .addinfo-modal-body {
+                padding: 16px;
+            }
+
+            .addinfo-row {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .addinfo-field {
+                flex: 1 1 100%;
+            }
+        }
+
+        /* Autocomplete dropdown styling */
+        .addinfo-autocomplete-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .addinfo-autocomplete-input {
+            width: 100%;
+            padding: 14px 16px;
+            padding-left: 40px;
+            /* Space for dropdown arrow */
+            border: 2px solid var(--color-nigun-pale);
+            border-radius: 12px;
+            font-size: 0.95em;
+            font-family: inherit;
+            background: white;
+            color: var(--color-nigun-dark);
+            transition: all 0.25s ease;
+            direction: rtl;
+            cursor: text;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%234a7cc9' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: left 12px center;
+            background-size: 16px;
+        }
+
+        .addinfo-autocomplete-input:focus {
+            outline: none;
+            border-color: var(--color-nigun);
+            box-shadow: 0 0 0 4px rgba(74, 124, 201, 0.2), 0 4px 12px rgba(74, 124, 201, 0.15);
+        }
+
+        .addinfo-autocomplete-input::placeholder {
+            color: var(--color-nigun);
+            opacity: 0.6;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .addinfo-autocomplete-dropdown::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .addinfo-autocomplete-dropdown::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .addinfo-autocomplete-dropdown::-webkit-scrollbar-thumb {
+            background: var(--color-nigun-pale);
+            border-radius: 6px;
+        }
+
+        .addinfo-autocomplete-item {
+            display: inline-block;
+            margin: 6px;
+            padding: 8px 16px;
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            color: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.9em;
+            direction: rtl;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Category-specific colors for items */
+        .addinfo-autocomplete-item.source-mechabrim {
+            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
+        }
+
+        .addinfo-autocomplete-item.source-chatzeros {
+            background: linear-gradient(135deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
+        }
+
+        .addinfo-autocomplete-item.source-verter {
+            background: linear-gradient(135deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
+        }
+
+        .addinfo-autocomplete-item.source-piyutim {
+            background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+        }
+
+        .addinfo-autocomplete-item.source-scales {
+            background: linear-gradient(135deg, #5c6bc0 0%, #3949ab 100%);
+        }
+
+        .addinfo-autocomplete-item.source-rhythms {
+            background: linear-gradient(135deg, #ef6c00 0%, #e65100 100%);
+        }
+
+        .addinfo-autocomplete-item.source-collections {
+            background: linear-gradient(135deg, #8e24aa 0%, #6a1b9a 100%);
+        }
+
+        .addinfo-autocomplete-item.source-documents {
+            background: linear-gradient(135deg, #546e7a 0%, #37474f 100%);
+        }
+
+        .addinfo-autocomplete-item.source-albums {
+            background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+        }
+
+        .addinfo-autocomplete-item:hover,
+        .addinfo-autocomplete-item.highlighted {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .addinfo-autocomplete-dropdown {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid var(--color-nigun-pale);
+            border-radius: 16px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 10000;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            display: none;
+            padding: 8px;
+            text-align: right;
+        }
+
+        .addinfo-autocomplete-dropdown.active {
+            display: block;
+            animation: dropdownFadeIn 0.2s ease;
+        }
+
+        .addinfo-autocomplete-empty {
+            padding: 16px;
+            text-align: center;
+            color: #888;
+            font-size: 0.9em;
+            direction: rtl;
+        }
+
+        .addinfo-autocomplete-loading {
+            padding: 16px;
+            text-align: center;
+            color: var(--color-nigun);
+        }
+
+        /* Selected tags - positioned inside the wrapper */
+        .addinfo-selected-tags {
+            display: contents;
+            /* Tags flow naturally with input */
+        }
+
+        /* Wrapper acts as flex container for input + tags */
+        .addinfo-autocomplete-wrapper {
+            position: relative;
+            width: 100%;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            padding: 8px 12px;
+            background: white;
+            border: 2px solid var(--color-nigun-pale);
+            border-radius: 12px;
+            align-items: center;
+            justify-content: flex-start;
+            direction: rtl;
+            min-height: 48px;
+        }
+
+        .addinfo-autocomplete-wrapper:focus-within {
+            border-color: var(--color-nigun);
+            box-shadow: 0 0 0 3px rgba(107, 137, 147, 0.1);
+        }
+
+        .addinfo-autocomplete-input {
+            flex: 1;
+            min-width: 100px;
+            border: none !important;
+            padding: 4px 0 !important;
+            background: transparent !important;
+            box-shadow: none !important;
+            outline: none !important;
+            order: 999;
+            /* Input goes last, so tags appear first (right side in RTL) */
+        }
+
+        .addinfo-autocomplete-input:focus {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        /* For single-select: hide input when has selection, allow clicking to reselect */
+        .addinfo-autocomplete-wrapper[data-multi="false"].has-selection .addinfo-autocomplete-input {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            min-width: 0;
+            flex: 0;
+            pointer-events: none;
+        }
+
+        /* Hide tags container when no selections for single-select */
+        .addinfo-autocomplete-wrapper[data-multi="false"]:not(.has-selection) .addinfo-selected-tags {
+            display: none;
+        }
+
+        .addinfo-selected-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 14px;
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
+            border-radius: 20px;
+            font-size: 0.9em;
+            color: white;
+            direction: rtl;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Category-specific colors for selected tags */
+        .addinfo-selected-tag.source-mechabrim {
+            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%);
+        }
+
+        .addinfo-selected-tag.source-chatzeros {
+            background: linear-gradient(135deg, var(--color-chatzer) 0%, var(--color-chatzer-dark) 100%);
+        }
+
+        .addinfo-selected-tag.source-verter {
+            background: linear-gradient(135deg, var(--color-verter) 0%, var(--color-verter-dark) 100%);
+        }
+
+        .addinfo-selected-tag.source-piyutim {
+            background: linear-gradient(135deg, #00897b 0%, #00695c 100%);
+        }
+
+        .addinfo-selected-tag.source-scales {
+            background: linear-gradient(135deg, #5c6bc0 0%, #3949ab 100%);
+        }
+
+        .addinfo-selected-tag.source-rhythms {
+            background: linear-gradient(135deg, #ef6c00 0%, #e65100 100%);
+        }
+
+        .addinfo-selected-tag.source-collections {
+            background: linear-gradient(135deg, #8e24aa 0%, #6a1b9a 100%);
+        }
+
+        .addinfo-selected-tag.source-documents {
+            background: linear-gradient(135deg, #546e7a 0%, #37474f 100%);
+        }
+
+        .addinfo-selected-tag.source-albums {
+            background: linear-gradient(135deg, #43a047 0%, #2e7d32 100%);
+        }
+
+        /* Single-select input styling when has value - looks like a tag */
+        .addinfo-autocomplete-input.has-value {
+            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%) !important;
+            color: white !important;
+            font-weight: 500;
+            border-color: transparent !important;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .addinfo-autocomplete-input.has-value::placeholder {
+            color: transparent !important;
+        }
+
+        /* Category-specific colors for single-select inputs */
+        .addinfo-autocomplete-input.has-value.source-mechabrim {
+            background: linear-gradient(135deg, var(--color-mechaber) 0%, var(--color-mechaber-dark) 100%) !important;
+        }
+
+        .addinfo-autocomplete-input.has-value.source-scales {
+            background: linear-gradient(135deg, #5c6bc0 0%, #3949ab 100%) !important;
+        }
+
+        .addinfo-autocomplete-input.has-value.source-rhythms {
+            background: linear-gradient(135deg, #ef6c00 0%, #e65100 100%) !important;
+        }
+
+        .addinfo-selected-tag button {
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            cursor: pointer;
+            font-size: 0.9em;
+            line-height: 1;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.8;
+            transition: all 0.15s;
+        }
+
+        .addinfo-selected-tag button:hover {
+            opacity: 1;
+            background: rgba(255, 255, 255, 0.4);
         }
 
         .detail-row {
@@ -18480,6 +19669,13 @@
     <!-- Nigun Modal Overlay (Lightbox) -->
     <div class="nigun-modal-overlay" id="nigunModalOverlay" onclick="if(event.target === this) closeNigunModal()">
         <div class="nigun-modal-content">
+            <!-- Floating music notes background -->
+            <div class="nigun-modal-notes" id="nigunModalNotes"></div>
+
+            <button class="nigun-modal-report" onclick="event.stopPropagation(); openReportModal()"
+                title="רעפארט א פראבלעם">!</button>
+            <button class="nigun-modal-addinfo" onclick="event.stopPropagation(); openAddInfoModal()"
+                title="לייג צו אינפארמאציע">+</button>
             <button class="nigun-modal-expand" onclick="event.stopPropagation(); expandToFullPage()"
                 title="עקספענד צו פולע בלאט">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -18491,6 +19687,268 @@
             </button>
             <button class="nigun-modal-close" onclick="event.stopPropagation(); closeNigunModal()">×</button>
             <div id="nigunModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div class="report-modal-overlay" id="reportModalOverlay" onclick="if(event.target === this) closeReportModal()">
+        <div class="report-modal-content" onclick="event.stopPropagation()">
+            <div class="report-modal-header">
+                <button class="report-modal-close" onclick="closeReportModal()">×</button>
+                <h3>רעפארט א פראבלעם</h3>
+                <div class="report-modal-song-name" id="reportSongName"></div>
+            </div>
+            <div class="report-modal-body">
+                <div class="report-form-group">
+                    <select id="reportCategory">
+                        <option value="" disabled selected hidden>רעפארט קאטעגאריע...</option>
+                        <option value="duplicate">דאפלטע ניגון</option>
+                        <option value="incorrect-info">אומריכטיגע אינפארמאציע</option>
+                        <option value="hasagat-gvul">השגת גבול</option>
+                        <option value="modern">היינטיג/מאדערן</option>
+                        <option value="other">אנדערע הערות</option>
+                    </select>
+                </div>
+                <div class="report-form-group">
+                    <textarea id="reportDetails" placeholder="רעפארט דעטאלן..."></textarea>
+                </div>
+                <button class="report-submit-btn" onclick="submitReport()">רעפארט</button>
+            </div>
+            <div class="report-success-message">
+                <span class="success-icon">✓</span>
+                <h4>א דאנק פאר אייער רעפארט!</h4>
+                <p>עס ווערט אי"ה איבערגעקוקט און פאראכטן בקרוב.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Info Modal -->
+    <div class="addinfo-modal-overlay" id="addinfoModalOverlay" onclick="if(event.target === this) closeAddInfoModal()">
+        <div class="addinfo-modal-content" onclick="event.stopPropagation()">
+            <div class="addinfo-modal-header">
+                <button class="addinfo-modal-close" onclick="closeAddInfoModal()">×</button>
+                <h3>לייג צו אינפארמאציע</h3>
+                <div class="addinfo-modal-song-name" id="addinfoSongName"></div>
+            </div>
+            <div class="addinfo-modal-body">
+                <!-- Section 1: מחבר און פערזענליכקייטן -->
+                <div class="addinfo-section">
+                    <div class="addinfo-section-title">מחבר און פערזענליכקייטן</div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field">
+                            <div class="addinfo-autocomplete-wrapper" data-source="mechabrim" data-multi="false">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-mechaber"
+                                    placeholder="מחבר" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-mechaber-tags"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field full-width">
+                            <div class="addinfo-autocomplete-wrapper" data-source="mechabrim" data-multi="true">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-personalities"
+                                    placeholder="פערזענליכקייטן וואס האבן געהאט א שייכות מיט דעם ניגון"
+                                    autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-personalities-tags"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: חצר און פיוט -->
+                <div class="addinfo-section">
+                    <div class="addinfo-section-title">חצר און פיוט</div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field">
+                            <div class="addinfo-autocomplete-wrapper" data-source="chatzeros" data-multi="true">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-chatzer"
+                                    placeholder="ווערט געזינגען אין חצר" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-chatzer-tags"></div>
+                            </div>
+                        </div>
+                        <div class="addinfo-field">
+                            <div class="addinfo-autocomplete-wrapper" data-source="piyutim" data-multi="true">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-piyut"
+                                    placeholder="אויפן פיוט" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-piyut-tags"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 3: ווערטער און סימן -->
+                <div class="addinfo-section">
+                    <div class="addinfo-section-title">ווערטער און סימן</div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field">
+                            <div class="addinfo-autocomplete-wrapper" data-source="verter" data-multi="true">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-verter"
+                                    placeholder="די ווערטער פונעם ניגון" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-verter-tags"></div>
+                            </div>
+                        </div>
+                        <div class="addinfo-field">
+                            <input type="text" id="addinfo-siman" placeholder="א סימן צו געדענקען דעם ניגון">
+                        </div>
+                    </div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field full-width">
+                            <div class="addinfo-autocomplete-wrapper" data-source="piyutim" data-multi="true">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-also-piyut"
+                                    placeholder="און איז אויך פאסיג צו ווערן געזינגען אויפן פיוט" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-also-piyut-tags"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 4: סקעיל, ריטעם, קאלעקשנס -->
+                <div class="addinfo-section">
+                    <div class="addinfo-section-title">מוזיק סטייל</div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field">
+                            <div class="addinfo-autocomplete-wrapper" data-source="scales" data-multi="false">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-scale"
+                                    placeholder="סקעיל" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-scale-tags"></div>
+                            </div>
+                        </div>
+                        <div class="addinfo-field">
+                            <div class="addinfo-autocomplete-wrapper" data-source="rhythms" data-multi="false">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-rhythm"
+                                    placeholder="ריטעם" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-rhythm-tags"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field full-width">
+                            <div class="addinfo-autocomplete-wrapper" data-source="collections" data-multi="true">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-collections"
+                                    placeholder="קאלעקשנס" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-collections-tags"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 5: דאקומענטן און אלבומס -->
+                <div class="addinfo-section">
+                    <div class="addinfo-section-title">דאקומענטן און אלבומס</div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field">
+                            <div class="addinfo-autocomplete-wrapper" data-source="documents" data-multi="true">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-documents"
+                                    placeholder="דאקומענטן וואו דער ניגון ווערט דערמאנט" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-documents-tags"></div>
+                            </div>
+                        </div>
+                        <div class="addinfo-field">
+                            <div class="addinfo-autocomplete-wrapper" data-source="albums" data-multi="true">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-albums"
+                                    placeholder="אלבומס וואו דער ניגון ווערט געשפילט" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-albums-tags"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 6: אודיאו רעקארדירונג -->
+                <div class="addinfo-section">
+                    <div class="addinfo-section-title">אודיאו רעקארדירונג</div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field full-width">
+                            <div class="addinfo-file-upload" onclick="document.getElementById('addinfo-audio').click()">
+                                <input type="file" id="addinfo-audio" accept="audio/*">
+                                <div class="addinfo-file-upload-icon">🎵</div>
+                                <div class="addinfo-file-upload-text">אודיאו רעקארדירונג</div>
+                                <div class="addinfo-file-upload-hint">MP3, WAV, M4A</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-checkbox-wrapper">
+                            <input type="checkbox" id="addinfo-rights-confirm">
+                            <label for="addinfo-rights-confirm">I confirm that I own the rights to this recording and I
+                                accept the <a href="https://oitzerhanigunim.org/terms" target="_blank">terms of use</a>
+                                of oitzerhanigunim.org</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 7: דעטאלן פונעם רעקארדירונג -->
+                <div class="addinfo-section">
+                    <div class="addinfo-row">
+                        <div class="addinfo-field full-width">
+                            <input type="text" id="addinfo-recording-details" placeholder="דעטאלן פונעם רעקארדירונג">
+                        </div>
+                    </div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field">
+                            <div class="addinfo-autocomplete-wrapper" data-source="mechabrim" data-multi="true">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-recording-personality"
+                                    placeholder="פערזענליכקייט פונעם רעקארדירונג" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-recording-personality-tags"></div>
+                            </div>
+                        </div>
+                        <div class="addinfo-field">
+                            <div class="addinfo-autocomplete-wrapper" data-source="albums" data-multi="true">
+                                <input type="text" class="addinfo-autocomplete-input" id="addinfo-recording-album"
+                                    placeholder="אלבום פונעם רעקארדירונג" autocomplete="off">
+                                <div class="addinfo-autocomplete-dropdown"></div>
+                                <div class="addinfo-selected-tags" id="addinfo-recording-album-tags"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 8: ווידיאוס און בילדער -->
+                <div class="addinfo-section">
+                    <div class="addinfo-row">
+                        <div class="addinfo-field full-width">
+                            <div class="addinfo-file-upload" onclick="document.getElementById('addinfo-files').click()">
+                                <input type="file" id="addinfo-files" multiple>
+                                <div class="addinfo-file-upload-icon">📁</div>
+                                <div class="addinfo-file-upload-text">ווידיאוס, בילדער, און אנדערע פיילס</div>
+                                <div class="addinfo-file-upload-hint">ווידיאוס, בילדער, דאקומענטן</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="addinfo-row">
+                        <div class="addinfo-field full-width">
+                            <input type="text" id="addinfo-files-details" placeholder="דעטאלן פון דעם פייל">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Section 9: הערות -->
+                <div class="addinfo-section">
+                    <div class="addinfo-row">
+                        <div class="addinfo-field full-width">
+                            <textarea id="addinfo-notes" placeholder="הערות / מער אינפארמאציע"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="addinfo-submit-btn" onclick="submitAddInfo()">לייג צו</button>
+            </div>
+            <div class="addinfo-success-message">
+                <span class="success-icon">✓</span>
+                <h4>א דאנק פאר אייער אינפארמאציע!</h4>
+                <p>עס ווערט אי"ה ווערן איבערגעקוקט און צוגעלייגט בקרוב.</p>
+            </div>
         </div>
     </div>
 
@@ -18566,6 +20024,8 @@
         const RESOURCES_TABLE_ID = 'grid-8Gfz8rXNUV'; // רעסורסן טעיבל
         const DOCUMENTS_TABLE_ID = 'grid-3wKzDnkPg-'; // דאקומענטן טעיבל
         const ALBUMS_TABLE_ID = 'grid-bbTaa18Jhx'; // אלבומס טעיבל
+        const SCALE_TABLE_ID = 'grid-3zCbdOmk4G'; // סקעיל טעיבל
+        const RHYTHM_TABLE_ID = 'grid-26264o7G_r'; // ריטעם טעיבל
         const STATS_TABLE_ID = 'table-CbrETqO5E9'; // סטעטיסטיקס טעיבל
 
         // Stats column IDs (exact IDs from Coda)
@@ -18895,6 +20355,8 @@
         let resourcesInfo = {};
         let documentsInfo = {};
         let albumsInfo = {};
+        let scaleInfo = {};
+        let rhythmInfo = {};
 
         // --- Helper: Generate tiny random loader HTML ---
         function getTinyLoaderHTML() {
@@ -19619,6 +21081,14 @@
             await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
         }
 
+        async function fetchScaleInfo() {
+            await fetchTableInfo(SCALE_TABLE_ID, scaleInfo, 'Scale');
+        }
+
+        async function fetchRhythmInfo() {
+            await fetchTableInfo(RHYTHM_TABLE_ID, rhythmInfo, 'Rhythm');
+        }
+
         // Fetch statistics from STATS table (only row 1) - with caching
         async function fetchStatistics() {
             try {
@@ -19832,6 +21302,12 @@
                     }
                     if (!loadedCategories.albums) {
                         searchPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
+                    }
+                    if (!loadedCategories.scale) {
+                        searchPromises.push(fetchScaleInfo().then(() => loadedCategories.scale = true));
+                    }
+                    if (!loadedCategories.rhythm) {
+                        searchPromises.push(fetchRhythmInfo().then(() => loadedCategories.rhythm = true));
                     }
                     if (!loadedCategories.songs) {
                         searchPromises.push(fetchSongsInBackground());
@@ -25927,6 +27403,81 @@
             }
         }
 
+        // Generate floating music notes for nigun detail page
+        function generateNigunDetailNotes() {
+            const notesContainer = document.getElementById('nigunDetailNotes');
+            if (!notesContainer) return;
+
+            const symbols = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
+            const noteCount = 30; // More notes for full page coverage
+            let html = '';
+
+            for (let i = 0; i < noteCount; i++) {
+                const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                const size = 40 + Math.random() * 50; // 40-90px
+                const duration = 80 + Math.random() * 50; // 80-130s
+                const delay = Math.random() * duration;
+                const rot = (Math.random() * 40 - 20) + 'deg';
+
+                // Random position across full viewport
+                const startX = Math.random() * 100; // 0-100%
+                const startY = Math.random() * 100; // 0-100%
+
+                // Random end position with some movement
+                const endXVal = (Math.random() * 40 - 20); // move -20 to +20vw
+                const endYVal = (Math.random() * 40 - 20); // move -20 to +20vh
+
+                const endX = `${endXVal}vw`;
+                const endY = `${endYVal}vh`;
+
+                const wanderClass = `wander-${Math.floor(Math.random() * 3) + 1}`;
+                const wanderDuration = 35 + Math.random() * 20;
+
+                html += `
+                    <div class="note-wrapper" style="left: ${startX}%; top: ${startY}%; --end-x: ${endX}; --end-y: ${endY}; animation-duration: ${duration}s; animation-delay: -${delay}s;">
+                        <span class="musical-note ${wanderClass}" style="--rot: ${rot}; font-size: ${size}px; animation-duration: ${wanderDuration}s;">${symbol}</span>
+                    </div>
+                `;
+            }
+            notesContainer.innerHTML = html;
+        }
+
+        // Generate floating music notes for nigun modal
+        function generateNigunModalNotes() {
+            const notesContainer = document.getElementById('nigunModalNotes');
+            if (!notesContainer) return;
+
+            const symbols = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
+            const noteCount = 20; // Fewer notes for modal
+            let html = '';
+
+            for (let i = 0; i < noteCount; i++) {
+                const symbol = symbols[Math.floor(Math.random() * symbols.length)];
+                const size = 35 + Math.random() * 40; // 35-75px - smaller for modal
+                const duration = 70 + Math.random() * 40; // 70-110s
+                const delay = Math.random() * duration;
+                const rot = (Math.random() * 40 - 20) + 'deg';
+
+                const angle = Math.random() * 360;
+                const distance = 40 + Math.random() * 25;
+                const endXVal = Math.cos(angle * Math.PI / 180) * distance;
+                const endYVal = Math.sin(angle * Math.PI / 180) * distance;
+
+                const endX = `calc(${endXVal}vw - 50%)`;
+                const endY = `calc(${endYVal}vh - 50%)`;
+
+                const wanderClass = `wander-${Math.floor(Math.random() * 3) + 1}`;
+                const wanderDuration = 30 + Math.random() * 15;
+
+                html += `
+                    <div class="note-wrapper" style="--end-x: ${endX}; --end-y: ${endY}; animation-duration: ${duration}s; animation-delay: -${delay}s;">
+                        <span class="musical-note ${wanderClass}" style="--rot: ${rot}; font-size: ${size}px; animation-duration: ${wanderDuration}s;">${symbol}</span>
+                    </div>
+                `;
+            }
+            notesContainer.innerHTML = html;
+        }
+
         // Render nigun detail page
         function renderNigunDetailPage(container, nigunName) {
             // Find the song by name, rowId, or customId
@@ -25940,6 +27491,9 @@
                 songIdx = allSongs.findIndex(s => s.customId === nigunName);
             }
             const song = allSongs[songIdx];
+
+            // Store current detail page song index globally for report modal
+            window.currentDetailPageSongIdx = songIdx;
 
             if (!song) {
                 container.innerHTML = '<p>ניגון נישט געפונען</p>';
@@ -25989,8 +27543,16 @@
 
             container.innerHTML = `
                 <div class="detail-page nigun-detail-page">
+                    <!-- Floating music notes background -->
+                    <div class="nigun-detail-notes" id="nigunDetailNotes"></div>
+                    
                     <button class="back-button" onclick="navigateTo('nigunim')">→ ניגונים
                     </button>
+                    
+                    <!-- Report button for full page -->
+                    <button class="nigun-modal-report nigun-fullpage-report" onclick="openReportModal()" title="רעפארט א פראבלעם">!</button>
+                    <!-- Add info button for full page -->
+                    <button class="nigun-modal-addinfo nigun-fullpage-addinfo" onclick="openAddInfoModal()" title="לייג צו אינפארמאציע">+</button>
                     
                     <!-- New Hero Header for Modal -->
                     <div class="nigun-modal-hero${firstMechaber ? '' : ' no-mechaber'}">
@@ -26273,6 +27835,9 @@
             `;
 
             // Title centering is now handled by CSS padding: 0 160px on .nigun-modal-hero-title
+
+            // Generate floating music notes for this page
+            generateNigunDetailNotes();
         }
 
         // Play recording from nigun detail page
@@ -26436,6 +28001,8 @@
                     matches = song.mechaber.split(',').map(m => m.trim()).includes(name);
                 } else if (type === 'chatzeros' && song.category) {
                     matches = song.category.split(',').map(c => c.trim()).includes(name);
+                } else if (type === 'verter' && song.verter) {
+                    matches = song.verter.split(',').map(v => v.trim()).includes(name);
                 } else if (type === 'piyutim' && song.maure) {
                     matches = song.maure.split(',').map(m => m.trim()).includes(name);
                 } else if (type === 'collections' && song.collection) {
@@ -26462,6 +28029,8 @@
                         isFromThisPage = currentSong.mechaber.split(',').map(m => m.trim()).includes(name);
                     } else if (type === 'chatzeros' && currentSong.category) {
                         isFromThisPage = currentSong.category.split(',').map(c => c.trim()).includes(name);
+                    } else if (type === 'verter' && currentSong.verter) {
+                        isFromThisPage = currentSong.verter.split(',').map(v => v.trim()).includes(name);
                     } else if (type === 'piyutim' && currentSong.maure) {
                         isFromThisPage = currentSong.maure.split(',').map(m => m.trim()).includes(name);
                     } else if (type === 'collections' && currentSong.collection) {
@@ -29490,6 +31059,9 @@
             const modalBody = document.getElementById('nigunModalBody');
             renderNigunDetailInModal(modalBody, song.name, idx);
 
+            // Generate floating music notes for modal
+            generateNigunModalNotes();
+
             // Show overlay with stacking z-index
             const overlay = document.getElementById('nigunModalOverlay');
             modalZIndexCounter++;
@@ -29571,6 +31143,695 @@
             skipNextPopstateHandler = true;
             skipNextHashChange = true;
             history.back();
+        }
+
+        // Report modal state
+        let currentReportSongName = '';
+        let currentReportSongId = '';
+        const REPORTS_TABLE_ID = 'grid-zxaGYhXG8S';
+
+        // Add Info Modal Variables
+        let currentAddInfoSongName = '';
+        let currentAddInfoSongId = '';
+
+        // Autocomplete data sources (will be populated dynamically)
+        const addinfoAutocompleteData = {
+            mechabrim: [],
+            chatzeros: [],
+            piyutim: [],
+            verter: [],
+            scales: [],
+            rhythms: [],
+            collections: [],
+            documents: [],
+            albums: []
+        };
+
+        // Selected values for multi-select fields
+        const addinfoSelectedValues = {};
+
+        // Initialize autocomplete data from existing app data
+        function initAddinfoAutocompleteData() {
+            // Hebrew-aware sort function
+            const hebrewSort = (a, b) => a.localeCompare(b, 'he');
+
+            // Get mechabrim data
+            if (typeof mechabrimInfo !== 'undefined' && Object.keys(mechabrimInfo).length > 0) {
+                addinfoAutocompleteData.mechabrim = Object.keys(mechabrimInfo).sort(hebrewSort);
+            }
+            // Get chatzeros data
+            if (typeof chatzerosInfo !== 'undefined' && Object.keys(chatzerosInfo).length > 0) {
+                addinfoAutocompleteData.chatzeros = Object.keys(chatzerosInfo).sort(hebrewSort);
+            }
+            // Get verter data
+            if (typeof verterInfo !== 'undefined' && Object.keys(verterInfo).length > 0) {
+                addinfoAutocompleteData.verter = Object.keys(verterInfo).sort(hebrewSort);
+            }
+            // Get piyutim data
+            if (typeof piyutimInfo !== 'undefined' && Object.keys(piyutimInfo).length > 0) {
+                addinfoAutocompleteData.piyutim = Object.keys(piyutimInfo).sort(hebrewSort);
+            }
+            // Get collections data
+            if (typeof collectionsInfo !== 'undefined' && Object.keys(collectionsInfo).length > 0) {
+                addinfoAutocompleteData.collections = Object.keys(collectionsInfo).sort(hebrewSort);
+            }
+            // Get documents data
+            if (typeof documentsInfo !== 'undefined' && Object.keys(documentsInfo).length > 0) {
+                addinfoAutocompleteData.documents = Object.keys(documentsInfo).sort(hebrewSort);
+            }
+            // Get albums data
+            if (typeof albumsInfo !== 'undefined' && Object.keys(albumsInfo).length > 0) {
+                addinfoAutocompleteData.albums = Object.keys(albumsInfo).sort(hebrewSort);
+            }
+
+            // Get scales data dynamically
+            if (typeof scaleInfo !== 'undefined' && Object.keys(scaleInfo).length > 0) {
+                addinfoAutocompleteData.scales = Object.keys(scaleInfo).sort(hebrewSort);
+            } else {
+                // Fallback to static data if not loaded
+                addinfoAutocompleteData.scales = ['אהבה רבה', 'מאזשאר', 'מי שברך', 'מינאר', 'מישעבערעך', 'פריגיש'];
+            }
+            // Get rhythms data dynamically
+            if (typeof rhythmInfo !== 'undefined' && Object.keys(rhythmInfo).length > 0) {
+                addinfoAutocompleteData.rhythms = Object.keys(rhythmInfo).sort(hebrewSort);
+            } else {
+                // Fallback to static data if not loaded
+                addinfoAutocompleteData.rhythms = ['דבקות', 'הארא', 'וואלץ', 'טיש', 'מארש', 'ניגון', 'פרייליכס'];
+            }
+
+            console.log('Addinfo autocomplete data initialized:', addinfoAutocompleteData);
+        }
+
+        // Setup autocomplete for all wrapper elements
+        function setupAddinfoAutocomplete() {
+            const wrappers = document.querySelectorAll('.addinfo-autocomplete-wrapper');
+
+            wrappers.forEach(wrapper => {
+                const input = wrapper.querySelector('.addinfo-autocomplete-input');
+                const dropdown = wrapper.querySelector('.addinfo-autocomplete-dropdown');
+                const tagsContainer = wrapper.querySelector('.addinfo-selected-tags');
+                const source = wrapper.dataset.source;
+                const isMulti = wrapper.dataset.multi === 'true';
+                const fieldId = input.id;
+
+                // Initialize selected values array for multi-select
+                if (isMulti && !addinfoSelectedValues[fieldId]) {
+                    addinfoSelectedValues[fieldId] = [];
+                }
+
+                // Input event for filtering
+                input.addEventListener('input', () => {
+                    const query = input.value.trim().toLowerCase();
+                    showAddinfoDropdown(wrapper, source, query, isMulti, fieldId);
+                });
+
+                // Focus event to show dropdown
+                input.addEventListener('focus', () => {
+                    const query = input.value.trim().toLowerCase();
+                    showAddinfoDropdown(wrapper, source, query, isMulti, fieldId);
+                });
+
+                // Blur event to hide dropdown (with delay for click handling)
+                input.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        dropdown.classList.remove('active');
+                    }, 200);
+                });
+
+                // For single-select: clicking on tags container allows re-selection
+                // For all: clicking on wrapper (empty space) focuses input
+                wrapper.addEventListener('click', (e) => {
+                    // Don't trigger if clicking the X button or input itself
+                    if (e.target.tagName === 'BUTTON' || e.target === input) return;
+
+                    // Focus the input and show dropdown
+                    input.focus();
+                    showAddinfoDropdown(wrapper, source, '', isMulti, fieldId);
+                });
+
+                // Keyboard navigation
+                input.addEventListener('keydown', (e) => {
+                    const items = dropdown.querySelectorAll('.addinfo-autocomplete-item');
+                    const highlighted = dropdown.querySelector('.addinfo-autocomplete-item.highlighted');
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (!highlighted && items.length > 0) {
+                            items[0].classList.add('highlighted');
+                        } else if (highlighted && highlighted.nextElementSibling) {
+                            highlighted.classList.remove('highlighted');
+                            highlighted.nextElementSibling.classList.add('highlighted');
+                        }
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (highlighted && highlighted.previousElementSibling) {
+                            highlighted.classList.remove('highlighted');
+                            highlighted.previousElementSibling.classList.add('highlighted');
+                        }
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (highlighted) {
+                            selectAddinfoItem(wrapper, highlighted.textContent, isMulti, fieldId, source);
+                        } else if (input.value.trim()) {
+                            // Allow adding custom value
+                            selectAddinfoItem(wrapper, input.value.trim(), isMulti, fieldId, source);
+                        }
+                    } else if (e.key === 'Escape') {
+                        dropdown.classList.remove('active');
+                        input.blur();
+                    }
+                });
+            });
+        }
+
+        // Show dropdown with filtered items
+        function showAddinfoDropdown(wrapper, source, query, isMulti, fieldId) {
+            const dropdown = wrapper.querySelector('.addinfo-autocomplete-dropdown');
+            const data = addinfoAutocompleteData[source] || [];
+
+            // Filter data based on query
+            let filtered = data;
+            if (query) {
+                filtered = data.filter(item =>
+                    item.toLowerCase().includes(query)
+                );
+            }
+
+            // Exclude already selected items
+            if (addinfoSelectedValues[fieldId] && addinfoSelectedValues[fieldId].length > 0) {
+                filtered = filtered.filter(item =>
+                    !addinfoSelectedValues[fieldId].includes(item)
+                );
+            }
+
+            // Limit results
+            filtered = filtered.slice(0, 10);
+
+            // Build dropdown HTML with source class for theming
+            if (filtered.length === 0) {
+                if (query) {
+                    dropdown.innerHTML = `<div class="addinfo-autocomplete-empty">נישט געפונען. דרוק Enter צוצולייגן "${query}"</div>`;
+                } else {
+                    dropdown.innerHTML = '<div class="addinfo-autocomplete-empty">טייפ צו זוכן...</div>';
+                }
+            } else {
+                dropdown.innerHTML = filtered.map(item =>
+                    `<div class="addinfo-autocomplete-item source-${source}">${item}</div>`
+                ).join('');
+
+                // Add click handlers
+                dropdown.querySelectorAll('.addinfo-autocomplete-item').forEach(item => {
+                    item.addEventListener('mousedown', (e) => {
+                        e.preventDefault();
+                        selectAddinfoItem(wrapper, item.textContent, isMulti, fieldId, source);
+                    });
+                });
+            }
+
+            dropdown.classList.add('active');
+        }
+
+        // Select an item from dropdown
+        function selectAddinfoItem(wrapper, value, isMulti, fieldId, source) {
+            const input = wrapper.querySelector('.addinfo-autocomplete-input');
+            const dropdown = wrapper.querySelector('.addinfo-autocomplete-dropdown');
+            let tagsContainer = wrapper.querySelector('.addinfo-selected-tags');
+
+            // Create tags container if it doesn't exist (for single-select fields)
+            if (!tagsContainer) {
+                tagsContainer = document.createElement('div');
+                tagsContainer.className = 'addinfo-selected-tags';
+                tagsContainer.id = fieldId + '-tags';
+                wrapper.appendChild(tagsContainer);
+            }
+
+            // Get source from wrapper if not passed
+            if (!source) {
+                source = wrapper.dataset.source;
+            }
+
+            // Add to selected values (treat all as arrays for consistency)
+            if (!addinfoSelectedValues[fieldId]) {
+                addinfoSelectedValues[fieldId] = [];
+            }
+
+            if (isMulti) {
+                // Multi-select - add to array
+                if (!addinfoSelectedValues[fieldId].includes(value)) {
+                    addinfoSelectedValues[fieldId].push(value);
+                }
+            } else {
+                // Single select - replace with single value, show as removable tag
+                addinfoSelectedValues[fieldId] = [value];
+            }
+
+            renderAddinfoTags(tagsContainer, fieldId, source);
+            input.value = '';
+
+            // Only close dropdown for single-select, keep open for multi-select
+            if (!isMulti) {
+                dropdown.classList.remove('active');
+            } else {
+                // Re-show dropdown with updated filter (to exclude selected items)
+                const wrapper = input.closest('.addinfo-autocomplete-wrapper');
+                showAddinfoDropdown(wrapper, source, '', isMulti, fieldId);
+                input.focus();
+            }
+        }
+
+        // Render selected tags
+        function renderAddinfoTags(container, fieldId, source) {
+            if (!container) return;
+
+            const values = addinfoSelectedValues[fieldId] || [];
+
+            // Toggle has-selection class on wrapper for single-select styling
+            const wrapper = container.closest('.addinfo-autocomplete-wrapper');
+            if (wrapper && wrapper.dataset.multi === 'false') {
+                if (values.length > 0) {
+                    wrapper.classList.add('has-selection');
+                } else {
+                    wrapper.classList.remove('has-selection');
+                }
+            }
+
+            container.innerHTML = values.map(value =>
+                `<span class="addinfo-selected-tag source-${source}">
+                    ${value}
+                    <button type="button" onclick="removeAddinfoTag('${fieldId}', '${value.replace(/'/g, "\\'")}', '${source}')">×</button>
+                </span>`
+            ).join('');
+        }
+
+        // Remove a tag
+        function removeAddinfoTag(fieldId, value, source) {
+            if (addinfoSelectedValues[fieldId]) {
+                addinfoSelectedValues[fieldId] = addinfoSelectedValues[fieldId].filter(v => v !== value);
+                const tagsContainer = document.getElementById(fieldId + '-tags');
+                renderAddinfoTags(tagsContainer, fieldId, source);
+            }
+        }
+
+        // Open add info modal for current nigun
+        async function openAddInfoModal() {
+            // Get the current song name and ID from the modal, full page, or player
+            let songName = '';
+            let songId = '';
+            if (currentNigunModalIdx !== null && allSongs[currentNigunModalIdx]) {
+                songName = allSongs[currentNigunModalIdx].name;
+                songId = allSongs[currentNigunModalIdx].id || '';
+            } else if (window.currentDetailPageSongIdx !== undefined && allSongs[window.currentDetailPageSongIdx]) {
+                songName = allSongs[window.currentDetailPageSongIdx].name;
+                songId = allSongs[window.currentDetailPageSongIdx].id || '';
+            } else if (currentSongIndex !== null && allSongs[currentSongIndex]) {
+                songName = allSongs[currentSongIndex].name;
+                songId = allSongs[currentSongIndex].id || '';
+            }
+
+            currentAddInfoSongName = songName;
+            currentAddInfoSongId = songId;
+
+            // Update modal with song name
+            document.getElementById('addinfoSongName').textContent = songName || 'ניגון';
+
+            // Reset form
+            resetAddInfoForm();
+
+            // Show modal immediately with loading state
+            document.getElementById('addinfoModalOverlay').classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Load all required data if not already loaded
+            const dataPromises = [];
+            if (!loadedCategories.mechabrim) {
+                dataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
+            }
+            if (!loadedCategories.chatzeros) {
+                dataPromises.push(fetchChatzerosInfo().then(() => loadedCategories.chatzeros = true));
+            }
+            if (!loadedCategories.verter) {
+                dataPromises.push(fetchVerterInfo().then(() => loadedCategories.verter = true));
+            }
+            if (!loadedCategories.piyutim) {
+                dataPromises.push(fetchPiyutimInfo().then(() => loadedCategories.piyutim = true));
+            }
+            if (!loadedCategories.collections) {
+                dataPromises.push(fetchCollectionsInfo().then(() => loadedCategories.collections = true));
+            }
+            if (!loadedCategories.documents) {
+                dataPromises.push(fetchDocumentsInfo().then(() => loadedCategories.documents = true));
+            }
+            if (!loadedCategories.albums) {
+                dataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
+            }
+            if (!loadedCategories.scale) {
+                dataPromises.push(fetchScaleInfo().then(() => loadedCategories.scale = true));
+            }
+            if (!loadedCategories.rhythm) {
+                dataPromises.push(fetchRhythmInfo().then(() => loadedCategories.rhythm = true));
+            }
+
+            // Wait for all data to load
+            if (dataPromises.length > 0) {
+                console.log('Loading add-info data...', dataPromises.length, 'tables');
+                await Promise.all(dataPromises);
+                console.log('Add-info data loaded!');
+            }
+
+            // Initialize autocomplete data
+            initAddinfoAutocompleteData();
+
+            // Setup autocomplete handlers
+            setupAddinfoAutocomplete();
+        }
+
+        // Close add info modal
+        function closeAddInfoModal() {
+            const overlay = document.getElementById('addinfoModalOverlay');
+            const content = document.querySelector('.addinfo-modal-content');
+
+            overlay.classList.add('fade-out');
+
+            setTimeout(() => {
+                overlay.classList.remove('active', 'fade-out');
+                content.classList.remove('success');
+                document.body.style.overflow = '';
+                resetAddInfoForm();
+            }, 300);
+        }
+
+        // Reset add info form
+        function resetAddInfoForm() {
+            // Reset all text inputs and remove tag styling classes
+            const textInputs = document.querySelectorAll('.addinfo-modal-body input[type="text"]');
+            textInputs.forEach(input => {
+                input.value = '';
+                input.classList.remove('has-value', 'source-mechabrim', 'source-scales', 'source-rhythms');
+            });
+
+            // Reset textareas
+            const textareas = document.querySelectorAll('.addinfo-modal-body textarea');
+            textareas.forEach(textarea => textarea.value = '');
+
+            // Reset file inputs
+            const fileInputs = document.querySelectorAll('.addinfo-modal-body input[type="file"]');
+            fileInputs.forEach(input => input.value = '');
+
+            // Reset checkboxes
+            const checkboxes = document.querySelectorAll('.addinfo-modal-body input[type="checkbox"]');
+            checkboxes.forEach(checkbox => checkbox.checked = false);
+
+            // Reset all selected tags
+            Object.keys(addinfoSelectedValues).forEach(key => {
+                addinfoSelectedValues[key] = [];
+            });
+            document.querySelectorAll('.addinfo-selected-tags').forEach(container => {
+                container.innerHTML = '';
+            });
+
+            // Remove has-selection class from single-select wrappers
+            document.querySelectorAll('.addinfo-autocomplete-wrapper.has-selection').forEach(wrapper => {
+                wrapper.classList.remove('has-selection');
+            });
+        }
+
+        // Submit add info to Coda table
+        const ADDINFO_TABLE_ID = 'grid-LutCbIuQvQ';
+
+        async function submitAddInfo() {
+            // Validate: if audio file is attached, checkbox must be checked
+            const audioFile = document.getElementById('addinfo-audio').files[0];
+            const rightsCheckbox = document.getElementById('addinfo-rights-confirm');
+            if (audioFile && !rightsCheckbox.checked) {
+                alert('Please confirm that you own the rights to this recording before submitting.');
+                rightsCheckbox.focus();
+                return;
+            }
+
+            // Helper to convert a name to row ID using info objects
+            // For lookups, Coda expects row IDs (i-xxx format) to create proper links
+            const getRowId = (name, infoObject) => {
+                if (!name || !infoObject) return name;
+                const info = infoObject[name];
+                return info && info.rowId ? info.rowId : name;
+            };
+
+            // Convert array of names to array of row IDs
+            const getRowIds = (names, infoObject) => {
+                if (!names || !Array.isArray(names) || names.length === 0) return [];
+                return names.map(name => getRowId(name, infoObject));
+            };
+
+            // Get single-select values (from addinfoSelectedValues or fallback to input value)
+            const getMechaberValue = () => {
+                const selected = addinfoSelectedValues['addinfo-mechaber'];
+                if (selected && selected.length > 0) return selected[0];
+                return document.getElementById('addinfo-mechaber').value || '';
+            };
+
+            const getScaleValue = () => {
+                const selected = addinfoSelectedValues['addinfo-scale'];
+                if (selected && selected.length > 0) return selected[0];
+                return document.getElementById('addinfo-scale').value || '';
+            };
+
+            const getRhythmValue = () => {
+                const selected = addinfoSelectedValues['addinfo-rhythm'];
+                if (selected && selected.length > 0) return selected[0];
+                return document.getElementById('addinfo-rhythm').value || '';
+            };
+
+            // Collect form data
+            const formData = {
+                nigunId: currentAddInfoSongId,
+                nigunName: currentAddInfoSongName,
+                mechaber: getMechaberValue(),
+                personalities: addinfoSelectedValues['addinfo-personalities'] || [],
+                chatzer: addinfoSelectedValues['addinfo-chatzer'] || [],
+                piyut: addinfoSelectedValues['addinfo-piyut'] || [],
+                verter: addinfoSelectedValues['addinfo-verter'] || [],
+                siman: document.getElementById('addinfo-siman').value,
+                alsoPiyut: addinfoSelectedValues['addinfo-also-piyut'] || [],
+                scale: getScaleValue(),
+                rhythm: getRhythmValue(),
+                collections: addinfoSelectedValues['addinfo-collections'] || [],
+                documents: addinfoSelectedValues['addinfo-documents'] || [],
+                albums: addinfoSelectedValues['addinfo-albums'] || [],
+                audioFile: document.getElementById('addinfo-audio').files[0],
+                rightsConfirmed: document.getElementById('addinfo-rights-confirm').checked,
+                recordingDetails: document.getElementById('addinfo-recording-details').value,
+                recordingPersonality: addinfoSelectedValues['addinfo-recording-personality'] || [],
+                recordingAlbum: addinfoSelectedValues['addinfo-recording-album'] || [],
+                otherFiles: document.getElementById('addinfo-files').files,
+                filesDetails: document.getElementById('addinfo-files-details').value,
+                notes: document.getElementById('addinfo-notes').value
+            };
+
+            console.log('Add Info Form Data:', formData);
+
+            // Build row data for Coda API
+            // Column mappings based on user specification
+            // Use row IDs for lookup columns to create proper relations
+            const cells = [
+                // c-1eHE4HQup7: ניגון (lookup) - Use nigun row ID if available
+                { column: 'c-1eHE4HQup7', value: formData.nigunId || formData.nigunName },
+
+                // c-957MCX4fP3: מחבר (lookup) - Convert to row ID
+                { column: 'c-957MCX4fP3', value: getRowId(formData.mechaber, mechabrimInfo) },
+
+                // c-ZSb8Zvuye2: פערזענליכטן (lookup array) - Convert to row IDs
+                { column: 'c-ZSb8Zvuye2', value: getRowIds(formData.personalities, mechabrimInfo) },
+
+                // c-RNILpWB0xd: ווערט געזינגען אין חצר (lookup array) - Convert to row IDs
+                { column: 'c-RNILpWB0xd', value: getRowIds(formData.chatzer, chatzerosInfo) },
+
+                // c-mqtoH1-w8e: אויפן פיוט (lookup array) - Convert to row IDs
+                { column: 'c-mqtoH1-w8e', value: getRowIds(formData.piyut, piyutimInfo) },
+
+                // c-XCHK7TgqU4: די ווערטער פונעם ניגון (lookup array) - Convert to row IDs
+                { column: 'c-XCHK7TgqU4', value: getRowIds(formData.verter, verterInfo) },
+
+                // c-gtrCPSKT8T: א סימן (text)
+                { column: 'c-gtrCPSKT8T', value: formData.siman || '' },
+
+                // c-AAqH_a6yvg: און איז אויך פאסיג (lookup array) - Convert to row IDs
+                { column: 'c-AAqH_a6yvg', value: getRowIds(formData.alsoPiyut, piyutimInfo) },
+
+                // c-L78zihwwxk: סקעיל (lookup) - Convert to row ID
+                { column: 'c-L78zihwwxk', value: getRowId(formData.scale, scaleInfo) },
+
+                // c-5TTjXuxCIm: ריטעם (lookup) - Convert to row ID
+                { column: 'c-5TTjXuxCIm', value: getRowId(formData.rhythm, rhythmInfo) },
+
+                // c-_JlFihcdEc: קאלעקשנס (lookup array) - Convert to row IDs
+                { column: 'c-_JlFihcdEc', value: getRowIds(formData.collections, collectionsInfo) },
+
+                // c-GPbs5itGVl: דאקומענטן (lookup array) - Convert to row IDs
+                { column: 'c-GPbs5itGVl', value: getRowIds(formData.documents, documentsInfo) },
+
+                // c-lG1-Yh6PQO: אלבומס (lookup array) - Convert to row IDs
+                { column: 'c-lG1-Yh6PQO', value: getRowIds(formData.albums, albumsInfo) },
+
+                // c-_cLY9rI_C1: rights confirmation (checkbox)
+                { column: 'c-_cLY9rI_C1', value: formData.rightsConfirmed },
+
+                // c-d0S0MqwE_D: דעטאלן פונעם רעקארדירונג (text)
+                { column: 'c-d0S0MqwE_D', value: formData.recordingDetails || '' },
+
+                // c-EdZrAwA4oP: פערזענליכקייט פונעם רעקארדירונג (lookup array) - Convert to row IDs
+                { column: 'c-EdZrAwA4oP', value: getRowIds(formData.recordingPersonality, mechabrimInfo) },
+
+                // c-dCDDsxX9LB: אלבום פונעם רעקארדירונג (lookup array) - Convert to row IDs
+                { column: 'c-dCDDsxX9LB', value: getRowIds(formData.recordingAlbum, albumsInfo) },
+
+                // c-rzbIDQBUAB: דעטאלן פון דעם פייל (text)
+                { column: 'c-rzbIDQBUAB', value: formData.filesDetails || '' },
+
+                // c-c-aKWszo9F: הערות / מער אינפארמאציע (text)
+                { column: 'c-c-aKWszo9F', value: formData.notes || '' }
+            ];
+
+            // Filter out empty values to avoid sending unnecessary data
+            const filteredCells = cells.filter(cell => {
+                if (Array.isArray(cell.value)) return cell.value.length > 0;
+                if (typeof cell.value === 'boolean') return true;
+                return cell.value !== '';
+            });
+
+            const rowData = { cells: filteredCells };
+
+            try {
+                const response = await fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${ADDINFO_TABLE_ID}/rows`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ rows: [rowData] })
+                });
+
+                if (response.ok) {
+                    console.log('Add Info submitted successfully');
+                    // Show success state in modal
+                    document.querySelector('.addinfo-modal-content').classList.add('success');
+
+                    // Auto close after 2 seconds
+                    setTimeout(() => {
+                        closeAddInfoModal();
+                    }, 2000);
+                } else {
+                    const errorText = await response.text();
+                    console.error('Add Info submission failed:', errorText);
+                    alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
+                }
+            } catch (error) {
+                console.error('Add Info submission error:', error);
+                alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
+            }
+        }
+
+        // Open report modal for current nigun
+        function openReportModal() {
+            // Get the current song name and ID from the modal, full page, or player
+            let songName = '';
+            let songId = '';
+            if (currentNigunModalIdx !== null && allSongs[currentNigunModalIdx]) {
+                songName = allSongs[currentNigunModalIdx].name;
+                songId = allSongs[currentNigunModalIdx].id || '';
+            } else if (window.currentDetailPageSongIdx !== undefined && allSongs[window.currentDetailPageSongIdx]) {
+                songName = allSongs[window.currentDetailPageSongIdx].name;
+                songId = allSongs[window.currentDetailPageSongIdx].id || '';
+            } else if (currentSongIndex !== null && allSongs[currentSongIndex]) {
+                songName = allSongs[currentSongIndex].name;
+                songId = allSongs[currentSongIndex].id || '';
+            }
+
+            currentReportSongName = songName;
+            currentReportSongId = songId;
+
+            // Update song name display
+            const songNameEl = document.getElementById('reportSongName');
+            songNameEl.textContent = songName || 'אומבאקאנט';
+
+            // Reset form
+            document.getElementById('reportCategory').value = '';
+            document.getElementById('reportDetails').value = '';
+
+            // Show modal
+            document.getElementById('reportModalOverlay').classList.add('active');
+        }
+
+        // Close report modal
+        function closeReportModal() {
+            const overlay = document.getElementById('reportModalOverlay');
+            const content = overlay.querySelector('.report-modal-content');
+
+            // Add fade-out class for animation
+            overlay.classList.add('fade-out');
+
+            // After animation completes, reset everything
+            setTimeout(() => {
+                overlay.classList.remove('active', 'fade-out');
+                content.classList.remove('success');
+                currentReportSongName = '';
+                currentReportSongId = '';
+            }, 300);
+        }
+
+        // Submit report to Coda
+        async function submitReport() {
+            const category = document.getElementById('reportCategory').value;
+            const details = document.getElementById('reportDetails').value.trim();
+
+            if (!category) {
+                alert('ביטע אויסוועלן א קאטעגאריע');
+                return;
+            }
+
+            // Category labels for Coda
+            const categoryLabels = {
+                'duplicate': 'דאפלטע ניגון',
+                'hasagat-gvul': 'השגת גבול',
+                'modern': 'היינטיג/מאדערן',
+                'incorrect-info': 'אומריכטיגע אינפארמאציע',
+                'other': 'אנדערע הערות'
+            };
+
+            // Prepare the row data for Coda API
+            const rowData = {
+                cells: [
+                    { column: 'c-y3_VeoDRKA', value: currentReportSongName },      // ניגון
+                    { column: 'c-0C7oWrHcmO', value: currentReportSongId },         // ניגון ID
+                    { column: 'c-uXqZMLIGez', value: categoryLabels[category] },    // קאטאגאריע
+                    { column: 'c-kpn8KWBYiA', value: details }                      // אינפארמאציע
+                ]
+            };
+
+            try {
+                const response = await fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${REPORTS_TABLE_ID}/rows`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ rows: [rowData] })
+                });
+
+                if (response.ok) {
+                    // Show success state in modal
+                    const content = document.querySelector('.report-modal-content');
+                    content.classList.add('success');
+
+                    // Auto-close after 4 seconds
+                    setTimeout(() => {
+                        closeReportModal();
+                    }, 4000);
+                } else {
+                    console.error('Report submission failed:', await response.text());
+                    alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
+                }
+            } catch (error) {
+                console.error('Report submission error:', error);
+                alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
+            }
         }
 
         // Generic detail modal state
@@ -29865,7 +32126,7 @@
             }
 
             // Generate hero header with play-all button
-            const playAllBtnHTML = ['mechabrim', 'chatzeros', 'piyutim', 'collections'].includes(type) ? `
+            const playAllBtnHTML = ['mechabrim', 'chatzeros', 'verter', 'piyutim', 'collections'].includes(type) ? `
                 <button class="play-all-btn" title="שפיל אלע" onclick="event.stopPropagation(); playAllFromDetailPage('${type}', '${escapeHtml(name).replace(/'/g, "\\'")}')" data-detail-type="${type}" data-detail-name="${escapeHtml(name)}">
                     <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                     <svg class="pause-icon" style="display:none" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
