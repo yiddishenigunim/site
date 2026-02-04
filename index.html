@@ -28938,34 +28938,9 @@
                                 </div>
                             `;
                 }).join('')}
-                                </div>
-                            ` : ''}
-                        </div>
                     </div>
-                    <div class="card-stats">
-                        <span class="card-stat"><span class="card-stat-icon">🎵</span>${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
-                        ${recordingsCount > 0 ? `<span class="card-stat"><span class="card-stat-icon">🎧</span>${recordingsCount} רעקארדינג</span>` : ''}
-                        ${shaychusCount > 0 ? `<span class="card-stat"><span class="card-stat-icon">🔗</span>${shaychusCount} שייכות</span>` : ''}
-                    </div>
-                </a>
+                </div>
             `;
-                }
-
-                // Default layout for other categories (chatzer, verter, zman - mechaber-like style)
-                return `
-                <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
-                    <div class="card-header">
-                        <div class="card-header-text">
-                            <div class="card-title">${key}</div>
-                        </div>
-                    </div>
-                    <div class="card-stats">
-                        ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${pluralize(mechabrimCount, 'מחבר', 'מחברים')}</span>` : ''}
-                        <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
-                    </div>
-                </a>
-                `;
-            }
 
                 // Hide loading wave bar
                 setTimeout(() => {
