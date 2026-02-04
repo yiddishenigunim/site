@@ -8498,6 +8498,7 @@
 
         /* Mobile styles for chatzer, verter, zman, piyut cards */
         @media (max-width: 480px) {
+
             .page-theme-chatzer .category-card .card-header-text,
             .page-theme-verter .category-card .card-header-text,
             .page-theme-zman .category-card .card-header-text,
@@ -21212,10 +21213,15 @@
                         const values = item.values;
 
                         // Get name from first column or name column (this is the tag name / short name)
-                        const nameValue = nameColId ? values[nameColId] : values[Object.keys(values)[0]];
+                        // For mechabrim table, ONLY use specific column c-wRFSCyCCs5 for tagName display
+                        // This column has built-in fallback logic in Coda so no additional fallback needed
+                        const mechabrimTagColId = 'c-wRFSCyCCs5';
+                        const nameValue = (tableId === MECHABRIM_TABLE_ID)
+                            ? values[mechabrimTagColId]
+                            : (nameColId ? values[nameColId] : values[Object.keys(values)[0]]);
                         const tagName = extractText(nameValue);
 
-                        // Use item.name as the full/display name (computed by Coda)
+                        // Use item.name as the key (computed by Coda) - this is what song.mechaber references
                         const name = item.name || tagName;
 
                         if (name) {
@@ -21690,8 +21696,18 @@
             async function ensureDataForPage(page, waitForAll = false) {
                 switch (page) {
                     case 'songs':
-                        if (!loadedCategories.songs) {
-                            await fetchSongsInBackground();
+                        // Load mechabrim info and songs in parallel, wait for both
+                        {
+                            const promises = [];
+                            if (!loadedCategories.mechabrim) {
+                                promises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
+                            }
+                            if (!loadedCategories.songs) {
+                                promises.push(fetchSongsInBackground());
+                            }
+                            if (promises.length > 0) {
+                                await Promise.all(promises);
+                            }
                         }
                         // For detail pages, wait for ALL songs to be loaded, not just first batch
                         if (waitForAll && !songsFullyLoaded) {
@@ -24029,7 +24045,7 @@
                                 <img src="${imageUrl}" alt="" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                                 <span class="mechaber-pill-placeholder" style="display:none;"><span class="mechaber-icon"></span></span>
                             </span>
-                            <span class="mechaber-pill-name">${key}</span>
+                            <span class="mechaber-pill-name">${info.tagName || key}</span>
                         </a>
                     `;
                     }).join('') + `</div>`;
@@ -27331,6 +27347,7 @@
                         })
                         .map(([mechName, mechInfo]) => ({
                             name: mechName,
+                            tagName: mechInfo.tagName || mechName, // Use tagName for display
                             image: mechInfo.image,
                             id: mechInfo.customId || mechName,
                             description: mechInfo.description,
@@ -27486,7 +27503,7 @@
                         ? `<img class="nigun-mechaber-image" src="${mech.image}" alt="${mech.name}">`
                         : `<div class="nigun-mechaber-placeholder"><div class="mechaber-icon"></div></div>`
                     }
-                                            <div class="nigun-mechaber-name">${mech.name}</div>
+                                            <div class="nigun-mechaber-name">${mech.tagName}</div>
                                         </a>
                                     `).join('')}
                                 </div>
@@ -28011,26 +28028,8 @@
                 const firstMechaberInfo = firstMechaber ? mechabrimInfo[firstMechaber] : null;
                 const firstMechaberId = firstMechaberInfo?.customId || firstMechaber;
 
-                // Build mechaber name HTML like mechabrim cards
-                let mechaberNameHtml = firstMechaber || '';
-                if (firstMechaberInfo) {
-                    const info = firstMechaberInfo;
-                    // Formal name = title + firstName + lastName (like mechabrim card)
-                    const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
-                    const formalName = formalParts.join(' ');
-
-                    if (info.gerufen) {
-                        // Has gerufen - two lines: formal (small) + known (big), NO suffix in modal
-                        const knownParts = [info.gerufen, info.platz].filter(Boolean);
-                        const knownName = knownParts.join(' ');
-                        mechaberNameHtml = `<span class="mechaber-formal">${formalName}</span><span class="mechaber-known">${knownName}</span>`;
-                    } else {
-                        // No gerufen - show name WITHOUT suffix (suffix hidden if no gerufen)
-                        const fullNameParts = [info.title, info.firstName, info.lastName, info.platz].filter(Boolean);
-                        const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : firstMechaber;
-                        mechaberNameHtml = `<span class="mechaber-known">${fullName}</span>`;
-                    }
-                }
+                // Build mechaber name HTML - just use tagName
+                let mechaberNameHtml = firstMechaberInfo?.tagName || '';
 
                 container.innerHTML = `
                 <div class="detail-page nigun-detail-page">
@@ -30322,15 +30321,23 @@
                     'piyut': 'piyutim'
                 };
                 const category = categoryMap[filterKey] || page;
-                return values.map(v =>
-                    `<span class="${tagClass} song-meta-tag"
+                return values.map(v => {
+                    // For mechabrim, use tagName for display but keep full name for navigation
+                    let displayName = v;
+                    if (filterKey === 'mechaber') {
+                        const { info } = findEntityByNameOrId(mechabrimInfo, v);
+                        if (info && info.tagName) {
+                            displayName = info.tagName;
+                        }
+                    }
+                    return `<span class="${tagClass} song-meta-tag"
                     data-action="detail"
                     data-category="${category}"
                     data-name="${escapeHtml(v)}"
                     data-tooltip-value="${escapeHtml(v)}"
                     data-tooltip-type="${filterKey}"
-                    onclick="event.stopPropagation(); navigateToDetail('${category}', '${escapeHtml(v).replace(/'/g, "\\'")}');">${v}</span>`
-                ).join(' ');
+                    onclick="event.stopPropagation(); navigateToDetail('${category}', '${escapeHtml(v).replace(/'/g, "\\'")}');">${displayName}</span>`;
+                }).join(' ');
             }
 
             // Render song item - supports display modes: 'minimal', 'recordings', 'full'
@@ -30609,22 +30616,8 @@
                     const firstMechaberInfo = firstMechaber ? mechabrimInfo[firstMechaber] : null;
                     const firstMechaberId = firstMechaberInfo?.customId || firstMechaber;
 
-                    // Build mechaber name HTML like modal
-                    let mechaberNameHtml = firstMechaber || '';
-                    if (firstMechaberInfo) {
-                        const info = firstMechaberInfo;
-                        const formalParts = [info.title, info.firstName, info.lastName].filter(Boolean);
-                        const formalName = formalParts.join(' ');
-                        if (info.gerufen) {
-                            const knownParts = [info.gerufen, info.platz].filter(Boolean);
-                            const knownName = knownParts.join(' ');
-                            mechaberNameHtml = `<span class="mechaber-formal">${formalName}</span><span class="mechaber-known">${knownName}</span>`;
-                        } else {
-                            const fullNameParts = [info.title, info.firstName, info.lastName, info.platz].filter(Boolean);
-                            const fullName = fullNameParts.length > 0 ? fullNameParts.join(' ') : firstMechaber;
-                            mechaberNameHtml = `<span class="mechaber-known">${fullName}</span>`;
-                        }
-                    }
+                    // Build mechaber name HTML - just use tagName
+                    let mechaberNameHtml = firstMechaberInfo?.tagName || '';
 
                     // Build mechaber profile HTML - same as modal
                     const mechaberProfileHtml = firstMechaber ? `
@@ -30670,7 +30663,7 @@
                         <div class="mechaber-avatar-small">
                             ${firstMechaberInfo?.image ? `<img src="${firstMechaberInfo.image}" alt="${escapeHtml(firstMechaber)}">` : `<div class="placeholder"><div class="mechaber-icon"></div></div>`}
                         </div>
-                        <span class="mechaber-name-small">${firstMechaber}</span>
+                        <span class="mechaber-name-small">${firstMechaberInfo?.tagName || ''}</span>
                     </a>
                 ` : '';
 
@@ -30969,16 +30962,8 @@
                         mechaberAvatar.innerHTML = `<div class="placeholder"><span class="mechaber-icon"></span></div>`;
                     }
 
-                    // Set name - use gerufen if available
-                    let displayName = firstMechaber;
-                    if (mechaberInfo) {
-                        if (mechaberInfo.gerufen) {
-                            displayName = mechaberInfo.gerufen;
-                        } else if (mechaberInfo.firstName) {
-                            displayName = mechaberInfo.firstName;
-                        }
-                    }
-                    mechaberNameEl.textContent = displayName;
+                    // Set name - just use tagName
+                    mechaberNameEl.textContent = mechaberInfo?.tagName || '';
 
                     mechaberProfile.style.display = 'flex';
                     document.querySelector('.player-info-box').classList.remove('no-mechaber');
