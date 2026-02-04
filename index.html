@@ -17024,6 +17024,11 @@
             box-shadow: 0 2px 8px rgba(67, 160, 71, 0.3);
         }
 
+        .addinfo-autocomplete-item.source-nigunim {
+            background: var(--color-nigun);
+            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.3);
+        }
+
         .addinfo-autocomplete-item:hover,
         .addinfo-autocomplete-item.highlighted {
             transform: scale(1.05);
@@ -20189,7 +20194,8 @@
                     <div class="addinfo-section">
                         <div class="addinfo-row">
                             <div class="addinfo-field full-width">
-                                <select id="reportCategory" class="addinfo-select">
+                                <select id="reportCategory" class="addinfo-select"
+                                    onchange="handleReportCategoryChange()">
                                     <option value="" disabled selected hidden>רעפארט קאטעגאריע...</option>
                                     <option value="duplicate">דאפלטע ניגון</option>
                                     <option value="incorrect-info">אומריכטיגע אינפארמאציע</option>
@@ -20197,6 +20203,18 @@
                                     <option value="modern">היינטיג/מאדערן</option>
                                     <option value="other">אנדערע הערות</option>
                                 </select>
+                            </div>
+                        </div>
+                        <!-- Duplicate Nigun Selector (shown only when duplicate category is selected) -->
+                        <div class="addinfo-row" id="duplicateNigunRow" style="display: none;">
+                            <div class="addinfo-field full-width">
+                                <div class="addinfo-autocomplete-wrapper" data-source="nigunim" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input" id="report-duplicate-nigun"
+                                        placeholder="וועל אויס מיט וועלכע ניגון עס זאל ווערן צאמגעשטעלט"
+                                        autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="report-duplicate-nigun-tags"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -31650,7 +31668,8 @@
                 rhythms: [],
                 collections: [],
                 documents: [],
-                albums: []
+                albums: [],
+                nigunim: []
             };
 
             // Selected values for multi-select fields
@@ -31703,6 +31722,15 @@
                 } else {
                     // Fallback to static data if not loaded
                     addinfoAutocompleteData.rhythms = ['דבקות', 'הארא', 'וואלץ', 'טיש', 'מארש', 'ניגון', 'פרייליכס'];
+                }
+
+                // Get nigunim data from allSongs - store both name and rowId
+                if (typeof allSongs !== 'undefined' && allSongs.length > 0) {
+                    // Store as objects with name and rowId for lookup
+                    addinfoAutocompleteData.nigunim = allSongs
+                        .filter(song => song.name && song.rowId)
+                        .map(song => ({ name: song.name, rowId: song.rowId }))
+                        .sort((a, b) => a.name.localeCompare(b.name, 'he'));
                 }
 
                 console.log('Addinfo autocomplete data initialized:', addinfoAutocompleteData);
@@ -31777,7 +31805,9 @@
                         } else if (e.key === 'Enter') {
                             e.preventDefault();
                             if (highlighted) {
-                                selectAddinfoItem(wrapper, highlighted.textContent, isMulti, fieldId, source);
+                                // For nigunim source, pass rowId from data attribute
+                                const rowId = highlighted.dataset.rowid;
+                                selectAddinfoItem(wrapper, highlighted.textContent, isMulti, fieldId, source, rowId);
                             } else if (input.value.trim()) {
                                 // Allow adding custom value
                                 selectAddinfoItem(wrapper, input.value.trim(), isMulti, fieldId, source);
@@ -31795,19 +31825,35 @@
                 const dropdown = wrapper.querySelector('.addinfo-autocomplete-dropdown');
                 const data = addinfoAutocompleteData[source] || [];
 
+                // Check if this is nigunim source (objects with name/rowId)
+                const isNigunim = source === 'nigunim';
+
                 // Filter data based on query
                 let filtered = data;
                 if (query) {
-                    filtered = data.filter(item =>
-                        item.toLowerCase().includes(query)
-                    );
+                    if (isNigunim) {
+                        filtered = data.filter(item =>
+                            item.name.toLowerCase().includes(query)
+                        );
+                    } else {
+                        filtered = data.filter(item =>
+                            item.toLowerCase().includes(query)
+                        );
+                    }
                 }
 
                 // Exclude already selected items
                 if (addinfoSelectedValues[fieldId] && addinfoSelectedValues[fieldId].length > 0) {
-                    filtered = filtered.filter(item =>
-                        !addinfoSelectedValues[fieldId].includes(item)
-                    );
+                    if (isNigunim) {
+                        // For nigunim, compare by rowId since that's what we store
+                        filtered = filtered.filter(item =>
+                            !addinfoSelectedValues[fieldId].includes(item.rowId)
+                        );
+                    } else {
+                        filtered = filtered.filter(item =>
+                            !addinfoSelectedValues[fieldId].includes(item)
+                        );
+                    }
                 }
 
                 // Limit results
@@ -31821,15 +31867,27 @@
                         dropdown.innerHTML = '<div class="addinfo-autocomplete-empty">טייפ צו זוכן...</div>';
                     }
                 } else {
-                    dropdown.innerHTML = filtered.map(item =>
-                        `<div class="addinfo-autocomplete-item source-${source}">${item}</div>`
-                    ).join('');
+                    if (isNigunim) {
+                        // For nigunim, show name but store rowId in data attribute
+                        dropdown.innerHTML = filtered.map(item =>
+                            `<div class="addinfo-autocomplete-item source-${source}" data-rowid="${item.rowId}">${item.name}</div>`
+                        ).join('');
+                    } else {
+                        dropdown.innerHTML = filtered.map(item =>
+                            `<div class="addinfo-autocomplete-item source-${source}">${item}</div>`
+                        ).join('');
+                    }
 
                     // Add click handlers
                     dropdown.querySelectorAll('.addinfo-autocomplete-item').forEach(item => {
                         item.addEventListener('mousedown', (e) => {
                             e.preventDefault();
-                            selectAddinfoItem(wrapper, item.textContent, isMulti, fieldId, source);
+                            if (isNigunim) {
+                                // For nigunim, pass both name (for display) and rowId (for storage)
+                                selectAddinfoItem(wrapper, item.textContent, isMulti, fieldId, source, item.dataset.rowid);
+                            } else {
+                                selectAddinfoItem(wrapper, item.textContent, isMulti, fieldId, source);
+                            }
                         });
                     });
                 }
@@ -31838,7 +31896,10 @@
             }
 
             // Select an item from dropdown
-            function selectAddinfoItem(wrapper, value, isMulti, fieldId, source) {
+            // Map to store nigun name by rowId for display purposes
+            const nigunNameByRowId = {};
+
+            function selectAddinfoItem(wrapper, value, isMulti, fieldId, source, rowId) {
                 const input = wrapper.querySelector('.addinfo-autocomplete-input');
                 const dropdown = wrapper.querySelector('.addinfo-autocomplete-dropdown');
                 let tagsContainer = wrapper.querySelector('.addinfo-selected-tags');
@@ -31856,6 +31917,12 @@
                     source = wrapper.dataset.source;
                 }
 
+                // For nigunim, store rowId and keep track of name for display
+                const valueToStore = (source === 'nigunim' && rowId) ? rowId : value;
+                if (source === 'nigunim' && rowId) {
+                    nigunNameByRowId[rowId] = value; // Store name for display
+                }
+
                 // Add to selected values (treat all as arrays for consistency)
                 if (!addinfoSelectedValues[fieldId]) {
                     addinfoSelectedValues[fieldId] = [];
@@ -31863,12 +31930,12 @@
 
                 if (isMulti) {
                     // Multi-select - add to array
-                    if (!addinfoSelectedValues[fieldId].includes(value)) {
-                        addinfoSelectedValues[fieldId].push(value);
+                    if (!addinfoSelectedValues[fieldId].includes(valueToStore)) {
+                        addinfoSelectedValues[fieldId].push(valueToStore);
                     }
                 } else {
                     // Single select - replace with single value, show as removable tag
-                    addinfoSelectedValues[fieldId] = [value];
+                    addinfoSelectedValues[fieldId] = [valueToStore];
                 }
 
                 renderAddinfoTags(tagsContainer, fieldId, source);
@@ -31901,12 +31968,16 @@
                     }
                 }
 
-                container.innerHTML = values.map(value =>
-                    `<span class="addinfo-selected-tag source-${source}">
-                    ${value}
+                container.innerHTML = values.map(value => {
+                    // For nigunim, display the name from our lookup map instead of the rowId
+                    const displayValue = (source === 'nigunim' && nigunNameByRowId[value])
+                        ? nigunNameByRowId[value]
+                        : value;
+                    return `<span class="addinfo-selected-tag source-${source}">
+                    ${displayValue}
                     <button type="button" onclick="removeAddinfoTag('${fieldId}', '${value.replace(/'/g, "\\'")}', '${source}')">×</button>
-                </span>`
-                ).join('');
+                </span>`;
+                }).join('');
             }
 
             // Remove a tag
@@ -31922,20 +31993,29 @@
             async function openAddInfoModal() {
                 // Get the current song name and ID from the modal, full page, or player
                 let songName = '';
-                let songId = '';
+                let songRowId = '';
+                let songCustomId = '';
+
                 if (currentNigunModalIdx !== null && allSongs[currentNigunModalIdx]) {
                     songName = allSongs[currentNigunModalIdx].name;
-                    songId = allSongs[currentNigunModalIdx].id || '';
+                    songRowId = allSongs[currentNigunModalIdx].rowId || '';
+                    songCustomId = allSongs[currentNigunModalIdx].customId || '';
                 } else if (window.currentDetailPageSongIdx !== undefined && allSongs[window.currentDetailPageSongIdx]) {
                     songName = allSongs[window.currentDetailPageSongIdx].name;
-                    songId = allSongs[window.currentDetailPageSongIdx].id || '';
+                    songRowId = allSongs[window.currentDetailPageSongIdx].rowId || '';
+                    songCustomId = allSongs[window.currentDetailPageSongIdx].customId || '';
                 } else if (currentSongIndex !== null && allSongs[currentSongIndex]) {
                     songName = allSongs[currentSongIndex].name;
-                    songId = allSongs[currentSongIndex].id || '';
+                    songRowId = allSongs[currentSongIndex].rowId || '';
+                    songCustomId = allSongs[currentSongIndex].customId || '';
                 }
 
                 currentAddInfoSongName = songName;
-                currentAddInfoSongId = songId;
+                currentAddInfoSongId = songRowId;
+
+                // Also set report values so switching to report tab works correctly
+                currentReportSongName = songName;
+                currentReportSongId = songCustomId;
 
                 // Update modal with song name
                 document.getElementById('addinfoSongName').textContent = songName || 'ניגון';
@@ -32224,22 +32304,42 @@
 
             // Open report modal for current nigun (uses combined modal)
             function openReportModal() {
+                console.log('[DEBUG openReportModal] Starting...');
+                console.log('[DEBUG openReportModal] currentNigunModalIdx:', currentNigunModalIdx);
+                console.log('[DEBUG openReportModal] window.currentDetailPageSongIdx:', window.currentDetailPageSongIdx);
+                console.log('[DEBUG openReportModal] currentSongIndex:', currentSongIndex);
+                console.log('[DEBUG openReportModal] allSongs.length:', allSongs ? allSongs.length : 'undefined');
+
                 // Get the current song name and ID from the modal, full page, or player
                 let songName = '';
                 let songId = '';
                 if (currentNigunModalIdx !== null && allSongs[currentNigunModalIdx]) {
+                    console.log('[DEBUG openReportModal] Using currentNigunModalIdx');
+                    console.log('[DEBUG openReportModal] Song object:', allSongs[currentNigunModalIdx]);
                     songName = allSongs[currentNigunModalIdx].name;
-                    songId = allSongs[currentNigunModalIdx].id || '';
+                    songId = allSongs[currentNigunModalIdx].customId || '';
                 } else if (window.currentDetailPageSongIdx !== undefined && allSongs[window.currentDetailPageSongIdx]) {
+                    console.log('[DEBUG openReportModal] Using window.currentDetailPageSongIdx');
+                    console.log('[DEBUG openReportModal] Song object:', allSongs[window.currentDetailPageSongIdx]);
                     songName = allSongs[window.currentDetailPageSongIdx].name;
-                    songId = allSongs[window.currentDetailPageSongIdx].id || '';
+                    songId = allSongs[window.currentDetailPageSongIdx].customId || '';
                 } else if (currentSongIndex !== null && allSongs[currentSongIndex]) {
+                    console.log('[DEBUG openReportModal] Using currentSongIndex');
+                    console.log('[DEBUG openReportModal] Song object:', allSongs[currentSongIndex]);
                     songName = allSongs[currentSongIndex].name;
-                    songId = allSongs[currentSongIndex].id || '';
+                    songId = allSongs[currentSongIndex].customId || '';
+                } else {
+                    console.log('[DEBUG openReportModal] NO SONG FOUND - all conditions failed');
                 }
+
+                console.log('[DEBUG openReportModal] Final songName:', songName);
+                console.log('[DEBUG openReportModal] Final songId:', songId);
 
                 currentReportSongName = songName;
                 currentReportSongId = songId;
+
+                console.log('[DEBUG openReportModal] Set currentReportSongName:', currentReportSongName);
+                console.log('[DEBUG openReportModal] Set currentReportSongId:', currentReportSongId);
 
                 // Use the combined modal - update song name
                 const songNameEl = document.getElementById('addinfoSongName');
@@ -32249,6 +32349,14 @@
                 document.getElementById('reportCategory').value = '';
                 document.getElementById('reportDetails').value = '';
 
+                // Hide and reset duplicate nigun selector
+                document.getElementById('duplicateNigunRow').style.display = 'none';
+                addinfoSelectedValues['report-duplicate-nigun'] = [];
+                const dupNigunTags = document.getElementById('report-duplicate-nigun-tags');
+                if (dupNigunTags) dupNigunTags.innerHTML = '';
+                const dupNigunInput = document.getElementById('report-duplicate-nigun');
+                if (dupNigunInput) dupNigunInput.value = '';
+
                 // Switch to report panel and show modal
                 switchModalPanel('report');
                 document.getElementById('addinfoModalOverlay').classList.add('active');
@@ -32257,6 +32365,97 @@
             // Close report modal (uses combined modal)
             function closeReportModal() {
                 closeAddInfoModal();
+            }
+
+            // Handle report category change - show/hide duplicate nigun selector
+            function handleReportCategoryChange() {
+                const category = document.getElementById('reportCategory').value;
+                const duplicateRow = document.getElementById('duplicateNigunRow');
+
+                if (category === 'duplicate') {
+                    duplicateRow.style.display = '';
+                    // Re-initialize autocomplete for the duplicate nigun field
+                    setupDuplicateNigunAutocomplete();
+                } else {
+                    duplicateRow.style.display = 'none';
+                    // Clear any selected values
+                    addinfoSelectedValues['report-duplicate-nigun'] = [];
+                    const tags = document.getElementById('report-duplicate-nigun-tags');
+                    if (tags) tags.innerHTML = '';
+                }
+            }
+
+            // Setup autocomplete for duplicate nigun field specifically
+            function setupDuplicateNigunAutocomplete() {
+                const wrapper = document.querySelector('#duplicateNigunRow .addinfo-autocomplete-wrapper');
+                if (!wrapper) return;
+
+                const input = wrapper.querySelector('.addinfo-autocomplete-input');
+                const dropdown = wrapper.querySelector('.addinfo-autocomplete-dropdown');
+                const tagsContainer = wrapper.querySelector('.addinfo-selected-tags');
+                const source = 'nigunim';
+                const isMulti = true;
+                const fieldId = 'report-duplicate-nigun';
+
+                // Initialize selected values array
+                if (!addinfoSelectedValues[fieldId]) {
+                    addinfoSelectedValues[fieldId] = [];
+                }
+
+                // Remove existing listeners by cloning
+                const newInput = input.cloneNode(true);
+                input.parentNode.replaceChild(newInput, input);
+
+                // Input event for filtering
+                newInput.addEventListener('input', () => {
+                    const query = newInput.value.trim().toLowerCase();
+                    showAddinfoDropdown(wrapper, source, query, isMulti, fieldId);
+                });
+
+                // Focus event to show dropdown
+                newInput.addEventListener('focus', () => {
+                    const query = newInput.value.trim().toLowerCase();
+                    showAddinfoDropdown(wrapper, source, query, isMulti, fieldId);
+                });
+
+                // Blur event to hide dropdown
+                newInput.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        dropdown.classList.remove('active');
+                    }, 200);
+                });
+
+                // Keyboard navigation
+                newInput.addEventListener('keydown', (e) => {
+                    const items = dropdown.querySelectorAll('.addinfo-autocomplete-item');
+                    const highlighted = dropdown.querySelector('.addinfo-autocomplete-item.highlighted');
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (!highlighted && items.length > 0) {
+                            items[0].classList.add('highlighted');
+                        } else if (highlighted && highlighted.nextElementSibling) {
+                            highlighted.classList.remove('highlighted');
+                            highlighted.nextElementSibling.classList.add('highlighted');
+                        }
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (highlighted && highlighted.previousElementSibling) {
+                            highlighted.classList.remove('highlighted');
+                            highlighted.previousElementSibling.classList.add('highlighted');
+                        }
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (highlighted) {
+                            // For nigunim, pass rowId from data attribute
+                            const rowId = highlighted.dataset.rowid;
+                            selectAddinfoItem(wrapper, highlighted.textContent, isMulti, fieldId, source, rowId);
+                        }
+                    } else if (e.key === 'Escape') {
+                        dropdown.classList.remove('active');
+                        newInput.blur();
+                    }
+                });
             }
 
             // Switch between panels in combined modal with slide animation
@@ -32322,15 +32521,37 @@
                     'other': 'אנדערע הערות'
                 };
 
-                // Prepare the row data for Coda API
-                const rowData = {
-                    cells: [
-                        { column: 'c-y3_VeoDRKA', value: currentReportSongName },      // ניגון
-                        { column: 'c-0C7oWrHcmO', value: currentReportSongId },         // ניגון ID
-                        { column: 'c-uXqZMLIGez', value: categoryLabels[category] },    // קאטאגאריע
-                        { column: 'c-kpn8KWBYiA', value: details }                      // אינפארמאציע
-                    ]
-                };
+                // Prepare the row data for Coda API - send rowId for unique identification
+                console.log('[DEBUG submitReport] currentReportSongName:', currentReportSongName);
+                console.log('[DEBUG submitReport] currentReportSongId:', currentReportSongId);
+                console.log('[DEBUG submitReport] category:', category);
+                console.log('[DEBUG submitReport] categoryLabels[category]:', categoryLabels[category]);
+                console.log('[DEBUG submitReport] details:', details);
+
+                const cells = [
+                    { column: 'c-y3_VeoDRKA', value: '#' + currentReportSongId },           // ניגון ID (for formula lookup)
+                    { column: 'c-0C7oWrHcmO', value: '#' + currentReportSongId },           // ניגון ID (backup)
+                    { column: 'c-uXqZMLIGez', value: categoryLabels[category] },      // קאטאגאריע
+                    { column: 'c-kpn8KWBYiA', value: details }                        // אינפארמאציע
+                ];
+
+                // If duplicate category, add the selected duplicate niguns
+                if (category === 'duplicate') {
+                    const duplicateNigunRowIds = addinfoSelectedValues['report-duplicate-nigun'] || [];
+                    console.log('[DEBUG submitReport] duplicateNigunRowIds:', duplicateNigunRowIds);
+                    if (duplicateNigunRowIds.length > 0) {
+                        // Convert rowIds to customIds with # prefix
+                        const duplicateNigunIds = duplicateNigunRowIds.map(rowId => {
+                            const song = allSongs.find(s => s.rowId === rowId);
+                            return song && song.customId ? '#' + song.customId : rowId;
+                        });
+                        console.log('[DEBUG submitReport] duplicateNigunIds (customIds):', duplicateNigunIds);
+                        cells.push({ column: 'c-HoQV_ar9bZ', value: duplicateNigunIds }); // דאפלטע ניגונים
+                    }
+                }
+
+                const rowData = { cells };
+                console.log('[DEBUG submitReport] Full rowData being sent:', JSON.stringify(rowData, null, 2));
 
                 try {
                     const response = await fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${REPORTS_TABLE_ID}/rows`, {
