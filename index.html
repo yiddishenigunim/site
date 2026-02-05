@@ -16445,15 +16445,64 @@
             letter-spacing: 0.5px;
         }
 
+        /* Add Nigun Name Input - styled like song name header */
+        .addnigun-name-header-wrapper {
+            text-align: center;
+            margin-top: 8px;
+        }
+
+        .addnigun-name-input {
+            width: 100%;
+            font-size: 1.6em;
+            font-weight: 700;
+            text-align: center;
+            letter-spacing: 0.5px;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 8px 0;
+            outline: none;
+            transition: border-color 0.3s ease;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        .addnigun-name-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+        }
+
+        .addnigun-name-input:focus {
+            border-bottom-color: white;
+        }
+
+        .addnigun-name-error {
+            color: #ffcccc;
+            font-size: 0.85em;
+            margin-top: 8px;
+            display: none;
+            text-align: center;
+            background: rgba(255, 0, 0, 0.2);
+            padding: 8px 12px;
+            border-radius: 6px;
+        }
+
+        .addnigun-name-error.visible {
+            display: block;
+        }
+
         /* Toggle slider for switching between Report and Add Info */
         .addinfo-modal-toggle {
             display: flex;
             background: rgba(255, 255, 255, 0.15);
             border-radius: 25px;
             padding: 4px;
-            margin-top: 12px;
+            margin-top: 0;
             gap: 0;
             position: relative;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         /* Sliding indicator for toggle */
@@ -16462,16 +16511,24 @@
             position: absolute;
             top: 4px;
             bottom: 4px;
-            width: calc(50% - 4px);
+            width: calc(33.333% - 4px);
             background: white;
             border-radius: 20px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            transform: translateX(0);
+            transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            left: 4px;
         }
 
         .addinfo-modal-toggle.report-active::before {
-            transform: translateX(calc(-100% - 4px));
+            left: 4px;
+        }
+
+        .addinfo-modal-toggle.addinfo-active::before {
+            left: calc(33.333% + 2px);
+        }
+
+        .addinfo-modal-toggle.addnigun-active::before {
+            left: calc(66.666% - 2px);
         }
 
         .addinfo-modal-toggle-btn {
@@ -20180,15 +20237,249 @@
         <div class="addinfo-modal-content" onclick="event.stopPropagation()">
             <div class="addinfo-modal-header">
                 <button class="addinfo-modal-close" onclick="closeAddInfoModal()">×</button>
-                <div class="addinfo-modal-song-name" id="addinfoSongName"></div>
                 <div class="addinfo-modal-toggle">
+                    <button class="addinfo-modal-toggle-btn" data-panel="addnigun"
+                        onclick="switchModalPanel('addnigun')">לייג צו א ניגון</button>
                     <button class="addinfo-modal-toggle-btn active" data-panel="addinfo"
                         onclick="switchModalPanel('addinfo')">לייג צו אינפארמאציע</button>
                     <button class="addinfo-modal-toggle-btn" data-panel="report"
                         onclick="switchModalPanel('report')">רעפארט א פראבלעם</button>
                 </div>
+                <div class="addinfo-modal-song-name" id="addinfoSongName"></div>
+                <!-- Nigun Name Input in header (only for Add Nigun panel) -->
+                <div class="addnigun-name-header-wrapper" id="addnigunNameHeader" style="display: none;">
+                    <input type="text" id="addnigun-name" class="addnigun-name-input" placeholder="נאמען פונעם ניגון"
+                        required autocomplete="off">
+                    <div class="addnigun-name-error" id="addnigun-name-error"></div>
+                </div>
             </div>
             <div class="addinfo-modal-body">
+                <!-- Add Nigun Panel -->
+                <div class="addinfo-panel" id="addnigunPanel">
+
+                    <!-- Section 1: מחבר און פערזענליכקייטן -->
+
+                    <!-- Section 2: מחבר און פערזענליכקייטן -->
+                    <div class="addinfo-section">
+                        <div class="addinfo-section-title">מחבר און פערזענליכקייטן</div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field">
+                                <div class="addinfo-autocomplete-wrapper" data-source="mechabrim" data-multi="false">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-mechaber"
+                                        placeholder="מחבר" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-mechaber-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field full-width">
+                                <div class="addinfo-autocomplete-wrapper" data-source="mechabrim" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-personalities"
+                                        placeholder="פערזענליכקייטן וואס האבן געהאט א שייכות מיט דעם ניגון"
+                                        autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-personalities-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: חצר און פיוט -->
+                    <div class="addinfo-section">
+                        <div class="addinfo-section-title">חצר און פיוט</div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field">
+                                <div class="addinfo-autocomplete-wrapper" data-source="chatzeros" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-chatzer"
+                                        placeholder="ווערט געזינגען אין חצר" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-chatzer-tags"></div>
+                                </div>
+                            </div>
+                            <div class="addinfo-field">
+                                <div class="addinfo-autocomplete-wrapper" data-source="piyutim" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-piyut"
+                                        placeholder="אויפן פיוט" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-piyut-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 4: ווערטער און סימן -->
+                    <div class="addinfo-section">
+                        <div class="addinfo-section-title">ווערטער און סימן</div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field">
+                                <div class="addinfo-autocomplete-wrapper" data-source="verter" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-verter"
+                                        placeholder="די ווערטער פונעם ניגון" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-verter-tags"></div>
+                                </div>
+                            </div>
+                            <div class="addinfo-field">
+                                <input type="text" id="addnigun-siman" placeholder="א סימן צו געדענקען דעם ניגון">
+                            </div>
+                        </div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field full-width">
+                                <div class="addinfo-autocomplete-wrapper" data-source="piyutim" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-also-piyut"
+                                        placeholder="און איז אויך פאסיג צו ווערן געזינגען אויפן פיוט"
+                                        autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-also-piyut-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 5: סקעיל, ריטעם, קאלעקשנס -->
+                    <div class="addinfo-section">
+                        <div class="addinfo-section-title">מוזיק סטייל</div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field">
+                                <div class="addinfo-autocomplete-wrapper" data-source="scales" data-multi="false">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-scale"
+                                        placeholder="סקעיל" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-scale-tags"></div>
+                                </div>
+                            </div>
+                            <div class="addinfo-field">
+                                <div class="addinfo-autocomplete-wrapper" data-source="rhythms" data-multi="false">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-rhythm"
+                                        placeholder="ריטעם" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-rhythm-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field full-width">
+                                <div class="addinfo-autocomplete-wrapper" data-source="collections" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-collections"
+                                        placeholder="קאלעקשנס" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-collections-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 6: דאקומענטן און אלבומס -->
+                    <div class="addinfo-section">
+                        <div class="addinfo-section-title">דאקומענטן און אלבומס</div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field">
+                                <div class="addinfo-autocomplete-wrapper" data-source="documents" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-documents"
+                                        placeholder="דאקומענטן וואו דער ניגון ווערט דערמאנט" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-documents-tags"></div>
+                                </div>
+                            </div>
+                            <div class="addinfo-field">
+                                <div class="addinfo-autocomplete-wrapper" data-source="albums" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-albums"
+                                        placeholder="אלבומס וואו דער ניגון ווערט געשפילט" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-albums-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 7: אודיאו רעקארדירונג -->
+                    <div class="addinfo-section">
+                        <div class="addinfo-section-title">אודיאו רעקארדירונג</div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field full-width">
+                                <div class="addinfo-file-upload"
+                                    onclick="document.getElementById('addnigun-audio').click()">
+                                    <input type="file" id="addnigun-audio" accept="audio/*">
+                                    <div class="addinfo-file-upload-icon">🎵</div>
+                                    <div class="addinfo-file-upload-text">אודיאו רעקארדירונג</div>
+                                    <div class="addinfo-file-upload-hint">MP3, WAV, M4A</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-checkbox-wrapper">
+                                <input type="checkbox" id="addnigun-rights-confirm">
+                                <label for="addnigun-rights-confirm">I confirm that I own the rights to this recording
+                                    and I
+                                    accept the <a href="https://oitzerhanigunim.org/terms" target="_blank">terms of
+                                        use</a>
+                                    of oitzerhanigunim.org</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 8: דעטאלן פונעם רעקארדירונג -->
+                    <div class="addinfo-section">
+                        <div class="addinfo-row">
+                            <div class="addinfo-field full-width">
+                                <input type="text" id="addnigun-recording-details"
+                                    placeholder="דעטאלן פונעם רעקארדירונג">
+                            </div>
+                        </div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field">
+                                <div class="addinfo-autocomplete-wrapper" data-source="mechabrim" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input"
+                                        id="addnigun-recording-personality"
+                                        placeholder="פערזענליכקייט פונעם רעקארדירונג" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-recording-personality-tags"></div>
+                                </div>
+                            </div>
+                            <div class="addinfo-field">
+                                <div class="addinfo-autocomplete-wrapper" data-source="albums" data-multi="true">
+                                    <input type="text" class="addinfo-autocomplete-input" id="addnigun-recording-album"
+                                        placeholder="אלבום פונעם רעקארדירונג" autocomplete="off">
+                                    <div class="addinfo-autocomplete-dropdown"></div>
+                                    <div class="addinfo-selected-tags" id="addnigun-recording-album-tags"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 9: ווידיאוס און בילדער -->
+                    <div class="addinfo-section">
+                        <div class="addinfo-row">
+                            <div class="addinfo-field full-width">
+                                <div class="addinfo-file-upload"
+                                    onclick="document.getElementById('addnigun-files').click()">
+                                    <input type="file" id="addnigun-files" multiple>
+                                    <div class="addinfo-file-upload-icon">📁</div>
+                                    <div class="addinfo-file-upload-text">ווידיאוס, בילדער, און אנדערע פיילס</div>
+                                    <div class="addinfo-file-upload-hint">ווידיאוס, בילדער, דאקומענטן</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="addinfo-row">
+                            <div class="addinfo-field full-width">
+                                <input type="text" id="addnigun-files-details" placeholder="דעטאלן פון דעם פייל">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 10: הערות -->
+                    <div class="addinfo-section">
+                        <div class="addinfo-row">
+                            <div class="addinfo-field full-width">
+                                <textarea id="addnigun-notes" placeholder="הערות / מער אינפארמאציע"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="addinfo-submit-btn" onclick="submitAddNigun()">לייג צו א ניגון</button>
+                </div>
+
                 <!-- Report Panel -->
                 <div class="addinfo-panel" id="reportPanel">
                     <div class="addinfo-section">
@@ -20458,6 +20749,11 @@
             <div class="addinfo-success-message" id="addinfoSuccessMessage">
                 <span class="success-icon">✓</span>
                 <h4>א דאנק פאר אייער אינפארמאציע!</h4>
+                <p>עס וועט אי"ה ווערן איבערגעקוקט און צוגעלייגט בקרוב.</p>
+            </div>
+            <div class="addinfo-success-message" id="addnigunSuccessMessage">
+                <span class="success-icon">✓</span>
+                <h4>א דאנק פאר דער ניגון!</h4>
                 <p>עס וועט אי"ה ווערן איבערגעקוקט און צוגעלייגט בקרוב.</p>
             </div>
         </div>
@@ -32302,6 +32598,202 @@
                 }
             }
 
+            // Submit add nigun (placeholder - similar to add info)
+            async function submitAddNigun() {
+                const nigunNameInput = document.getElementById('addnigun-name');
+                const nigunNameError = document.getElementById('addnigun-name-error');
+                const nigunName = nigunNameInput.value.trim();
+
+                // Clear previous error
+                nigunNameError.classList.remove('visible');
+                nigunNameError.textContent = '';
+
+                // Validate nigun name is not empty
+                if (!nigunName) {
+                    nigunNameError.textContent = 'ביטע אריינשרייבן א נאמען פארן ניגון';
+                    nigunNameError.classList.add('visible');
+                    nigunNameInput.focus();
+                    return;
+                }
+
+                // Validate nigun name is unique (check against allSongs)
+                const existingNigun = allSongs.find(song =>
+                    song.name && song.name.trim().toLowerCase() === nigunName.toLowerCase()
+                );
+                if (existingNigun) {
+                    nigunNameError.textContent = 'עס איז שוין דא א ניגון מיט דעם נאמען. ביטע לייגט אריין אינעם נאמען נאך אינפארמאציע, ווי צום ביישפיל דער מחבר אדער חצר, כדי עס צו מאכן אייגנארטיג';
+                    nigunNameError.classList.add('visible');
+                    nigunNameInput.focus();
+                    return;
+                }
+
+                // Validate: if audio file is attached, checkbox must be checked
+                const audioFile = document.getElementById('addnigun-audio').files[0];
+                const rightsCheckbox = document.getElementById('addnigun-rights-confirm');
+                if (audioFile && !rightsCheckbox.checked) {
+                    alert('Please confirm that you own the rights to this recording before submitting.');
+                    return;
+                }
+
+                // Get single-select values for addnigun fields
+                const getAddnigunMechaberValue = () => {
+                    const selected = addinfoSelectedValues['addnigun-mechaber'];
+                    if (selected && selected.length > 0) return selected[0];
+                    return document.getElementById('addnigun-mechaber')?.value || '';
+                };
+
+                const getAddnigunScaleValue = () => {
+                    const selected = addinfoSelectedValues['addnigun-scale'];
+                    if (selected && selected.length > 0) return selected[0];
+                    return document.getElementById('addnigun-scale')?.value || '';
+                };
+
+                const getAddnigunRhythmValue = () => {
+                    const selected = addinfoSelectedValues['addnigun-rhythm'];
+                    if (selected && selected.length > 0) return selected[0];
+                    return document.getElementById('addnigun-rhythm')?.value || '';
+                };
+
+                // Collect all form data for submission
+                const formData = {
+                    nigunName: nigunName,
+                    mechaber: getAddnigunMechaberValue(),
+                    personalities: addinfoSelectedValues['addnigun-personalities'] || [],
+                    chatzer: addinfoSelectedValues['addnigun-chatzer'] || [],
+                    piyut: addinfoSelectedValues['addnigun-piyut'] || [],
+                    verter: addinfoSelectedValues['addnigun-verter'] || [],
+                    siman: document.getElementById('addnigun-siman')?.value?.trim() || '',
+                    alsoPiyut: addinfoSelectedValues['addnigun-also-piyut'] || [],
+                    scale: getAddnigunScaleValue(),
+                    rhythm: getAddnigunRhythmValue(),
+                    collections: addinfoSelectedValues['addnigun-collections'] || [],
+                    documents: addinfoSelectedValues['addnigun-documents'] || [],
+                    albums: addinfoSelectedValues['addnigun-albums'] || [],
+                    recordingDetails: document.getElementById('addnigun-recording-details')?.value?.trim() || '',
+                    recordingPersonality: addinfoSelectedValues['addnigun-recording-personality'] || [],
+                    recordingAlbum: addinfoSelectedValues['addnigun-recording-album'] || [],
+                    filesDetails: document.getElementById('addnigun-files-details')?.value?.trim() || '',
+                    notes: document.getElementById('addnigun-notes')?.value?.trim() || ''
+                };
+
+                // Helper to convert a name to row ID using info objects
+                // For lookups, Coda expects row IDs (i-xxx format) to create proper links
+                const getRowId = (name, infoObject) => {
+                    if (!name || !infoObject) return name;
+                    const info = infoObject[name];
+                    return info && info.rowId ? info.rowId : name;
+                };
+
+                // Convert array of names to array of row IDs
+                const getRowIds = (names, infoObject) => {
+                    if (!names || !Array.isArray(names) || names.length === 0) return [];
+                    return names.map(name => getRowId(name, infoObject));
+                };
+
+                // Build cells array for Coda API - using same columns as submitAddInfo
+                const cells = [
+                    // c-rUBafw88EY: ניגון נאמען (text) - NEW column for nigun name
+                    { column: 'c-rUBafw88EY', value: formData.nigunName },
+
+                    // c-957MCX4fP3: מחבר (lookup) - Convert to row ID
+                    { column: 'c-957MCX4fP3', value: getRowId(formData.mechaber, mechabrimInfo) },
+
+                    // c-ZSb8Zvuye2: פערזענליכטן (lookup array) - Convert to row IDs
+                    { column: 'c-ZSb8Zvuye2', value: getRowIds(formData.personalities, mechabrimInfo) },
+
+                    // c-RNILpWB0xd: ווערט געזינגען אין חצר (lookup array) - Convert to row IDs
+                    { column: 'c-RNILpWB0xd', value: getRowIds(formData.chatzer, chatzerosInfo) },
+
+                    // c-mqtoH1-w8e: אויפן פיוט (lookup array) - Convert to row IDs
+                    { column: 'c-mqtoH1-w8e', value: getRowIds(formData.piyut, piyutimInfo) },
+
+                    // c-XCHK7TgqU4: די ווערטער פונעם ניגון (lookup array) - Convert to row IDs
+                    { column: 'c-XCHK7TgqU4', value: getRowIds(formData.verter, verterInfo) },
+
+                    // c-gtrCPSKT8T: א סימן (text)
+                    { column: 'c-gtrCPSKT8T', value: formData.siman || '' },
+
+                    // c-AAqH_a6yvg: און איז אויך פאסיג (lookup array) - Convert to row IDs
+                    { column: 'c-AAqH_a6yvg', value: getRowIds(formData.alsoPiyut, piyutimInfo) },
+
+                    // c-L78zihwwxk: סקעיל (lookup) - Convert to row ID
+                    { column: 'c-L78zihwwxk', value: getRowId(formData.scale, scaleInfo) },
+
+                    // c-5TTjXuxCIm: ריטעם (lookup) - Convert to row ID
+                    { column: 'c-5TTjXuxCIm', value: getRowId(formData.rhythm, rhythmInfo) },
+
+                    // c-_JlFihcdEc: קאלעקשנס (lookup array) - Convert to row IDs
+                    { column: 'c-_JlFihcdEc', value: getRowIds(formData.collections, collectionsInfo) },
+
+                    // c-GPbs5itGVl: דאקומענטן (lookup array) - Convert to row IDs
+                    { column: 'c-GPbs5itGVl', value: getRowIds(formData.documents, documentsInfo) },
+
+                    // c-lG1-Yh6PQO: אלבומס (lookup array) - Convert to row IDs
+                    { column: 'c-lG1-Yh6PQO', value: getRowIds(formData.albums, albumsInfo) },
+
+                    // c-d0S0MqwE_D: דעטאלן פונעם רעקארדירונג (text)
+                    { column: 'c-d0S0MqwE_D', value: formData.recordingDetails || '' },
+
+                    // c-EdZrAwA4oP: פערזענליכקייט פונעם רעקארדירונג (lookup array) - Convert to row IDs
+                    { column: 'c-EdZrAwA4oP', value: getRowIds(formData.recordingPersonality, mechabrimInfo) },
+
+                    // c-dCDDsxX9LB: אלבום פונעם רעקארדירונג (lookup array) - Convert to row IDs
+                    { column: 'c-dCDDsxX9LB', value: getRowIds(formData.recordingAlbum, albumsInfo) },
+
+                    // c-rzbIDQBUAB: דעטאלן פון דעם פייל (text)
+                    { column: 'c-rzbIDQBUAB', value: formData.filesDetails || '' },
+
+                    // c-c-aKWszo9F: הערות / מער אינפארמאציע (text)
+                    { column: 'c-c-aKWszo9F', value: formData.notes || '' }
+                ];
+
+                // Filter out empty values
+                const filteredCells = cells.filter(cell => {
+                    if (Array.isArray(cell.value)) return cell.value.length > 0;
+                    return cell.value !== '';
+                });
+
+                const rowData = { cells: filteredCells };
+
+                try {
+                    const response = await fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${ADDINFO_TABLE_ID}/rows`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ rows: [rowData] })
+                    });
+
+                    if (response.ok) {
+                        console.log('Add Nigun submitted successfully');
+                        // Hide modal body and show success message
+                        const modalBody = document.querySelector('.addinfo-modal-body');
+                        const successMsg = document.getElementById('addnigunSuccessMessage');
+
+                        if (modalBody) modalBody.style.display = 'none';
+                        if (successMsg) successMsg.style.display = 'block';
+
+                        // Clear the form
+                        nigunNameInput.value = '';
+                        nigunNameError.classList.remove('visible');
+
+                        // Auto close after 4 seconds
+                        setTimeout(() => {
+                            if (successMsg) successMsg.style.display = 'none';
+                            if (modalBody) modalBody.style.display = '';
+                            closeAddInfoModal();
+                        }, 4000);
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Add Nigun submission failed:', errorText);
+                        alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
+                    }
+                } catch (error) {
+                    console.error('Add Nigun submission error:', error);
+                    alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
+                }
+            }
+
             // Open report modal for current nigun (uses combined modal)
             function openReportModal() {
                 console.log('[DEBUG openReportModal] Starting...');
@@ -32463,28 +32955,52 @@
                 const toggle = document.querySelector('.addinfo-modal-toggle');
                 const reportPanel = document.getElementById('reportPanel');
                 const addinfoPanel = document.getElementById('addinfoPanel');
+                const addnigunPanel = document.getElementById('addnigunPanel');
                 const currentActive = document.querySelector('.addinfo-panel.active');
+                const songNameEl = document.getElementById('addinfoSongName');
+                const nigunNameHeader = document.getElementById('addnigunNameHeader');
 
-                // Determine direction based on which panel we're going to
-                const goingToReport = panelName === 'report';
+                // Panel order: addnigun (0), addinfo (1), report (2)
+                const panelOrder = { 'addnigun': 0, 'addinfo': 1, 'report': 2 };
+                const panels = { 'addnigun': addnigunPanel, 'addinfo': addinfoPanel, 'report': reportPanel };
 
-                // Update toggle indicator
-                toggle.classList.toggle('report-active', goingToReport);
+                const targetPanel = panels[panelName];
+                const targetIndex = panelOrder[panelName];
+
+                // Get current panel index
+                let currentIndex = 1; // default to addinfo
+                if (currentActive === addnigunPanel) currentIndex = 0;
+                else if (currentActive === reportPanel) currentIndex = 2;
+
+                // Update toggle indicator - remove all state classes and add the correct one
+                toggle.classList.remove('addnigun-active', 'addinfo-active', 'report-active');
+                toggle.classList.add(panelName + '-active');
 
                 // Update toggle buttons
                 document.querySelectorAll('.addinfo-modal-toggle-btn').forEach(btn => {
                     btn.classList.toggle('active', btn.dataset.panel === panelName);
                 });
 
+                // Show/hide song name vs nigun input in header
+                if (panelName === 'addnigun') {
+                    songNameEl.style.display = 'none';
+                    nigunNameHeader.style.display = 'block';
+                } else {
+                    songNameEl.style.display = '';
+                    nigunNameHeader.style.display = 'none';
+                }
+
                 // If same panel, do nothing
-                if ((goingToReport && currentActive === reportPanel) ||
-                    (!goingToReport && currentActive === addinfoPanel)) {
+                if (currentActive === targetPanel) {
                     return;
                 }
 
+                // Determine slide direction based on panel order
+                const goingLeft = targetIndex > currentIndex;
+
                 // Animate out current panel
                 if (currentActive) {
-                    currentActive.classList.add(goingToReport ? 'slide-out-right' : 'slide-out-left');
+                    currentActive.classList.add(goingLeft ? 'slide-out-right' : 'slide-out-left');
                     setTimeout(() => {
                         currentActive.classList.remove('active', 'slide-out-left', 'slide-out-right');
                     }, 300);
@@ -32492,13 +33008,8 @@
 
                 // Animate in new panel from opposite direction
                 setTimeout(() => {
-                    if (goingToReport) {
-                        reportPanel.classList.add('active', 'slide-in-left');
-                        setTimeout(() => reportPanel.classList.remove('slide-in-left'), 300);
-                    } else {
-                        addinfoPanel.classList.add('active', 'slide-in-right');
-                        setTimeout(() => addinfoPanel.classList.remove('slide-in-right'), 300);
-                    }
+                    targetPanel.classList.add('active', goingLeft ? 'slide-in-left' : 'slide-in-right');
+                    setTimeout(() => targetPanel.classList.remove('slide-in-left', 'slide-in-right'), 300);
                 }, 150);
             }
 
