@@ -10873,21 +10873,21 @@
         /* Rating Modal Overlay */
         .rating-modal-overlay {
             position: fixed;
-            bottom: 90px;
-            right: 30px;
-            z-index: 15000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.9);
+            z-index: 999999;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
             pointer-events: none;
-            transform: translateY(40px);
         }
 
         .rating-modal-overlay.active {
             opacity: 1;
             visibility: visible;
             pointer-events: auto;
-            transform: translateY(0);
+            transform: translate(-50%, -50%) scale(1);
         }
 
         .rating-modal-content {
@@ -20171,7 +20171,8 @@
                 </div>
             </div>
             <div class="player-tags" id="playerTags"></div>
-            <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט" style="display: none;">
+            <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט" style="display: none;"
+                onclick="openRatingModal()">
                 <div class="player-rating-container">
                     <span class="player-rating-stars" id="playerRatingStars"></span>
                     <span class="player-rating-description" id="playerRatingDescription"></span>
@@ -20848,19 +20849,8 @@
                 collections: 'c-Y9SNk0BOGV'
             };
 
-            // Recording slots configuration (5 recording slots) - used for rating updates
-            const RECORDING_SLOTS = [
-                { file: 'c-XmTlDf3xfw', personalities: 'c-s8sYskJc4M', details: 'c-SuWz2qu9B1', rating: 'c-v5V7PENdFy', album: 'c-FuDbL2XiAj' },
-                { file: 'c-oqB3imNNfk', personalities: 'c-jRuAfCbs28', details: 'c-_TOU9FXYYn', rating: 'c-YQ-aWW59ej', album: 'c-H0XAyaKkPl' },
-                { file: 'c-oGF6C78GZl', personalities: 'c-4trFKY_CK8', details: 'c-dr-m1GnYty', rating: 'c-gmz2rln2dD', album: 'c-HKBBDews5N' },
-                { file: 'c-pf9zW3wypK', personalities: 'c-x0WLb4j4wV', details: 'c-pbtldr4CXD', rating: 'c-_GlQy78PAc', album: 'c-imgRABw0tH' },
-                { file: 'c-aqbocjDGuL', personalities: 'c-ilrb-DW4dV', details: 'c-2T9FWsVE9h', rating: 'c-yuKHpnbHfM', album: 'c-5FSrRNb-Uw' },
-                { file: 'c-7I50D2psiX', personalities: 'c-K6YqT2KsoI', details: 'c-DnuzpLiKbT', rating: 'c-N2PvPrKB35', album: 'c-7tZ4Q8h1g0' },
-                { file: 'c-tacDsFSejH', personalities: 'c-WN3PHzoSUH', details: 'c-FUEdeMZ4To', rating: 'c-Ib5MeF651f', album: 'c-UBxa0H-Q8x' },
-                { file: 'c-ksizMXSqVT', personalities: 'c-Ym24EkM-YR', details: 'c-tVpeTBqPJC', rating: 'c-pRk0qe4piC', album: 'c-VFA3UXcRxk' },
-                { file: 'c-8eFWozy35-', personalities: 'c-m7D24vQIxt', details: 'c-ybpQ1pRsuT', rating: 'c-X4qHc0unPI', album: 'c-bNm83Rrxw5' },
-                { file: 'c-5eg5m7MTzF', personalities: 'c-q1DcajYwRt', details: 'c-5fdXOsRWdr', rating: 'c-XaQ_gvW9Xo', album: 'c-yk9NeTNLym' }
-            ];
+            // Recording slots configuration - DEPRECATED: Now using separate recordings table
+            // Rating column for recordings table: c-WqeOGhwKvu
 
             // Rating descriptions for each star level
             const RATING_DESCRIPTIONS = {
@@ -22063,6 +22053,32 @@
                     if (typeof applyFiltersQuiet === 'function') {
                         applyFiltersQuiet();
                     }
+
+                    // Update displayed song items with recording badges
+                    document.querySelectorAll('.music-song-item[data-idx]').forEach(item => {
+                        const idx = parseInt(item.dataset.idx, 10);
+                        const song = allSongs[idx];
+                        if (song && song.recordings && song.recordings.length > 0) {
+                            // Find or create recording badge
+                            let badge = item.querySelector('.song-recording-count');
+                            if (!badge) {
+                                // Add recording badge if it doesn't exist
+                                const badgeHtml = `<span class="song-recording-count" title="${song.recordings.length} רעקארדינגס">${song.recordings.length}</span>`;
+                                const nameEl = item.querySelector('.music-song-name');
+                                if (nameEl) {
+                                    nameEl.insertAdjacentHTML('afterend', badgeHtml);
+                                }
+                            } else {
+                                // Update existing badge
+                                badge.textContent = song.recordings.length;
+                                badge.title = `${song.recordings.length} רעקארדינגס`;
+                            }
+
+                            // Update item classes
+                            item.classList.add('has-recordings');
+                            item.classList.remove('no-audio');
+                        }
+                    });
                 }
             }
 
@@ -28879,7 +28895,8 @@
                     songIdx: songIdx,
                     recordingIdx: recordingIdx,
                     slotIndex: recording.slotIndex,
-                    rowId: song.rowId
+                    rowId: song.rowId,
+                    tableRowId: recording.tableRowId // Recording's own row ID in recordings table
                 };
 
                 // Enable recordings mode when playing any recording
@@ -31294,7 +31311,8 @@
                         songIdx: idx,
                         recordingIdx: 0,
                         slotIndex: song.recordings[0].slotIndex,
-                        rowId: song.rowId
+                        rowId: song.rowId,
+                        tableRowId: song.recordings[0].tableRowId // Recording's own row ID in recordings table
                     };
                 } else {
                     currentPlayingRecordingInfo = null;
@@ -31395,7 +31413,8 @@
                     songIdx: songIdx,
                     recordingIdx: recordingIdx,
                     slotIndex: recording.slotIndex,
-                    rowId: song.rowId
+                    rowId: song.rowId,
+                    tableRowId: recording.tableRowId // Recording's own row ID in recordings table
                 };
 
                 // Play the specific recording URL
@@ -34460,6 +34479,12 @@
                 if (!e.target.closest('.sidebar-filter-dropdown')) {
                     document.querySelectorAll('.sidebar-dropdown-content').forEach(d => d.classList.remove('show'));
                 }
+
+                // Handle player rating clicks with event delegation (works even if stars are regenerated)
+                if (e.target.closest('#playerRating') || e.target.closest('.player-rating-star')) {
+                    console.log('Rating click detected, opening modal');
+                    openRatingModal();
+                }
             });
 
             // Keyboard shortcuts
@@ -34617,29 +34642,27 @@
                     return;
                 }
 
-                const { songIdx, recordingIdx, slotIndex, rowId } = currentPlayingRecordingInfo;
-                if (!rowId || slotIndex === undefined) {
-                    console.log('Missing rowId or slotIndex for rating update');
+                const { songIdx, recordingIdx, tableRowId } = currentPlayingRecordingInfo;
+
+                // Use recording's own rowId from recordings table
+                if (!tableRowId) {
+                    console.log('Missing tableRowId for rating update');
                     return;
                 }
 
-                // Get the rating column ID for this recording slot
-                const ratingColId = RECORDING_SLOTS[slotIndex]?.rating;
-                if (!ratingColId) {
-                    console.log('No rating column ID for slot', slotIndex);
-                    return;
-                }
+                // Fixed rating column for new recordings table
+                const RECORDING_RATING_COLUMN = 'c-WqeOGhwKvu';
 
                 const playerRating = document.getElementById('playerRating');
                 if (playerRating) {
                     playerRating.classList.add('saving');
                 }
 
-                console.log(`Submitting rating ${newRating} for song ${songIdx}, recording ${recordingIdx}, slot ${slotIndex}`);
+                console.log(`Submitting rating ${newRating} for song ${songIdx}, recording ${recordingIdx}, tableRowId ${tableRowId}`);
 
                 try {
-                    // Coda API requires PUT to update a specific cell
-                    const url = `${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows/${rowId}`;
+                    // Coda API requires PUT to update a specific cell - use RECORDINGS_TABLE_ID
+                    const url = `${WORKER_URL}docs/${DOC_ID}/tables/${RECORDINGS_TABLE_ID}/rows/${tableRowId}`;
 
                     const response = await fetch(url, {
                         method: 'PUT',
@@ -34650,7 +34673,7 @@
                             row: {
                                 cells: [
                                     {
-                                        column: ratingColId,
+                                        column: RECORDING_RATING_COLUMN,
                                         value: newRating
                                     }
                                 ]
@@ -34745,10 +34768,15 @@
 
             // Open rating modal
             function openRatingModal() {
+                console.log('openRatingModal called!');
                 const modal = document.getElementById('ratingModalOverlay');
                 const optionsContainer = document.getElementById('ratingModalOptions');
                 const headerContainer = document.getElementById('ratingModalHeader');
-                if (!modal || !optionsContainer) return;
+                console.log('Modal elements:', { modal: !!modal, optionsContainer: !!optionsContainer, headerContainer: !!headerContainer });
+                if (!modal || !optionsContainer) {
+                    console.log('Modal elements missing, returning');
+                    return;
+                }
 
                 // Get current nigun and recording info
                 let headerText = 'ביטע וועל אויס דעם קוואליטעט פון דעם רעקארדינג';
@@ -34807,6 +34835,7 @@
 
                 // Show modal
                 modal.classList.add('active');
+                console.log('Modal class after adding active:', modal.className);
                 document.body.style.overflow = 'hidden';
 
                 // Add Escape key handler
