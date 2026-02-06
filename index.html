@@ -22221,6 +22221,7 @@
 
                     return {
                         rowId: item.id,
+                        codaRowName: item.name, // Coda row name for matching with relations
                         customId: customId,
                         name: songName || `ליד ${index + 1}`,
                         author: extractText(values['c-ujrTHeCJGo']),
@@ -24012,7 +24013,7 @@
                     html = sortedKeys.map(piyutName => {
                         const info = piyutimInfo[piyutName] || {};
                         const linkedNigunim = new Set(info.nigunim || []);
-                        const songCount = allSongs.filter(song => linkedNigunim.has(song.name)).length;
+                        const songCount = allSongs.filter(song => linkedNigunim.has(song.codaRowName)).length;
                         const piyutId = info.customId || piyutName;
                         const zmanim = info.zmanim || [];
                         return `
@@ -27250,7 +27251,7 @@
                 let songIndices = []; // Declare at top level for use in mechabrim filtering
                 if (type === 'piyutim') {
                     const linkedNigunim = new Set(info?.nigunim || []);
-                    songs = allSongs.filter(song => linkedNigunim.has(song.name));
+                    songs = allSongs.filter(song => linkedNigunim.has(song.codaRowName));
                 } else {
                     const categoryKey = type;
                     songIndices = categories[categoryKey]?.[entityKey] || [];
@@ -28622,7 +28623,7 @@
                             ${piyutim.sort((a, b) => a.localeCompare(b, 'he')).map(piyutName => {
                         // Count songs using linked nigunim from piyutim table
                         const piyutLinkedNigunim = new Set((piyutimInfo[piyutName]?.nigunim) || []);
-                        const songCount = allSongs.filter(song => piyutLinkedNigunim.has(song.name)).length;
+                        const songCount = allSongs.filter(song => piyutLinkedNigunim.has(song.codaRowName)).length;
                         const piyutInfo = piyutimInfo[piyutName] || {};
                         const piyutId = piyutInfo.customId || piyutName;
                         return `
@@ -28747,7 +28748,7 @@
                         const info = piyutimInfo[piyutName] || {};
                         // Count songs using linked nigunim from piyutim table
                         const piyutLinkedNigunim = new Set(info.nigunim || []);
-                        const songCount = allSongs.filter(song => piyutLinkedNigunim.has(song.name)).length;
+                        const songCount = allSongs.filter(song => piyutLinkedNigunim.has(song.codaRowName)).length;
                         const piyutId = info.customId || piyutName;
                         const zmanim = info.zmanim || [];
 
@@ -28806,7 +28807,7 @@
                     const info = piyutimInfo[piyutName] || {};
                     // Count songs using linked nigunim from piyutim table
                     const piyutLinkedNigunim = new Set(info.nigunim || []);
-                    const songCount = allSongs.filter(song => piyutLinkedNigunim.has(song.name)).length;
+                    const songCount = allSongs.filter(song => piyutLinkedNigunim.has(song.codaRowName)).length;
                     const piyutId = info.customId || piyutName;
                     const zmanim = info.zmanim || [];
 
