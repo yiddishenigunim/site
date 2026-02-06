@@ -20820,7 +20820,15 @@
         <script>
             // API Configuration
             const WORKER_URL = 'https://api.oitzerhanigunim.org/api/';
+            const API_BASE = 'https://api.oitzerhanigunim.org';
             const DOC_ID = '6QcJRx7e13';
+
+            // IndexManager localStorage keys (v2 - avoids conflicts with old CacheManager)
+            const STORAGE_KEYS = {
+                SONG_INDEX: 'oitzer_songIndex_v2',
+                SONG_INDEX_TIMESTAMP: 'oitzer_songIndex_timestamp',
+                CATEGORY_PREFIX: 'oitzer_category_',
+            };
             const TABLE_ID = 'grid-YycmDjJ8pS'; // Songs table
 
             // Additional table IDs from Coda doc
@@ -21205,95 +21213,628 @@
             };
 
             // ========================================
-            // CACHE MANAGER - Minimize API calls
+            // INDEX MANAGER - Slim index approach
+            // Replaces CacheManager for efficient data loading
             // ========================================
-            const CACHE_VERSION = 'v11'; // Increment when data structure changes
-            const CACHE_DURATION = 24 * 60 * 60 * 1000; // 24 hours in milliseconds
 
-            const CacheManager = {
-                // Get cached data if valid
-                get(key) {
+            const IndexManager = {
+                songIndex: null,           // Array of songs from index
+                songMap: null,             // Map for quick lookup by id
+                recordingsIndex: null,     // Object keyed by songId (MEMORY ONLY)
+                categoryIndexes: {},       // Cached category data
+                lastUpdated: null,
+                isLoading: false,
+                recordingsLoaded: false,
+
+                // Loading state promises (prevent duplicate fetches)
+                _songIndexPromise: null,
+                _recordingsPromise: null,
+
+                // Loading states for UI
+                songIndexLoading: false,
+                recordingsLoading: false,
+                modalLoading: false,
+                categoryLoading: false,
+
+                // Check if we need to refresh from server
+                async checkForUpdates() {
                     try {
-                        const cacheKey = `${CACHE_VERSION}_${key}`;
-                        const cached = localStorage.getItem(cacheKey);
-                        if (!cached) return null;
+                        const response = await fetch(`${API_BASE}/api/last-updated`);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const data = await response.json();
+                        const serverTimestamp = data.lastUpdated;
 
-                        const { data, timestamp } = JSON.parse(cached);
-                        const now = Date.now();
+                        const localTimestamp = localStorage.getItem(STORAGE_KEYS.SONG_INDEX_TIMESTAMP);
 
-                        // Check if cache expired
-                        if (now - timestamp > CACHE_DURATION) {
-                            console.log(`⏰ Cache expired for ${key}`);
-                            localStorage.removeItem(cacheKey);
-                            return null;
+                        if (!localTimestamp || localTimestamp < serverTimestamp) {
+                            console.log('Server has newer data, will refresh');
+                            return true;
                         }
 
-                        console.log(`✅ Using cached ${key} (age: ${Math.round((now - timestamp) / 1000 / 60)} minutes)`);
-                        return data;
+                        console.log('Local data is up to date');
+                        return false;
                     } catch (error) {
-                        console.error(`Cache read error for ${key}:`, error);
+                        console.error('Error checking for updates:', error);
+                        return true; // Refresh on error to be safe
+                    }
+                },
+
+                // Load song index (from localStorage or API)
+                async loadSongIndex() {
+                    if (this.songIndex) return this.songIndex;
+                    if (this._songIndexPromise) return this._songIndexPromise;
+
+                    this.songIndexLoading = true;
+                    this._songIndexPromise = this._doLoadSongIndex();
+
+                    try {
+                        return await this._songIndexPromise;
+                    } finally {
+                        this.songIndexLoading = false;
+                        this._songIndexPromise = null;
+                    }
+                },
+
+                async _doLoadSongIndex() {
+                    try {
+                        // Check if server has newer data
+                        const needsRefresh = await this.checkForUpdates();
+
+                        if (!needsRefresh) {
+                            const cached = localStorage.getItem(STORAGE_KEYS.SONG_INDEX);
+                            if (cached) {
+                                try {
+                                    const parsed = JSON.parse(cached);
+                                    if (parsed && parsed.length > 0) {
+                                        this.songIndex = parsed;
+                                        this._buildSongMap();
+                                        console.log(`Loaded ${this.songIndex.length} songs from localStorage`);
+                                        return this.songIndex;
+                                    }
+                                } catch (e) {
+                                    console.error('Error parsing cached song index:', e);
+                                }
+                            }
+                        }
+
+                        // Fetch from API
+                        console.log('Fetching song index from API...');
+                        const response = await fetch(`${API_BASE}/api/song-index`);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const data = await response.json();
+
+                        this.songIndex = data.songs || [];
+                        this.lastUpdated = data.lastUpdated;
+                        this._buildSongMap();
+
+                        // Store in localStorage
+                        try {
+                            localStorage.setItem(STORAGE_KEYS.SONG_INDEX, JSON.stringify(this.songIndex));
+                            localStorage.setItem(STORAGE_KEYS.SONG_INDEX_TIMESTAMP, data.lastUpdated);
+                            console.log(`Cached ${this.songIndex.length} songs in localStorage`);
+                        } catch (e) {
+                            if (e.name === 'QuotaExceededError') {
+                                this._clearOldStorage();
+                                try {
+                                    localStorage.setItem(STORAGE_KEYS.SONG_INDEX, JSON.stringify(this.songIndex));
+                                    localStorage.setItem(STORAGE_KEYS.SONG_INDEX_TIMESTAMP, data.lastUpdated);
+                                } catch (e2) {
+                                    console.error('Failed to cache song index even after cleanup');
+                                }
+                            }
+                        }
+
+                        console.log(`Song index loaded: ${this.songIndex.length} songs`);
+                        return this.songIndex;
+                    } catch (error) {
+                        console.error('Error loading song index:', error);
+
+                        // Fallback to localStorage even if stale
+                        const cached = localStorage.getItem(STORAGE_KEYS.SONG_INDEX);
+                        if (cached) {
+                            try {
+                                this.songIndex = JSON.parse(cached);
+                                this._buildSongMap();
+                                console.log(`Using stale cached index: ${this.songIndex.length} songs`);
+                                return this.songIndex;
+                            } catch (e) { /* ignore parse error */ }
+                        }
+
+                        throw error;
+                    }
+                },
+
+                // Build map for quick lookups by id and rowId
+                _buildSongMap() {
+                    this.songMap = new Map();
+                    if (this.songIndex) {
+                        this.songIndex.forEach((song, idx) => {
+                            if (song.id) this.songMap.set(String(song.id), { song, idx });
+                            if (song.rowId) this.songMap.set(song.rowId, { song, idx });
+                        });
+                    }
+                },
+
+                // Load recordings index (always from API, store in memory only)
+                async loadRecordingsIndex() {
+                    if (this.recordingsLoaded) return this.recordingsIndex;
+                    if (this._recordingsPromise) return this._recordingsPromise;
+
+                    this.recordingsLoading = true;
+                    this._recordingsPromise = this._doLoadRecordingsIndex();
+
+                    try {
+                        return await this._recordingsPromise;
+                    } finally {
+                        this.recordingsLoading = false;
+                        this._recordingsPromise = null;
+                    }
+                },
+
+                async _doLoadRecordingsIndex() {
+                    try {
+                        console.log('Fetching recordings index from API...');
+                        const response = await fetch(`${API_BASE}/api/recordings-index`);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const data = await response.json();
+
+                        this.recordingsIndex = data.recordings || {};
+                        this.recordingsLoaded = true;
+
+                        console.log(`Recordings index loaded for ${Object.keys(this.recordingsIndex).length} songs`);
+                        return this.recordingsIndex;
+                    } catch (error) {
+                        console.error('Error loading recordings index:', error);
+                        this.recordingsIndex = {};
+                        return this.recordingsIndex;
+                    }
+                },
+
+                // Get song by ID from index (by customId or rowId)
+                getSong(id) {
+                    if (!this.songMap) return null;
+                    const entry = this.songMap.get(String(id));
+                    return entry ? entry.song : null;
+                },
+
+                // Get full song details from API (for modal)
+                async getFullSongDetails(rowId) {
+                    try {
+                        this.modalLoading = true;
+                        const response = await fetch(`${API_BASE}/api/song/${rowId}`);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        return await response.json();
+                    } catch (error) {
+                        console.error('Error fetching full song details:', error);
+                        return null;
+                    } finally {
+                        this.modalLoading = false;
+                    }
+                },
+
+                // Get recordings for a song from memory index
+                getRecordings(songId) {
+                    if (!this.recordingsIndex) return null;
+                    return this.recordingsIndex[String(songId)] || null;
+                },
+
+                // Get single recording by rowId (fallback when index not loaded)
+                async getRecordingByRowId(rowId) {
+                    try {
+                        const response = await fetch(`${API_BASE}/api/recording/${rowId}`);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        return await response.json();
+                    } catch (error) {
+                        console.error('Error fetching recording:', error);
                         return null;
                     }
                 },
 
-                // Save data to cache
-                set(key, data) {
+                // Search songs using index fields
+                searchSongs(query) {
+                    if (!this.songIndex) return [];
+                    const q = query.toLowerCase();
+                    return this.songIndex.filter(song => {
+                        return (
+                            (song.name && song.name.toLowerCase().includes(q)) ||
+                            (song.mechaber && song.mechaber.toLowerCase().includes(q)) ||
+                            (song.chatzer && song.chatzer.toLowerCase().includes(q)) ||
+                            (song.verter && song.verter.toLowerCase().includes(q)) ||
+                            (song.collections && song.collections.toLowerCase().includes(q)) ||
+                            (song.scale && song.scale.toLowerCase().includes(q)) ||
+                            (song.ritem && song.ritem.toLowerCase().includes(q))
+                        );
+                    });
+                },
+
+                // Filter songs using index fields
+                filterSongs(filters) {
+                    if (!this.songIndex) return [];
+                    return this.songIndex.filter(song => {
+                        if (filters.mechaber && filters.mechaber.length > 0) {
+                            if (!filters.mechaber.some(f => song.mechaber?.includes(f))) return false;
+                        }
+                        if (filters.chatzer && filters.chatzer.length > 0) {
+                            if (!filters.chatzer.some(f => song.chatzer?.includes(f))) return false;
+                        }
+                        if (filters.scale && filters.scale.length > 0) {
+                            if (!filters.scale.some(f => song.scale?.includes(f))) return false;
+                        }
+                        if (filters.ritem && filters.ritem.length > 0) {
+                            if (!filters.ritem.some(f => song.ritem?.includes(f))) return false;
+                        }
+                        if (filters.collections && filters.collections.length > 0) {
+                            if (!filters.collections.some(f => song.collections?.includes(f))) return false;
+                        }
+                        if (filters.verter && filters.verter.length > 0) {
+                            const songVerter = song.verter?.split(',').map(v => v.trim()).filter(Boolean) || [];
+                            if (!filters.verter.some(f => songVerter.includes(f))) return false;
+                        }
+                        return true;
+                    });
+                },
+
+                // Get category index (from localStorage or API)
+                async getCategoryIndex(category) {
+                    // Check memory cache
+                    if (this.categoryIndexes[category]) {
+                        return this.categoryIndexes[category];
+                    }
+
+                    // Check localStorage
+                    const storageKey = STORAGE_KEYS.CATEGORY_PREFIX + category;
+                    const cached = localStorage.getItem(storageKey);
+                    if (cached) {
+                        try {
+                            const parsed = JSON.parse(cached);
+                            this.categoryIndexes[category] = parsed;
+                            console.log(`Category ${category} loaded from localStorage`);
+                            return parsed;
+                        } catch (e) {
+                            console.error('Error parsing cached category:', e);
+                        }
+                    }
+
+                    // Fetch from API
                     try {
-                        const cacheKey = `${CACHE_VERSION}_${key}`;
-                        const cacheData = {
-                            data: data,
-                            timestamp: Date.now()
-                        };
-                        localStorage.setItem(cacheKey, JSON.stringify(cacheData));
-                        console.log(`💾 Cached ${key}`);
-                    } catch (error) {
-                        console.error(`Cache write error for ${key}:`, error);
-                        // If localStorage is full, clear old caches
-                        if (error.name === 'QuotaExceededError') {
-                            this.clearOldCaches();
-                            // Try again
-                            try {
-                                localStorage.setItem(cacheKey, JSON.stringify(cacheData));
-                            } catch (e) {
-                                console.error('Failed to cache even after cleanup');
+                        this.categoryLoading = true;
+                        console.log(`Fetching category index: ${category}...`);
+                        const response = await fetch(`${API_BASE}/api/category-index/${category}`);
+                        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                        const data = await response.json();
+
+                        const index = data.index || data;
+                        this.categoryIndexes[category] = index;
+
+                        // Store in localStorage
+                        try {
+                            localStorage.setItem(storageKey, JSON.stringify(index));
+                        } catch (e) {
+                            if (e.name === 'QuotaExceededError') {
+                                this._clearOldStorage();
                             }
                         }
+
+                        console.log(`Category ${category} loaded: ${Object.keys(index).length} items`);
+                        return index;
+                    } catch (error) {
+                        console.error(`Error loading category index ${category}:`, error);
+                        return {};
+                    } finally {
+                        this.categoryLoading = false;
                     }
                 },
 
-                // Clear all caches (for testing or when structure changes)
-                clearAll() {
+                // Clear old CacheManager storage to free space
+                _clearOldStorage() {
                     const keys = Object.keys(localStorage);
                     keys.forEach(key => {
-                        if (key.startsWith(CACHE_VERSION + '_')) {
+                        if (key.startsWith('v11_') || key.startsWith('v10_') || key.startsWith('v9_') ||
+                            key.startsWith('v8_') || key.startsWith('v7_') || key.startsWith('v6_')) {
                             localStorage.removeItem(key);
                         }
                     });
-                    console.log('🗑️ All caches cleared');
+                    console.log('Old CacheManager storage cleared');
                 },
 
-                // Clear old version caches
-                clearOldCaches() {
+                // Clear all IndexManager data
+                clearAll() {
+                    localStorage.removeItem(STORAGE_KEYS.SONG_INDEX);
+                    localStorage.removeItem(STORAGE_KEYS.SONG_INDEX_TIMESTAMP);
                     const keys = Object.keys(localStorage);
                     keys.forEach(key => {
-                        if (!key.startsWith(CACHE_VERSION + '_')) {
+                        if (key.startsWith(STORAGE_KEYS.CATEGORY_PREFIX)) {
                             localStorage.removeItem(key);
                         }
                     });
-                    console.log('🗑️ Old version caches cleared');
+                    this.songIndex = null;
+                    this.songMap = null;
+                    this.recordingsIndex = null;
+                    this.categoryIndexes = {};
+                    this.recordingsLoaded = false;
+                    console.log('All IndexManager data cleared');
                 }
             };
 
-            // Clear old caches on load
-            CacheManager.clearOldCaches();
+            // Clean up old CacheManager keys on load
+            IndexManager._clearOldStorage();
 
-            // Helper functions for cache (aliases for CacheManager)
+            // Backwards-compatible cache helpers for small data (statistics)
+            // Main data (songs, recordings, categories) goes through IndexManager
             function getCachedData(key) {
-                return CacheManager.get(key);
+                try {
+                    const cacheKey = `oitzer_${key}`;
+                    const cached = localStorage.getItem(cacheKey);
+                    if (!cached) return null;
+                    const { data, timestamp } = JSON.parse(cached);
+                    if (Date.now() - timestamp > 24 * 60 * 60 * 1000) {
+                        localStorage.removeItem(cacheKey);
+                        return null;
+                    }
+                    return data;
+                } catch (error) {
+                    return null;
+                }
             }
 
             function setCachedData(key, data) {
-                CacheManager.set(key, data);
+                try {
+                    const cacheKey = `oitzer_${key}`;
+                    localStorage.setItem(cacheKey, JSON.stringify({ data, timestamp: Date.now() }));
+                } catch (error) {
+                    console.error('Cache write error:', error);
+                }
+            }
+
+            // Legacy alias for code that still references CacheManager
+            const CacheManager = {
+                get: getCachedData,
+                set: setCachedData,
+                clearAll() { IndexManager.clearAll(); },
+                clearOldCaches() { IndexManager._clearOldStorage(); }
+            };
+
+            // ========================================
+            // INDEX DATA TRANSFORMATION HELPERS
+            // ========================================
+
+            // Transform a song from the songIndex format to the allSongs format
+            // Maps slim index fields to the field names used by existing rendering code
+            function transformIndexSong(indexSong) {
+                return {
+                    // Core fields from index
+                    customId: indexSong.id,
+                    rowId: indexSong.rowId,
+                    name: indexSong.name || '',
+                    mechaber: indexSong.mechaber || '',
+                    author: indexSong.mechaber || '',
+                    category: indexSong.chatzer || '',   // backwards compat
+                    chatzer: indexSong.chatzer || '',
+                    scale: indexSong.scale || null,
+                    ritem: indexSong.ritem || null,
+                    verter: indexSong.verter || null,
+                    collections: indexSong.collections || null,
+                    hasRecordings: indexSong.hasRecordings || false,
+                    recordingCount: indexSong.recordingCount || 0,
+                    bestRecordingRowId: indexSong.bestRecordingRowId || null,
+                    bestRecordingRating: indexSong.bestRecordingRating || 0,
+
+                    // Derived fields (populated from recordings index)
+                    recordings: [],
+                    audioUrl: null,
+
+                    // Fields loaded on demand via /api/song/:id
+                    gezungen: null,
+                    maure: null,
+                    pasigOif: null,
+                    personalities: null,
+                    info: null,
+                    siman: null,
+                    notn: null,
+                    documents: null,
+                    albums: null,
+                    resources: null,
+                    zugeleigt: null,
+                    images: [],
+                    pdfs: [],
+                    otherMedia: null,
+                    credits: null,
+
+                    // Internal
+                    codaRowName: indexSong.name,
+                    _fullDetailsLoaded: false
+                };
+            }
+
+            // Transform full song details (from /api/song/:id) into existing fields
+            function mergeFullSongDetails(song, fullDetails) {
+                if (!fullDetails) return;
+                song.gezungen = fullDetails.gezungen || null;
+                song.maure = fullDetails.maure || null;
+                song.pasigOif = fullDetails.pasigOif || null;
+                song.personalities = fullDetails.personalities || null;
+                song.info = fullDetails.info || null;
+                song.siman = fullDetails.siman || null;
+                song.notn = fullDetails.notn || null;
+                song.documents = fullDetails.documents || null;
+                song.albums = fullDetails.albums || null;
+                song.resources = fullDetails.resources || null;
+                song.zugeleigt = fullDetails.zugeleigt || null;
+                song.credits = fullDetails.credits || null;
+                // Update verter with full text if available
+                if (fullDetails.verter) song.verter = fullDetails.verter;
+                // Update other media if provided
+                if (fullDetails.otherMedia) song.otherMedia = fullDetails.otherMedia;
+                if (fullDetails.images) song.images = fullDetails.images;
+                if (fullDetails.pdfs) song.pdfs = fullDetails.pdfs;
+                song._fullDetailsLoaded = true;
+            }
+
+            // Populate allSongs from the song index
+            function populateAllSongsFromIndex(indexSongs) {
+                allSongs = indexSongs.map(transformIndexSong);
+                loadedCategories.songs = true;
+                songsFullyLoaded = true;
+
+                // Merge recordings if already loaded
+                if (IndexManager.recordingsLoaded) {
+                    updateSongsFromRecordingsIndex();
+                }
+
+                applyFiltersQuiet();
+                buildCategoryIndices();
+                updateFilterMegaMenuContent();
+                updateNavCounts();
+            }
+
+            // Update allSongs with recordings from the IndexManager recordings index
+            function updateSongsFromRecordingsIndex() {
+                if (!IndexManager.recordingsLoaded || allSongs.length === 0) return;
+
+                let updated = 0;
+                allSongs.forEach(song => {
+                    const recordings = IndexManager.getRecordings(song.customId);
+                    if (recordings && recordings.length > 0) {
+                        song.recordings = recordings;
+                        song.hasRecordings = true;
+                        song.recordingCount = recordings.length;
+                        song.audioUrl = recordings[0].url;
+                        updated++;
+                    }
+                });
+
+                // Also update the global recordingsByNigunId for backwards compat
+                if (IndexManager.recordingsIndex) {
+                    Object.assign(recordingsByNigunId, IndexManager.recordingsIndex);
+                }
+
+                if (updated > 0) {
+                    console.log(`Updated ${updated} songs with recordings from index`);
+                    applyFiltersQuiet();
+                    updatePlayButtonStates();
+                }
+            }
+
+            // Update play button states in the current view after recordings load
+            function updatePlayButtonStates() {
+                document.querySelectorAll('.song-item[data-song-idx]').forEach(item => {
+                    const idx = parseInt(item.dataset.songIdx, 10);
+                    const song = allSongs[idx];
+                    if (song && song.hasRecordings && !item.querySelector('.song-play-btn-new')) {
+                        // Song now has recordings but play button wasn't rendered - update the item
+                        item.classList.remove('no-audio');
+                    }
+                });
+                // Also update any .music-song-item elements
+                document.querySelectorAll('.music-song-item[data-idx]').forEach(item => {
+                    const idx = parseInt(item.dataset.idx, 10);
+                    const song = allSongs[idx];
+                    if (song && song.recordings && song.recordings.length > 0) {
+                        item.classList.add('has-recordings');
+                        item.classList.remove('no-audio');
+                    }
+                });
+            }
+
+            // Handle direct song link: /song/123 or #/nigunim/123
+            async function handleDirectSongLink(songId) {
+                const content = document.getElementById('mainContent');
+                if (content) {
+                    content.innerHTML = `
+                        <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
+                            ${getMediumLoaderHTML()}
+                            <p style="color: var(--text-secondary); font-size: 16px; margin: 0;">לאודינג...</p>
+                        </div>
+                    `;
+                }
+
+                try {
+                    // Fetch song directly from API - don't wait for full index
+                    const response = await fetch(`${API_BASE}/api/song/${songId}`);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const songData = await response.json();
+
+                    // Create a song object that matches allSongs format
+                    const song = {
+                        customId: songData.id || songData.customId || songId,
+                        rowId: songData.rowId || songId,
+                        name: songData.name || '',
+                        mechaber: songData.mechaber || '',
+                        author: songData.mechaber || '',
+                        category: songData.chatzer || songData.category || '',
+                        chatzer: songData.chatzer || songData.category || '',
+                        scale: songData.scale || null,
+                        ritem: songData.ritem || null,
+                        verter: songData.verter || null,
+                        collections: songData.collections || null,
+                        gezungen: songData.gezungen || null,
+                        maure: songData.maure || null,
+                        pasigOif: songData.pasigOif || null,
+                        personalities: songData.personalities || null,
+                        info: songData.info || null,
+                        siman: songData.siman || null,
+                        notn: songData.notn || null,
+                        documents: songData.documents || null,
+                        albums: songData.albums || null,
+                        resources: songData.resources || null,
+                        zugeleigt: songData.zugeleigt || null,
+                        credits: songData.credits || null,
+                        hasRecordings: songData.hasRecordings || false,
+                        recordingCount: songData.recordingCount || 0,
+                        bestRecordingRowId: songData.bestRecordingRowId || null,
+                        bestRecordingRating: songData.bestRecordingRating || 0,
+                        recordings: songData.recordings || [],
+                        audioUrl: songData.recordings?.[0]?.url || null,
+                        images: songData.images || [],
+                        pdfs: songData.pdfs || [],
+                        otherMedia: songData.otherMedia || null,
+                        codaRowName: songData.name,
+                        _fullDetailsLoaded: true
+                    };
+
+                    // Add to allSongs temporarily so rendering code can find it
+                    if (allSongs.length === 0) {
+                        allSongs.push(song);
+                    } else {
+                        const existingIdx = allSongs.findIndex(s => s.customId === song.customId || s.rowId === song.rowId);
+                        if (existingIdx === -1) {
+                            allSongs.push(song);
+                        } else {
+                            Object.assign(allSongs[existingIdx], song);
+                        }
+                    }
+
+                    // Open in modal or render detail page
+                    const hash = window.location.hash || '';
+                    const isPreview = hash.includes('/preview');
+                    const idx = allSongs.findIndex(s => s.customId === song.customId || s.rowId === song.rowId);
+
+                    if (isPreview) {
+                        openNigunModal(idx, allSongs[idx]);
+                    } else {
+                        currentPageView = 'songs';
+                        currentDetailView = { type: 'nigunim', name: song.name, id: song.rowId, customId: song.customId };
+                        renderDetailPage();
+                    }
+                } catch (error) {
+                    console.error('Error loading direct song link:', error);
+                    if (content) {
+                        content.innerHTML = `
+                            <div class="empty-state">
+                                <div class="empty-state-icon">❌</div>
+                                <h2>ניגון נישט געפונען</h2>
+                                <button onclick="location.hash='#/home'" style="margin-top: 20px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">צוריק צו הויפט זייט</button>
+                            </div>
+                        `;
+                    }
+                }
+
+                // Background: load full index for navigation
+                IndexManager.loadSongIndex().then(songs => {
+                    if (songs && songs.length > 0) {
+                        populateAllSongsFromIndex(songs);
+                    }
+                });
             }
 
             // Animation Helper: Count Up Number
@@ -21861,41 +22402,75 @@
                 }
             }
 
-            // Fetch functions for each table
+            // Helper: load category via IndexManager API, mapping to existing info object format
+            async function fetchCategoryViaIndex(categoryName, infoObject, displayName) {
+                try {
+                    const index = await IndexManager.getCategoryIndex(categoryName);
+                    if (index && Object.keys(index).length > 0) {
+                        // Map index format to existing info object format
+                        Object.entries(index).forEach(([name, data]) => {
+                            infoObject[name] = {
+                                ...data,
+                                customId: data.id || data.customId || name,
+                                rowId: data.rowId,
+                                image: data.image || null,
+                                tagName: data.tagName || name,
+                                allData: data
+                            };
+                        });
+                        console.log(`${displayName} loaded via IndexManager (${Object.keys(index).length} items)`);
+                        return true;
+                    }
+                } catch (error) {
+                    console.error(`IndexManager category fetch failed for ${categoryName}:`, error);
+                }
+                return false;
+            }
+
+            // Fetch functions for each table - now try IndexManager API first, fall back to Coda
             async function fetchChatzerosInfo() {
-                await fetchTableInfo(CHATZEROS_TABLE_ID, chatzerosInfo, 'Chatzeros');
+                const loaded = await fetchCategoryViaIndex('chatzeros', chatzerosInfo, 'Chatzeros');
+                if (!loaded) await fetchTableInfo(CHATZEROS_TABLE_ID, chatzerosInfo, 'Chatzeros');
             }
 
             async function fetchMechabrimInfo() {
-                await fetchTableInfo(MECHABRIM_TABLE_ID, mechabrimInfo, 'Mechabrim');
+                const loaded = await fetchCategoryViaIndex('mechabrim', mechabrimInfo, 'Mechabrim');
+                if (!loaded) await fetchTableInfo(MECHABRIM_TABLE_ID, mechabrimInfo, 'Mechabrim');
             }
 
             async function fetchVerterInfo() {
-                await fetchTableInfo(VERTER_TABLE_ID, verterInfo, 'Verter');
+                const loaded = await fetchCategoryViaIndex('verter', verterInfo, 'Verter');
+                if (!loaded) await fetchTableInfo(VERTER_TABLE_ID, verterInfo, 'Verter');
             }
 
             async function fetchZmanimInfo() {
-                await fetchTableInfo(ZMANIM_TABLE_ID, zmaninInfo, 'Zmanim');
+                const loaded = await fetchCategoryViaIndex('zmanim', zmaninInfo, 'Zmanim');
+                if (!loaded) await fetchTableInfo(ZMANIM_TABLE_ID, zmaninInfo, 'Zmanim');
             }
 
             async function fetchPiyutimInfo() {
-                await fetchTableInfo(PIYUTIM_TABLE_ID, piyutimInfo, 'Piyutim');
+                const loaded = await fetchCategoryViaIndex('piyutim', piyutimInfo, 'Piyutim');
+                if (!loaded) await fetchTableInfo(PIYUTIM_TABLE_ID, piyutimInfo, 'Piyutim');
             }
 
             async function fetchCollectionsInfo() {
-                await fetchTableInfo(COLLECTIONS_TABLE_ID, collectionsInfo, 'Collections');
+                const loaded = await fetchCategoryViaIndex('collections', collectionsInfo, 'Collections');
+                if (!loaded) await fetchTableInfo(COLLECTIONS_TABLE_ID, collectionsInfo, 'Collections');
             }
 
             async function fetchResourcesInfo() {
-                await fetchTableInfo(RESOURCES_TABLE_ID, resourcesInfo, 'Resources');
+                const loaded = await fetchCategoryViaIndex('resources', resourcesInfo, 'Resources');
+                if (!loaded) await fetchTableInfo(RESOURCES_TABLE_ID, resourcesInfo, 'Resources');
             }
 
             async function fetchDocumentsInfo() {
-                await fetchTableInfo(DOCUMENTS_TABLE_ID, documentsInfo, 'Documents');
+                const loaded = await fetchCategoryViaIndex('documents', documentsInfo, 'Documents');
+                if (!loaded) await fetchTableInfo(DOCUMENTS_TABLE_ID, documentsInfo, 'Documents');
             }
 
             async function fetchAlbumsInfo() {
-                await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
+                const loaded = await fetchCategoryViaIndex('albums', albumsInfo, 'Albums');
+                if (!loaded) await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
             }
 
             async function fetchScaleInfo() {
@@ -21906,137 +22481,18 @@
                 await fetchTableInfo(RHYTHM_TABLE_ID, rhythmInfo, 'Rhythm');
             }
 
-            // Fetch recordings from separate table and index by nigun ID
+            // Fetch recordings index via IndexManager (replaces old Coda table fetch)
+            // Now uses /api/recordings-index endpoint, stored in memory only
             async function fetchRecordingsTable() {
                 try {
-                    // Check cache first
-                    const cacheKey = 'recordings_table';
-                    const cachedRecordings = getCachedData(cacheKey);
-                    if (cachedRecordings && Object.keys(cachedRecordings).length > 0) {
-                        recordingsByNigunId = cachedRecordings;
-                        console.log(`✅ Recordings loaded from cache (${Object.keys(recordingsByNigunId).length} nigunim)`);
-                        return;
+                    await IndexManager.loadRecordingsIndex();
+                    // Sync to global recordingsByNigunId for backwards compat
+                    if (IndexManager.recordingsIndex) {
+                        Object.assign(recordingsByNigunId, IndexManager.recordingsIndex);
                     }
-
-                    console.log('📡 Fetching recordings table...');
-                    let allRows = [];
-                    let pageToken = null;
-
-                    do {
-                        const url = `${WORKER_URL}docs/${DOC_ID}/tables/${RECORDINGS_TABLE_ID}/rows?valueFormat=rich${pageToken ? '&pageToken=' + pageToken : ''}`;
-                        const response = await fetch(url);
-                        if (!response.ok) {
-                            console.log('Recordings table not accessible:', response.status);
-                            return;
-                        }
-                        const data = await response.json();
-                        allRows = allRows.concat(data.items || []);
-                        pageToken = data.nextPageToken;
-                        console.log(`📥 Fetched ${allRows.length} recordings so far...`);
-                    } while (pageToken);
-
-                    console.log(`📊 Fetched ${allRows.length} recordings from table`);
-
-                    // Process and index by nigun ID
-                    allRows.forEach(item => {
-                        const values = item.values;
-
-                        // Get nigun ID reference - column c-YRfBI9lv8C
-                        const nigunIdValue = values['c-YRfBI9lv8C'];
-                        let nigunId = null;
-
-                        // Handle row reference format - can be object with rowId, or text with customId
-                        if (nigunIdValue) {
-                            if (typeof nigunIdValue === 'object') {
-                                // Row reference from Coda - the NAME field is the customId we need
-                                nigunId = nigunIdValue.name || nigunIdValue.rowId || nigunIdValue.id || extractText(nigunIdValue);
-                            } else {
-                                // Plain text - likely the customId directly
-                                nigunId = extractText(nigunIdValue);
-                            }
-                        }
-
-                        // Strip # prefix to match song customId format
-                        if (nigunId && nigunId.startsWith('#')) {
-                            nigunId = nigunId.substring(1);
-                        }
-
-                        if (!nigunId) return;
-
-                        // Get file attachment - column c-5huefE57QG
-                        let fileAttachment = values['c-5huefE57QG'];
-                        if (!fileAttachment) return;
-
-                        // Handle both array and single object formats
-                        if (!Array.isArray(fileAttachment)) {
-                            if (fileAttachment.url && fileAttachment.name) {
-                                fileAttachment = [fileAttachment];
-                            } else {
-                                return;
-                            }
-                        }
-
-                        if (fileAttachment.length === 0) return;
-
-                        // Extract metadata from columns
-                        const personalities = extractText(values['c-g8h-pbWteL']) || '';
-                        const details = extractText(values['c--CHvJUWn_f']) || '';
-                        const ratingVal = extractText(values['c-WqeOGhwKvu']) || '';
-                        const album = extractText(values['c-jbH2d1qm6j']) || '';
-
-                        // Parse rating (1-5)
-                        let rating = 0;
-                        if (ratingVal) {
-                            const parsed = parseInt(ratingVal, 10);
-                            if (!isNaN(parsed) && parsed >= 1 && parsed <= 5) {
-                                rating = parsed;
-                            }
-                        }
-
-                        // Process all files in this attachment
-                        fileAttachment.forEach((file, fileIdx) => {
-                            if (!file.url || !isAudioFile(file.name)) return;
-
-                            const suffix = fileAttachment.length > 1 ? ` (${fileIdx + 1})` : '';
-                            const recording = {
-                                url: file.url,
-                                name: file.name || 'רעקארדינג',
-                                details: details,
-                                personalities: personalities,
-                                album: album,
-                                rating: rating,
-                                displayName: details || personalities || album || `רעקארדינג${suffix}`,
-                                tableRowId: item.id // Store the recording's row ID
-                            };
-
-                            // Index by nigun ID
-                            if (!recordingsByNigunId[nigunId]) {
-                                recordingsByNigunId[nigunId] = [];
-                            }
-                            recordingsByNigunId[nigunId].push(recording);
-                        });
-                    });
-
-                    // Sort all recordings by rating (highest first) and add numbering
-                    Object.values(recordingsByNigunId).forEach(recs => {
-                        recs.sort((a, b) => {
-                            if (a.rating && b.rating) return b.rating - a.rating;
-                            if (a.rating && !b.rating) return -1;
-                            if (!a.rating && b.rating) return 1;
-                            return 0;
-                        });
-                        // Add recording numbers after sorting
-                        recs.forEach((rec, idx) => {
-                            rec.recordingNumber = idx + 1;
-                        });
-                    });
-
-                    console.log(`✅ Recordings indexed for ${Object.keys(recordingsByNigunId).length} nigunim`);
-
-                    // Also cache it for faster subsequent loads
-                    setCachedData('recordings_table', recordingsByNigunId);
+                    console.log(`Recordings loaded via IndexManager (${Object.keys(recordingsByNigunId).length} nigunim)`);
                 } catch (error) {
-                    console.error('❌ Error fetching recordings table:', error);
+                    console.error('Error loading recordings index:', error);
                 }
             }
 
@@ -22268,32 +22724,52 @@
                 }
             }
 
-            // Fetch songs from API - OPTIMIZED: Only load stats, everything else is lazy loaded
+            // Main initialization - uses IndexManager for slim index approach
             async function fetchSongs() {
                 try {
-                    console.log('🚀 Starting initialization (optimized - lazy loading)...');
+                    console.log('Starting initialization with IndexManager...');
 
-                    // ONLY load statistics - no category info, no songs yet
+                    // 1. Load statistics (uses simple cache)
                     try {
                         await fetchStatistics();
-                        console.log('✅ Statistics loaded:', cachedStats);
                     } catch (statsError) {
-                        console.error('⚠️ Statistics failed to load, using defaults:', statsError);
-                        // Continue anyway with default 0 values
+                        console.error('Statistics failed to load, using defaults:', statsError);
                     }
 
-                    // Render home page NOW with statistics (or defaults)
-                    if (!window.location.hash || window.location.hash === '#/home' || window.location.hash === '#/') {
+                    // 2. Check if this is a direct song link
+                    const hash = window.location.hash || '';
+                    const directSongMatch = hash.match(/#\/nigunim\/([^\/]+)/);
+
+                    if (directSongMatch && directSongMatch[1] !== '') {
+                        const songId = decodeURIComponent(directSongMatch[1]);
+                        // Direct link: fetch song directly, don't wait for full index
+                        handleDirectSongLink(songId);
+                        return;
+                    }
+
+                    // 3. Load song index (fast: from localStorage or ~700KB API fetch)
+                    const songs = await IndexManager.loadSongIndex();
+                    if (songs && songs.length > 0) {
+                        populateAllSongsFromIndex(songs);
+                    }
+
+                    // 4. Render UI immediately
+                    if (!hash || hash === '#/home' || hash === '#/') {
                         updateURL();
                         renderCurrentPage();
-                        console.log('✅ Home page rendered');
                     } else {
-                        // Navigate based on URL - category data will be loaded on demand
                         handleURLChange();
                     }
 
+                    // 5. Background: load recordings index (memory only, enables instant play)
+                    IndexManager.loadRecordingsIndex().then(() => {
+                        updateSongsFromRecordingsIndex();
+                    });
+
+                    // 6. Categories loaded on demand via ensureDataForPage
+
                 } catch (error) {
-                    console.error('❌ Fatal error:', error);
+                    console.error('Fatal error:', error);
                     const content = document.getElementById('mainContent');
                     if (content) {
                         content.innerHTML = `
@@ -22312,16 +22788,14 @@
             async function ensureDataForPage(page, waitForAll = false) {
                 switch (page) {
                     case 'songs':
-                        // Load recordings, mechabrim, and songs ALL in parallel for speed
-                        // After songs load, we'll merge in recording data
+                        // Load songs, recordings, and mechabrim in parallel
                         {
                             const promises = [];
-                            // Load recordings in background (don't await)
-                            if (!loadedCategories.recordings) {
+                            // Load recordings in background via IndexManager
+                            if (!IndexManager.recordingsLoaded) {
                                 promises.push(fetchRecordingsTable().then(() => {
                                     loadedCategories.recordings = true;
-                                    // After recordings load, update any already-loaded songs
-                                    updateSongsWithRecordings();
+                                    updateSongsFromRecordingsIndex();
                                 }));
                             }
                             if (!loadedCategories.mechabrim) {
@@ -22333,10 +22807,6 @@
                             if (promises.length > 0) {
                                 await Promise.all(promises);
                             }
-                        }
-                        // For detail pages, wait for ALL songs to be loaded, not just first batch
-                        if (waitForAll && !songsFullyLoaded) {
-                            await fetchSongsInBackground();
                         }
                         break;
                     case 'chatzeros':
@@ -22455,201 +22925,49 @@
             let songsCurrentlyLoading = false;
             let songsLoadingPromise = null;
 
-            // Fetch songs in background with pagination - OPTIMIZED: first 50 items initially
+            // Fetch songs via IndexManager song index (replaces paginated Coda API fetch)
             async function fetchSongsInBackground() {
                 // Prevent duplicate fetches - return existing promise if already loading
                 if (songsCurrentlyLoading && songsLoadingPromise) {
-                    console.log('⏳ Songs already loading, returning existing promise');
                     return songsLoadingPromise;
                 }
+                if (songsFullyLoaded && allSongs.length > 0) return;
+
                 songsCurrentlyLoading = true;
 
-                // Create a promise that will be resolved when songs are loaded
                 songsLoadingPromise = (async () => {
-
                     try {
-                        // Check cache first
-                        const cachedSongs = getCachedData('songs');
-                        if (cachedSongs && cachedSongs.length > 0) {
-                            console.log(`Using cached songs: ${cachedSongs.length} items`);
-                            allSongs = cachedSongs;
-                            loadedCategories.songs = true;
-                            songsFullyLoaded = true; // Cached songs are complete
-                            applyFiltersQuiet();  // Quiet version to avoid animation on load
-                            buildCategoryIndices();
-                            updateFilterMegaMenuContent(); // Refresh filter mega-menu with populated data
-                            updateNavCounts();
+                        // Show loading wave bar
+                        const waveBar = document.getElementById('loadingWaveBar');
+                        if (waveBar) waveBar.classList.add('active');
+
+                        // Load song index via IndexManager
+                        const songs = await IndexManager.loadSongIndex();
+
+                        if (songs && songs.length > 0) {
+                            // Transform index data into allSongs format
+                            populateAllSongsFromIndex(songs);
+
+                            console.log(`Song index loaded: ${allSongs.length} songs`);
+
+                            // Render song list if on songs page
                             if (currentPageView === 'songs') {
-                                // Only update the songs grid, not the whole page
                                 updateSongsCount();
                                 const grid = document.getElementById('songsGrid');
                                 if (grid && grid.children.length === 0) {
                                     loadMoreSongs(true);
                                 }
                             }
-                            songsCurrentlyLoading = false;
-                            songsLoadingPromise = null;
-                            return;
+
+                            // Update category pages if viewing one
+                            const categoryPagesList = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections'];
+                            if (categoryPagesList.includes(currentPageView)) {
+                                updateCategoryPageCards();
+                            }
                         }
 
-                        let allRows = [];
-                        let pageToken = null;
-                        let isFirstBatch = true;
-
-                        // Show loading wave bar
-                        const waveBar = document.getElementById('loadingWaveBar');
-                        if (waveBar) waveBar.classList.add('active');
-
-                        // Note: Recordings are now fetched on-demand when nigun modal opens
-                        // Minimal recording info comes from relation column c-T2POJqNgIS in nigun data
-
-                        do {
-                            const cacheBuster = Date.now();
-                            const url = `${WORKER_URL}docs/${DOC_ID}/tables/${TABLE_ID}/rows?valueFormat=rich&_cb=${cacheBuster}${pageToken ? '&pageToken=' + pageToken : ''}`;
-                            const response = await fetch(url);
-                            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-                            const data = await response.json();
-                            allRows = allRows.concat(data.items || []);
-                            pageToken = data.nextPageToken;
-
-                            // Process songs so far and update counts
-                            processSongsData(allRows);
-
-                            // Update filteredSongs after each batch
-                            // First batch: shuffle for random mode, skip sort for alphabetical (for FLIP)
-                            // Subsequent batches: skip sort for shuffle (preserve order), sort for alphabetical
-                            if (isFirstBatch) {
-                                if (currentSortOrder === 'random') {
-                                    applyFiltersQuiet(false); // Shuffle for random mode
-                                    console.log('First batch: shuffling songs for random mode');
-                                } else {
-                                    applyFiltersQuiet(true); // Skip sort for FLIP-friendly display
-                                    console.log('First batch: skipping sort for FLIP-friendly display');
-                                }
-                            } else if (currentSortOrder === 'random') {
-                                // In shuffle mode: DON'T re-shuffle! Keep existing order
-                                // Just filter and append new songs - FLIP will insert at random positions
-                                applyFiltersQuiet(true); // Skip sort to preserve order
-                                console.log('Subsequent batch: shuffle mode - preserving existing order');
-                            } else {
-                                applyFiltersQuiet(false); // Sort to put new songs in correct position
-                            }
-
-                            if (currentPageView === 'songs') {
-                                updateSongsCount();
-                            }
-
-                            // After first batch, render and mark DISPLAYED songs as "seen"
-                            if (isFirstBatch && allRows.length >= 50) {
-                                isFirstBatch = false;
-                                loadedCategories.songs = true;
-                                buildCategoryIndices();
-
-                                if (currentPageView === 'songs') {
-                                    const grid = document.getElementById('songsGrid');
-                                    if (grid) {
-                                        // For sorted modes: display 1 song from middle position
-                                        // This allows earlier songs to FLIP in before it
-                                        if (currentSortOrder !== 'random') {
-                                            // Sort first to know correct order
-                                            applyFiltersQuiet(false);
-                                            // Seed with song at position 49 (or last if less)
-                                            const seedPosition = Math.min(49, filteredSongs.length - 1);
-                                            const seedSong = filteredSongs[seedPosition];
-                                            const seedIdx = allSongs.indexOf(seedSong);
-
-                                            // Create the seed element
-                                            const playlistIndices = filteredSongs.map(song => allSongs.indexOf(song));
-                                            const seedHtml = renderSongItem(seedSong, seedIdx, seedPosition + 1, playlistIndices);
-                                            grid.insertAdjacentHTML('beforeend', seedHtml);
-                                            songsLazyState.currentIndex = 1;
-
-                                            // Mark only this song as seen
-                                            seenSongIds = new Set([seedSong.rowId || seedSong.name]);
-                                            console.log(`First batch: seeded with song at position ${seedPosition} (alphabetical mode)`);
-                                        } else {
-                                            // Shuffle mode: display first song normally
-                                            songsLazyState.batchSize = 1;
-                                            loadMoreSongs(true);
-                                            songsLazyState.batchSize = 50;
-
-                                            const displayedSongs = filteredSongs.slice(0, 1);
-                                            seenSongIds = new Set(displayedSongs.map(s => s.rowId || s.name));
-                                            console.log(`First batch: marked ${seenSongIds.size} displayed song as seen (shuffle mode)`);
-                                        }
-                                    } else {
-                                        renderCurrentPage();
-                                        seenSongIds = new Set(allSongs.map(s => s.rowId || s.name));
-                                    }
-                                } else {
-                                    seenSongIds = new Set(allSongs.map(s => s.rowId || s.name));
-                                }
-                            } else if (!isFirstBatch) {
-                                // Subsequent batches: identify new songs (not in displayed set)
-                                const newSongs = allSongs.filter(s => {
-                                    const id = s.rowId || s.name;
-                                    return !seenSongIds.has(id);
-                                });
-
-                                // Only mark songs in VISIBLE RANGE as seen (not all)
-                                // This allows later batches to FLIP into positions 0-49
-                                const displayedCount = document.getElementById('songsGrid')?.children.length || 50;
-                                const visibleRange = Math.max(displayedCount + 20, 50);
-                                newSongs.forEach(s => {
-                                    const posInFiltered = filteredSongs.indexOf(s);
-                                    if (posInFiltered < visibleRange) {
-                                        seenSongIds.add(s.rowId || s.name);
-                                    }
-                                });
-
-                                console.log(`FLIP check: newSongs=${newSongs.length}, currentSortOrder=${currentSortOrder}`);
-
-                                // FLIP for ALL sort modes - show songs popping in
-                                if (currentPageView === 'songs' && newSongs.length > 0) {
-                                    const grid = document.getElementById('songsGrid');
-                                    if (grid && grid.children.length > 0) {
-                                        updateSongsListWithNewSongs(newSongs);
-                                    }
-                                }
-
-                                // Update category page incrementally as songs load
-                                const categoryPagesForUpdate = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections'];
-                                if (categoryPagesForUpdate.includes(currentPageView)) {
-                                    buildCategoryIndices();
-                                    updateCategoryPageCards();
-                                }
-                            }
-
-                            console.log(`Loaded ${allRows.length} songs...`);
-                        } while (pageToken);
-
-                        console.log(`Finished loading ${allRows.length} total songs`);
-                        loadedCategories.songs = true;
-                        songsFullyLoaded = true; // All songs are now loaded
-
-                        // Cache the processed songs
-                        setCachedData('songs', allSongs);
-
-                        // Final update - just refresh filters and count (no animation for background data)
-                        applyFiltersQuiet();  // Update filteredSongs without animation
-                        buildCategoryIndices();
-                        updateFilterMegaMenuContent(); // Refresh filter mega-menu with populated data
-
-                        // Update category page if user is viewing one (categories grew as songs loaded)
-                        const categoryPagesList = ['chatzeros', 'mechabrim', 'verter', 'zmanim', 'collections'];
-                        if (categoryPagesList.includes(currentPageView)) {
-                            // Final update with all categories
-                            updateCategoryPageCards();
-                            // Make sure wave bar is hidden now that all songs are loaded
-                            const categoryLoader = document.getElementById('categoryLoader');
-                            if (categoryLoader) categoryLoader.classList.remove('active');
-                        }
-
-                        // Hide loading wave bar and update subtitle (fade out ball)
-                        const waveBarToHide = document.getElementById('loadingWaveBar');
-                        if (waveBarToHide) waveBarToHide.classList.remove('active');
-
-                        // Update count display to fade out loading ball
+                        // Hide loading wave bar
+                        if (waveBar) waveBar.classList.remove('active');
                         if (currentPageView === 'songs') {
                             updateSongsCount();
                         }
@@ -26181,10 +26499,17 @@
             // Check if a song has any recording that meets the quality threshold
             function songHasQualityAudio(song) {
                 if (minQualityRating === 0) {
-                    // No quality filter, just check if has audio
-                    return song.audioUrl && song.audioUrl.startsWith('http');
+                    // No quality filter - check audioUrl, recordings array, or index flags
+                    if (song.audioUrl && song.audioUrl.startsWith('http')) return true;
+                    if (song.hasRecordings) return true; // From songIndex
+                    if (song.bestRecordingRowId) return true; // Has a known recording
+                    return false;
                 }
-                if (!song.recordings || song.recordings.length === 0) return false;
+                if (!song.recordings || song.recordings.length === 0) {
+                    // No recordings loaded yet - check bestRecordingRating from index
+                    if (song.bestRecordingRating && song.bestRecordingRating >= minQualityRating) return true;
+                    return false;
+                }
                 return song.recordings.some(rec => recordingMeetsQuality(rec));
             }
 
@@ -27408,9 +27733,17 @@
                         const dataPage = page === 'zman' ? 'zmanim' : (page === 'piyutim' ? 'piyutim' : (page === 'nigunim' ? 'songs' : page));
 
                         // Show loading indicator and ensure data is loaded for detail pages
-                        // For nigunim, need to check songsFullyLoaded, not just loadedCategories
-                        const needsLoading = page === 'nigunim' ? !songsFullyLoaded : !isDataLoadedForPage(dataPage);
+                        // For nigunim: use direct API fetch if song not in index yet
+                        const needsLoading = page === 'nigunim'
+                            ? (!loadedCategories.songs || !allSongs.some(s => s.customId === idOrName || s.rowId === idOrName || s.name === idOrName))
+                            : !isDataLoadedForPage(dataPage);
                         if (detailPages.includes(page) && needsLoading) {
+                            if (page === 'nigunim') {
+                                // For nigunim: try direct API fetch first (fast)
+                                // Don't wait for full index if we can fetch this specific song
+                                await handleDirectSongLink(idOrName);
+                                return;
+                            }
                             if (content) {
                                 content.innerHTML = `
                                 <div class="detail-loading-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 400px; gap: 20px;">
@@ -27422,8 +27755,7 @@
                                 </div>
                             `;
                             }
-                            // For nigunim, wait for ALL songs to load so we can find the specific one
-                            await ensureDataForPage(dataPage, page === 'nigunim');
+                            await ensureDataForPage(dataPage);
                         }
 
                         // Find item by ID or name
@@ -31269,7 +31601,8 @@
             }
 
             // Play song (sets playlist if not already set)
-            function playSong(idx, playlist = null) {
+            // Now supports fallback: if recordings not loaded, use bestRecordingRowId from index
+            async function playSong(idx, playlist = null) {
                 if (idx < 0 || idx >= allSongs.length) return;
 
                 // If clicking the same song, toggle play/pause
@@ -31298,28 +31631,57 @@
                 currentSongIndex = idx;
                 const song = allSongs[idx];
 
-                // Set recording info for rating updates (default to first recording)
+                // FIRST: Update song list to show wave with 'loading' state
+                updateActiveSongInList();
+                showPlayer();
+                updatePlayerUI(song);
+
+                // Try to play from recordings (instant if loaded)
                 if (song.recordings && song.recordings.length > 0) {
                     currentPlayingRecordingInfo = {
                         songIdx: idx,
                         recordingIdx: 0,
                         slotIndex: song.recordings[0].slotIndex,
                         rowId: song.rowId,
-                        tableRowId: song.recordings[0].tableRowId // Recording's own row ID in recordings table
+                        tableRowId: song.recordings[0].tableRowId
                     };
-                } else {
-                    currentPlayingRecordingInfo = null;
+                    audioPlayer.src = song.audioUrl || song.recordings[0].url;
+                    audioPlayer.play();
+                    return;
                 }
 
-                // FIRST: Update song list to show wave with 'loading' state
-                updateActiveSongInList();
+                // Fallback: use bestRecordingRowId from songIndex
+                if (song.bestRecordingRowId) {
+                    try {
+                        const recording = await IndexManager.getRecordingByRowId(song.bestRecordingRowId);
+                        if (recording && recording.url) {
+                            song.audioUrl = recording.url;
+                            // Add to recordings array for future use
+                            if (!song.recordings) song.recordings = [];
+                            song.recordings.push(recording);
+                            currentPlayingRecordingInfo = {
+                                songIdx: idx,
+                                recordingIdx: 0,
+                                rowId: song.rowId,
+                                tableRowId: recording.rowId
+                            };
+                            audioPlayer.src = recording.url;
+                            audioPlayer.play();
+                            return;
+                        }
+                    } catch (error) {
+                        console.error('Error fetching recording for playback:', error);
+                    }
+                }
 
-                // THEN: Start loading and playing audio
-                audioPlayer.src = song.audioUrl;
-                audioPlayer.play();
-
-                showPlayer();
-                updatePlayerUI(song);
+                // If we have an audioUrl (from any source), play it
+                if (song.audioUrl) {
+                    currentPlayingRecordingInfo = null;
+                    audioPlayer.src = song.audioUrl;
+                    audioPlayer.play();
+                } else {
+                    console.log('No recording available for song:', song.name);
+                }
             }
 
             // Play song from a specific playlist (detail pages)
@@ -32083,7 +32445,9 @@
                 document.body.style.overflow = 'hidden'; // Prevent background scrolling
             }
 
-            // Render nigun detail content inside modal (uses same logic as renderNigunDetailPage)
+            // Render nigun detail content inside modal
+            // Now supports async loading: shows basic info immediately from songIndex,
+            // then fetches full details (gezungen, maure, pasigOif) and recordings async
             function renderNigunDetailInModal(container, nigunName, idx) {
                 // Find the song
                 let songIdx = idx !== undefined ? idx : allSongs.findIndex(s => s.name === nigunName);
@@ -32100,13 +32464,76 @@
                     return;
                 }
 
-                // Use the existing render function but target the modal container
-                // Create a temporary container to hold the content
+                // Render immediately with available data from songIndex
                 const tempContainer = document.createElement('div');
                 renderNigunDetailPage(tempContainer, song.name);
-
-                // Insert the rendered content into modal
                 container.innerHTML = tempContainer.innerHTML;
+
+                // If full details aren't loaded yet, fetch them asynchronously
+                if (!song._fullDetailsLoaded && song.rowId) {
+                    loadFullSongDetailsForModal(song, songIdx, container);
+                }
+
+                // If recordings not loaded yet, try to load them
+                if ((!song.recordings || song.recordings.length === 0) && song.hasRecordings) {
+                    loadRecordingsForModal(song, songIdx, container);
+                }
+            }
+
+            // Async: fetch full song details and update the modal
+            async function loadFullSongDetailsForModal(song, songIdx, container) {
+                try {
+                    const fullDetails = await IndexManager.getFullSongDetails(song.rowId);
+                    if (!fullDetails) return;
+
+                    // Merge full details into the song object
+                    mergeFullSongDetails(song, fullDetails);
+
+                    // Re-render the modal content with full details
+                    // Only if the modal is still showing this song
+                    if (nigunModalOpen && currentNigunModalIdx === songIdx) {
+                        const tempContainer = document.createElement('div');
+                        renderNigunDetailPage(tempContainer, song.name);
+                        container.innerHTML = tempContainer.innerHTML;
+                    }
+                } catch (error) {
+                    console.error('Error loading full song details for modal:', error);
+                }
+            }
+
+            // Async: load recordings for a song and update the modal
+            async function loadRecordingsForModal(song, songIdx, container) {
+                try {
+                    // Try recordings index first
+                    if (IndexManager.recordingsLoaded) {
+                        const recordings = IndexManager.getRecordings(song.customId);
+                        if (recordings && recordings.length > 0) {
+                            song.recordings = recordings;
+                            song.audioUrl = recordings[0].url;
+                            song.hasRecordings = true;
+                            song.recordingCount = recordings.length;
+                        }
+                    } else {
+                        // Wait for recordings index to load
+                        await IndexManager.loadRecordingsIndex();
+                        const recordings = IndexManager.getRecordings(song.customId);
+                        if (recordings && recordings.length > 0) {
+                            song.recordings = recordings;
+                            song.audioUrl = recordings[0].url;
+                            song.hasRecordings = true;
+                            song.recordingCount = recordings.length;
+                        }
+                    }
+
+                    // Re-render modal if still open for this song
+                    if (nigunModalOpen && currentNigunModalIdx === songIdx) {
+                        const tempContainer = document.createElement('div');
+                        renderNigunDetailPage(tempContainer, song.name);
+                        container.innerHTML = tempContainer.innerHTML;
+                    }
+                } catch (error) {
+                    console.error('Error loading recordings for modal:', error);
+                }
             }
 
             // Close all open modals (nigun and detail)
