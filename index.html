@@ -6670,16 +6670,16 @@
         /* Collections Grid - Playlist Style */
         .collections-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 14px;
             max-width: 1200px;
             margin: 0 auto;
         }
 
         .collection-card {
-            background: linear-gradient(145deg, var(--color-collection) 0%, var(--color-collection-dark) 100%);
-            border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(198, 40, 40, 0.25);
+            background: linear-gradient(145deg, var(--color-collection-light) 0%, var(--color-collection) 100%);
+            border-radius: 14px;
+            box-shadow: 0 3px 12px rgba(198, 40, 40, 0.12);
             transition: var(--transition-smooth);
             position: relative;
             overflow: hidden;
@@ -6692,17 +6692,17 @@
         .collection-card::before {
             content: '♫';
             position: absolute;
-            top: -15px;
-            left: -10px;
-            font-size: 6em;
-            opacity: 0.08;
+            bottom: -10px;
+            right: -5px;
+            font-size: 4em;
+            opacity: 0.15;
             color: white;
             pointer-events: none;
         }
 
         .collection-card:hover {
-            box-shadow: 0 10px 35px rgba(198, 40, 40, 0.35);
-            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 5px 18px rgba(198, 40, 40, 0.2);
+            transform: translateY(-2px);
         }
 
         .collection-card-header {
@@ -6710,58 +6710,21 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px 15px;
+            padding: 16px 12px;
             cursor: pointer;
             flex: 1;
-            gap: 12px;
+            gap: 10px;
             text-align: center;
-        }
-
-        .collection-info {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 4px;
         }
 
         .collection-title {
-            font-weight: 800;
-            font-size: 1.35em;
+            font-weight: 700;
+            font-size: 1.05em;
             color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            line-height: 1.3;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            line-height: 1.35;
             text-align: center;
             word-break: break-word;
-        }
-
-        .collection-meta {
-            font-size: 0.85em;
-            color: rgba(255, 255, 255, 0.8);
-            font-weight: 500;
-        }
-
-        .collection-zmanim {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            margin-top: 4px;
-            justify-content: center;
-        }
-
-        .collection-zman-tag {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7em;
-            cursor: pointer;
-            transition: var(--transition-smooth);
-            backdrop-filter: blur(4px);
-        }
-
-        .collection-zman-tag:hover {
-            background: rgba(255, 255, 255, 0.35);
-            transform: scale(1.05);
         }
 
         .collection-zman-more {
@@ -6945,49 +6908,48 @@
         }
 
         .collection-play-btn {
-            width: 56px;
-            height: 56px;
-            background: rgba(255, 255, 255, 0.95);
+            width: 44px;
+            height: 44px;
+            background: white;
             border: none;
             border-radius: 50%;
             color: var(--color-collection);
-            font-size: 1.5em;
+            font-size: 1.1em;
             cursor: pointer;
             transition: var(--transition-smooth);
             flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-            padding-right: 2px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            padding-right: 1px;
         }
 
         .collection-play-btn:hover {
-            transform: scale(1.15);
-            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
-            background: white;
+            transform: scale(1.1);
+            box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
         }
 
         /* Mobile styles for collection cards */
         @media (max-width: 480px) {
             .collections-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 12px;
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                gap: 10px;
             }
 
             .collection-card-header {
-                padding: 15px 10px;
+                padding: 12px 10px;
                 gap: 8px;
             }
 
             .collection-title {
-                font-size: 1.1em;
+                font-size: 0.95em;
             }
 
             .collection-play-btn {
-                width: 48px;
-                height: 48px;
-                font-size: 1.3em;
+                width: 38px;
+                height: 38px;
+                font-size: 1em;
             }
         }
 
@@ -23952,30 +23914,13 @@
                     }).join('');
                 } else if (currentCategoryKey === 'collections') {
                     html = sortedKeys.map(key => {
-                        const info = collectionsInfo[key] || {};
-                        const colData = categories.collections[key] || [];
-                        const songCount = colData.length;
-                        const zmanim = info.zmanim || [];
                         return `
                         <div class="collection-card">
                             <div class="collection-card-header" data-action="detail" data-category="collections" data-name="${escapeHtml(key)}">
                                 <button class="collection-play-btn" data-action="play-collection" data-name="${escapeHtml(key)}" onclick="event.stopPropagation();">
                                     ▶
                                 </button>
-                                <div class="collection-info">
-                                    <div class="collection-title">${key}</div>
-                                    <div class="collection-meta">${pluralize(songCount, 'ניגון', 'ניגונים')}</div>
-                                    ${zmanim.length > 0 ? `
-                                        <div class="collection-zmanim" onclick="event.stopPropagation();">
-                                            ${zmanim.slice(0, 2).map(zman => `<span class="collection-zman-tag"
-                                                data-action="zman-detail"
-                                                data-name="${escapeHtml(zman)}"
-                                                data-tooltip-value="${escapeHtml(zman)}"
-                                                data-tooltip-type="zman">${zman}</span>`).join('')}
-                                            ${zmanim.length > 2 ? `<span class="collection-zman-more">+${zmanim.length - 2}</span>` : ''}
-                                        </div>
-                                    ` : ''}
-                                </div>
+                                <div class="collection-title">${key}</div>
                             </div>
                         </div>
                     `;
@@ -28672,32 +28617,13 @@
 
                     <div class="collections-grid" id="categoryGrid">
                         ${sortedKeys.map(key => {
-                    const info = collectionsInfo[key] || {};
-                    const songCount = data[key].length;
-                    const zmanim = info.zmanim || [];
-                    const songIndices = data[key] || [];
-                    const playlistIndices = songIndices.map(idx => idx);
-
                     return `
                             <div class="collection-card">
                                 <div class="collection-card-header" data-action="detail" data-category="collections" data-name="${escapeHtml(key)}">
                                     <button class="collection-play-btn" data-action="play-collection" data-name="${escapeHtml(key)}" onclick="event.stopPropagation();">
                                         ▶
                                     </button>
-                                    <div class="collection-info">
-                                        <div class="collection-title">${key}</div>
-                                        <div class="collection-meta">${pluralize(songCount, 'ניגון', 'ניגונים')}</div>
-                                        ${zmanim.length > 0 ? `
-                                            <div class="collection-zmanim" onclick="event.stopPropagation();">
-                                                ${zmanim.slice(0, 2).map(zman => `<span class="collection-zman-tag"
-                                                    data-action="zman-detail"
-                                                    data-name="${escapeHtml(zman)}"
-                                                    data-tooltip-value="${escapeHtml(zman)}"
-                                                    data-tooltip-type="zman">${zman}</span>`).join('')}
-                                                ${zmanim.length > 2 ? `<span class="collection-zman-more">+${zmanim.length - 2}</span>` : ''}
-                                            </div>
-                                        ` : ''}
-                                    </div>
+                                    <div class="collection-title">${key}</div>
                                 </div>
                             </div>
                         `}).join('')}
