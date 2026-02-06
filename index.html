@@ -20835,6 +20835,7 @@
             const SCALE_TABLE_ID = 'grid-3zCbdOmk4G'; // סקעיל טעיבל
             const RHYTHM_TABLE_ID = 'grid-26264o7G_r'; // ריטעם טעיבל
             const STATS_TABLE_ID = 'table-CbrETqO5E9'; // סטעטיסטיקס טעיבל
+            const RECORDINGS_TABLE_ID = 'grid-jWWLn52ryG'; // רעקארדינגס טעיבל
 
             // Stats column IDs (exact IDs from Coda)
             const STATS_COLS = {
@@ -20898,6 +20899,9 @@
                 albums: false,
                 songs: false
             };
+
+            // Recordings indexed by nigun ID (fetched from separate table)
+            let recordingsByNigunId = {};
 
             // Nigun modal state (defined early for event handlers)
             let nigunModalOpen = false;
@@ -21902,6 +21906,278 @@
                 await fetchTableInfo(RHYTHM_TABLE_ID, rhythmInfo, 'Rhythm');
             }
 
+            // Fetch recordings from separate table and index by nigun ID
+            async function fetchRecordingsTable() {
+                try {
+                    // Check cache first
+                    const cacheKey = 'recordings_table';
+                    const cachedRecordings = getCachedData(cacheKey);
+                    if (cachedRecordings && Object.keys(cachedRecordings).length > 0) {
+                        recordingsByNigunId = cachedRecordings;
+                        console.log(`✅ Recordings loaded from cache (${Object.keys(recordingsByNigunId).length} nigunim)`);
+                        return;
+                    }
+
+                    console.log('📡 Fetching recordings table...');
+                    let allRows = [];
+                    let pageToken = null;
+
+                    do {
+                        const url = `${WORKER_URL}docs/${DOC_ID}/tables/${RECORDINGS_TABLE_ID}/rows?valueFormat=rich${pageToken ? '&pageToken=' + pageToken : ''}`;
+                        const response = await fetch(url);
+                        if (!response.ok) {
+                            console.log('Recordings table not accessible:', response.status);
+                            return;
+                        }
+                        const data = await response.json();
+                        allRows = allRows.concat(data.items || []);
+                        pageToken = data.nextPageToken;
+                        console.log(`📥 Fetched ${allRows.length} recordings so far...`);
+                    } while (pageToken);
+
+                    console.log(`📊 Fetched ${allRows.length} recordings from table`);
+
+                    // Process and index by nigun ID
+                    allRows.forEach(item => {
+                        const values = item.values;
+
+                        // Get nigun ID reference - column c-YRfBI9lv8C
+                        const nigunIdValue = values['c-YRfBI9lv8C'];
+                        let nigunId = null;
+
+                        // Handle row reference format - can be object with rowId, or text with customId
+                        if (nigunIdValue) {
+                            if (typeof nigunIdValue === 'object') {
+                                // Row reference from Coda - the NAME field is the customId we need
+                                nigunId = nigunIdValue.name || nigunIdValue.rowId || nigunIdValue.id || extractText(nigunIdValue);
+                            } else {
+                                // Plain text - likely the customId directly
+                                nigunId = extractText(nigunIdValue);
+                            }
+                        }
+
+                        // Strip # prefix to match song customId format
+                        if (nigunId && nigunId.startsWith('#')) {
+                            nigunId = nigunId.substring(1);
+                        }
+
+                        if (!nigunId) return;
+
+                        // Get file attachment - column c-5huefE57QG
+                        let fileAttachment = values['c-5huefE57QG'];
+                        if (!fileAttachment) return;
+
+                        // Handle both array and single object formats
+                        if (!Array.isArray(fileAttachment)) {
+                            if (fileAttachment.url && fileAttachment.name) {
+                                fileAttachment = [fileAttachment];
+                            } else {
+                                return;
+                            }
+                        }
+
+                        if (fileAttachment.length === 0) return;
+
+                        // Extract metadata from columns
+                        const personalities = extractText(values['c-g8h-pbWteL']) || '';
+                        const details = extractText(values['c--CHvJUWn_f']) || '';
+                        const ratingVal = extractText(values['c-WqeOGhwKvu']) || '';
+                        const album = extractText(values['c-jbH2d1qm6j']) || '';
+
+                        // Parse rating (1-5)
+                        let rating = 0;
+                        if (ratingVal) {
+                            const parsed = parseInt(ratingVal, 10);
+                            if (!isNaN(parsed) && parsed >= 1 && parsed <= 5) {
+                                rating = parsed;
+                            }
+                        }
+
+                        // Process all files in this attachment
+                        fileAttachment.forEach((file, fileIdx) => {
+                            if (!file.url || !isAudioFile(file.name)) return;
+
+                            const suffix = fileAttachment.length > 1 ? ` (${fileIdx + 1})` : '';
+                            const recording = {
+                                url: file.url,
+                                name: file.name || 'רעקארדינג',
+                                details: details,
+                                personalities: personalities,
+                                album: album,
+                                rating: rating,
+                                displayName: details || personalities || album || `רעקארדינג${suffix}`,
+                                tableRowId: item.id // Store the recording's row ID
+                            };
+
+                            // Index by nigun ID
+                            if (!recordingsByNigunId[nigunId]) {
+                                recordingsByNigunId[nigunId] = [];
+                            }
+                            recordingsByNigunId[nigunId].push(recording);
+                        });
+                    });
+
+                    // Sort all recordings by rating (highest first) and add numbering
+                    Object.values(recordingsByNigunId).forEach(recs => {
+                        recs.sort((a, b) => {
+                            if (a.rating && b.rating) return b.rating - a.rating;
+                            if (a.rating && !b.rating) return -1;
+                            if (!a.rating && b.rating) return 1;
+                            return 0;
+                        });
+                        // Add recording numbers after sorting
+                        recs.forEach((rec, idx) => {
+                            rec.recordingNumber = idx + 1;
+                        });
+                    });
+
+                    console.log(`✅ Recordings indexed for ${Object.keys(recordingsByNigunId).length} nigunim`);
+
+                    // Also cache it for faster subsequent loads
+                    setCachedData('recordings_table', recordingsByNigunId);
+                } catch (error) {
+                    console.error('❌ Error fetching recordings table:', error);
+                }
+            }
+
+            // Update already-loaded songs with recording data
+            // Called after recordings table finishes loading in the background
+            function updateSongsWithRecordings() {
+                if (allSongs.length === 0) return;
+
+                let updated = 0;
+                allSongs.forEach(song => {
+                    const recordings = recordingsByNigunId[song.customId] || [];
+                    if (recordings.length > 0) {
+                        song.recordings = recordings;
+                        song.hasRecordings = true;
+                        song.recordingCount = recordings.length;
+                        song.audioUrl = recordings[0].url;
+                        updated++;
+                    }
+                });
+
+                if (updated > 0) {
+                    console.log(`🔄 Updated ${updated} songs with recordings`);
+                    // Re-apply filters to update UI with new recording info
+                    if (typeof applyFiltersQuiet === 'function') {
+                        applyFiltersQuiet();
+                    }
+                }
+            }
+
+            // Helper to check if file is audio (global scope for reuse)
+            function isAudioFile(filename) {
+                if (!filename) return false;
+                const ext = filename.toLowerCase().split('.').pop();
+                return ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'wma'].includes(ext);
+            }
+
+            // Fetch recordings on-demand for a specific song
+            async function fetchRecordingsForSong(song) {
+                if (!song || !song.recordingRefs || song.recordingRefs.length === 0) {
+                    return [];
+                }
+
+                // Check if already fetched (recordings array populated)
+                if (song.recordings && song.recordings.length > 0) {
+                    return song.recordings;
+                }
+
+                try {
+                    console.log(`🎵 Fetching ${song.recordingRefs.length} recordings for nigun:`, song.name);
+                    const recordings = [];
+
+                    // Fetch each recording row by ID
+                    for (const ref of song.recordingRefs) {
+                        const rowId = typeof ref === 'object' ? ref.rowId : ref;
+                        if (!rowId) continue;
+
+                        try {
+                            const url = `${WORKER_URL}docs/${DOC_ID}/tables/${RECORDINGS_TABLE_ID}/rows/${rowId}?valueFormat=rich`;
+                            const response = await fetch(url);
+                            if (!response.ok) {
+                                console.warn(`Recording ${rowId} not found:`, response.status);
+                                continue;
+                            }
+                            const data = await response.json();
+                            const values = data.values || {};
+
+                            // Get file attachment - column c-5huefE57QG
+                            let fileAttachment = values['c-5huefE57QG'];
+                            if (!fileAttachment) continue;
+
+                            // Handle both array and single object formats
+                            if (!Array.isArray(fileAttachment)) {
+                                if (fileAttachment.url && fileAttachment.name) {
+                                    fileAttachment = [fileAttachment];
+                                } else {
+                                    continue;
+                                }
+                            }
+
+                            // Extract metadata from columns
+                            const personalities = extractText(values['c-g8h-pbWteL']) || '';
+                            const details = extractText(values['c--CHvJUWn_f']) || '';
+                            const ratingVal = extractText(values['c-WqeOGhwKvu']) || '';
+                            const album = extractText(values['c-jbH2d1qm6j']) || '';
+
+                            // Parse rating (1-5)
+                            let rating = 0;
+                            if (ratingVal) {
+                                const parsed = parseInt(ratingVal, 10);
+                                if (!isNaN(parsed) && parsed >= 1 && parsed <= 5) {
+                                    rating = parsed;
+                                }
+                            }
+
+                            // Process all files in this attachment
+                            fileAttachment.forEach((file, fileIdx) => {
+                                if (!file.url || !isAudioFile(file.name)) return;
+                                const suffix = fileAttachment.length > 1 ? ` (${fileIdx + 1})` : '';
+                                recordings.push({
+                                    url: file.url,
+                                    name: file.name || 'רעקארדינג',
+                                    details: details,
+                                    personalities: personalities,
+                                    album: album,
+                                    rating: rating,
+                                    displayName: details || personalities || album || `רעקארדינג${suffix}`,
+                                    tableRowId: rowId
+                                });
+                            });
+                        } catch (err) {
+                            console.warn(`Error fetching recording ${rowId}:`, err);
+                        }
+                    }
+
+                    // Sort by rating (highest first)
+                    recordings.sort((a, b) => {
+                        if (a.rating && b.rating) return b.rating - a.rating;
+                        if (a.rating && !b.rating) return -1;
+                        if (!a.rating && b.rating) return 1;
+                        return 0;
+                    });
+
+                    // Add numbering
+                    recordings.forEach((rec, idx) => {
+                        rec.recordingNumber = idx + 1;
+                    });
+
+                    // Store back on song object
+                    song.recordings = recordings;
+                    if (recordings.length > 0) {
+                        song.audioUrl = recordings[0].url;
+                    }
+
+                    console.log(`✅ Loaded ${recordings.length} recordings for:`, song.name);
+                    return recordings;
+                } catch (error) {
+                    console.error('❌ Error fetching recordings for song:', error);
+                    return [];
+                }
+            }
+
             // Fetch statistics from STATS table (only row 1) - with caching
             async function fetchStatistics() {
                 try {
@@ -22010,9 +22286,18 @@
             async function ensureDataForPage(page, waitForAll = false) {
                 switch (page) {
                     case 'songs':
-                        // Load mechabrim info and songs in parallel, wait for both
+                        // Load recordings, mechabrim, and songs ALL in parallel for speed
+                        // After songs load, we'll merge in recording data
                         {
                             const promises = [];
+                            // Load recordings in background (don't await)
+                            if (!loadedCategories.recordings) {
+                                promises.push(fetchRecordingsTable().then(() => {
+                                    loadedCategories.recordings = true;
+                                    // After recordings load, update any already-loaded songs
+                                    updateSongsWithRecordings();
+                                }));
+                            }
                             if (!loadedCategories.mechabrim) {
                                 promises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
                             }
@@ -22188,6 +22473,9 @@
                         // Show loading wave bar
                         const waveBar = document.getElementById('loadingWaveBar');
                         if (waveBar) waveBar.classList.add('active');
+
+                        // Note: Recordings are now fetched on-demand when nigun modal opens
+                        // Minimal recording info comes from relation column c-T2POJqNgIS in nigun data
 
                         do {
                             const cacheBuster = Date.now();
@@ -22370,13 +22658,6 @@
                         }
                     }
 
-                    // Helper to check file type
-                    const isAudioFile = (filename) => {
-                        if (!filename) return false;
-                        const ext = filename.toLowerCase().split('.').pop();
-                        return ['mp3', 'wav', 'ogg', 'm4a', 'aac', 'flac', 'wma'].includes(ext);
-                    };
-
                     const isImageFile = (filename) => {
                         if (!filename) return false;
                         const ext = filename.toLowerCase().split('.').pop();
@@ -22395,85 +22676,14 @@
                         return ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'].includes(ext);
                     };
 
-                    // Recording slots configuration (5 recording slots)
-                    const recordingSlots = [
-                        { file: 'c-XmTlDf3xfw', personalities: 'c-s8sYskJc4M', details: 'c-SuWz2qu9B1', rating: 'c-v5V7PENdFy', album: 'c-FuDbL2XiAj' },
-                        { file: 'c-oqB3imNNfk', personalities: 'c-jRuAfCbs28', details: 'c-_TOU9FXYYn', rating: 'c-YQ-aWW59ej', album: 'c-H0XAyaKkPl' },
-                        { file: 'c-oGF6C78GZl', personalities: 'c-4trFKY_CK8', details: 'c-dr-m1GnYty', rating: 'c-gmz2rln2dD', album: 'c-HKBBDews5N' },
-                        { file: 'c-pf9zW3wypK', personalities: 'c-x0WLb4j4wV', details: 'c-pbtldr4CXD', rating: 'c-_GlQy78PAc', album: 'c-imgRABw0tH' },
-                        { file: 'c-aqbocjDGuL', personalities: 'c-ilrb-DW4dV', details: 'c-2T9FWsVE9h', rating: 'c-yuKHpnbHfM', album: 'c-5FSrRNb-Uw' },
-                        { file: 'c-7I50D2psiX', personalities: 'c-K6YqT2KsoI', details: 'c-DnuzpLiKbT', rating: 'c-N2PvPrKB35', album: 'c-7tZ4Q8h1g0' },
-                        { file: 'c-tacDsFSejH', personalities: 'c-WN3PHzoSUH', details: 'c-FUEdeMZ4To', rating: 'c-Ib5MeF651f', album: 'c-UBxa0H-Q8x' },
-                        { file: 'c-ksizMXSqVT', personalities: 'c-Ym24EkM-YR', details: 'c-tVpeTBqPJC', rating: 'c-pRk0qe4piC', album: 'c-VFA3UXcRxk' },
-                        { file: 'c-8eFWozy35-', personalities: 'c-m7D24vQIxt', details: 'c-ybpQ1pRsuT', rating: 'c-X4qHc0unPI', album: 'c-bNm83Rrxw5' },
-                        { file: 'c-5eg5m7MTzF', personalities: 'c-q1DcajYwRt', details: 'c-5fdXOsRWdr', rating: 'c-XaQ_gvW9Xo', album: 'c-yk9NeTNLym' }
-                    ];
 
-                    // Extract recordings with full metadata
-                    const recordings = [];
-                    let recordingCounter = 1;
-
-                    recordingSlots.forEach((slot, slotIndex) => {
-                        let fileAttachment = values[slot.file];
-
-                        // Handle both array and single object formats from Coda
-                        if (!fileAttachment) return;
-
-                        // If it's a single object (not an array), wrap it in an array
-                        if (!Array.isArray(fileAttachment)) {
-                            if (fileAttachment.url && fileAttachment.name) {
-                                fileAttachment = [fileAttachment];
-                            } else {
-                                return; // Not a valid file attachment
-                            }
-                        }
-
-                        if (fileAttachment.length === 0) return;
-
-                        const personalities = extractText(values[slot.personalities]) || '';
-                        const details = extractText(values[slot.details]) || '';
-                        const ratingVal = extractText(values[slot.rating]) || '';
-                        const album = extractText(values[slot.album]) || '';
-
-                        // Parse rating (1-5 stars)
-                        let rating = 0;
-                        if (ratingVal) {
-                            const parsed = parseInt(ratingVal, 10);
-                            if (!isNaN(parsed) && parsed >= 1 && parsed <= 5) {
-                                rating = parsed;
-                            }
-                        }
-
-                        // Process all files in this attachment field (can have multiple)
-                        fileAttachment.forEach((file, fileIdx) => {
-                            if (!file.url || !isAudioFile(file.name)) return;
-
-                            const suffix = fileAttachment.length > 1 ? ` (${fileIdx + 1})` : '';
-                            recordings.push({
-                                url: file.url,
-                                name: file.name || `רעקארדינג ${recordingCounter}`,
-                                details: details,
-                                personalities: personalities,
-                                album: album,
-                                rating: rating,
-                                displayName: details || personalities || album || `רעקארדינג ${recordingCounter}${suffix}`,
-                                slotIndex: slotIndex,
-                                fileIndex: fileIdx
-                            });
-                            recordingCounter++;
-                        });
-                    });
-
-                    // Sort recordings by rating (highest first), then those without rating
-                    recordings.sort((a, b) => {
-                        if (a.rating && b.rating) return b.rating - a.rating;
-                        if (a.rating && !b.rating) return -1;
-                        if (!a.rating && b.rating) return 1;
-                        return 0;
-                    });
-
-                    // Get main audio URL (first recording)
-                    let mainAudioUrl = recordings.length > 0 ? recordings[0].url : null;
+                    // Look up recordings from the pre-fetched recordingsByNigunId index
+                    // This is populated by fetchRecordingsTable() in the background
+                    // The index uses nigun customId as key (from the name field in recordings table relation)
+                    let recordings = recordingsByNigunId[customId] || [];
+                    let hasRecordings = recordings.length > 0;
+                    let recordingCount = recordings.length;
+                    let mainAudioUrl = hasRecordings ? recordings[0].url : null;
 
                     // 6th attachment slot - for other media (images, videos, PDFs, additional audio)
                     const otherMedia = {
@@ -22547,6 +22757,8 @@
                         resources: extractText(values['c-KBb2Bgi6nM']), // רעסורסן
                         audioUrl: mainAudioUrl,
                         recordings: recordings,
+                        hasRecordings: hasRecordings,      // Quick check for audio icon
+                        recordingCount: recordingCount,    // Count for display
                         images: images,
                         pdfs: pdfs,
                         otherMedia: otherMedia
@@ -25060,13 +25272,8 @@
 
             // Generate floating musical notes for the nigunim page background
             function generateSongsFloatingNotes() {
-                console.log('[NOTES DEBUG] generateSongsFloatingNotes called');
                 const notesContainer = document.getElementById('songsFloatingNotes');
-                console.log('[NOTES DEBUG] notesContainer:', notesContainer);
-                if (!notesContainer) {
-                    console.log('[NOTES DEBUG] Container not found! Exiting.');
-                    return;
-                }
+                if (!notesContainer) return;
 
                 const symbols = ['♪', '♫', '♬', '♩', '♭', '♮', '♯'];
                 const noteCount = 35; // More notes
@@ -25100,9 +25307,6 @@
                 `;
                 }
                 notesContainer.innerHTML = html;
-                console.log('[NOTES DEBUG] Added', noteCount, 'notes to container');
-                console.log('[NOTES DEBUG] Container innerHTML length:', notesContainer.innerHTML.length);
-                console.log('[NOTES DEBUG] Container computed style:', window.getComputedStyle(notesContainer).display, window.getComputedStyle(notesContainer).visibility, window.getComputedStyle(notesContainer).opacity);
             }
 
             // Load more songs (for infinite scroll)
@@ -27312,11 +27516,7 @@
             let skipNextHashChange = false;
 
             window.addEventListener('hashchange', function () {
-                console.log('[DEBUG HASHCHANGE] hashchange event fired, hash:', window.location.hash);
-                console.log('[DEBUG HASHCHANGE] skipNextHashChange:', skipNextHashChange);
-
                 if (skipNextHashChange) {
-                    console.log('[DEBUG HASHCHANGE] Skipping because skipNextHashChange = true');
                     skipNextHashChange = false;
                     return;
                 }
@@ -27474,7 +27674,7 @@
                     if (dataPromises.length > 0) {
                         await Promise.all(dataPromises);
                     }
-                    renderNigunDetailPage(container, name);
+                    await renderNigunDetailPage(container, name);
                     return;
                 }
 
@@ -32796,42 +32996,22 @@
 
             // Open report modal for current nigun (uses combined modal)
             function openReportModal() {
-                console.log('[DEBUG openReportModal] Starting...');
-                console.log('[DEBUG openReportModal] currentNigunModalIdx:', currentNigunModalIdx);
-                console.log('[DEBUG openReportModal] window.currentDetailPageSongIdx:', window.currentDetailPageSongIdx);
-                console.log('[DEBUG openReportModal] currentSongIndex:', currentSongIndex);
-                console.log('[DEBUG openReportModal] allSongs.length:', allSongs ? allSongs.length : 'undefined');
-
                 // Get the current song name and ID from the modal, full page, or player
                 let songName = '';
                 let songId = '';
                 if (currentNigunModalIdx !== null && allSongs[currentNigunModalIdx]) {
-                    console.log('[DEBUG openReportModal] Using currentNigunModalIdx');
-                    console.log('[DEBUG openReportModal] Song object:', allSongs[currentNigunModalIdx]);
                     songName = allSongs[currentNigunModalIdx].name;
                     songId = allSongs[currentNigunModalIdx].customId || '';
                 } else if (window.currentDetailPageSongIdx !== undefined && allSongs[window.currentDetailPageSongIdx]) {
-                    console.log('[DEBUG openReportModal] Using window.currentDetailPageSongIdx');
-                    console.log('[DEBUG openReportModal] Song object:', allSongs[window.currentDetailPageSongIdx]);
                     songName = allSongs[window.currentDetailPageSongIdx].name;
                     songId = allSongs[window.currentDetailPageSongIdx].customId || '';
                 } else if (currentSongIndex !== null && allSongs[currentSongIndex]) {
-                    console.log('[DEBUG openReportModal] Using currentSongIndex');
-                    console.log('[DEBUG openReportModal] Song object:', allSongs[currentSongIndex]);
                     songName = allSongs[currentSongIndex].name;
                     songId = allSongs[currentSongIndex].customId || '';
-                } else {
-                    console.log('[DEBUG openReportModal] NO SONG FOUND - all conditions failed');
                 }
-
-                console.log('[DEBUG openReportModal] Final songName:', songName);
-                console.log('[DEBUG openReportModal] Final songId:', songId);
 
                 currentReportSongName = songName;
                 currentReportSongId = songId;
-
-                console.log('[DEBUG openReportModal] Set currentReportSongName:', currentReportSongName);
-                console.log('[DEBUG openReportModal] Set currentReportSongId:', currentReportSongId);
 
                 // Use the combined modal - update song name
                 const songNameEl = document.getElementById('addinfoSongName');
@@ -33033,12 +33213,6 @@
                 };
 
                 // Prepare the row data for Coda API - send rowId for unique identification
-                console.log('[DEBUG submitReport] currentReportSongName:', currentReportSongName);
-                console.log('[DEBUG submitReport] currentReportSongId:', currentReportSongId);
-                console.log('[DEBUG submitReport] category:', category);
-                console.log('[DEBUG submitReport] categoryLabels[category]:', categoryLabels[category]);
-                console.log('[DEBUG submitReport] details:', details);
-
                 const cells = [
                     { column: 'c-y3_VeoDRKA', value: '#' + currentReportSongId },           // ניגון ID (for formula lookup)
                     { column: 'c-0C7oWrHcmO', value: '#' + currentReportSongId },           // ניגון ID (backup)
@@ -33049,20 +33223,17 @@
                 // If duplicate category, add the selected duplicate niguns
                 if (category === 'duplicate') {
                     const duplicateNigunRowIds = addinfoSelectedValues['report-duplicate-nigun'] || [];
-                    console.log('[DEBUG submitReport] duplicateNigunRowIds:', duplicateNigunRowIds);
                     if (duplicateNigunRowIds.length > 0) {
                         // Convert rowIds to customIds with # prefix
                         const duplicateNigunIds = duplicateNigunRowIds.map(rowId => {
                             const song = allSongs.find(s => s.rowId === rowId);
                             return song && song.customId ? '#' + song.customId : rowId;
                         });
-                        console.log('[DEBUG submitReport] duplicateNigunIds (customIds):', duplicateNigunIds);
                         cells.push({ column: 'c-HoQV_ar9bZ', value: duplicateNigunIds }); // דאפלטע ניגונים
                     }
                 }
 
                 const rowData = { cells };
-                console.log('[DEBUG submitReport] Full rowData being sent:', JSON.stringify(rowData, null, 2));
 
                 try {
                     const response = await fetch(`${WORKER_URL}docs/${DOC_ID}/tables/${REPORTS_TABLE_ID}/rows`, {
@@ -33109,10 +33280,8 @@
 
             // Open generic detail modal
             async function openDetailModal(type, name, skipHistory = false) {
-                console.log('[DEBUG MODAL] openDetailModal called:', { type, name, skipHistory });
                 // Save current scroll position
                 savedScrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-                console.log('[DEBUG MODAL] savedScrollPosition:', savedScrollPosition);
                 detailModalOpen = true;
                 currentDetailModalType = type;
                 currentDetailModalName = name;
@@ -33218,14 +33387,9 @@
             }
 
             function closeTopDetailModal() {
-                console.log('[DEBUG MODAL] closeTopDetailModal called');
-                console.log('[DEBUG MODAL] modalStack before:', JSON.stringify(modalStack.map(m => ({ type: m.type, overlayId: m.overlayId }))));
                 // Find the topmost detail modal in the stack
                 const detailModals = modalStack.filter(m => m.type === 'detail');
-                if (detailModals.length === 0) {
-                    console.log('[DEBUG MODAL] No detail modals in stack, returning');
-                    return;
-                }
+                if (detailModals.length === 0) return;
 
                 const topModal = detailModals[detailModals.length - 1];
                 const overlay = document.getElementById(topModal.overlayId);
@@ -33260,9 +33424,6 @@
                     document.body.style.overflow = '';
                 }
 
-                console.log('[DEBUG MODAL] About to call history.back(), setting skipNextPopstateHandler = true');
-                console.log('[DEBUG MODAL] modalStack after close:', JSON.stringify(modalStack.map(m => ({ type: m.type, overlayId: m.overlayId }))));
-                console.log('[DEBUG MODAL] detailModalOpen:', detailModalOpen, 'nigunModalOpen:', nigunModalOpen);
                 skipNextPopstateHandler = true;
                 skipNextHashChange = true;
                 history.back();
@@ -33599,22 +33760,13 @@
 
             // Handle browser back/forward for nigun modal
             window.addEventListener('popstate', (e) => {
-                console.log('[DEBUG POPSTATE] popstate event fired');
-                console.log('[DEBUG POPSTATE] skipNextPopstateHandler:', skipNextPopstateHandler);
-                console.log('[DEBUG POPSTATE] nigunModalOpen:', nigunModalOpen, 'detailModalOpen:', detailModalOpen);
-                console.log('[DEBUG POPSTATE] e.state:', JSON.stringify(e.state));
-                console.log('[DEBUG POPSTATE] current hash:', window.location.hash);
-
                 // Check if we should skip this handler (modal was closed programmatically)
                 if (skipNextPopstateHandler) {
-                    console.log('[DEBUG POPSTATE] Skipping handler because skipNextPopstateHandler = true');
                     skipNextPopstateHandler = false;
                     // Still restore scroll position
                     if (e.state && e.state.scrollPos !== undefined) {
-                        console.log('[DEBUG POPSTATE] Restoring scroll to e.state.scrollPos:', e.state.scrollPos);
                         window.scrollTo(0, e.state.scrollPos);
                     } else if (savedScrollPosition) {
-                        console.log('[DEBUG POPSTATE] Restoring scroll to savedScrollPosition:', savedScrollPosition);
                         window.scrollTo(0, savedScrollPosition);
                     }
                     return;
