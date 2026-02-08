@@ -21603,21 +21603,15 @@
             function transformCodaRowToSong(item) {
                 const values = item.values || {};
 
-                // Find customId from any column with a numeric-looking value
+                // Get customId from the specific ID column first (c-DhElYWayZ-)
                 let customId = null;
-                for (const [colId, value] of Object.entries(values)) {
-                    const textVal = extractText(value);
-                    if (textVal && /^#?\d+$/.test(textVal.trim())) {
-                        customId = textVal.replace(/^#/, '').trim();
-                        break;
-                    }
+                const customIdVal = extractText(values['c-DhElYWayZ-']);
+                if (customIdVal) {
+                    customId = String(customIdVal).replace(/^#/, '').trim();
                 }
-                // Also try the specific ID column
-                if (!customId) {
-                    const customIdVal = extractText(values['c-DhElYWayZ-']);
-                    if (customIdVal) {
-                        customId = customIdVal.replace(/^#/, '').trim();
-                    }
+                // Fallback: try item.name if it's numeric (Coda row name is often the ID)
+                if (!customId && item.name && /^#?\d+$/.test(item.name.trim())) {
+                    customId = item.name.replace(/^#/, '').trim();
                 }
 
                 const isImageFile = (filename) => {
@@ -22563,50 +22557,44 @@
                 return false;
             }
 
-            // Fetch functions for each table - now try IndexManager API first, fall back to Coda
+            // Fetch functions for each table - use Coda API (fetchTableInfo) for rich data
+            // The IndexManager category-index API is too slim (missing customId, relationships, descriptions)
+            // TODO: Switch to fetchCategoryViaIndex once backend adds: customId, piyutim, collections,
+            //       nigunim, zmanim, chatzer, description, mechaber detail fields
             async function fetchChatzerosInfo() {
-                const loaded = await fetchCategoryViaIndex('chatzeros', chatzerosInfo, 'Chatzeros');
-                if (!loaded) await fetchTableInfo(CHATZEROS_TABLE_ID, chatzerosInfo, 'Chatzeros');
+                await fetchTableInfo(CHATZEROS_TABLE_ID, chatzerosInfo, 'Chatzeros');
             }
 
             async function fetchMechabrimInfo() {
-                const loaded = await fetchCategoryViaIndex('mechabrim', mechabrimInfo, 'Mechabrim');
-                if (!loaded) await fetchTableInfo(MECHABRIM_TABLE_ID, mechabrimInfo, 'Mechabrim');
+                await fetchTableInfo(MECHABRIM_TABLE_ID, mechabrimInfo, 'Mechabrim');
             }
 
             async function fetchVerterInfo() {
-                const loaded = await fetchCategoryViaIndex('verter', verterInfo, 'Verter');
-                if (!loaded) await fetchTableInfo(VERTER_TABLE_ID, verterInfo, 'Verter');
+                await fetchTableInfo(VERTER_TABLE_ID, verterInfo, 'Verter');
             }
 
             async function fetchZmanimInfo() {
-                const loaded = await fetchCategoryViaIndex('zmanim', zmaninInfo, 'Zmanim');
-                if (!loaded) await fetchTableInfo(ZMANIM_TABLE_ID, zmaninInfo, 'Zmanim');
+                await fetchTableInfo(ZMANIM_TABLE_ID, zmaninInfo, 'Zmanim');
             }
 
             async function fetchPiyutimInfo() {
-                const loaded = await fetchCategoryViaIndex('piyutim', piyutimInfo, 'Piyutim');
-                if (!loaded) await fetchTableInfo(PIYUTIM_TABLE_ID, piyutimInfo, 'Piyutim');
+                await fetchTableInfo(PIYUTIM_TABLE_ID, piyutimInfo, 'Piyutim');
             }
 
             async function fetchCollectionsInfo() {
-                const loaded = await fetchCategoryViaIndex('collections', collectionsInfo, 'Collections');
-                if (!loaded) await fetchTableInfo(COLLECTIONS_TABLE_ID, collectionsInfo, 'Collections');
+                await fetchTableInfo(COLLECTIONS_TABLE_ID, collectionsInfo, 'Collections');
             }
 
             async function fetchResourcesInfo() {
-                const loaded = await fetchCategoryViaIndex('resources', resourcesInfo, 'Resources');
-                if (!loaded) await fetchTableInfo(RESOURCES_TABLE_ID, resourcesInfo, 'Resources');
+                await fetchTableInfo(RESOURCES_TABLE_ID, resourcesInfo, 'Resources');
             }
 
             async function fetchDocumentsInfo() {
-                const loaded = await fetchCategoryViaIndex('documents', documentsInfo, 'Documents');
-                if (!loaded) await fetchTableInfo(DOCUMENTS_TABLE_ID, documentsInfo, 'Documents');
+                await fetchTableInfo(DOCUMENTS_TABLE_ID, documentsInfo, 'Documents');
             }
 
             async function fetchAlbumsInfo() {
-                const loaded = await fetchCategoryViaIndex('albums', albumsInfo, 'Albums');
-                if (!loaded) await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
+                await fetchTableInfo(ALBUMS_TABLE_ID, albumsInfo, 'Albums');
             }
 
             async function fetchScaleInfo() {
@@ -25184,6 +25172,8 @@
             function renderMegaFilterCategory(key, label, data) {
                 if (!data) data = {};
                 const options = Object.keys(data).sort((a, b) => a.localeCompare(b, 'he'));
+                // Hide empty filter categories (e.g. gezungen when songIndex doesn't have that field)
+                if (options.length === 0 && (!activeFilters[key] || activeFilters[key].length === 0)) return '';
                 const selectedCount = activeFilters[key]?.length || 0;
                 const hasActive = selectedCount > 0;
                 const selectedItems = activeFilters[key] || [];
