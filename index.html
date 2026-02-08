@@ -21598,6 +21598,105 @@
             // INDEX DATA TRANSFORMATION HELPERS
             // ========================================
 
+            // Transform a raw Coda row (from /api/song/:id) into allSongs format
+            // Reuses the same column ID mappings as processSongsData
+            function transformCodaRowToSong(item) {
+                const values = item.values || {};
+
+                // Find customId from any column with a numeric-looking value
+                let customId = null;
+                for (const [colId, value] of Object.entries(values)) {
+                    const textVal = extractText(value);
+                    if (textVal && /^#?\d+$/.test(textVal.trim())) {
+                        customId = textVal.replace(/^#/, '').trim();
+                        break;
+                    }
+                }
+                // Also try the specific ID column
+                if (!customId) {
+                    const customIdVal = extractText(values['c-DhElYWayZ-']);
+                    if (customIdVal) {
+                        customId = customIdVal.replace(/^#/, '').trim();
+                    }
+                }
+
+                const isImageFile = (filename) => {
+                    if (!filename) return false;
+                    const ext = filename.toLowerCase().split('.').pop();
+                    return ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(ext);
+                };
+                const isPdfFile = (filename) => {
+                    if (!filename) return false;
+                    return filename.toLowerCase().split('.').pop() === 'pdf';
+                };
+                const isVideoFile = (filename) => {
+                    if (!filename) return false;
+                    const ext = filename.toLowerCase().split('.').pop();
+                    return ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'].includes(ext);
+                };
+
+                // Other media (attachment slot)
+                const otherMedia = {
+                    text: extractText(values['c-l9TdqiWUNg']) || '',
+                    audio: [], files: [], images: [], videos: [], pdfs: []
+                };
+                const attachment6 = values['c-_q44nnca44'];
+                if (Array.isArray(attachment6)) {
+                    attachment6.forEach((file, idx) => {
+                        if (!file.url) return;
+                        const fileName = file.name || `קובץ ${idx + 1}`;
+                        if (isAudioFile(fileName)) otherMedia.audio.push({ url: file.url, name: fileName });
+                        else if (isImageFile(fileName)) otherMedia.images.push({ url: file.url, name: fileName });
+                        else if (isVideoFile(fileName)) otherMedia.videos.push({ url: file.url, name: fileName });
+                        else if (isPdfFile(fileName)) otherMedia.pdfs.push({ url: file.url, name: fileName });
+                        else otherMedia.files.push({ url: file.url, name: fileName });
+                    });
+                }
+
+                // Look up recordings
+                const recordings = recordingsByNigunId[customId] || [];
+
+                const songName = extractText(values['c-6qqDF7NYmv']) || item.name || '';
+                const mechaber = extractText(values['c-ujrTHeCJGo']) || '';
+                const category = extractText(values['c-u0H9G6FHoJ']) || '';
+
+                return {
+                    rowId: item.id,
+                    codaRowName: item.name,
+                    customId: customId,
+                    name: songName,
+                    author: mechaber,
+                    mechaber: mechaber,
+                    category: category,
+                    chatzer: category,
+                    verter: extractText(values['c-KAWfVfB4jq']) || null,
+                    personalities: extractText(values['c-6E02UJxxZW']) || '',
+                    scale: extractText(values['c-wQZrHPVWog']) || null,
+                    ritem: extractText(values['c-OmWEZXO7Ys']) || null,
+                    gezungen: extractText(values['c-kiHIam57Z0']) || null,
+                    collections: extractText(values['c-pCBFiGU8ex']) || null,
+                    zugeleigt: extractText(values['c-iOlvD8H0n3']) || null,
+                    pasigOif: extractText(values['c-mTtYp3FK9U']) || null,
+                    maure: extractText(values['c-J3q8mQIXBh']) || null,
+                    info: extractText(values['c-0jFLHVYRL8']) || null,
+                    siman: extractText(values['c-jSVbHezFAS']) || null,
+                    notn: extractText(values['c-hodtA6zYsy']) || null,
+                    documents: extractText(values['c-nF5sRFoMkJ']) || null,
+                    albums: extractText(values['c-j8dujLHcnT']) || null,
+                    resources: extractText(values['c-KBb2Bgi6nM']) || null,
+                    audioUrl: recordings.length > 0 ? recordings[0].url : null,
+                    recordings: recordings,
+                    hasRecordings: recordings.length > 0,
+                    recordingCount: recordings.length,
+                    bestRecordingRowId: null,
+                    bestRecordingRating: 0,
+                    images: otherMedia.images,
+                    pdfs: otherMedia.pdfs,
+                    otherMedia: otherMedia,
+                    _fullDetailsLoaded: true
+                };
+            }
+
             // Transform a song from the songIndex format to the allSongs format
             // Maps slim index fields to the field names used by existing rendering code
             function transformIndexSong(indexSong) {
@@ -21647,26 +21746,74 @@
             }
 
             // Transform full song details (from /api/song/:id) into existing fields
+            // The API returns raw Coda row format with values keyed by column IDs
             function mergeFullSongDetails(song, fullDetails) {
                 if (!fullDetails) return;
-                song.gezungen = fullDetails.gezungen || null;
-                song.maure = fullDetails.maure || null;
-                song.pasigOif = fullDetails.pasigOif || null;
-                song.personalities = fullDetails.personalities || null;
-                song.info = fullDetails.info || null;
-                song.siman = fullDetails.siman || null;
-                song.notn = fullDetails.notn || null;
-                song.documents = fullDetails.documents || null;
-                song.albums = fullDetails.albums || null;
-                song.resources = fullDetails.resources || null;
-                song.zugeleigt = fullDetails.zugeleigt || null;
-                song.credits = fullDetails.credits || null;
-                // Update verter with full text if available
-                if (fullDetails.verter) song.verter = fullDetails.verter;
-                // Update other media if provided
-                if (fullDetails.otherMedia) song.otherMedia = fullDetails.otherMedia;
-                if (fullDetails.images) song.images = fullDetails.images;
-                if (fullDetails.pdfs) song.pdfs = fullDetails.pdfs;
+
+                // Check if this is raw Coda format (has 'values' with column IDs)
+                if (fullDetails.values) {
+                    const values = fullDetails.values;
+                    song.gezungen = extractText(values['c-kiHIam57Z0']) || null;
+                    song.maure = extractText(values['c-J3q8mQIXBh']) || null;
+                    song.pasigOif = extractText(values['c-mTtYp3FK9U']) || null;
+                    song.personalities = extractText(values['c-6E02UJxxZW']) || null;
+                    song.info = extractText(values['c-0jFLHVYRL8']) || null;
+                    song.siman = extractText(values['c-jSVbHezFAS']) || null;
+                    song.notn = extractText(values['c-hodtA6zYsy']) || null;
+                    song.documents = extractText(values['c-nF5sRFoMkJ']) || null;
+                    song.albums = extractText(values['c-j8dujLHcnT']) || null;
+                    song.resources = extractText(values['c-KBb2Bgi6nM']) || null;
+                    song.zugeleigt = extractText(values['c-iOlvD8H0n3']) || null;
+                    // Update verter with full text if available
+                    const fullVerter = extractText(values['c-KAWfVfB4jq']);
+                    if (fullVerter) song.verter = fullVerter;
+
+                    // Process other media attachment
+                    const isImageFile = (fn) => fn && ['jpg','jpeg','png','gif','webp','bmp','svg'].includes(fn.toLowerCase().split('.').pop());
+                    const isPdfFile = (fn) => fn && fn.toLowerCase().split('.').pop() === 'pdf';
+                    const isVideoFile = (fn) => fn && ['mp4','webm','mov','avi','mkv','m4v'].includes(fn.toLowerCase().split('.').pop());
+
+                    const otherMedia = {
+                        text: extractText(values['c-l9TdqiWUNg']) || '',
+                        audio: [], files: [], images: [], videos: [], pdfs: []
+                    };
+                    const attachment6 = values['c-_q44nnca44'];
+                    if (Array.isArray(attachment6)) {
+                        attachment6.forEach((file, idx) => {
+                            if (!file.url) return;
+                            const fileName = file.name || `קובץ ${idx + 1}`;
+                            if (isAudioFile(fileName)) otherMedia.audio.push({ url: file.url, name: fileName });
+                            else if (isImageFile(fileName)) otherMedia.images.push({ url: file.url, name: fileName });
+                            else if (isVideoFile(fileName)) otherMedia.videos.push({ url: file.url, name: fileName });
+                            else if (isPdfFile(fileName)) otherMedia.pdfs.push({ url: file.url, name: fileName });
+                            else otherMedia.files.push({ url: file.url, name: fileName });
+                        });
+                    }
+                    if (otherMedia.text || otherMedia.audio.length || otherMedia.images.length ||
+                        otherMedia.videos.length || otherMedia.pdfs.length || otherMedia.files.length) {
+                        song.otherMedia = otherMedia;
+                        song.images = otherMedia.images;
+                        song.pdfs = otherMedia.pdfs;
+                    }
+                } else {
+                    // Pre-processed format (future-proofing)
+                    song.gezungen = fullDetails.gezungen || null;
+                    song.maure = fullDetails.maure || null;
+                    song.pasigOif = fullDetails.pasigOif || null;
+                    song.personalities = fullDetails.personalities || null;
+                    song.info = fullDetails.info || null;
+                    song.siman = fullDetails.siman || null;
+                    song.notn = fullDetails.notn || null;
+                    song.documents = fullDetails.documents || null;
+                    song.albums = fullDetails.albums || null;
+                    song.resources = fullDetails.resources || null;
+                    song.zugeleigt = fullDetails.zugeleigt || null;
+                    song.credits = fullDetails.credits || null;
+                    if (fullDetails.verter) song.verter = fullDetails.verter;
+                    if (fullDetails.otherMedia) song.otherMedia = fullDetails.otherMedia;
+                    if (fullDetails.images) song.images = fullDetails.images;
+                    if (fullDetails.pdfs) song.pdfs = fullDetails.pdfs;
+                }
                 song._fullDetailsLoaded = true;
             }
 
@@ -21750,53 +21897,22 @@
 
                 try {
                     // Fetch song directly from API - don't wait for full index
+                    // The API returns raw Coda row format with values keyed by column IDs
                     const response = await fetch(`${API_BASE}/api/song/${songId}`);
                     if (!response.ok) throw new Error(`HTTP ${response.status}`);
                     const songData = await response.json();
 
-                    // Create a song object that matches allSongs format
-                    const song = {
-                        customId: songData.id || songData.customId || songId,
-                        rowId: songData.rowId || songId,
-                        name: songData.name || '',
-                        mechaber: songData.mechaber || '',
-                        author: songData.mechaber || '',
-                        category: songData.chatzer || songData.category || '',
-                        chatzer: songData.chatzer || songData.category || '',
-                        scale: songData.scale || null,
-                        ritem: songData.ritem || null,
-                        verter: songData.verter || null,
-                        collections: songData.collections || null,
-                        gezungen: songData.gezungen || null,
-                        maure: songData.maure || null,
-                        pasigOif: songData.pasigOif || null,
-                        personalities: songData.personalities || null,
-                        info: songData.info || null,
-                        siman: songData.siman || null,
-                        notn: songData.notn || null,
-                        documents: songData.documents || null,
-                        albums: songData.albums || null,
-                        resources: songData.resources || null,
-                        zugeleigt: songData.zugeleigt || null,
-                        credits: songData.credits || null,
-                        hasRecordings: songData.hasRecordings || false,
-                        recordingCount: songData.recordingCount || 0,
-                        bestRecordingRowId: songData.bestRecordingRowId || null,
-                        bestRecordingRating: songData.bestRecordingRating || 0,
-                        recordings: songData.recordings || [],
-                        audioUrl: songData.recordings?.[0]?.url || null,
-                        images: songData.images || [],
-                        pdfs: songData.pdfs || [],
-                        otherMedia: songData.otherMedia || null,
-                        codaRowName: songData.name,
-                        _fullDetailsLoaded: true
-                    };
+                    // Transform raw Coda row into allSongs format
+                    const song = transformCodaRowToSong(songData);
 
-                    // Add to allSongs temporarily so rendering code can find it
+                    // Add to allSongs so rendering code can find it
                     if (allSongs.length === 0) {
                         allSongs.push(song);
                     } else {
-                        const existingIdx = allSongs.findIndex(s => s.customId === song.customId || s.rowId === song.rowId);
+                        const existingIdx = allSongs.findIndex(s =>
+                            (song.customId && s.customId === song.customId) ||
+                            (song.rowId && s.rowId === song.rowId)
+                        );
                         if (existingIdx === -1) {
                             allSongs.push(song);
                         } else {
@@ -21807,7 +21923,10 @@
                     // Open in modal or render detail page
                     const hash = window.location.hash || '';
                     const isPreview = hash.includes('/preview');
-                    const idx = allSongs.findIndex(s => s.customId === song.customId || s.rowId === song.rowId);
+                    const idx = allSongs.findIndex(s =>
+                        (song.customId && s.customId === song.customId) ||
+                        (song.rowId && s.rowId === song.rowId)
+                    );
 
                     if (isPreview) {
                         openNigunModal(idx, allSongs[idx]);
@@ -21815,6 +21934,23 @@
                         currentPageView = 'songs';
                         currentDetailView = { type: 'nigunim', name: song.name, id: song.rowId, customId: song.customId };
                         renderDetailPage();
+                    }
+
+                    // Try loading recordings for this song in background
+                    if (!song.hasRecordings || song.recordings.length === 0) {
+                        IndexManager.loadRecordingsIndex().then(() => {
+                            const recordings = IndexManager.getRecordings(song.customId);
+                            if (recordings && recordings.length > 0) {
+                                song.recordings = recordings;
+                                song.hasRecordings = true;
+                                song.recordingCount = recordings.length;
+                                song.audioUrl = recordings[0].url;
+                                // Re-render if still on this page
+                                if (currentDetailView?.customId === song.customId || currentDetailView?.id === song.rowId) {
+                                    renderDetailPage();
+                                }
+                            }
+                        });
                     }
                 } catch (error) {
                     console.error('Error loading direct song link:', error);
