@@ -21860,15 +21860,36 @@
 
             // Update play button states in the current view after recordings load
             function updatePlayButtonStates() {
+                // 1. Update song list items - inject play buttons for songs that now have recordings
                 document.querySelectorAll('.song-item[data-song-idx]').forEach(item => {
                     const idx = parseInt(item.dataset.songIdx, 10);
                     const song = allSongs[idx];
-                    if (song && song.hasRecordings && !item.querySelector('.song-play-btn-new')) {
-                        // Song now has recordings but play button wasn't rendered - update the item
+                    if (!song) return;
+                    const hasAudio = songHasQualityAudio(song);
+                    const hasBtn = item.querySelector('.song-play-btn-new');
+
+                    if (hasAudio && !hasBtn) {
+                        // Song now has quality recordings but no play button - inject one
                         item.classList.remove('no-audio');
+                        const playAction = `playSong(${idx})`;
+                        const btn = document.createElement('button');
+                        btn.className = 'song-play-btn-new';
+                        btn.setAttribute('data-song-idx', idx);
+                        btn.setAttribute('onclick', `event.stopPropagation(); ${playAction};`);
+                        btn.innerHTML = '<span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span><span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>';
+                        item.appendChild(btn);
+                    } else if (!hasAudio && song.recordings && song.recordings.length > 0 && !hasBtn) {
+                        // Has recordings but low quality - show low-quality indicator
+                        item.classList.remove('no-audio');
+                        const indicator = document.createElement('div');
+                        indicator.className = 'song-play-btn-new song-btn-low-quality';
+                        indicator.title = 'רעקארדירונגען מיט נידעריגע קוואליטעט';
+                        indicator.innerHTML = '<span class="low-quality-icon">☆</span>';
+                        item.appendChild(indicator);
                     }
                 });
-                // Also update any .music-song-item elements
+
+                // 2. Update .music-song-item elements
                 document.querySelectorAll('.music-song-item[data-idx]').forEach(item => {
                     const idx = parseInt(item.dataset.idx, 10);
                     const song = allSongs[idx];
@@ -21877,6 +21898,19 @@
                         item.classList.remove('no-audio');
                     }
                 });
+
+                // 3. Re-render nigun detail page if currently viewing one
+                if (currentDetailView?.type === 'nigunim') {
+                    const detailId = currentDetailView.customId || currentDetailView.name;
+                    const song = allSongs.find(s => s.customId === detailId || s.name === detailId || s.rowId === detailId);
+                    if (song && song.recordings && song.recordings.length > 0) {
+                        // Only re-render if recordings section is missing
+                        const container = document.getElementById('mainContent');
+                        if (container && !container.querySelector('.nigun-recordings-list')) {
+                            renderDetailPage();
+                        }
+                    }
+                }
             }
 
             // Handle direct song link: /song/123 or #/nigunim/123
