@@ -21815,7 +21815,32 @@
 
             // Populate allSongs from the song index
             function populateAllSongsFromIndex(indexSongs) {
-                allSongs = indexSongs.map(transformIndexSong);
+                // Build map of existing songs that have extra data loaded
+                const existingMap = new Map();
+                allSongs.forEach(song => {
+                    if (song.customId && (song._fullDetailsLoaded || (song.recordings && song.recordings.length > 0))) {
+                        existingMap.set(song.customId, song);
+                    }
+                });
+
+                allSongs = indexSongs.map(indexSong => {
+                    const song = transformIndexSong(indexSong);
+                    const existing = existingMap.get(song.customId);
+                    if (existing) {
+                        // Preserve full details and recordings from previously loaded data
+                        if (existing._fullDetailsLoaded) {
+                            const detailFields = ['gezungen', 'maure', 'pasigOif', 'personalities', 'info', 'siman', 'notn', 'documents', 'albums', 'resources', 'zugeleigt', 'credits', 'otherMedia', 'images', 'pdfs', 'verter'];
+                            detailFields.forEach(f => { if (existing[f] != null) song[f] = existing[f]; });
+                            song._fullDetailsLoaded = true;
+                        }
+                        if (existing.recordings && existing.recordings.length > 0) {
+                            song.recordings = existing.recordings;
+                            song.audioUrl = existing.audioUrl;
+                        }
+                    }
+                    return song;
+                });
+
                 loadedCategories.songs = true;
                 songsFullyLoaded = true;
 
@@ -21914,6 +21939,8 @@
             }
 
             // Handle direct song link: /song/123 or #/nigunim/123
+            // Strategy: Load song index first (fast from cache), find song by customId,
+            // render immediately, then background-load full details + recordings
             async function handleDirectSongLink(songId) {
                 const content = document.getElementById('mainContent');
                 if (content) {
@@ -21926,81 +21953,84 @@
                 }
 
                 try {
-                    // Fetch song directly from API - don't wait for full index
-                    // The API returns raw Coda row format with values keyed by column IDs
-                    const response = await fetch(`${API_BASE}/api/song/${songId}`);
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    const songData = await response.json();
-
-                    // Transform raw Coda row into allSongs format
-                    const song = transformCodaRowToSong(songData);
-
-                    // Add to allSongs so rendering code can find it
-                    if (allSongs.length === 0) {
-                        allSongs.push(song);
-                    } else {
-                        const existingIdx = allSongs.findIndex(s =>
-                            (song.customId && s.customId === song.customId) ||
-                            (song.rowId && s.rowId === song.rowId)
-                        );
-                        if (existingIdx === -1) {
-                            allSongs.push(song);
-                        } else {
-                            Object.assign(allSongs[existingIdx], song);
-                        }
+                    // Step 1: Load song index (instant from localStorage, or ~700KB API fetch)
+                    const indexSongs = await IndexManager.loadSongIndex();
+                    if (indexSongs && indexSongs.length > 0) {
+                        populateAllSongsFromIndex(indexSongs);
                     }
 
-                    // Open in modal or render detail page
+                    // Step 2: Find song by customId, rowId, or name in the index
+                    let songIdx = allSongs.findIndex(s => s.customId === songId);
+                    if (songIdx === -1) songIdx = allSongs.findIndex(s => s.rowId === songId);
+                    if (songIdx === -1) songIdx = allSongs.findIndex(s => s.name === songId);
+
+                    if (songIdx === -1) {
+                        // Not in index - show not found
+                        if (content) {
+                            content.innerHTML = `
+                                <div class="empty-state">
+                                    <div class="empty-state-icon">❌</div>
+                                    <h2>ניגון נישט געפונען</h2>
+                                    <button onclick="location.hash='#/home'" style="margin-top: 20px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">צוריק צו הויפט זייט</button>
+                                </div>
+                            `;
+                        }
+                        return;
+                    }
+
+                    const song = allSongs[songIdx];
+
+                    // Step 3: Render detail page immediately with index data
                     const hash = window.location.hash || '';
                     const isPreview = hash.includes('/preview');
-                    const idx = allSongs.findIndex(s =>
-                        (song.customId && s.customId === song.customId) ||
-                        (song.rowId && s.rowId === song.rowId)
-                    );
 
                     if (isPreview) {
-                        openNigunModal(idx, allSongs[idx]);
+                        openNigunModal(songIdx, song);
                     } else {
                         currentPageView = 'songs';
                         currentDetailView = { type: 'nigunim', name: song.name, id: song.rowId, customId: song.customId };
                         renderDetailPage();
                     }
 
-                    // Try loading recordings for this song in background
-                    if (!song.hasRecordings || song.recordings.length === 0) {
-                        IndexManager.loadRecordingsIndex().then(() => {
-                            const recordings = IndexManager.getRecordings(song.customId);
-                            if (recordings && recordings.length > 0) {
-                                song.recordings = recordings;
-                                song.hasRecordings = true;
-                                song.recordingCount = recordings.length;
-                                song.audioUrl = recordings[0].url;
-                                // Re-render if still on this page
-                                if (currentDetailView?.customId === song.customId || currentDetailView?.id === song.rowId) {
-                                    renderDetailPage();
+                    // Step 4: Background - load full song details (uses rowId for fast direct lookup)
+                    if (!song._fullDetailsLoaded && song.rowId) {
+                        IndexManager.getFullSongDetails(song.rowId).then(fullDetails => {
+                            if (!fullDetails) return;
+                            mergeFullSongDetails(song, fullDetails);
+                            // Re-render if still on this page
+                            if (currentDetailView?.customId === song.customId || currentDetailView?.id === song.rowId) {
+                                renderDetailPage();
+                            }
+                            // Also update modal if open
+                            if (nigunModalOpen && currentNigunModalIdx === songIdx) {
+                                const modalBody = document.getElementById('nigunModalBody');
+                                if (modalBody) {
+                                    const tempContainer = document.createElement('div');
+                                    renderNigunDetailPage(tempContainer, song.name);
+                                    modalBody.innerHTML = tempContainer.innerHTML;
                                 }
                             }
-                        });
+                        }).catch(err => console.error('Error loading full song details:', err));
                     }
+
+                    // Step 5: Background - load recordings
+                    IndexManager.loadRecordingsIndex().then(() => {
+                        updateSongsFromRecordingsIndex();
+                    });
+
                 } catch (error) {
                     console.error('Error loading direct song link:', error);
                     if (content) {
                         content.innerHTML = `
                             <div class="empty-state">
                                 <div class="empty-state-icon">❌</div>
-                                <h2>ניגון נישט געפונען</h2>
-                                <button onclick="location.hash='#/home'" style="margin-top: 20px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">צוריק צו הויפט זייט</button>
+                                <h2>גרייז לאָודינג</h2>
+                                <p>${error.message}</p>
+                                <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: var(--primary); color: white; border: none; border-radius: 8px; cursor: pointer;">פּרוּוו ווידער</button>
                             </div>
                         `;
                     }
                 }
-
-                // Background: load full index for navigation
-                IndexManager.loadSongIndex().then(songs => {
-                    if (songs && songs.length > 0) {
-                        populateAllSongsFromIndex(songs);
-                    }
-                });
             }
 
             // Animation Helper: Count Up Number
@@ -22902,7 +22932,7 @@
 
                     if (directSongMatch && directSongMatch[1] !== '') {
                         const songId = decodeURIComponent(directSongMatch[1]);
-                        // Direct link: fetch song directly, don't wait for full index
+                        // Direct link: loads song index, finds song, renders detail page
                         handleDirectSongLink(songId);
                         return;
                     }
@@ -29345,6 +29375,13 @@
                     ${song.credits ? `
                         <div class="nigun-credits">
                             ${song.credits}
+                        </div>
+                    ` : ''}
+
+                    ${!song._fullDetailsLoaded ? `
+                        <div class="nigun-detail-loading-more" style="display: flex; align-items: center; justify-content: center; gap: 8px; padding: 16px 0 8px; opacity: 0.5;">
+                            <div style="width: 16px; height: 16px; border: 2px solid var(--text-tertiary, #999); border-top-color: transparent; border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+                            <span style="font-size: 13px; color: var(--text-tertiary, #999);">לאודט מער אינפארמאציע...</span>
                         </div>
                     ` : ''}
                 </div>
