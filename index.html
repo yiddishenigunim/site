@@ -21712,14 +21712,16 @@
                     bestRecordingRowId: indexSong.bestRecordingRowId || null,
                     bestRecordingRating: indexSong.bestRecordingRating || 0,
 
+                    // Fields now available in song index (after worker fix)
+                    pasigOif: indexSong.pasigOif || null,
+                    gezungen: indexSong.gezungen || null,
+
                     // Derived fields (populated from recordings index)
                     recordings: [],
                     audioUrl: null,
 
                     // Fields loaded on demand via /api/song/:id
-                    gezungen: null,
                     maure: null,
-                    pasigOif: null,
                     personalities: null,
                     info: null,
                     siman: null,
