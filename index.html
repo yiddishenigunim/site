@@ -22527,9 +22527,9 @@
                     if (fullVerter) song.verter = fullVerter;
 
                     // Process other media attachment
-                    const isImageFile = (fn) => fn && ['jpg','jpeg','png','gif','webp','bmp','svg'].includes(fn.toLowerCase().split('.').pop());
+                    const isImageFile = (fn) => fn && ['jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'].includes(fn.toLowerCase().split('.').pop());
                     const isPdfFile = (fn) => fn && fn.toLowerCase().split('.').pop() === 'pdf';
-                    const isVideoFile = (fn) => fn && ['mp4','webm','mov','avi','mkv','m4v'].includes(fn.toLowerCase().split('.').pop());
+                    const isVideoFile = (fn) => fn && ['mp4', 'webm', 'mov', 'avi', 'mkv', 'm4v'].includes(fn.toLowerCase().split('.').pop());
 
                     const otherMedia = {
                         text: extractText(values['c-l9TdqiWUNg']) || '',
@@ -29865,18 +29865,12 @@
 
             // Play recording from nigun detail page
             function playNigunRecording(songIdx, recordingIdx, element, playlist = null, expandPlayer = true) {
-                console.log('=== playNigunRecording CALLED ===');
-                console.log('songIdx:', songIdx, 'recordingIdx:', recordingIdx);
                 const song = allSongs[songIdx];
-                console.log('Song from allSongs[songIdx]:', song);
-                console.log('allSongs.length:', allSongs.length);
                 if (!song || !song.recordings || !song.recordings[recordingIdx]) {
-                    console.log('EARLY RETURN - song or recording not found');
                     return;
                 }
 
                 const recording = song.recordings[recordingIdx];
-                console.log('Recording:', recording);
 
                 // If clicking the same recording that's currently playing, toggle play/pause
                 if (songIdx === currentSongIndex && recordingIdx === currentRecordingIndex && audioPlayer.src) {
@@ -29907,7 +29901,7 @@
                     recordingIdx: recordingIdx,
                     slotIndex: recording.slotIndex,
                     rowId: song.rowId,
-                    tableRowId: recording.tableRowId // Recording's own row ID in recordings table
+                    tableRowId: recording.rowId // Recording's own row ID in recordings table
                 };
 
                 // Enable recordings mode when playing any recording
@@ -31329,16 +31323,11 @@
                 const trimmedName = docName.trim();
                 const info = documentsInfo[trimmedName] || documentsInfo[docName] || {};
 
-                console.log('Document detail for:', docName, '| trimmed:', trimmedName);
-                console.log('info:', info);
-                console.log('info.file:', info.file);
-                console.log('info.allData:', info.allData);
 
                 // Try to get file URL from multiple sources
                 let fileUrl = info.file;
                 if (!fileUrl && info.allData) {
                     fileUrl = extractUrl(info.allData['פייל']) || extractUrl(info.allData['file']);
-                    console.log('Extracted fileUrl from allData:', fileUrl);
                 }
 
                 // Try to get link URL from multiple sources
@@ -31346,9 +31335,6 @@
                 if (!linkUrl && info.allData) {
                     linkUrl = extractUrl(info.allData['לינק']) || extractUrl(info.allData['link']);
                 }
-
-                console.log('Final fileUrl:', fileUrl);
-                console.log('Final linkUrl:', linkUrl);
 
                 const hasFile = fileUrl && fileUrl.startsWith('http');
                 const hasLink = linkUrl && linkUrl.startsWith('http');
@@ -32173,28 +32159,17 @@
 
             // Hide the player banner (user clicked hide button)
             function hidePlayerBanner() {
-                console.log('=== hidePlayerBanner called ===');
                 const playerSection = document.querySelector('.player-section');
-                console.log('playerSection found:', playerSection);
-                console.log('Classes BEFORE:', playerSection?.classList?.toString());
 
                 // Keep player-visible class, just add player-minimized (CSS handles the transition)
                 playerSection.classList.add('player-minimized');
-
-                console.log('Classes AFTER:', playerSection?.classList?.toString());
 
                 // Trigger marquee for minimized song name after transition
                 setTimeout(() => {
                     triggerMinimizedMarquee();
                 }, 400); // Wait for CSS transition to complete
 
-                // Debug computed styles
-                const computed = window.getComputedStyle(playerSection);
-                console.log('Computed transform:', computed.transform);
-                console.log('Computed left:', computed.left);
-                console.log('Computed right:', computed.right);
-                console.log('Computed opacity:', computed.opacity);
-                console.log('Computed width:', computed.width);
+
             }
 
             // Trigger marquee for minimized player song name
@@ -32258,11 +32233,8 @@
 
             // Show the player banner (user clicked minimized player or show button)
             function showPlayerBanner() {
-                console.log('=== showPlayerBanner called ===');
                 const playerSection = document.querySelector('.player-section');
-                console.log('Classes BEFORE:', playerSection?.classList?.toString());
                 playerSection.classList.remove('player-minimized');
-                console.log('Classes AFTER:', playerSection?.classList?.toString());
                 const showBtn = document.getElementById('playerShowBtn');
                 if (showBtn) showBtn.classList.remove('visible');
 
@@ -32441,7 +32413,7 @@
 
                 // If clicking the same song, toggle play/pause
                 if (idx === currentSongIndex && audioPlayer.src) {
-                    console.log('Same song - toggling play/pause');
+
                     togglePlayPause();
                     return;
                 }
@@ -32465,9 +32437,7 @@
 
                 currentSongIndex = idx;
                 const song = allSongs[idx];
-                console.log('Song from allSongs[idx]:', song);
-                console.log('Song.name:', song?.name);
-                console.log('Song.audioUrl:', song?.audioUrl);
+
 
                 // FIRST: Update song list to show wave with 'loading' state
                 updateActiveSongInList();
@@ -32481,7 +32451,7 @@
                         recordingIdx: 0,
                         slotIndex: song.recordings[0].slotIndex,
                         rowId: song.rowId,
-                        tableRowId: song.recordings[0].tableRowId
+                        tableRowId: song.recordings[0].rowId
                     };
                     audioPlayer.src = song.audioUrl || song.recordings[0].url;
                     audioPlayer.play();
@@ -32531,7 +32501,7 @@
                     showPlayer();
                     updatePlayerUI(song);
                 } else {
-                    console.log('No recording available for song:', song.name);
+
                 }
             }
 
@@ -32552,14 +32522,13 @@
             // Play a collection from the start
             function playCollectionFromStart(collectionName) {
                 const trimmedName = collectionName.trim();
-                console.log('Playing collection:', trimmedName);
-                console.log('Available collections:', Object.keys(categories.collections));
+
 
                 const songIndices = categories.collections[trimmedName] || categories.collections[collectionName] || [];
-                console.log('Song indices:', songIndices);
+
 
                 if (songIndices.length === 0) {
-                    console.log('No songs found for collection');
+
                     return;
                 }
 
@@ -32569,10 +32538,10 @@
                     return song && song.audioUrl && song.audioUrl.startsWith('http');
                 });
 
-                console.log('Playable songs:', playableSongs);
+
 
                 if (playableSongs.length === 0) {
-                    console.log('No playable songs');
+
                     return;
                 }
 
@@ -32622,7 +32591,7 @@
                     recordingIdx: recordingIdx,
                     slotIndex: recording.slotIndex,
                     rowId: song.rowId,
-                    tableRowId: recording.tableRowId // Recording's own row ID in recordings table
+                    tableRowId: recording.rowId // Recording's own row ID in recordings table
                 };
 
                 // Play the specific recording URL
@@ -32681,17 +32650,8 @@
 
             // Update player UI
             function updatePlayerUI(song) {
-                console.log('=== updatePlayerUI CALLED ===');
-                console.log('Song object:', song);
-                console.log('Song name:', song?.name);
-                console.log('Song mechaber:', song?.mechaber);
-                console.log('Song chatzer:', song?.chatzer);
-                console.log('Song recordings:', song?.recordings);
-
                 const rightSongName = document.getElementById('playerRightSongName');
-                console.log('rightSongName element:', rightSongName);
                 rightSongName.textContent = song.name;
-                console.log('Set rightSongName.textContent to:', song.name);
                 // Set data attribute for minimized pill display
                 document.querySelector('.player-section')?.setAttribute('data-song-name', song.name);
 
@@ -32756,11 +32716,7 @@
                                     // NOW start the animation (was paused until offset was set)
                                     rightSongName.classList.add('running');
 
-                                    // DEBUG
-                                    console.log('=== MARQUEE DEBUG ===');
-                                    console.log('Start offset:', startOffset);
-                                    console.log('One unit width:', oneUnitWidth);
-                                    console.log('=== END DEBUG ===');
+
                                 }
                             });
                         }
@@ -33442,21 +33398,13 @@
 
                 // Update player button
                 const playerSection = document.querySelector('.player-section');
-                console.log('[DEBUG] updatePlayState called, isPlaying:', isPlaying);
-                console.log('[DEBUG] playerSection element:', playerSection);
-                console.log('[DEBUG] playerSection classes BEFORE:', playerSection?.className);
-                console.log('[DEBUG] playerSection has data-song-name:', playerSection?.getAttribute('data-song-name'));
-
                 if (isPlaying) {
                     playPauseBtn.classList.add('playing');
                     playerSection?.classList.add('playing');
-                    console.log('[DEBUG] Added playing class');
                 } else {
                     playPauseBtn.classList.remove('playing');
                     playerSection?.classList.remove('playing');
-                    console.log('[DEBUG] Removed playing class');
                 }
-                console.log('[DEBUG] playerSection classes AFTER:', playerSection?.className);
 
                 // Update wave animation in player-show-btn (pause when audio paused)
                 if (playerShowWave) {
@@ -33678,9 +33626,7 @@
 
             // Show song details - opens in modal overlay
             function showSongDetails(idx) {
-                console.log('showSongDetails called with idx:', idx);
                 const song = allSongs[idx];
-                console.log('Song found:', song ? song.name : 'NOT FOUND');
                 if (!song) return;
 
                 // Open modal instead of navigating to full page
@@ -33938,7 +33884,7 @@
                         .sort((a, b) => a.name.localeCompare(b.name, 'he'));
                 }
 
-                console.log('Addinfo autocomplete data initialized:', addinfoAutocompleteData);
+
             }
 
             // Setup autocomplete for all wrapper elements
@@ -34265,9 +34211,9 @@
 
                 // Wait for all data to load
                 if (dataPromises.length > 0) {
-                    console.log('Loading add-info data...', dataPromises.length, 'tables');
+
                     await Promise.all(dataPromises);
-                    console.log('Add-info data loaded!');
+
                 }
 
                 // Initialize autocomplete data
@@ -34403,7 +34349,7 @@
                     }
 
                     const result = await response.json();
-                    console.log('File uploaded successfully:', result);
+
                     return result; // { success, fileName, size, storedAs, type }
                 } catch (error) {
                     console.error('File upload error:', error);
@@ -34492,7 +34438,7 @@
                     notes: document.getElementById('addinfo-notes').value
                 };
 
-                console.log('Add Info Form Data:', formData);
+
 
                 // Get the submit button and save original text
                 const submitBtn = document.querySelector('#addinfo-panel .addinfo-submit-btn');
@@ -34614,7 +34560,7 @@
                     });
 
                     if (response.ok) {
-                        console.log('Add Info submitted successfully');
+
                         // Hide modal body and show success message
                         const modalBody = document.querySelector('.addinfo-modal-body');
                         const successMsg = document.getElementById('addinfoSuccessMessage');
@@ -34865,7 +34811,7 @@
                     });
 
                     if (response.ok) {
-                        console.log('Add Nigun submitted successfully');
+
                         // Hide modal body and show success message
                         const modalBody = document.querySelector('.addinfo-modal-body');
                         const successMsg = document.getElementById('addnigunSuccessMessage');
@@ -36382,7 +36328,6 @@
 
                 // Handle player rating clicks with event delegation (works even if stars are regenerated)
                 if (e.target.closest('#playerRating') || e.target.closest('.player-rating-star')) {
-                    console.log('Rating click detected, opening modal');
                     openRatingModal();
                 }
             });
@@ -36707,7 +36652,7 @@
             // Submit rating to Coda API
             async function submitRating(newRating) {
                 if (!currentPlayingRecordingInfo) {
-                    console.log('No recording info available for rating');
+
                     return;
                 }
 
@@ -36715,7 +36660,7 @@
 
                 // Use recording's own rowId from recordings table
                 if (!tableRowId) {
-                    console.log('Missing tableRowId for rating update');
+
                     return;
                 }
 
@@ -36727,7 +36672,7 @@
                     playerRating.classList.add('saving');
                 }
 
-                console.log(`Submitting rating ${newRating} for song ${songIdx}, recording ${recordingIdx}, tableRowId ${tableRowId}`);
+
 
                 try {
                     // Coda API requires PUT to update a specific cell - use RECORDINGS_TABLE_ID
@@ -36754,7 +36699,7 @@
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }
 
-                    console.log('Rating updated successfully');
+
 
                     // Update local data
                     if (allSongs[songIdx] && allSongs[songIdx].recordings && allSongs[songIdx].recordings[recordingIdx]) {
@@ -36762,7 +36707,8 @@
                     }
 
                     // Clear local cache so next load gets fresh data
-                    localStorage.removeItem(`${CACHE_VERSION}_songs`);
+                    localStorage.removeItem(STORAGE_KEYS.SONG_INDEX);
+                    localStorage.removeItem(STORAGE_KEYS.SONG_INDEX_TIMESTAMP);
 
                     // Update the display
                     updatePlayerRating(newRating);
@@ -36837,13 +36783,10 @@
 
             // Open rating modal
             function openRatingModal() {
-                console.log('openRatingModal called!');
                 const modal = document.getElementById('ratingModalOverlay');
                 const optionsContainer = document.getElementById('ratingModalOptions');
                 const headerContainer = document.getElementById('ratingModalHeader');
-                console.log('Modal elements:', { modal: !!modal, optionsContainer: !!optionsContainer, headerContainer: !!headerContainer });
                 if (!modal || !optionsContainer) {
-                    console.log('Modal elements missing, returning');
                     return;
                 }
 
@@ -36904,7 +36847,6 @@
 
                 // Show modal
                 modal.classList.add('active');
-                console.log('Modal class after adding active:', modal.className);
                 document.body.style.overflow = 'hidden';
 
                 // Add Escape key handler
@@ -37047,7 +36989,7 @@
                     // Cache the original position of page-title (when it's not fixed)
                     if (pageTitle && !pageTitle.classList.contains('is-fixed') && pageTitleOriginalTop === null) {
                         pageTitleOriginalTop = pageTitle.getBoundingClientRect().top + currentScrollY;
-                        console.log('[HEADER] Cached page-title original top:', pageTitleOriginalTop);
+
                     }
 
                     // Reset cache if page-title doesn't exist (page changed)
@@ -37069,7 +37011,7 @@
                         const shouldBecomeUnfixed = isCurrentlyFixed && currentScrollY < unfixThreshold;
 
                         if (shouldBecomeFixed) {
-                            console.log('[HEADER] Making page-title fixed at scrollY:', currentScrollY);
+
 
                             // Create placeholder to maintain layout when page-title becomes fixed
                             let placeholder = document.getElementById('page-title-placeholder');
@@ -37084,7 +37026,7 @@
 
                             pageTitle.classList.add('is-fixed');
                         } else if (shouldBecomeUnfixed) {
-                            console.log('[HEADER] Removing page-title fixed at scrollY:', currentScrollY);
+
                             pageTitle.classList.remove('is-fixed');
                             pageTitleOriginalTop = null; // Recache on next scroll
 
@@ -37101,7 +37043,7 @@
                     // At top - always show everything
                     if (currentScrollY <= 100) {
                         if (isHeaderHidden) {
-                            console.log('[HEADER] At top - showing all');
+
                             isHeaderHidden = false;
                             header.classList.remove('header-hidden');
                             if (pageTitle) {
@@ -37115,7 +37057,7 @@
                     else if (Math.abs(scrollDelta) > SCROLL_THRESHOLD) {
                         if (scrollDelta > 0 && !isHeaderHidden) {
                             // Scrolling down significantly - hide main header
-                            console.log('[HEADER] Scrolling DOWN - hiding (delta: ' + scrollDelta + ')');
+
                             isHeaderHidden = true;
                             header.classList.add('header-hidden');
                             if (pageTitle) {
@@ -37125,7 +37067,7 @@
                             if (settingsBar) settingsBar.classList.add('merged');
                         } else if (scrollDelta < 0 && isHeaderHidden) {
                             // Scrolling up significantly - show main header
-                            console.log('[HEADER] Scrolling UP - showing (delta: ' + scrollDelta + ')');
+
                             isHeaderHidden = false;
                             header.classList.remove('header-hidden');
                             if (pageTitle) {
