@@ -10672,42 +10672,39 @@
         .player-rating {
             display: flex;
             align-items: center;
-            gap: 2px;
-            margin-right: auto;
-            padding-left: 15px;
+            gap: 4px;
+            padding-right: 15px;
             cursor: pointer;
             flex-shrink: 0;
-            position: relative;
         }
 
         .player-rating-star {
-            font-size: 1.1em;
-            color: #555;
-            transition: transform 0.15s ease, opacity 0.2s ease;
+            font-size: 1.2em;
+            color: white;
+            transition: transform 0.15s ease, opacity 0.2s ease, text-shadow 0.2s ease;
             cursor: pointer;
+            text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
         .player-rating-star:hover {
-            transform: scale(1.2);
+            transform: scale(1.25);
         }
 
         /* All 5 stars container */
         .player-rating-stars {
             display: flex;
-            gap: 2px;
+            gap: 3px;
         }
 
-        /* Each star has its own gradient slice for smooth transitions */
+        /* Each star - white on gradient background */
         .player-rating-stars .player-rating-star {
-            background: linear-gradient(90deg, var(--color-nigun) 0%, var(--color-chatzer) 100%);
-            background-size: 500% 100%;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-            transition: -webkit-text-fill-color 0.25s ease;
+            color: white;
+            -webkit-text-fill-color: white;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.4);
+            transition: all 0.25s ease;
         }
 
-        /* Position each star's gradient slice */
+        /* Position each star's gradient slice - not needed for white stars but kept for compatibility */
         .player-rating-stars .player-rating-star:nth-child(1) {
             background-position: 0% 0;
         }
@@ -10728,23 +10725,29 @@
             background-position: 100% 0;
         }
 
-        /* Empty stars are gray */
+        /* Empty stars are translucent white */
         .player-rating-stars .player-rating-star.empty {
-            -webkit-text-fill-color: #ccc;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.35);
+            color: rgba(255, 255, 255, 0.35);
+            text-shadow: none;
         }
 
-        /* Hover preview - gray out non-preview stars */
+        /* Hover preview - dim non-preview stars */
         .player-rating-stars:hover .player-rating-star:not(.hover-preview) {
-            -webkit-text-fill-color: #ccc;
+            -webkit-text-fill-color: rgba(255, 255, 255, 0.35);
+            color: rgba(255, 255, 255, 0.35);
+            text-shadow: none;
         }
 
-        /* Hover-preview stars show gradient */
+        /* Hover-preview stars show full white */
         .player-rating-stars:hover .player-rating-star.hover-preview {
-            -webkit-text-fill-color: transparent;
+            -webkit-text-fill-color: white;
+            color: white;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.6);
         }
 
         .player-rating:hover .player-rating-stars {
-            filter: brightness(1.05);
+            filter: brightness(1.1);
         }
 
         /* Theme-specific star colors */
@@ -10809,14 +10812,14 @@
         .player-rating-container {
             display: flex;
             flex-direction: column;
-            align-items: flex-start;
+            align-items: flex-end;
             gap: 3px;
         }
 
         /* Rating description text under stars */
         .player-rating-description {
-            font-size: 0.8em;
-            color: #555;
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.85);
             font-weight: 600;
             white-space: nowrap;
             line-height: 1.2;
@@ -10832,9 +10835,9 @@
         .player-rating-prompt {
             position: absolute;
             top: -35px;
-            left: 20px;
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-chatzer) 100%);
-            color: white;
+            right: 10px;
+            background: rgba(255, 255, 255, 0.95);
+            color: var(--color-nigun);
             padding: 8px 12px;
             border-radius: 8px;
             font-size: 0.85em;
@@ -10850,12 +10853,12 @@
             content: '';
             position: absolute;
             bottom: -6px;
-            left: 20px;
+            right: 20px;
             width: 0;
             height: 0;
             border-left: 6px solid transparent;
             border-right: 6px solid transparent;
-            border-top: 6px solid var(--color-chatzer);
+            border-top: 6px solid rgba(255, 255, 255, 0.95);
         }
 
         @keyframes ratingPromptBounce {
@@ -10872,38 +10875,44 @@
 
         /* Rating Modal Overlay */
         .rating-modal-overlay {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            z-index: 999999;
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            background: rgba(0, 0, 0, 0.7) !important;
+            z-index: 999999 !important;
             opacity: 0;
             visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease, transform 0.3s ease;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
             pointer-events: none;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
         }
 
         .rating-modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-            pointer-events: auto;
-            transform: translate(-50%, -50%) scale(1);
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
         }
 
         .rating-modal-content {
-            background: white;
+            background: red !important;
             border-radius: 12px;
-            max-width: 280px;
-            width: auto;
-            min-width: 240px;
+            max-width: 320px;
+            width: 300px !important;
+            height: 300px !important;
+            min-width: 280px;
             position: relative;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
-            border: 2px solid var(--color-nigun);
-            padding: 15px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            border: 5px solid yellow !important;
+            padding: 20px;
+            transform: scale(1) !important;
         }
 
         .rating-modal-overlay.active .rating-modal-content {
-            /* Content doesn't need separate transform */
+            transform: scale(1) !important;
         }
 
         .rating-modal-close {
@@ -11011,11 +11020,7 @@
         }
 
         @media (max-width: 768px) {
-            .rating-modal-overlay {
-                bottom: 80px;
-                right: 10px;
-                left: auto;
-            }
+            /* Rating modal is already full-screen centered, no position changes needed */
 
             .rating-modal-content {
                 max-width: 260px;
@@ -15082,42 +15087,260 @@
         /* Fixed Player */
         .player-section {
             position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 15px 30px;
-            box-shadow: 0 -5px 30px rgba(74, 18, 89, 0.15);
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%) translateY(150%);
+            width: calc(100% - 80px);
+            max-width: 1200px;
+            background: linear-gradient(270deg, #4a7cc9 0%, #6a5acd 35%, #9b4cba 65%, #e91e6c 100%);
+            padding: 12px 25px;
+            box-shadow: 0 8px 40px rgba(74, 18, 89, 0.35), 0 -4px 20px rgba(74, 18, 89, 0.15);
             z-index: 10500;
             direction: ltr;
-            transform: translateY(100%);
             opacity: 0;
-            transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+            border-radius: 20px;
+            /* Smooth transitions for morph effect - minimal easing */
+            transition:
+                transform 0.4s ease-out,
+                opacity 0.3s ease,
+                width 0.4s ease-out,
+                max-width 0.4s ease-out,
+                padding 0.4s ease-out,
+                border-radius 0.4s ease-out,
+                left 0.4s ease-out,
+                right 0.4s ease-out;
         }
 
         .player-section.player-visible {
-            transform: translateY(0);
+            transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
 
-        .player-section.player-minimized {
-            transform: translateY(100%);
+        /* ========================================
+           MINIMIZED PLAYER - SIMPLE CLEAN LAYOUT
+            ======================================== */
+
+        /* Base minimized pill */
+        .player-section.player-visible.player-minimized {
+            --minimized-progress: 0%;
+            /* Position on right side of screen */
+            left: auto !important;
+            right: 30px;
+            transform: translateX(0) translateY(0);
+            width: 200px;
+            min-height: 44px;
+            padding: 10px 20px;
+            border-radius: 20px;
+            opacity: 1;
+            cursor: pointer;
+            background: var(--color-nigun, #4a7cc9);
+            box-shadow: 0 6px 24px rgba(74, 124, 201, 0.5);
+            overflow: hidden;
+            position: fixed;
+            bottom: 20px;
+            transition: transform 0.4s ease, opacity 0.3s ease, box-shadow 0.3s ease, right 0.4s ease, left 0.4s ease, width 0.4s ease !important;
+        }
+
+        /* Hide ALL player-inner in minimized state */
+        .player-section.player-visible.player-minimized .player-inner {
+            display: none !important;
+        }
+
+        /* Hide ::before in minimized state - using real element instead */
+        .player-section.player-visible.player-minimized::before {
+            display: none !important;
+        }
+
+        /* Song name element for minimized player */
+        .minimized-song-name {
+            display: none;
+            position: absolute;
+            left: 40px;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.9em;
+            font-weight: 600;
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            color: white;
+            line-height: 1.2;
+            direction: rtl;
+        }
+
+        /* Show only in minimized state */
+        .player-section.player-visible.player-minimized .minimized-song-name {
+            display: block;
+        }
+
+        /* Minimized marquee styling */
+        .minimized-song-name.marquee span {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marqueeScroll var(--marquee-duration, 8s) linear infinite;
+            animation-play-state: paused;
+        }
+
+        .minimized-song-name.marquee.running span {
+            animation-play-state: running;
+        }
+
+        /* Progress bar background track via ::after */
+        .player-section.player-visible.player-minimized::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(to right,
+                    rgba(255, 255, 255, 0.9) 0%,
+                    rgba(255, 255, 255, 0.9) var(--minimized-progress),
+                    rgba(255, 255, 255, 0.25) var(--minimized-progress),
+                    rgba(255, 255, 255, 0.25) 100%);
+            border-radius: 0 0 20px 20px;
+            pointer-events: none;
+        }
+
+        /* Hover effect - keep same position, just lift slightly */
+        .player-section.player-visible.player-minimized:hover {
+            transform: translateX(0) translateY(-4px) scale(1.02);
+            box-shadow: 0 10px 32px rgba(74, 124, 201, 0.6);
+        }
+
+        /* Single pulse that goes out twice, then pauses */
+        @keyframes double-pulse-out {
+            0% {
+                box-shadow:
+                    0 6px 24px rgba(74, 124, 201, 0.5),
+                    0 0 0 0 rgba(74, 124, 201, 0.4);
+            }
+
+            20% {
+                box-shadow:
+                    0 6px 24px rgba(74, 124, 201, 0.5),
+                    0 0 0 18px rgba(74, 124, 201, 0);
+            }
+
+            21% {
+                box-shadow:
+                    0 6px 24px rgba(74, 124, 201, 0.5),
+                    0 0 0 0 rgba(74, 124, 201, 0);
+            }
+
+            30% {
+                box-shadow:
+                    0 6px 24px rgba(74, 124, 201, 0.5),
+                    0 0 0 0 rgba(74, 124, 201, 0.4);
+            }
+
+            50% {
+                box-shadow:
+                    0 6px 24px rgba(74, 124, 201, 0.5),
+                    0 0 0 18px rgba(74, 124, 201, 0);
+            }
+
+            51%,
+            100% {
+                box-shadow:
+                    0 6px 24px rgba(74, 124, 201, 0.5),
+                    0 0 0 0 rgba(74, 124, 201, 0);
+            }
+        }
+
+        /* Apply pulse animation when playing */
+        .player-section.player-visible.player-minimized.playing {
+            animation: double-pulse-out 3s ease-out infinite;
+        }
+
+        /* Song name stays the same */
+        .player-section.player-visible.player-minimized::before {
+            z-index: 1;
+        }
+
+        /* Minimized player play/pause button */
+        .minimized-play-btn {
+            position: absolute;
+            left: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.25);
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            color: white;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            z-index: 10;
+            padding: 0;
+        }
+
+        /* Show button only in minimized state */
+        .player-section.player-visible.player-minimized .minimized-play-btn {
+            display: flex;
+        }
+
+        .minimized-play-btn:hover {
+            transform: translateY(-50%) scale(1.15);
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .minimized-play-btn svg {
+            width: 16px;
+            height: 16px;
+        }
+
+        /* Icons stacked with fade transitions */
+        .minimized-play-btn .mini-play-icon,
+        .minimized-play-btn .mini-pause-icon {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.25s ease;
+        }
+
+        /* Play icon visible by default */
+        .minimized-play-btn .mini-play-icon {
+            opacity: 1;
+        }
+
+        .minimized-play-btn .mini-pause-icon {
             opacity: 0;
+        }
+
+        /* Playing state - fade to pause */
+        .player-section.playing .minimized-play-btn .mini-play-icon {
+            opacity: 0;
+        }
+
+        .player-section.playing .minimized-play-btn .mini-pause-icon {
+            opacity: 1;
+        }
+
+        /* Adjust song name in minimized state to not overlap with button */
+        .player-section.player-visible.player-minimized::before {
+            padding-left: 30px;
         }
 
         .player-hide-btn {
             position: absolute;
-            top: -12px;
-            left: 30px;
-            width: 36px;
-            height: 24px;
-            background: white;
+            top: 8px;
+            left: 20px;
+            width: 32px;
+            height: 32px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
             border: none;
-            border-radius: 12px 12px 0 0;
-            box-shadow: 0 -3px 10px rgba(74, 18, 89, 0.15);
+            border-radius: 50%;
             cursor: pointer;
-            color: var(--text-muted);
-            font-size: 18px;
+            color: white;
+            font-size: 20px;
             font-weight: bold;
             display: flex;
             align-items: center;
@@ -15126,8 +15349,8 @@
         }
 
         .player-hide-btn:hover {
-            color: var(--primary);
-            background: var(--primary-pale);
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.1);
         }
 
         .player-show-btn {
@@ -15173,86 +15396,405 @@
         }
 
         .player-inner {
-            max-width: 1400px;
-            margin: 0 auto;
+            width: 100%;
             display: flex;
             align-items: center;
-            gap: 20px;
+            justify-content: flex-start;
+            gap: 15px;
+            direction: ltr;
+            position: static;
+            height: 65px;
+        }
+
+        .player-right-area {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            direction: rtl;
+            order: 99;
+            margin-left: auto;
+            flex: 1;
+            max-width: calc(50% - 270px);
+            /* Stop at player progress bar with padding */
+            overflow: hidden;
+            padding-left: 20px;
+        }
+
+        .player-song-info-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
+            gap: 4px;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .player-bottom-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            direction: rtl;
+            width: 100%;
+        }
+
+        /* Info Carousel - Centered with flex */
+        .player-info-carousel {
+            position: relative;
+            flex: 1;
+            max-width: 350px;
+            min-width: 0;
+            height: 22px;
+            text-align: center;
+        }
+
+        .carousel-item {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(-20px);
+            transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0.4s;
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.9);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            z-index: 1;
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(0);
+            transition: opacity 0.4s ease, transform 0.4s ease, visibility 0s 0s;
+            z-index: 2;
+        }
+
+        .carousel-item.exiting {
+            opacity: 0;
+            visibility: hidden;
+            transform: translateX(20px);
+            z-index: 1;
+        }
+
+        .player-recording-name,
+        .player-personality-tag,
+        .player-album-tag {
+            display: inline-block;
+        }
+
+        .player-personality-tag,
+        .player-album-tag {
+            padding: 2px 10px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            max-width: 180px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            font-size: clamp(0.55em, 1.5vw, 0.8em);
+        }
+
+        /* Rating Stars - Left Side */
+        .player-rating {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .player-rating-stars {
+            display: flex;
+            flex-direction: row-reverse;
+            gap: 4px;
+            color: #fbbf24;
+        }
+
+        .player-rating-star {
+            font-size: 20px;
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.15s ease, text-shadow 0.2s ease;
+            color: #fbbf24;
+        }
+
+        .player-rating-star.empty {
+            color: rgba(255, 255, 255, 0.3);
+            text-shadow: none;
+        }
+
+        .player-rating-star:hover {
+            transform: scale(1.4);
+            text-shadow: 0 0 12px rgba(251, 191, 36, 0.8);
+        }
+
+        .player-rating-star.hover-preview {
+            color: #fcd34d;
+            text-shadow: 0 0 15px rgba(251, 191, 36, 0.9), 0 0 30px rgba(251, 191, 36, 0.4);
+            transform: scale(1.15);
+        }
+
+        .player-rating.saving .player-rating-star {
+            pointer-events: none;
+            animation: pulse-star 0.4s ease infinite;
+        }
+
+        /* Saving animation - subtle pulse */
+        @keyframes pulse-star {
+
+            0%,
+            100% {
+                opacity: 0.5;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* Stars stay stable on success - no animation on them */
+        .player-rating.rated-success .player-rating-star {
+            /* Just ensure they show correct state */
+        }
+
+        /* Container for flying stars */
+        .player-rating {
+            position: relative;
+        }
+
+        /* Flying star particle (created by JS) */
+        .flying-star {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 0 0 6px rgba(251, 191, 36, 0.9), 0 0 12px rgba(251, 191, 36, 0.5);
+            pointer-events: none;
+            z-index: 100;
+            animation: fly-star var(--fly-duration, 0.8s) ease-out forwards;
+            --fly-x: 0px;
+            --fly-y: 0px;
+        }
+
+        @keyframes fly-star {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(0.3);
+            }
+
+            20% {
+                opacity: 1;
+                transform: translate(calc(-50% + var(--fly-x) * 0.3), calc(-50% + var(--fly-y) * 0.3)) scale(1.1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(calc(-50% + var(--fly-x)), calc(-50% + var(--fly-y))) scale(0.4);
+            }
+        }
+
+        .player-rating-stars .star-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        .player-rating:hover .star-icon {
+            filter: brightness(1.2);
+        }
+
+        .player-rec-tag-personality {
+            background: var(--color-mechaber);
+            color: white;
+            box-shadow: 0 2px 6px rgba(196, 53, 168, 0.35);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .player-rec-tag-personality:hover {
+            background: var(--color-mechaber-dark);
+            transform: scale(1.05);
+        }
+
+        .player-rec-tag-album {
+            background: var(--color-album);
+            color: white;
+            box-shadow: 0 2px 6px rgba(0, 131, 143, 0.35);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .player-rec-tag-album:hover {
+            background: var(--color-album-dark);
+            transform: scale(1.05);
+        }
+
+        .player-right-song-name {
+            font-weight: 700;
+            font-size: 1.8em;
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+            cursor: pointer;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            max-width: 300px;
+            direction: rtl;
+            align-self: center;
+            position: relative;
+        }
+
+        .player-right-song-name:hover {
+            opacity: 0.85;
+        }
+
+        /* Marquee: wrapper keeps overflow:hidden, inner span animates */
+        .player-right-song-name.marquee {
+            overflow: hidden;
+            text-align: right;
+        }
+
+        .player-right-song-name.marquee span {
+            display: inline-block;
+            white-space: nowrap;
+            /* Animation paused initially until offset is calculated */
+            animation: marqueeScroll var(--marquee-duration, 10s) linear infinite;
+            animation-play-state: paused;
+            will-change: transform;
+        }
+
+        .player-right-song-name.marquee.running span {
+            animation-play-state: running;
+        }
+
+        @keyframes marqueeScroll {
+
+            0% {
+                transform: translateX(var(--marquee-start, 0px));
+            }
+
+            90%,
+            100% {
+                /* Positive = scroll RIGHT, Copy2 enters from left (correct for RTL) */
+                transform: translateX(calc(var(--marquee-start, 0px) + var(--marquee-width, 200px)));
+            }
+        }
+
+        .player-hide-btn-inner {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition-smooth);
+        }
+
+        .player-hide-btn-inner:hover {
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        .player-mechaber-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .player-mechaber-row:has(.player-mechaber-profile[style*="display: none"]) {
+            display: none;
         }
 
         .player-info {
-            flex: 1;
-            text-align: right;
+            position: absolute;
+            left: 2.5%;
+            top: 50%;
+            transform: translateY(-50%);
+            text-align: center;
             direction: rtl;
             min-width: 0;
+            width: calc(50% - 250px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
         }
 
         .player-song-name {
             font-weight: 700;
-            font-size: 1.1em;
-            color: var(--primary-deep);
+            font-size: 1.5em;
+            color: white;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
             cursor: pointer;
-            transition: color 0.2s ease;
+            transition: all 0.2s ease;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.25);
+            max-width: 260px;
         }
 
         .player-song-name:hover {
-            color: var(--primary-color);
+            opacity: 0.85;
             text-decoration: underline;
         }
 
         .player-song-meta {
-            font-size: 0.85em;
-            color: var(--text-muted);
+            font-size: 0.75em;
+            color: rgba(255, 255, 255, 0.85);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
-        /* New styled player info box - similar to nigun modal */
+        /* Compact mechaber badge - modern style */
         .player-info-box {
             position: relative;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, var(--color-nigun) 0%, var(--color-nigun-dark) 100%);
-            border-radius: 0 0 12px 12px;
-            padding: 8px 12px 8px 70px;
-            margin-bottom: 6px;
-            box-shadow: 0 4px 12px rgba(74, 124, 201, 0.25);
-            width: 240px;
-        }
-
-        .player-mechaber-profile {
-            position: absolute;
-            top: 0;
-            left: 10px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            background: var(--color-mechaber);
-            padding: 5px 7px 4px 7px;
-            border-radius: 0 0 8px 8px;
+            gap: 6px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 20px;
+            padding: 6px 12px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.2s ease;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .player-info-box:hover {
+            background: rgba(255, 255, 255, 0.22);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .player-mechaber-profile {
+            display: flex;
+            align-items: center;
+            gap: 6px;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
             text-decoration: none;
-            z-index: 5;
+            flex-shrink: 0;
         }
 
         .player-mechaber-profile:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 15px rgba(196, 53, 168, 0.4);
+            opacity: 0.85;
         }
 
         .player-mechaber-avatar {
-            width: 36px;
-            height: 36px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             background: white;
-            border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
             overflow: hidden;
             flex-shrink: 0;
         }
@@ -15281,50 +15823,56 @@
         }
 
         .player-mechaber-name {
-            font-size: 7px;
+            font-size: 0.75em;
             font-weight: 600;
             color: white;
-            text-align: center;
-            margin-top: 2px;
-            max-width: 50px;
+            max-width: 260px;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
         }
 
         .player-info-content {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 0;
-            flex: 1;
-            overflow: hidden;
-        }
-
-        .player-info-box .player-song-name {
-            color: white;
-            font-size: 0.9em;
-            font-weight: 600;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .player-info-box .player-song-name:hover {
-            color: rgba(255, 255, 255, 0.85);
-            text-decoration: underline;
+            display: none;
         }
 
         /* Player tags section */
         .player-tags {
+            display: none;
+        }
+
+        .player-tags-row {
             display: flex;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             gap: 6px;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             direction: rtl;
-            max-width: 200px;
+            width: 100%;
+            overflow: hidden;
+        }
+
+        .player-tags-row:empty {
+            display: none;
+        }
+
+        .player-tag-divider {
+            color: var(--color-nigun);
+            font-weight: bold;
+            font-size: 0.9em;
+            margin: 0 2px;
+            opacity: 0.8;
+        }
+
+        .player-tag-overflow {
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-size: 0.68em;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.25);
+            color: white;
+            flex-shrink: 0;
         }
 
         .player-tag {
@@ -15341,7 +15889,7 @@
         .player-tag-chatzer {
             background: var(--color-chatzer);
             color: white;
-            box-shadow: 0 2px 6px rgba(156, 91, 181, 0.35);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
         }
 
         .player-tag-chatzer:hover {
@@ -15349,10 +15897,21 @@
             transform: scale(1.05);
         }
 
+        .player-tag-personality {
+            background: var(--color-mechaber);
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+        }
+
+        .player-tag-personality:hover {
+            background: var(--color-mechaber-dark);
+            transform: scale(1.05);
+        }
+
         .player-tag-collection {
             background: var(--color-collection);
             color: white;
-            box-shadow: 0 2px 6px rgba(198, 40, 40, 0.35);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
         }
 
         .player-tag-collection:hover {
@@ -15363,7 +15922,7 @@
         .player-tag-zman {
             background: var(--color-zman);
             color: white;
-            box-shadow: 0 2px 6px rgba(233, 106, 27, 0.35);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
         }
 
         .player-tag-zman:hover {
@@ -15374,11 +15933,55 @@
         .player-tag-gezungen {
             background: var(--color-piyut);
             color: white;
-            box-shadow: 0 2px 6px rgba(46, 139, 46, 0.35);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
         }
 
         .player-tag-gezungen:hover {
             background: var(--color-piyut-dark);
+            transform: scale(1.05);
+        }
+
+        .player-tag-verter {
+            background: var(--color-verter);
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+        }
+
+        .player-tag-verter:hover {
+            background: var(--color-verter-dark);
+            transform: scale(1.05);
+        }
+
+        .player-tag-pasig {
+            background: var(--color-piyut);
+            color: white;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+        }
+
+        .player-tag-pasig:hover {
+            background: var(--color-piyut-dark);
+            transform: scale(1.05);
+        }
+
+        .player-tag-rhythm {
+            background: var(--color-music);
+            color: white;
+            box-shadow: 0 2px 6px rgba(255, 87, 34, 0.35);
+        }
+
+        .player-tag-rhythm:hover {
+            background: var(--color-music-dark);
+            transform: scale(1.05);
+        }
+
+        .player-tag-scale {
+            background: var(--color-music);
+            color: white;
+            box-shadow: 0 2px 6px rgba(96, 125, 139, 0.35);
+        }
+
+        .player-tag-scale:hover {
+            background: var(--color-music-dark);
             transform: scale(1.05);
         }
 
@@ -15428,24 +16031,32 @@
 
         .player-controls {
             display: flex;
-            align-items: center;
-            gap: 10px;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 8px;
             flex-shrink: 0;
+            position: absolute;
+            left: 50%;
+            top: 0;
+            transform: translate(-50%, -33%);
+            z-index: 30;
+            /* Ensure buttons are clickable above progress bar */
         }
 
         .player-btn {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border: none;
-            background: transparent;
-            color: var(--text-muted);
-            font-size: 1.2em;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 1.1em;
             cursor: pointer;
             border-radius: 50%;
             transition: var(--transition-smooth);
             display: flex;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(4px);
         }
 
         .player-btn svg {
@@ -15453,27 +16064,92 @@
         }
 
         .player-btn:hover {
-            color: var(--primary);
-            background: var(--primary-pale);
+            background: rgba(255, 255, 255, 0.35);
+            transform: scale(1.1);
         }
 
         .player-btn.main {
-            width: 55px;
-            height: 55px;
-            background: var(--gradient-main);
-            color: white;
-            font-size: 1.4em;
-            box-shadow: 0 4px 15px rgba(74, 124, 201, 0.25), 0 4px 15px rgba(156, 91, 181, 0.2);
+            width: 70px;
+            height: 70px;
+            background: transparent;
+            color: var(--color-nigun);
+            font-size: 1.6em;
             position: relative;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            overflow: visible;
+            border: none;
+            z-index: 10;
         }
 
-        .player-btn.main:hover {
-            transform: scale(1.05);
-            box-shadow: 0 6px 20px rgba(74, 124, 201, 0.35), 0 6px 20px rgba(156, 91, 181, 0.3);
+        .player-btn-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25), 0 0 30px rgba(255, 255, 255, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.5);
+            z-index: 1;
+            transition: var(--transition-smooth);
+        }
+
+        .player-btn.main:hover .player-btn-bg {
+            transform: scale(1.08);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.35), 0 0 40px rgba(255, 255, 255, 0.4);
+        }
+
+
+
+        .player-btn.main svg {
+            width: 42px;
+            height: 42px;
+            fill: var(--color-chatzer);
+        }
+
+        /* Shockwave/Pulse Effect for Main Play Button */
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.8);
+                opacity: 0.6;
+            }
+
+            100% {
+                transform: scale(1.6);
+                /* Expand nicely */
+                opacity: 0;
+            }
+        }
+
+        .player-btn.main::before,
+        .player-btn.main::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--color-chatzer);
+            /* Use main theme color */
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(1.4);
+            transition: all 0.6s ease-out;
+        }
+
+        .player-btn.main.playing::before {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+        }
+
+        .player-btn.main.playing::after {
+            animation: pulse-ring 2s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+            animation-delay: 0.6s;
+            /* Staggered delay for ripple effect */
         }
 
         /* Animated play/pause icons in player */
@@ -15484,6 +16160,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 2;
         }
 
         .player-play-icon svg,
@@ -15512,38 +16189,83 @@
         }
 
         .player-progress {
-            flex: 2;
+            position: absolute;
+            left: 50%;
+            top: auto;
+            /* Remove top positioning */
+            bottom: 2px;
+            /* Position lower, moved down closer to edge */
+            transform: translateX(-50%);
             display: flex;
-            flex-direction: column;
-            gap: 5px;
+            flex-direction: column-reverse;
+            /* Put time display below bar */
+            gap: 4px;
+            width: 450px;
+            max-width: 70%;
+            padding: 0;
+            /* Remove padding to lower it fully */
+            cursor: pointer;
+            z-index: 20;
+            /* Ensure it's above other elements */
         }
 
+        /* Larger invisible container for hit testing */
         .progress-bar-container {
             width: 100%;
-            height: 6px;
-            background: var(--primary-pale);
-            border-radius: 10px;
+            height: 40px;
+            /* Even larger hit area for better usability */
+            background: transparent;
+            /* Invisible hit area */
+            border-radius: 12px;
             cursor: pointer;
+            position: relative;
+            margin-bottom: 0px;
+            /* No margin, time display close to bar */
+            /* Flex layout to center the visible inner bar */
+            display: flex;
+            align-items: center;
+        }
+
+        /* The actual visual progress bar - thinner by default */
+        .progress-bar-visual-bg {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.25);
+            /* Visible track background moved here */
+            border-radius: 10px;
             overflow: hidden;
+            position: relative;
+            transform: scaleY(0.7);
+            /* Start thin */
+            transition: transform 0.2s ease;
         }
 
-        .progress-bar-container:hover {
-            height: 8px;
+        /* Container hover expands the visual bar */
+        .player-progress:hover .progress-bar-visual-bg,
+        .progress-bar-container:hover .progress-bar-visual-bg {
+            transform: scaleY(1.3);
+            /* Grow thicker on hover */
         }
 
+        /* The fill element */
         .progress-bar {
             height: 100%;
-            background: linear-gradient(90deg, var(--color-mechaber) 0%, var(--color-chatzer) 50%, var(--color-nigun) 100%);
+            background: white;
             border-radius: 10px;
             width: 0%;
-            transition: width 0.1s linear;
+            transition: width 0.15s ease-out;
+            /* Smooth movement for seeking and natural playback */
+            box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+            position: relative;
+            will-change: width;
         }
 
         .time-display {
             display: flex;
             justify-content: space-between;
-            font-size: 0.75em;
-            color: var(--text-muted);
+            font-size: 1.1em;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
         }
 
         /* Loading */
@@ -16822,6 +17544,54 @@
             margin-top: 4px;
         }
 
+        /* File selected state */
+        .addinfo-file-upload.file-selected {
+            border-color: #4CAF50;
+            border-style: solid;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .addinfo-file-upload.file-selected .addinfo-file-upload-icon {
+            color: #4CAF50;
+        }
+
+        .addinfo-file-upload.file-selected .addinfo-file-upload-icon::after {
+            content: ' ✓';
+        }
+
+        .addinfo-file-upload.file-selected .addinfo-file-upload-text {
+            color: #2E7D32;
+        }
+
+        .addinfo-file-upload.file-selected .addinfo-file-upload-hint {
+            color: #4CAF50;
+            opacity: 1;
+        }
+
+        /* Submit button loading state */
+        .addinfo-submit-btn.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .addinfo-submit-btn .btn-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-left: 8px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         /* Checkbox styling */
         .addinfo-checkbox-wrapper {
             display: flex;
@@ -17707,18 +18477,23 @@
 
             .player-inner {
                 flex-wrap: wrap;
+                justify-content: center;
+                padding-top: 30px;
             }
 
             .player-info {
-                order: 1;
+                order: 3;
                 width: 100%;
                 text-align: center;
-                margin-bottom: 8px;
+                margin-bottom: 0;
+                display: flex;
+                justify-content: center;
             }
 
             .player-info-box {
-                padding: 6px 10px 6px 60px;
-                width: 200px;
+                padding: 6px 10px 6px 55px;
+                width: auto;
+                max-width: 200px;
             }
 
             .player-info-box.no-mechaber {
@@ -17726,35 +18501,62 @@
             }
 
             .player-mechaber-profile {
-                left: 8px;
+                left: 6px;
                 padding: 4px 5px 3px 5px;
             }
 
             .player-mechaber-avatar {
-                width: 32px;
-                height: 32px;
+                width: 30px;
+                height: 30px;
             }
 
             .player-mechaber-name {
                 font-size: 6px;
-                max-width: 42px;
+                max-width: 38px;
             }
 
             .player-info-box .player-song-name {
-                font-size: 0.85em;
+                font-size: 0.8em;
             }
 
             .player-controls {
-                order: 2;
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                order: 1;
+                margin-bottom: 10px;
+            }
+
+            .player-btn.main {
+                width: 60px;
+                height: 60px;
+                margin-top: -35px;
             }
 
             .player-progress {
-                order: 3;
-                flex: 1;
+                position: static;
+                transform: none;
+                order: 2;
+                width: 100%;
+                max-width: none;
+                margin-bottom: 8px;
+            }
+
+            .player-rating {
+                order: 4;
+                padding-left: 0;
             }
 
             .player-tags {
                 display: none;
+            }
+
+            .player-hide-btn {
+                top: 5px;
+                left: 10px;
+                width: 28px;
+                height: 28px;
             }
         }
 
@@ -20107,79 +20909,114 @@
         </div>
     </div>
 
-    <!-- Player Show Button (when minimized) -->
-    <button class="player-show-btn" id="playerShowBtn" onclick="showPlayerBanner()">
-        <span id="showBtnSongName">ווייז פלעיער</span>
-        <div class="song-wave-animation loading">
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-            <span class="wave-bar"></span>
-        </div>
-    </button>
-
     <!-- Player -->
     <div class="player-section">
-        <button class="player-hide-btn" onclick="hidePlayerBanner()" title="באהאלט פלעיער">−</button>
+        <!-- SVG Gradient Definition for play button -->
+        <svg width="0" height="0" style="position:absolute">
+            <defs>
+                <linearGradient id="playerBtnGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:var(--color-nigun);stop-opacity:1" />
+                    <stop offset="50%" style="stop-color:var(--color-chatzer);stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:var(--color-mechaber);stop-opacity:1" />
+                </linearGradient>
+            </defs>
+        </svg>
+        <!-- Minimized state play/pause button -->
+        <button class="minimized-play-btn" id="minimizedPlayBtn" onclick="event.stopPropagation(); togglePlayPause();"
+            title="פלעי/פויז">
+            <span class="mini-play-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z" />
+                </svg></span>
+            <span class="mini-pause-icon"><svg viewBox="0 0 24 24" fill="currentColor">
+                    <path
+                        d="M9 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zM13 7v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z" />
+                </svg></span>
+        </button>
+        <!-- Minimized state song name (for marquee) -->
+        <div class="minimized-song-name" id="minimizedSongName"></div>
         <div class="player-inner">
-            <div class="player-info">
-                <div class="player-info-box">
-                    <a class="player-mechaber-profile" id="playerMechaberProfile" style="display: none;">
-                        <div class="player-mechaber-avatar" id="playerMechaberAvatar">
-                            <div class="placeholder"><span class="mechaber-icon"></span></div>
+            <!-- Right Side Area -->
+            <div class="player-right-area">
+                <div class="player-song-info-wrapper">
+                    <!-- Row 1: Song Name -->
+                    <div class="player-right-song-name" id="playerRightSongName" onclick="openCurrentSongDetails()">
+                    </div>
+                    <!-- Row 2: Info carousel (right) + Rating (left) -->
+                    <div class="player-bottom-row">
+                        <!-- Info Carousel - Right Side -->
+                        <div class="player-info-carousel" id="playerInfoCarousel">
+                            <div class="carousel-item carousel-recording active" id="carouselRecording">
+                                <span class="player-recording-name" id="playerRecordingName"></span>
+                            </div>
+                            <div class="carousel-item carousel-personality" id="carouselPersonality">
+                                <span class="player-personality-tag" id="playerPersonalityTag"></span>
+                            </div>
+                            <div class="carousel-item carousel-album" id="carouselAlbum">
+                                <span class="player-album-tag" id="playerAlbumTag"></span>
+                            </div>
                         </div>
-                        <div class="player-mechaber-name" id="playerMechaberName"></div>
-                    </a>
-                    <div class="player-info-content">
-                        <div class="player-song-name" id="playerSongName" onclick="openCurrentSongDetails()">קליק אויף א
-                            ניגון צו שפילן</div>
+                        <!-- Rating Stars - Left Side -->
+                        <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט"
+                            onclick="openRatingModal()">
+                            <span class="player-rating-stars" id="playerRatingStars"></span>
+                        </div>
                     </div>
                 </div>
-                <div class="player-wave-animation" id="playerWave">
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                    <span class="wave-bar"></span>
-                </div>
-                <div class="player-song-meta" id="playerSongMeta" style="display: none;"></div>
             </div>
+            <!-- Player Controls (Center - absolutely positioned) -->
             <div class="player-controls">
                 <button class="player-btn" onclick="playPrevious()" title="פריערדיגע"><svg viewBox="0 0 24 24"
                         fill="currentColor" width="18" height="18">
                         <path d="M6 6h2v12H6V6zm3.5 6l8.5 6V6l-8.5 6z" />
                     </svg></button>
                 <button class="player-btn main" id="playPauseBtn" onclick="togglePlayPause()">
-                    <span class="player-play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-                            <path d="M8 5v14l11-7L8 5z" />
+                    <div class="player-btn-bg"></div>
+                    <span class="player-play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="42" height="42">
+                            <path
+                                d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z" />
                         </svg></span>
-                    <span class="player-pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="22" height="22">
-                            <path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
+                    <span class="player-pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="42" height="42">
+                            <path
+                                d="M9 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zM13 7v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z" />
                         </svg></span>
                 </button>
                 <button class="player-btn" onclick="playNext()" title="קומענדיגע"><svg viewBox="0 0 24 24"
                         fill="currentColor" width="18" height="18">
-                        <path d="M6 18l8.5-6L6 6v12zm2 0V6l6.5 6L8 18zM16 6v12h2V6h-2z" />
+                        <path d="M16 18h2V6h-2v12zM6 6v12l8.5-6L6 6z" />
                     </svg></button>
             </div>
-            <div class="player-progress">
-                <div class="progress-bar-container" onclick="seekTo(event)">
-                    <div class="progress-bar" id="progressBar"></div>
+            <!-- Progress Bar -->
+            <div class="player-progress" id="progressBarContainer" onclick="seekTo(event)">
+                <div class="progress-bar-container">
+                    <div class="progress-bar-visual-bg">
+                        <div class="progress-bar" id="progressBar"></div>
+                    </div>
                 </div>
                 <div class="time-display">
                     <span id="currentTime">0:00</span>
                     <span id="duration">0:00</span>
                 </div>
             </div>
-            <div class="player-tags" id="playerTags"></div>
-            <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט" style="display: none;"
-                onclick="openRatingModal()">
-                <div class="player-rating-container">
-                    <span class="player-rating-stars" id="playerRatingStars"></span>
-                    <span class="player-rating-description" id="playerRatingDescription"></span>
+            <!-- Song Info (Left) - Mechaber, Tags in organized rows -->
+            <div class="player-info">
+                <!-- Row 1: Mechaber -->
+                <div class="player-mechaber-row">
+                    <a class="player-mechaber-profile" id="playerMechaberProfile" style="display: none;">
+                        <div class="player-mechaber-avatar" id="playerMechaberAvatar">
+                            <div class="placeholder"><span class="mechaber-icon"></span></div>
+                        </div>
+                        <div class="player-mechaber-name" id="playerMechaberName"></div>
+                    </a>
                 </div>
-                <div class="player-rating-prompt" id="playerRatingPrompt" style="display: none;">
-                    קליק דא צו רעיטן
-                </div>
+                <!-- Row 2: Chatzer + Gezingen -->
+                <div class="player-tags-row" id="playerTagsRow1"></div>
+                <!-- Row 3: Verter + Pasig -->
+                <div class="player-tags-row" id="playerTagsRow2"></div>
+                <!-- Row 4: Collections + Rhythm + Scale -->
+                <div class="player-tags-row" id="playerTagsRow3"></div>
+                <!-- Keep old container for backwards compatibility (hidden) -->
+                <div class="player-tags" id="playerTags" style="display: none;"></div>
             </div>
         </div>
         <audio id="audioPlayer"></audio>
@@ -20798,12 +21635,14 @@
         <!-- Rating Modal -->
         <div class="rating-modal-overlay" id="ratingModalOverlay"
             onclick="if(event.target === this) closeRatingModal()">
-            <div class="rating-modal-content">
+            <div class="rating-modal-content"
+                style="background: red !important; width: 300px !important; height: 300px !important; border: 5px solid yellow !important; display: block !important;">
                 <button class="rating-modal-close" onclick="event.stopPropagation(); closeRatingModal()">×</button>
-                <div class="rating-modal-header" id="ratingModalHeader">
+                <div class="rating-modal-header" id="ratingModalHeader"
+                    style="color: white !important; font-size: 20px !important;">
                     ביטע וועל אויס די קוואליטעט פון דעם רעקארדינג
                 </div>
-                <div class="rating-modal-options" id="ratingModalOptions">
+                <div class="rating-modal-options" id="ratingModalOptions" style="color: white !important;">
                     <!-- Rating options will be populated by JavaScript -->
                 </div>
             </div>
@@ -27946,8 +28785,8 @@
                         <div class="detail-category-bar">${typeName}</div>
                         <div class="detail-header-content ${(info.image || type === 'mechabrim') ? '' : 'no-image'}">
                             <button class="play-all-btn" title="שפיל אלע" onclick="event.stopPropagation(); playAllFromDetailPage('${type}', '${escapeHtml(name).replace(/'/g, "\\'")}')" data-detail-type="${type}" data-detail-name="${escapeHtml(name)}">
-                                <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                                <svg class="pause-icon" style="display:none" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                                <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/></svg>
+                                <svg class="pause-icon" style="display:none" viewBox="0 0 24 24"><path d="M9 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zM13 7v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/></svg>
                             </button>
                             <div class="detail-header-left">
                                 ${info.image ? `
@@ -28671,8 +29510,8 @@
 
                         // SVG play/pause button like main page
                         const playBtn = '<button class="song-play-btn-new rec-play-btn" onclick="event.stopPropagation(); playNigunRecording(' + songIdx + ', ' + i + ', this)" data-song-idx="' + songIdx + '" data-rec-idx="' + i + '">' +
-                            '<span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>' +
-                            '<span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>' +
+                            '<span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/></svg></span>' +
+                            '<span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M9 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zM13 7v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/></svg></span>' +
                             '</button>';
 
                         return '<div class="song-item-recording" onclick="event.stopPropagation(); playNigunRecording(' + songIdx + ', ' + i + ', this)" data-song-idx="' + songIdx + '" data-rec-idx="' + i + '" data-rating="' + (rec.rating || 0) + '">' +
@@ -28861,11 +29700,19 @@
             }
 
             // Play recording from nigun detail page
-            function playNigunRecording(songIdx, recordingIdx, element, playlist = null) {
+            function playNigunRecording(songIdx, recordingIdx, element, playlist = null, expandPlayer = true) {
+                console.log('=== playNigunRecording CALLED ===');
+                console.log('songIdx:', songIdx, 'recordingIdx:', recordingIdx);
                 const song = allSongs[songIdx];
-                if (!song || !song.recordings || !song.recordings[recordingIdx]) return;
+                console.log('Song from allSongs[songIdx]:', song);
+                console.log('allSongs.length:', allSongs.length);
+                if (!song || !song.recordings || !song.recordings[recordingIdx]) {
+                    console.log('EARLY RETURN - song or recording not found');
+                    return;
+                }
 
                 const recording = song.recordings[recordingIdx];
+                console.log('Recording:', recording);
 
                 // If clicking the same recording that's currently playing, toggle play/pause
                 if (songIdx === currentSongIndex && recordingIdx === currentRecordingIndex && audioPlayer.src) {
@@ -28903,10 +29750,23 @@
                 isInRecordingsMode = true;
 
                 // Play the specific recording URL
+                // Reset progress bar instantly (no animation)
+                const progressBar = document.getElementById('progressBar');
+                if (progressBar) {
+                    progressBar.style.transition = 'none';
+                    progressBar.style.width = '0%';
+                    setTimeout(() => { progressBar.style.transition = 'width 0.15s ease-out'; }, 50);
+                }
+                document.getElementById('currentTime').textContent = '0:00';
+
                 audioPlayer.src = recording.url;
                 audioPlayer.play();
 
                 showPlayer();
+                // Expand player when user manually selects a recording from list
+                if (expandPlayer) {
+                    showPlayerBanner();
+                }
                 // Update player UI with song info
                 updatePlayerUI(song);
                 updateActiveSongInList();
@@ -30907,8 +31767,8 @@
                     if (hasQualityRecordings) {
                         // Quality recordings - show play button
                         playBtnHtml = `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
-                        <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                        <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                        <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/></svg></span>
+                        <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M9 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zM13 7v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/></svg></span>
                     </button>`;
                     } else if (hasAnyRecordings) {
                         // Has recordings but none meet quality - show faded half-star
@@ -30933,8 +31793,8 @@
                             const isRecActive = isActive && currentRecordingIndex === i;
                             const recPlayBtn = recMeetsQuality
                                 ? `<button class="song-play-btn-new rec-play-btn ${isRecActive && !audioPlayer.paused ? 'playing' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${i}">
-                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/></svg></span>
+                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M9 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zM13 7v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/></svg></span>
                             </button>`
                                 : `<span class="song-play-btn-new song-btn-low-quality rec-play-btn" title="קוואליטעט נידעריג"><span class="low-quality-icon">☆</span></span>`;
                             const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
@@ -31122,8 +31982,8 @@
                             const isRecActive = isActive && currentRecordingIndex === actualIndex;
                             const recPlayBtn = recMeetsQuality
                                 ? `<button class="song-play-btn-new rec-play-btn ${isRecActive && !audioPlayer.paused ? 'playing' : ''}" onclick="event.stopPropagation(); ${recPlayAction}" data-song-idx="${globalIdx}" data-rec-idx="${actualIndex}">
-                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                                <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/></svg></span>
+                                <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="14" height="14"><path d="M9 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zM13 7v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/></svg></span>
                             </button>`
                                 : `<span class="song-play-btn-new song-btn-low-quality rec-play-btn" title="קוואליטעט נידעריג"><span class="low-quality-icon">☆</span></span>`;
                             const recRating = rec.rating ? `<span class="rec-rating-display">${'★'.repeat(rec.rating)}</span>` : '';
@@ -31229,8 +32089,8 @@
                     </div>
                     ${waveHtml}
                     ${hasAudio ? `<button class="song-play-btn-new" onclick="event.stopPropagation(); ${playAction};" data-song-idx="${globalIdx}">
-                        <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 5v14l11-7L8 5z"/></svg></span>
-                        <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg></span>
+                        <span class="play-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/></svg></span>
+                        <span class="pause-icon"><svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M9 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zM13 7v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/></svg></span>
                     </button>` : ''}
                 </div>
             `;
@@ -31252,35 +32112,288 @@
                     const playerSection = document.querySelector('.player-section');
                     playerSection.classList.add('player-visible');
                     playerSection.classList.remove('player-minimized');
-                    document.getElementById('playerShowBtn').classList.remove('visible');
+                    const showBtn = document.getElementById('playerShowBtn');
+                    if (showBtn) showBtn.classList.remove('visible');
                 }
+
             }
 
             // Hide the player banner (user clicked hide button)
             function hidePlayerBanner() {
+                console.log('=== hidePlayerBanner called ===');
                 const playerSection = document.querySelector('.player-section');
+                console.log('playerSection found:', playerSection);
+                console.log('Classes BEFORE:', playerSection?.classList?.toString());
+
+                // Keep player-visible class, just add player-minimized (CSS handles the transition)
                 playerSection.classList.add('player-minimized');
 
-                // Show the floating button with song name
-                const showBtn = document.getElementById('playerShowBtn');
-                const songName = document.getElementById('playerSongName').textContent;
-                document.getElementById('showBtnSongName').textContent = songName || 'ווייז פלעיער';
-                showBtn.classList.add('visible');
+                console.log('Classes AFTER:', playerSection?.classList?.toString());
+
+                // Trigger marquee for minimized song name after transition
+                setTimeout(() => {
+                    triggerMinimizedMarquee();
+                }, 400); // Wait for CSS transition to complete
+
+                // Debug computed styles
+                const computed = window.getComputedStyle(playerSection);
+                console.log('Computed transform:', computed.transform);
+                console.log('Computed left:', computed.left);
+                console.log('Computed right:', computed.right);
+                console.log('Computed opacity:', computed.opacity);
+                console.log('Computed width:', computed.width);
             }
 
-            // Show the player banner (user clicked show button)
-            function showPlayerBanner() {
+            // Trigger marquee for minimized player song name
+            function triggerMinimizedMarquee() {
+                const minimizedSongName = document.getElementById('minimizedSongName');
                 const playerSection = document.querySelector('.player-section');
-                playerSection.classList.remove('player-minimized');
-                document.getElementById('playerShowBtn').classList.remove('visible');
+                if (!minimizedSongName || !playerSection) return;
+
+                // Get song name from attribute
+                const songName = playerSection.getAttribute('data-song-name');
+                if (!songName) return;
+
+                // Reset first
+                minimizedSongName.classList.remove('marquee');
+                minimizedSongName.classList.remove('running');
+                minimizedSongName.textContent = songName;
+                minimizedSongName.style.removeProperty('--marquee-start');
+                minimizedSongName.style.removeProperty('--marquee-width');
+                minimizedSongName.style.removeProperty('--marquee-duration');
+
+                // Wait for DOM to be visible (minimized state)
+                requestAnimationFrame(() => {
+                    const containerWidth = minimizedSongName.clientWidth;
+                    const textWidth = minimizedSongName.scrollWidth;
+                    const overflow = textWidth - containerWidth;
+
+                    if (overflow > 10) {
+                        const separator = ' \u00A0\u00A0\u00A0 • \u00A0\u00A0\u00A0 ';
+                        const oneUnit = songName + separator;
+
+                        // Measure one unit
+                        const tempSpan = document.createElement('span');
+                        tempSpan.style.cssText = 'visibility:hidden;position:absolute;white-space:nowrap;';
+                        tempSpan.style.font = getComputedStyle(minimizedSongName).font;
+                        tempSpan.textContent = oneUnit;
+                        document.body.appendChild(tempSpan);
+                        const oneUnitWidth = tempSpan.offsetWidth;
+                        tempSpan.remove();
+
+                        // Set up marquee
+                        minimizedSongName.innerHTML = '<span>' + oneUnit + oneUnit + '</span>';
+                        minimizedSongName.style.setProperty('--marquee-width', oneUnitWidth + 'px');
+                        const duration = Math.max(8, oneUnitWidth / 50);
+                        minimizedSongName.style.setProperty('--marquee-duration', duration + 's');
+                        minimizedSongName.classList.add('marquee');
+
+                        // Calculate offset and start animation
+                        requestAnimationFrame(() => {
+                            const innerSpan = minimizedSongName.querySelector('span');
+                            if (innerSpan) {
+                                const spanRect = innerSpan.getBoundingClientRect();
+                                const containerRect = minimizedSongName.getBoundingClientRect();
+                                const startOffset = containerRect.right - spanRect.right;
+                                minimizedSongName.style.setProperty('--marquee-start', startOffset + 'px');
+                                minimizedSongName.classList.add('running');
+                            }
+                        });
+                    }
+                });
             }
+
+            // Show the player banner (user clicked minimized player or show button)
+            function showPlayerBanner() {
+                console.log('=== showPlayerBanner called ===');
+                const playerSection = document.querySelector('.player-section');
+                console.log('Classes BEFORE:', playerSection?.classList?.toString());
+                playerSection.classList.remove('player-minimized');
+                console.log('Classes AFTER:', playerSection?.classList?.toString());
+                const showBtn = document.getElementById('playerShowBtn');
+                if (showBtn) showBtn.classList.remove('visible');
+
+                // Set grace period to prevent immediate re-collapse during animation
+                playerJustExpanded = true;
+                setTimeout(() => {
+                    playerJustExpanded = false;
+                }, 500);
+
+                // Re-check marquee after player expands (after transition completes)
+                setTimeout(() => {
+                    const rightSongName = document.getElementById('playerRightSongName');
+                    if (rightSongName) {
+                        // Get the song name from data attribute or extract from current text
+                        const playerSection = document.querySelector('.player-section');
+                        const songName = playerSection?.getAttribute('data-song-name') ||
+                            rightSongName.textContent.split(' \u00A0\u00A0•\u00A0\u00A0 ')[0];
+
+                        if (songName && songName.trim()) {
+                            // Reset and re-measure
+                            rightSongName.classList.remove('marquee');
+                            rightSongName.classList.remove('running');
+                            rightSongName.textContent = songName;
+                            rightSongName.style.removeProperty('--marquee-start');
+                            rightSongName.style.removeProperty('--marquee-width');
+                            rightSongName.style.removeProperty('--marquee-duration');
+
+                            requestAnimationFrame(() => {
+                                const containerWidth = rightSongName.clientWidth;
+                                const textWidth = rightSongName.scrollWidth;
+                                const overflow = textWidth - containerWidth;
+
+                                if (overflow > 10) {
+                                    const separator = ' \u00A0\u00A0\u00A0 • \u00A0\u00A0\u00A0 ';
+                                    const oneUnit = songName + separator;
+
+                                    // Measure with temp span
+                                    const tempSpan = document.createElement('span');
+                                    tempSpan.style.cssText = 'visibility:hidden;position:absolute;white-space:nowrap;';
+                                    tempSpan.style.font = getComputedStyle(rightSongName).font;
+                                    tempSpan.textContent = oneUnit;
+                                    document.body.appendChild(tempSpan);
+                                    const oneUnitWidth = tempSpan.offsetWidth;
+                                    tempSpan.remove();
+
+                                    // Wrap in span for animation
+                                    rightSongName.innerHTML = '<span>' + oneUnit + oneUnit + '</span>';
+
+                                    rightSongName.style.setProperty('--marquee-width', oneUnitWidth + 'px');
+                                    const duration = Math.max(8, oneUnitWidth / 50);
+                                    rightSongName.style.setProperty('--marquee-duration', duration + 's');
+                                    rightSongName.classList.add('marquee');
+
+                                    requestAnimationFrame(() => {
+                                        const innerSpan = rightSongName.querySelector('span');
+                                        if (innerSpan) {
+                                            const spanRect = innerSpan.getBoundingClientRect();
+                                            const containerRect = rightSongName.getBoundingClientRect();
+                                            const startOffset = containerRect.right - spanRect.right;
+                                            rightSongName.style.setProperty('--marquee-start', startOffset + 'px');
+                                            rightSongName.classList.add('running');
+                                        }
+                                    });
+                                }
+                            });
+                        }
+                    }
+                }, 400);
+            }
+
+            // ====== AUTO-COLLAPSE PLAYER BANNER LOGIC ======
+            // Tracks when user last interacted with player
+            let playerLastClickTime = 0;
+            let playerLastHoverTime = 0;
+            let playerAutoCollapseTimer = null;
+            let playerIsHovering = false;
+            let playerJustExpanded = false; // Prevents immediate re-collapse after expansion
+
+
+            // Auto-collapse timer removed - player only minimizes on scroll or navigation
+
+            // Handle click on player section (for minimized state)
+            document.addEventListener('DOMContentLoaded', function () {
+                const playerSection = document.querySelector('.player-section');
+                if (playerSection) {
+                    // Track clicks on player
+                    playerSection.addEventListener('click', function (e) {
+                        playerLastClickTime = Date.now();
+
+
+                        // Only expand if minimized - block ALL other click actions
+                        if (this.classList.contains('player-minimized')) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            showPlayerBanner();
+                        }
+                    });
+
+                    // Track hover on player - also expand if minimized (but not if hovering on play button)
+                    let hoverExpandTimeout = null;
+                    playerSection.addEventListener('mouseenter', function (e) {
+                        playerIsHovering = true;
+                        playerLastHoverTime = Date.now();
+                        // Expand on hover if minimized, but NOT if hovering on the play button
+                        // Use small delay so user can reach play button first
+                        const minimizedPlayBtn = document.getElementById('minimizedPlayBtn');
+                        if (this.classList.contains('player-minimized') && !minimizedPlayBtn?.contains(e.target)) {
+                            hoverExpandTimeout = setTimeout(() => {
+                                // Check again that we're not hovering on play button
+                                if (!minimizedPlayBtn?.matches(':hover')) {
+                                    showPlayerBanner();
+                                }
+                            }, 150);
+                        }
+                    });
+
+                    playerSection.addEventListener('mouseleave', function () {
+                        playerIsHovering = false;
+                        playerLastHoverTime = Date.now();
+                        // Clear hover expand timeout if user leaves before it fires
+                        if (hoverExpandTimeout) {
+                            clearTimeout(hoverExpandTimeout);
+                            hoverExpandTimeout = null;
+                        }
+                    });
+
+                    // Track any interaction inside player (buttons, sliders, etc.)
+                    playerSection.addEventListener('mousedown', function () {
+                        playerLastClickTime = Date.now();
+
+                    });
+
+                    // Prevent minimized play button hover from expanding banner
+                    const minimizedPlayBtn = document.getElementById('minimizedPlayBtn');
+                    if (minimizedPlayBtn) {
+                        minimizedPlayBtn.addEventListener('mouseenter', function (e) {
+                            e.stopPropagation();
+                            // Also clear any pending expand timeout
+                            if (hoverExpandTimeout) {
+                                clearTimeout(hoverExpandTimeout);
+                                hoverExpandTimeout = null;
+                            }
+                        });
+                    }
+                }
+
+                // Auto-collapse on scroll (after brief delay to avoid accidental triggers)
+                let scrollCollapseTimeout = null;
+                window.addEventListener('scroll', function () {
+                    const playerSection = document.querySelector('.player-section');
+                    if (playerSection && !playerSection.classList.contains('player-minimized') && playerSection.classList.contains('player-visible')) {
+                        // Clear previous timeout
+                        if (scrollCollapseTimeout) clearTimeout(scrollCollapseTimeout);
+                        // Collapse after 300ms of scrolling (not immediate to allow small adjustments)
+                        scrollCollapseTimeout = setTimeout(function () {
+                            hidePlayerBanner();
+                        }, 300);
+                    }
+                });
+
+                // Auto-collapse on navigation (hash change for SPA-style navigation)
+                window.addEventListener('hashchange', function () {
+                    const playerSection = document.querySelector('.player-section');
+                    if (playerSection && !playerSection.classList.contains('player-minimized') && playerSection.classList.contains('player-visible')) {
+                        hidePlayerBanner();
+                    }
+                });
+
+
+            });
 
             // Play song (sets playlist if not already set)
             function playSong(idx, playlist = null) {
-                if (idx < 0 || idx >= allSongs.length) return;
+                console.log('=== playSong CALLED ===');
+                console.log('idx:', idx);
+                console.log('allSongs.length:', allSongs.length);
+                if (idx < 0 || idx >= allSongs.length) {
+                    console.log('EARLY RETURN - idx out of bounds');
+                    return;
+                }
 
                 // If clicking the same song, toggle play/pause
                 if (idx === currentSongIndex && audioPlayer.src) {
+                    console.log('Same song - toggling play/pause');
                     togglePlayPause();
                     return;
                 }
@@ -31304,6 +32417,9 @@
 
                 currentSongIndex = idx;
                 const song = allSongs[idx];
+                console.log('Song from allSongs[idx]:', song);
+                console.log('Song.name:', song?.name);
+                console.log('Song.audioUrl:', song?.audioUrl);
 
                 // Set recording info for rating updates (default to first recording)
                 if (song.recordings && song.recordings.length > 0) {
@@ -31322,6 +32438,18 @@
                 updateActiveSongInList();
 
                 // THEN: Start loading and playing audio
+                // Reset progress bar instantly (no animation)
+                const progressBar = document.getElementById('progressBar');
+                if (progressBar) {
+                    progressBar.style.transition = 'none';
+                    progressBar.style.width = '0%';
+                    // Restore transition after a brief moment
+                    setTimeout(() => {
+                        progressBar.style.transition = 'width 0.15s ease-out';
+                    }, 50);
+                }
+                document.getElementById('currentTime').textContent = '0:00';
+
                 audioPlayer.src = song.audioUrl;
                 audioPlayer.play();
 
@@ -31339,6 +32467,8 @@
                 currentPlaylist = playlistIndices;
                 currentPlaylistPosition = playlistIndices.indexOf(idx);
                 playSong(idx, playlistIndices);
+                // Expand player when user manually selects a song from list
+                showPlayerBanner();
             }
 
             // Play a collection from the start
@@ -31418,6 +32548,15 @@
                 };
 
                 // Play the specific recording URL
+                // Reset progress bar instantly (no animation)
+                const progressBar = document.getElementById('progressBar');
+                if (progressBar) {
+                    progressBar.style.transition = 'none';
+                    progressBar.style.width = '0%';
+                    setTimeout(() => { progressBar.style.transition = 'width 0.15s ease-out'; }, 50);
+                }
+                document.getElementById('currentTime').textContent = '0:00';
+
                 audioPlayer.src = recording.url;
                 audioPlayer.play();
 
@@ -31464,7 +32603,91 @@
 
             // Update player UI
             function updatePlayerUI(song) {
-                document.getElementById('playerSongName').textContent = song.name;
+                console.log('=== updatePlayerUI CALLED ===');
+                console.log('Song object:', song);
+                console.log('Song name:', song?.name);
+                console.log('Song mechaber:', song?.mechaber);
+                console.log('Song chatzer:', song?.chatzer);
+                console.log('Song recordings:', song?.recordings);
+
+                const rightSongName = document.getElementById('playerRightSongName');
+                console.log('rightSongName element:', rightSongName);
+                rightSongName.textContent = song.name;
+                console.log('Set rightSongName.textContent to:', song.name);
+                // Set data attribute for minimized pill display
+                document.querySelector('.player-section')?.setAttribute('data-song-name', song.name);
+
+                // Update minimized player song name with marquee
+                const minimizedSongName = document.getElementById('minimizedSongName');
+                if (minimizedSongName) {
+                    minimizedSongName.textContent = song.name;
+                    // Trigger marquee with delay
+                    setTimeout(() => triggerMinimizedMarquee(), 200);
+                }
+
+                // Check if text overflows and needs marquee
+                setTimeout(() => {
+                    // Reset first to measure properly
+                    rightSongName.classList.remove('marquee');
+                    rightSongName.classList.remove('running');
+                    rightSongName.textContent = song.name;
+                    rightSongName.style.removeProperty('--marquee-start');
+                    rightSongName.style.removeProperty('--marquee-width');
+                    rightSongName.style.removeProperty('--marquee-duration');
+
+                    // Wait for DOM to update
+                    requestAnimationFrame(() => {
+                        const containerWidth = rightSongName.clientWidth;
+                        const textWidth = rightSongName.scrollWidth;
+                        const overflow = textWidth - containerWidth;
+
+                        // Only scroll if overflow is more than 10px
+                        if (overflow > 10) {
+                            const separator = ' \u00A0\u00A0\u00A0 • \u00A0\u00A0\u00A0 ';
+                            const oneUnit = song.name + separator;
+
+                            // Create temp element to measure one unit
+                            const tempSpan = document.createElement('span');
+                            tempSpan.style.cssText = 'visibility:hidden;position:absolute;white-space:nowrap;';
+                            tempSpan.style.font = getComputedStyle(rightSongName).font;
+                            tempSpan.textContent = oneUnit;
+                            document.body.appendChild(tempSpan);
+                            const oneUnitWidth = tempSpan.offsetWidth;
+                            tempSpan.remove();
+
+                            // Wrap duplicated content in span for animation
+                            rightSongName.innerHTML = '<span>' + oneUnit + oneUnit + '</span>';
+
+                            // Set CSS variables
+                            rightSongName.style.setProperty('--marquee-width', oneUnitWidth + 'px');
+                            const duration = Math.max(8, oneUnitWidth / 50);
+                            rightSongName.style.setProperty('--marquee-duration', duration + 's');
+
+                            rightSongName.classList.add('marquee');
+
+                            // Calculate initial offset using bounding rectangles
+                            requestAnimationFrame(() => {
+                                const innerSpan = rightSongName.querySelector('span');
+                                if (innerSpan) {
+                                    const spanRect = innerSpan.getBoundingClientRect();
+                                    const containerRect = rightSongName.getBoundingClientRect();
+                                    // How far is span's right edge from container's right edge?
+                                    const startOffset = containerRect.right - spanRect.right;
+                                    rightSongName.style.setProperty('--marquee-start', startOffset + 'px');
+
+                                    // NOW start the animation (was paused until offset was set)
+                                    rightSongName.classList.add('running');
+
+                                    // DEBUG
+                                    console.log('=== MARQUEE DEBUG ===');
+                                    console.log('Start offset:', startOffset);
+                                    console.log('One unit width:', oneUnitWidth);
+                                    console.log('=== END DEBUG ===');
+                                }
+                            });
+                        }
+                    });
+                }, 50);
 
                 // Update the floating button song name if player is minimized
                 const playerSection = document.querySelector('.player-section');
@@ -31499,49 +32722,166 @@
                     mechaberNameEl.textContent = mechaberInfo?.tagName || '';
 
                     mechaberProfile.style.display = 'flex';
-                    document.querySelector('.player-info-box').classList.remove('no-mechaber');
+                    const infoBox = document.querySelector('.player-info-box');
+                    if (infoBox) infoBox.classList.remove('no-mechaber');
                 } else {
                     mechaberProfile.style.display = 'none';
-                    document.querySelector('.player-info-box').classList.add('no-mechaber');
+                    const infoBox = document.querySelector('.player-info-box');
+                    if (infoBox) infoBox.classList.add('no-mechaber');
                 }
 
-                // Build tags for player tags section
-                const tagsContainer = document.getElementById('playerTags');
-                let tagsHtml = [];
+                // Build tags for player tags section - organized in rows
+                const row1 = document.getElementById('playerTagsRow1'); // Chatzer + Gezungen
+                const row2 = document.getElementById('playerTagsRow2'); // Verter + Pasig
+                const row3 = document.getElementById('playerTagsRow3'); // Collections + Scale
 
-                // Add chatzer tags
+                let row1Tags = [];
+                let row2Tags = [];
+                let row3Tags = [];
+
+                // Row 1: Personalities tags (first, before chatzer)
+                if (song.personalities) {
+                    song.personalities.split(',').forEach(pers => {
+                        const persTrim = pers.trim();
+                        if (persTrim) {
+                            // Find mechaber info for link
+                            const mechaberInfo = mechabrimInfo[persTrim] || {};
+                            const mechaberId = mechaberInfo.customId || persTrim;
+                            row1Tags.push(`<a class="player-tag player-tag-personality" href="#/mechabrim/${encodeURIComponent(mechaberId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(persTrim)}">${persTrim}</a>`);
+                        }
+                    });
+                }
+
+                // Row 1: Chatzer tags (with divider if personalities exist)
                 if (song.category) {
+                    if (row1Tags.length > 0) {
+                        row1Tags.push('<span class="player-tag-divider">•</span>');
+                    }
                     song.category.split(',').forEach(chatzer => {
                         const c = chatzer.trim();
                         if (c) {
                             const chatzerInfo = chatzerosInfo[c] || {};
                             const chatzerId = chatzerInfo.customId || c;
-                            tagsHtml.push(`<a class="player-tag player-tag-chatzer" href="#/chatzeros/${encodeURIComponent(chatzerId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(c)}">${c}</a>`);
+                            row1Tags.push(`<a class="player-tag player-tag-chatzer" href="#/chatzeros/${encodeURIComponent(chatzerId)}" data-action="detail" data-category="chatzeros" data-name="${escapeHtml(c)}">${c}</a>`);
                         }
                     });
                 }
 
-                // Add collection tag (only first one to save space)
-                if (song.collections) {
-                    const firstCollection = song.collections.split(',')[0].trim();
-                    if (firstCollection) {
-                        const collInfo = collectionsInfo[firstCollection] || {};
-                        const collId = collInfo.customId || firstCollection;
-                        tagsHtml.push(`<a class="player-tag player-tag-collection" href="#/collections/${encodeURIComponent(collId)}" data-action="detail" data-category="collections" data-name="${escapeHtml(firstCollection)}">${firstCollection}</a>`);
-                    }
-                }
-
-                // Add gezungen tags
+                // Row 1: Gezungen tags (with divider if chatzer exists)
                 if (song.gezungen) {
+                    if (row1Tags.length > 0) {
+                        row1Tags.push('<span class="player-tag-divider">•</span>');
+                    }
                     song.gezungen.split(',').forEach(g => {
-                        const gezungen = g.trim();
-                        if (gezungen) {
-                            tagsHtml.push(`<span class="player-tag player-tag-gezungen" data-action="filter" data-page="nigunim" data-filter-key="gezungen" data-value="${escapeHtml(gezungen)}">${gezungen}</span>`);
+                        const gTrim = g.trim();
+                        if (gTrim) {
+                            row1Tags.push(`<a class="player-tag player-tag-gezungen" href="#/piyutim/${encodeURIComponent(gTrim)}" data-action="detail" data-category="piyutim" data-name="${escapeHtml(gTrim)}">${gTrim}</a>`);
                         }
                     });
                 }
 
-                tagsContainer.innerHTML = tagsHtml.join('');
+                // Row 2: Verter tags
+                if (song.verter) {
+                    song.verter.split(',').forEach(v => {
+                        const vTrim = v.trim();
+                        if (vTrim) {
+                            row2Tags.push(`<span class="player-tag player-tag-verter">${vTrim}</span>`);
+                        }
+                    });
+                }
+
+                // Row 2: Pasig tags (with divider if verter exists)
+                if (song.pasigOif) {
+                    if (row2Tags.length > 0) {
+                        row2Tags.push('<span class="player-tag-divider">•</span>');
+                    }
+                    song.pasigOif.split(',').forEach(p => {
+                        const pTrim = p.trim();
+                        if (pTrim) {
+                            row2Tags.push(`<span class="player-tag player-tag-pasig">${pTrim}</span>`);
+                        }
+                    });
+                }
+
+                // Row 3: Collections tags
+                if (song.collections) {
+                    song.collections.split(',').forEach(col => {
+                        const colTrim = col.trim();
+                        if (colTrim) {
+                            row3Tags.push(`<a class="player-tag player-tag-collection" href="#/collections/${encodeURIComponent(colTrim)}" data-action="detail" data-category="collections" data-name="${escapeHtml(colTrim)}">${colTrim}</a>`);
+                        }
+                    });
+                }
+
+                // Row 3: Scale tags (with divider if collections exists)
+                if (song.scale) {
+                    if (row3Tags.length > 0) {
+                        row3Tags.push('<span class="player-tag-divider">•</span>');
+                    }
+                    song.scale.split(',').forEach(s => {
+                        const sTrim = s.trim();
+                        if (sTrim) {
+                            row3Tags.push(`<span class="player-tag player-tag-scale">${sTrim}</span>`);
+                        }
+                    });
+                }
+
+                // Count how many rows have content
+                const hasRow1 = row1Tags.length > 0;
+                const hasRow2 = row2Tags.length > 0;
+                const hasRow3 = row3Tags.length > 0;
+                const activeRowCount = [hasRow1, hasRow2, hasRow3].filter(Boolean).length;
+
+                // If more than 2 rows, hide verter row (row2)
+                if (activeRowCount > 2 && hasRow2) {
+                    row2.innerHTML = '';
+                } else {
+                    row2.innerHTML = row2Tags.join('');
+                }
+
+                row1.innerHTML = row1Tags.join('');
+                row3.innerHTML = row3Tags.join('');
+
+                // After rendering, calculate overflow for each row
+                setTimeout(() => {
+                    [row1, row2, row3].forEach(row => {
+                        if (!row.innerHTML) return;
+
+                        const maxWidth = row.offsetWidth;
+                        const children = Array.from(row.children);
+
+                        // First pass: check if all items fit
+                        let totalWidth = 0;
+                        children.forEach(child => {
+                            totalWidth += child.offsetWidth + 6; // include gap
+                        });
+
+                        // If all fit, no need to do anything
+                        if (totalWidth <= maxWidth) return;
+
+                        // Second pass: calculate which tags fit (with space for +N)
+                        totalWidth = 0;
+                        let hiddenCount = 0;
+
+                        children.forEach(child => {
+                            const childWidth = child.offsetWidth + 6;
+                            if (totalWidth + childWidth <= maxWidth - 35) { // reserve space for +N
+                                totalWidth += childWidth;
+                            } else {
+                                hiddenCount++;
+                                child.style.display = 'none';
+                            }
+                        });
+
+                        // Add +N indicator for hidden tags
+                        if (hiddenCount > 0) {
+                            const overflow = document.createElement('span');
+                            overflow.className = 'player-tag-overflow';
+                            overflow.textContent = `+${hiddenCount}`;
+                            row.appendChild(overflow);
+                        }
+                    });
+                }, 50);
 
                 // Keep old meta for backwards compatibility (hidden)
                 let metaParts = [];
@@ -31551,18 +32891,122 @@
                 if (song.category) {
                     metaParts.push(createPlayerMetaLinks(song.category, 'chatzeros', 'chatzer', 'chatzer'));
                 }
-                document.getElementById('playerSongMeta').innerHTML = metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>');
+                const playerSongMeta = document.getElementById('playerSongMeta');
+                if (playerSongMeta) {
+                    playerSongMeta.innerHTML = metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>');
+                }
 
                 // Update rating from current recording (if in recordings mode) or first recording
-                const currentRec = song.recordings && song.recordings[currentRecordingIndex];
+                const recIdx = typeof currentRecordingIndex !== 'undefined' ? currentRecordingIndex : 0;
+                const currentRec = song.recordings && song.recordings[recIdx];
+
                 if (currentRec && currentRec.rating) {
                     updatePlayerRating(currentRec.rating);
                 } else {
                     updatePlayerRating(0);
                 }
 
+                // Update carousel items with recording info
+                const carouselContainer = document.getElementById('playerInfoCarousel');
+
+                // Clear previous carousel interval
+                if (window.playerCarouselInterval) {
+                    clearInterval(window.playerCarouselInterval);
+                    window.playerCarouselInterval = null;
+                }
+
+                if (carouselContainer) {
+                    // Recording name - use details field, fallback to "רעקארדינג X"
+                    let displayName = 'רעקארדינג 1';
+                    let personalityText = '';
+                    let albumText = '';
+
+                    if (currentRec) {
+                        displayName = currentRec.details || ('רעקארדינג ' + (recIdx + 1));
+
+                        // Personality tag
+                        if (currentRec.personalities) {
+                            const firstPersonality = currentRec.personalities.split(',')[0].trim();
+                            if (firstPersonality) personalityText = firstPersonality;
+                        }
+
+                        // Album tag
+                        if (currentRec.album) {
+                            albumText = currentRec.album.trim();
+                        }
+                    }
+
+                    // Build carousel items array - split long text into chunks
+                    const maxChars = 25; // carousel rotates through chunks
+                    let carouselData = [];
+
+                    // Split recording name if too long
+                    if (displayName.length > maxChars) {
+                        // Split by words to avoid cutting mid-word
+                        const words = displayName.split(' ');
+                        let currentChunk = '';
+                        for (const word of words) {
+                            if ((currentChunk + ' ' + word).trim().length <= maxChars) {
+                                currentChunk = (currentChunk + ' ' + word).trim();
+                            } else {
+                                if (currentChunk) carouselData.push({ type: 'recording', text: currentChunk });
+                                currentChunk = word;
+                            }
+                        }
+                        if (currentChunk) carouselData.push({ type: 'recording', text: currentChunk });
+                    } else {
+                        carouselData.push({ type: 'recording', text: displayName });
+                    }
+
+                    // Add personality and album
+                    if (personalityText) carouselData.push({ type: 'personality', text: personalityText });
+                    if (albumText) carouselData.push({ type: 'album', text: albumText });
+
+                    // Clear and rebuild carousel container
+                    carouselContainer.innerHTML = '';
+                    carouselData.forEach((item, idx) => {
+                        const div = document.createElement('div');
+                        div.className = `carousel-item carousel-${item.type}` + (idx === 0 ? ' active' : '');
+                        div.id = `carouselItem${idx}`;
+
+                        const span = document.createElement('span');
+                        // Use correct class name for recording
+                        span.className = item.type === 'recording' ? 'player-recording-name' : `player-${item.type}-tag`;
+                        span.textContent = item.text;
+                        div.appendChild(span);
+                        carouselContainer.appendChild(div);
+                    });
+
+                    // Start carousel cycling if more than one item
+                    if (carouselData.length > 1) {
+                        let currentCarouselIdx = 0;
+                        const items = carouselContainer.querySelectorAll('.carousel-item');
+
+                        // Calculate interval: consistent 3 seconds per item
+                        const intervalTime = 3000;
+
+                        window.playerCarouselInterval = setInterval(() => {
+                            // Add exiting class to current item
+                            items[currentCarouselIdx]?.classList.add('exiting');
+                            items[currentCarouselIdx]?.classList.remove('active');
+
+                            // Calculate next index
+                            const nextIdx = (currentCarouselIdx + 1) % items.length;
+
+                            // After a small delay, show next and clean up exiting
+                            setTimeout(() => {
+                                items[currentCarouselIdx]?.classList.remove('exiting');
+                                currentCarouselIdx = nextIdx;
+                                items[currentCarouselIdx]?.classList.add('active');
+                            }, 150);
+                        }, intervalTime);
+                    }
+                }
+
                 // Update player play button
                 document.getElementById('playPauseBtn').classList.add('playing');
+                // Also add playing class to player-section for minimized pulse effect
+                document.querySelector('.player-section')?.classList.add('playing');
                 // Only remove paused state from player show button wave if audio is actually playing
                 const playerShowWave = document.querySelector('#playerShowBtn .song-wave-animation');
                 if (playerShowWave && !audioPlayer.paused) {
@@ -31633,7 +33077,7 @@
                         // Find previous recording that meets quality
                         for (let i = currentRecordingIndex - 1; i >= 0; i--) {
                             if (recordingMeetsQuality(song.recordings[i])) {
-                                playNigunRecording(currentSongIndex, i, null);
+                                playNigunRecording(currentSongIndex, i, null, null, false);
                                 return;
                             }
                         }
@@ -31658,7 +33102,7 @@
                                     if (recordingMeetsQuality(song.recordings[i])) {
                                         isInRecordingsMode = true;
                                         currentRecordingIndex = i;
-                                        playNigunRecording(songIdx, i, null);
+                                        playNigunRecording(songIdx, i, null, null, false);
                                         return;
                                     }
                                 }
@@ -31667,7 +33111,7 @@
                             const firstQualityRec = getFirstQualityRecording(song);
                             if (firstQualityRec) {
                                 const recIdx = song.recordings.indexOf(firstQualityRec);
-                                playNigunRecording(songIdx, recIdx, null);
+                                playNigunRecording(songIdx, recIdx, null, null, false);
                             } else {
                                 playSong(songIdx, currentPlaylist);
                             }
@@ -31690,7 +33134,7 @@
                         // Find next recording that meets quality
                         for (let i = currentRecordingIndex + 1; i < song.recordings.length; i++) {
                             if (recordingMeetsQuality(song.recordings[i])) {
-                                playNigunRecording(currentSongIndex, i, null);
+                                playNigunRecording(currentSongIndex, i, null, null, false);
                                 return;
                             }
                         }
@@ -31715,7 +33159,7 @@
                                 if (firstQualityRec) {
                                     const recIdx = song.recordings.indexOf(firstQualityRec);
                                     isInRecordingsMode = true;
-                                    playNigunRecording(songIdx, recIdx, null);
+                                    playNigunRecording(songIdx, recIdx, null, null, false);
                                 } else {
                                     playSong(songIdx, currentPlaylist);
                                 }
@@ -31724,7 +33168,7 @@
                                 const firstQualityRec = getFirstQualityRecording(song);
                                 if (firstQualityRec) {
                                     const recIdx = song.recordings.indexOf(firstQualityRec);
-                                    playNigunRecording(songIdx, recIdx, null);
+                                    playNigunRecording(songIdx, recIdx, null, null, false);
                                 } else {
                                     playSong(songIdx, currentPlaylist);
                                 }
@@ -31737,12 +33181,96 @@
             }
 
             // Seek to position
+            let isDraggingProgress = false;
+
             function seekTo(event) {
-                const container = event.currentTarget;
+                const container = event.currentTarget || document.getElementById('progressBarContainer');
+                if (!container) return; // Guard clause
+
                 const rect = container.getBoundingClientRect();
-                const percent = (event.clientX - rect.left) / rect.width;
-                audioPlayer.currentTime = percent * audioPlayer.duration;
+                // Ensure percentage is between 0 and 1
+                const percent = Math.min(Math.max((event.clientX - rect.left) / rect.width, 0), 1);
+
+                if (isFinite(audioPlayer.duration)) {
+                    // Fast visual slide to new position
+                    const bar = document.getElementById('progressBar');
+                    bar.style.transition = 'width 0.3s ease-out';
+                    bar.style.width = `${percent * 100}%`;
+
+                    // Restore smooth linear flow after the fast slide
+                    if (window.progressAllTransitionTimeout) clearTimeout(window.progressAllTransitionTimeout);
+                    window.progressAllTransitionTimeout = setTimeout(() => {
+                        bar.style.transition = 'width 1s linear';
+                    }, 300);
+
+                    audioPlayer.currentTime = percent * audioPlayer.duration;
+                    if (audioPlayer.paused) {
+                        togglePlayPause(true); // Ensure it plays
+                    }
+                }
             }
+
+            // Enhanced scrubbing/dragging support
+            function setupProgressBarDragging() {
+                const container = document.getElementById('progressBarContainer');
+                if (!container) return; // Wait for DOM if needed, but here it should be ready
+
+                container.addEventListener('mousedown', (e) => {
+                    isDraggingProgress = true;
+                    // Disable transition for direct 1:1 control while dragging
+                    document.getElementById('progressBar').style.transition = 'none';
+                    // Optional: pause while dragging if desired, or just let it play
+                    seekTo(e); // Seek on initial click
+                });
+
+                document.addEventListener('mousemove', (e) => {
+                    if (isDraggingProgress) {
+                        e.preventDefault(); // Prevent text selection
+                        // Pass a mock event object or handle logic directly
+                        const container = document.getElementById('progressBarContainer');
+                        const rect = container.getBoundingClientRect();
+                        const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+
+                        // Update visual bar immediately while dragging
+                        document.getElementById('progressBar').style.width = `${percent * 100}%`;
+
+                        // Optional: update time display while dragging
+                        if (isFinite(audioPlayer.duration)) {
+                            document.getElementById('currentTime').textContent = formatTime(percent * audioPlayer.duration);
+                        }
+                    }
+                });
+
+                document.addEventListener('mouseup', (e) => {
+                    if (isDraggingProgress) {
+                        isDraggingProgress = false;
+                        const rect = container.getBoundingClientRect();
+                        const percent = Math.min(Math.max((e.clientX - rect.left) / rect.width, 0), 1);
+
+                        // Fast visual slide to new position
+                        const bar = document.getElementById('progressBar');
+                        bar.style.transition = 'width 0.3s ease-out';
+                        bar.style.width = `${percent * 100}%`;
+
+                        // Restore smooth linear flow after the fast slide
+                        if (window.progressAllTransitionTimeout) clearTimeout(window.progressAllTransitionTimeout);
+                        window.progressAllTransitionTimeout = setTimeout(() => {
+                            bar.style.transition = 'width 1s linear';
+                        }, 300);
+
+                        if (isFinite(audioPlayer.duration)) {
+                            audioPlayer.currentTime = percent * audioPlayer.duration;
+                            if (audioPlayer.paused) {
+                                togglePlayPause(true); // Ensure it plays
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Initialize dragging setup after DOM load or when player shows
+            // Since this script is at end of body, run it:
+            setupProgressBarDragging();
 
             // Format time
             function formatTime(seconds) {
@@ -31754,9 +33282,17 @@
 
             // Audio event listeners
             audioPlayer.addEventListener('timeupdate', () => {
-                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
-                document.getElementById('progressBar').style.width = `${progress}%`;
-                document.getElementById('currentTime').textContent = formatTime(audioPlayer.currentTime);
+                // Only update UI if NOT dragging, to prevent fighting/jitter
+                if (!isDraggingProgress) {
+                    const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                    document.getElementById('progressBar').style.width = `${progress}%`;
+                    document.getElementById('currentTime').textContent = formatTime(audioPlayer.currentTime);
+                    // Update minimized player progress bar CSS variable
+                    const playerSection = document.querySelector('.player-section');
+                    if (playerSection) {
+                        playerSection.style.setProperty('--minimized-progress', `${progress}%`);
+                    }
+                }
             });
 
             audioPlayer.addEventListener('loadedmetadata', () => {
@@ -31827,11 +33363,22 @@
                 }
 
                 // Update player button
+                const playerSection = document.querySelector('.player-section');
+                console.log('[DEBUG] updatePlayState called, isPlaying:', isPlaying);
+                console.log('[DEBUG] playerSection element:', playerSection);
+                console.log('[DEBUG] playerSection classes BEFORE:', playerSection?.className);
+                console.log('[DEBUG] playerSection has data-song-name:', playerSection?.getAttribute('data-song-name'));
+
                 if (isPlaying) {
                     playPauseBtn.classList.add('playing');
+                    playerSection?.classList.add('playing');
+                    console.log('[DEBUG] Added playing class');
                 } else {
                     playPauseBtn.classList.remove('playing');
+                    playerSection?.classList.remove('playing');
+                    console.log('[DEBUG] Removed playing class');
                 }
+                console.log('[DEBUG] playerSection classes AFTER:', playerSection?.className);
 
                 // Update wave animation in player-show-btn (pause when audio paused)
                 if (playerShowWave) {
@@ -32615,9 +34162,20 @@
                 const textareas = document.querySelectorAll('.addinfo-modal-body textarea');
                 textareas.forEach(textarea => textarea.value = '');
 
-                // Reset file inputs
+                // Reset file inputs and their visual state
                 const fileInputs = document.querySelectorAll('.addinfo-modal-body input[type="file"]');
-                fileInputs.forEach(input => input.value = '');
+                fileInputs.forEach(input => {
+                    input.value = '';
+                    const uploadBox = input.closest('.addinfo-file-upload');
+                    if (uploadBox) {
+                        uploadBox.classList.remove('file-selected');
+                        // Restore original text
+                        const textEl = uploadBox.querySelector('.addinfo-file-upload-text');
+                        const hintEl = uploadBox.querySelector('.addinfo-file-upload-hint');
+                        if (textEl) textEl.textContent = textEl.dataset.originalText || textEl.textContent;
+                        if (hintEl) hintEl.textContent = hintEl.dataset.originalHint || hintEl.textContent;
+                    }
+                });
 
                 // Reset checkboxes
                 const checkboxes = document.querySelectorAll('.addinfo-modal-body input[type="checkbox"]');
@@ -32635,6 +34193,88 @@
                 document.querySelectorAll('.addinfo-autocomplete-wrapper.has-selection').forEach(wrapper => {
                     wrapper.classList.remove('has-selection');
                 });
+            }
+
+            // Setup file input change handlers for visual feedback
+            function setupFileInputHandlers() {
+                const fileInputs = document.querySelectorAll('.addinfo-file-upload input[type="file"]');
+                fileInputs.forEach(input => {
+                    // Store original text
+                    const uploadBox = input.closest('.addinfo-file-upload');
+                    if (uploadBox) {
+                        const textEl = uploadBox.querySelector('.addinfo-file-upload-text');
+                        const hintEl = uploadBox.querySelector('.addinfo-file-upload-hint');
+                        if (textEl && !textEl.dataset.originalText) textEl.dataset.originalText = textEl.textContent;
+                        if (hintEl && !hintEl.dataset.originalHint) hintEl.dataset.originalHint = hintEl.textContent;
+                    }
+
+                    input.addEventListener('change', function () {
+                        const uploadBox = this.closest('.addinfo-file-upload');
+                        if (!uploadBox) return;
+
+                        const textEl = uploadBox.querySelector('.addinfo-file-upload-text');
+                        const hintEl = uploadBox.querySelector('.addinfo-file-upload-hint');
+
+                        if (this.files && this.files.length > 0) {
+                            uploadBox.classList.add('file-selected');
+                            if (this.files.length === 1) {
+                                if (textEl) textEl.textContent = this.files[0].name;
+                                const sizeKB = Math.round(this.files[0].size / 1024);
+                                if (hintEl) hintEl.textContent = sizeKB > 1024 ? `${(sizeKB / 1024).toFixed(1)} MB` : `${sizeKB} KB`;
+                            } else {
+                                if (textEl) textEl.textContent = `${this.files.length} פיילס אויסגעוועלט`;
+                                const totalSize = Array.from(this.files).reduce((sum, f) => sum + f.size, 0);
+                                const totalKB = Math.round(totalSize / 1024);
+                                if (hintEl) hintEl.textContent = totalKB > 1024 ? `${(totalKB / 1024).toFixed(1)} MB` : `${totalKB} KB`;
+                            }
+                        } else {
+                            uploadBox.classList.remove('file-selected');
+                            if (textEl) textEl.textContent = textEl.dataset.originalText || '';
+                            if (hintEl) hintEl.textContent = hintEl.dataset.originalHint || '';
+                        }
+                    });
+                });
+            }
+
+            // Initialize file input handlers when modal opens
+            document.addEventListener('DOMContentLoaded', setupFileInputHandlers);
+
+            // Upload file to R2 bucket via worker endpoint
+            async function uploadFileToR2(file) {
+                if (!file) return null;
+
+                const formData = new FormData();
+                formData.append('file', file);
+
+                try {
+                    // Use WORKER_URL base (remove trailing 'api/' and add 'api/upload')
+                    const uploadUrl = WORKER_URL.replace(/api\/$/, 'api/upload');
+                    const response = await fetch(uploadUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+
+                    if (!response.ok) {
+                        console.error('File upload failed:', response.status);
+                        return null;
+                    }
+
+                    const result = await response.json();
+                    console.log('File uploaded successfully:', result);
+                    return result; // { success, fileName, size, storedAs, type }
+                } catch (error) {
+                    console.error('File upload error:', error);
+                    return null;
+                }
+            }
+
+            // Upload multiple files to R2 bucket
+            async function uploadFilesToR2(files) {
+                if (!files || files.length === 0) return [];
+
+                const uploadPromises = Array.from(files).map(file => uploadFileToR2(file));
+                const results = await Promise.all(uploadPromises);
+                return results.filter(result => result !== null);
             }
 
             // Submit add info to Coda table
@@ -32711,6 +34351,39 @@
 
                 console.log('Add Info Form Data:', formData);
 
+                // Get the submit button and save original text
+                const submitBtn = document.querySelector('#addinfo-panel .addinfo-submit-btn');
+                const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+
+                // Upload files to R2 if present
+                let uploadedAudioUrl = '';
+                let uploadedOtherFilesUrls = [];
+
+                // Show uploading state if there are files to upload
+                const hasFilesToUpload = formData.audioFile || (formData.otherFiles && formData.otherFiles.length > 0);
+                if (hasFilesToUpload && submitBtn) {
+                    submitBtn.innerHTML = 'אפלאודינג<span class="btn-spinner"></span>';
+                    submitBtn.classList.add('loading');
+                    submitBtn.disabled = true;
+                }
+
+                if (formData.audioFile) {
+                    const audioResult = await uploadFileToR2(formData.audioFile);
+                    if (audioResult && audioResult.success) {
+                        // Use blobId for Coda attachment columns
+                        uploadedAudioUrl = audioResult.blobId;
+                        console.log('Audio file uploaded, blobId:', uploadedAudioUrl);
+                    }
+                }
+
+                if (formData.otherFiles && formData.otherFiles.length > 0) {
+                    const otherResults = await uploadFilesToR2(formData.otherFiles);
+                    // Use blobId for Coda attachment columns
+                    uploadedOtherFilesUrls = otherResults.map(r => r.blobId);
+                    console.log('Other files uploaded, blobIds:', uploadedOtherFilesUrls);
+                }
+
+
                 // Build row data for Coda API
                 // Column mappings based on user specification
                 // Use row IDs for lookup columns to create proper relations
@@ -32770,7 +34443,13 @@
                     { column: 'c-rzbIDQBUAB', value: formData.filesDetails || '' },
 
                     // c-c-aKWszo9F: הערות / מער אינפארמאציע (text)
-                    { column: 'c-c-aKWszo9F', value: formData.notes || '' }
+                    { column: 'c-c-aKWszo9F', value: formData.notes || '' },
+
+                    // c-6N7DQIohAK: אודיאו פייל URL
+                    { column: 'c-6N7DQIohAK', value: uploadedAudioUrl },
+
+                    // c-EEhnRJ4fQT: אנדערע פיילס URLs
+                    { column: 'c-EEhnRJ4fQT', value: uploadedOtherFilesUrls.join(', ') }
                 ];
 
                 // Filter out empty values to avoid sending unnecessary data
@@ -32800,6 +34479,13 @@
                         if (modalBody) modalBody.style.display = 'none';
                         if (successMsg) successMsg.style.display = 'block';
 
+                        // Reset button
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
+
                         // Auto close after 4 seconds
                         setTimeout(() => {
                             if (successMsg) successMsg.style.display = 'none';
@@ -32809,10 +34495,22 @@
                     } else {
                         const errorText = await response.text();
                         console.error('Add Info submission failed:', errorText);
+                        // Reset button on error
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
                         alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
                     }
                 } catch (error) {
                     console.error('Add Info submission error:', error);
+                    // Reset button on error
+                    if (submitBtn) {
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.classList.remove('loading');
+                        submitBtn.disabled = false;
+                    }
                     alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
                 }
             }
@@ -32888,12 +34586,46 @@
                     collections: addinfoSelectedValues['addnigun-collections'] || [],
                     documents: addinfoSelectedValues['addnigun-documents'] || [],
                     albums: addinfoSelectedValues['addnigun-albums'] || [],
+                    audioFile: audioFile,
                     recordingDetails: document.getElementById('addnigun-recording-details')?.value?.trim() || '',
                     recordingPersonality: addinfoSelectedValues['addnigun-recording-personality'] || [],
                     recordingAlbum: addinfoSelectedValues['addnigun-recording-album'] || [],
+                    otherFiles: document.getElementById('addnigun-files')?.files,
                     filesDetails: document.getElementById('addnigun-files-details')?.value?.trim() || '',
                     notes: document.getElementById('addnigun-notes')?.value?.trim() || ''
                 };
+
+                // Get the submit button and save original text
+                const submitBtn = document.querySelector('#addnigun-panel .addinfo-submit-btn');
+                const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+
+                // Upload files to R2 if present
+                let uploadedAudioUrl = '';
+                let uploadedOtherFilesUrls = [];
+
+                // Show uploading state if there are files to upload
+                const hasFilesToUpload = formData.audioFile || (formData.otherFiles && formData.otherFiles.length > 0);
+                if (hasFilesToUpload && submitBtn) {
+                    submitBtn.innerHTML = 'אפלאודינג<span class="btn-spinner"></span>';
+                    submitBtn.classList.add('loading');
+                    submitBtn.disabled = true;
+                }
+
+                if (formData.audioFile) {
+                    const audioResult = await uploadFileToR2(formData.audioFile);
+                    if (audioResult && audioResult.success) {
+                        // Use blobId for Coda attachment columns
+                        uploadedAudioUrl = audioResult.blobId;
+                        console.log('Audio file uploaded, blobId:', uploadedAudioUrl);
+                    }
+                }
+
+                if (formData.otherFiles && formData.otherFiles.length > 0) {
+                    const otherResults = await uploadFilesToR2(formData.otherFiles);
+                    // Use blobId for Coda attachment columns
+                    uploadedOtherFilesUrls = otherResults.map(r => r.blobId);
+                    console.log('Other files uploaded, blobIds:', uploadedOtherFilesUrls);
+                }
 
                 // Helper to convert a name to row ID using info objects
                 // For lookups, Coda expects row IDs (i-xxx format) to create proper links
@@ -32963,7 +34695,13 @@
                     { column: 'c-rzbIDQBUAB', value: formData.filesDetails || '' },
 
                     // c-c-aKWszo9F: הערות / מער אינפארמאציע (text)
-                    { column: 'c-c-aKWszo9F', value: formData.notes || '' }
+                    { column: 'c-c-aKWszo9F', value: formData.notes || '' },
+
+                    // c-6N7DQIohAK: אודיאו פייל URL
+                    { column: 'c-6N7DQIohAK', value: uploadedAudioUrl },
+
+                    // c-EEhnRJ4fQT: אנדערע פיילס URLs
+                    { column: 'c-EEhnRJ4fQT', value: uploadedOtherFilesUrls.join(', ') }
                 ];
 
                 // Filter out empty values
@@ -32992,6 +34730,13 @@
                         if (modalBody) modalBody.style.display = 'none';
                         if (successMsg) successMsg.style.display = 'block';
 
+                        // Reset button
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
+
                         // Clear the form
                         nigunNameInput.value = '';
                         nigunNameError.classList.remove('visible');
@@ -33005,10 +34750,22 @@
                     } else {
                         const errorText = await response.text();
                         console.error('Add Nigun submission failed:', errorText);
+                        // Reset button on error
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
                         alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
                     }
                 } catch (error) {
                     console.error('Add Nigun submission error:', error);
+                    // Reset button on error
+                    if (submitBtn) {
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.classList.remove('loading');
+                        submitBtn.disabled = false;
+                    }
                     alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
                 }
             }
@@ -33573,8 +35330,8 @@
                 // Generate hero header with play-all button
                 const playAllBtnHTML = ['mechabrim', 'chatzeros', 'verter', 'piyutim', 'collections'].includes(type) ? `
                 <button class="play-all-btn" title="שפיל אלע" onclick="event.stopPropagation(); playAllFromDetailPage('${type}', '${escapeHtml(name).replace(/'/g, "\\'")}')" data-detail-type="${type}" data-detail-name="${escapeHtml(name)}">
-                    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
-                    <svg class="pause-icon" style="display:none" viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                    <svg class="play-icon" viewBox="0 0 24 24"><path d="M8 6.82v10.36c0 .79.87 1.27 1.54.84l8.14-5.18c.62-.39.62-1.29 0-1.69L9.54 5.98C8.87 5.55 8 6.03 8 6.82z"/></svg>
+                    <svg class="pause-icon" style="display:none" viewBox="0 0 24 24"><path d="M9 19c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2v10c0 1.1.9 2 2 2zM13 7v10c0 1.1.9 2 2 2s2-.9 2-2V7c0-1.1-.9-2-2-2s-2 .9-2 2z"/></svg>
                 </button>
             ` : '';
 
@@ -34488,16 +36245,71 @@
             });
 
             // Keyboard shortcuts
+            // Keyboard shortcuts with Hold-to-Seek functionality
+            let arrowKeyTimer = null;
+            let arrowSeekInterval = null;
+            let isArrowSeeking = false;
+            const LONG_PRESS_DELAY = 400; // ms to trigger seek mode
+            const SEEK_INTERVAL_MS = 100; // ms between seek steps
+            const SEEK_STEP_SEC = 2.5; // seconds to seek per step
+
             document.addEventListener('keydown', (e) => {
                 if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
 
                 if (e.code === 'Space') {
                     e.preventDefault();
                     togglePlayPause();
-                } else if (e.code === 'ArrowRight') {
-                    playPrevious();
-                } else if (e.code === 'ArrowLeft') {
-                    playNext();
+                } else if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') {
+                    e.preventDefault(); // Prevent page scrolling
+
+                    // If already seeking (or holding), ignore repeats (we use our own interval)
+                    if (e.repeat || isArrowSeeking || arrowKeyTimer) return;
+
+                    // Start timer to detect hold
+                    arrowKeyTimer = setTimeout(() => {
+                        isArrowSeeking = true;
+                        // Start seeking loop
+                        const isNext = e.code === 'ArrowRight'; // Right is Next/Forward in this RTL setup
+
+                        // Auto-play if paused when seek starts
+                        if (audioPlayer.paused) {
+                            togglePlayPause(true);
+                        }
+
+                        arrowSeekInterval = setInterval(() => {
+                            if (isFinite(audioPlayer.duration)) {
+                                const delta = isNext ? SEEK_STEP_SEC : -SEEK_STEP_SEC;
+                                audioPlayer.currentTime = Math.min(Math.max(audioPlayer.currentTime + delta, 0), audioPlayer.duration);
+                            }
+                        }, SEEK_INTERVAL_MS);
+                    }, LONG_PRESS_DELAY);
+                }
+            });
+
+            document.addEventListener('keyup', (e) => {
+                if (e.code === 'ArrowRight' || e.code === 'ArrowLeft') {
+                    // Clear hold detection
+                    if (arrowKeyTimer) {
+                        clearTimeout(arrowKeyTimer);
+                        arrowKeyTimer = null;
+                    }
+                    // Stop seeking if active
+                    if (arrowSeekInterval) {
+                        clearInterval(arrowSeekInterval);
+                        arrowSeekInterval = null;
+                    }
+
+                    // If we weren't seeking, it was a tap -> Switch Song
+                    if (!isArrowSeeking) {
+                        if (e.code === 'ArrowRight') {
+                            playNext();
+                        } else {
+                            playPrevious();
+                        }
+                    }
+
+                    // Reset state
+                    isArrowSeeking = false;
                 }
             });
 
@@ -34565,7 +36377,7 @@
                 showPlayer();
 
                 // Update player UI with generic info
-                document.getElementById('playerSongName').textContent = 'אודיאו';
+                document.getElementById('playerRightSongName').textContent = 'אודיאו';
                 document.getElementById('playerSongMeta').innerHTML = '';
                 document.getElementById('playerTags').innerHTML = '';
 
@@ -34582,49 +36394,82 @@
                 }
             }
 
+            // Create flying stars burst effect
+            function createFlyingStars(container, count = 8, originEl = null) {
+                const starChars = ['✦', '✧', '✶'];
+
+                // Calculate spread across the full stars row
+                const containerRect = container.getBoundingClientRect();
+                const starsRow = container.querySelector('.player-rating-stars');
+                let spreadLeft, spreadWidth, originY;
+
+                if (starsRow) {
+                    const starsRect = starsRow.getBoundingClientRect();
+                    spreadLeft = starsRect.left - containerRect.left;
+                    spreadWidth = starsRect.width;
+                    originY = starsRect.top + starsRect.height / 2 - containerRect.top;
+                } else {
+                    spreadLeft = 0;
+                    spreadWidth = containerRect.width;
+                    originY = containerRect.height / 2;
+                }
+
+                for (let i = 0; i < count; i++) {
+                    const star = document.createElement('span');
+                    star.className = 'flying-star';
+                    star.textContent = starChars[Math.floor(Math.random() * starChars.length)];
+
+                    // Each star starts at a random X position along the stars row
+                    const originX = spreadLeft + Math.random() * spreadWidth;
+
+                    // Random direction - distribute around circle with slight randomness
+                    const angle = (i / count) * 360 + (Math.random() * 25 - 12);
+                    const distance = 40 + Math.random() * 30;
+                    const radians = angle * (Math.PI / 180);
+
+                    const flyX = Math.cos(radians) * distance;
+                    const flyY = Math.sin(radians) * distance;
+
+                    // Random size and duration
+                    const size = 10 + Math.random() * 8;
+                    const duration = 0.8 + Math.random() * 0.4;
+                    const delay = Math.random() * 0.12;
+
+                    star.style.left = `${originX}px`;
+                    star.style.top = `${originY}px`;
+                    star.style.setProperty('--fly-x', `${flyX}px`);
+                    star.style.setProperty('--fly-y', `${flyY}px`);
+                    star.style.setProperty('--fly-duration', `${duration}s`);
+                    star.style.fontSize = `${size}px`;
+                    star.style.animationDelay = `${delay}s`;
+
+                    container.appendChild(star);
+
+                    // Remove star after animation
+                    setTimeout(() => {
+                        star.remove();
+                    }, (duration + delay) * 1000 + 100);
+                }
+            }
+
             // Update player rating display - INTERACTIVE version
             function updatePlayerRating(rating) {
                 const playerRating = document.getElementById('playerRating');
                 const starsContainer = document.getElementById('playerRatingStars');
-                const descriptionEl = document.getElementById('playerRatingDescription');
                 if (!playerRating || !starsContainer) return;
 
-                // Always show rating container (even if rating is 0, user can click to set one)
+                // Store current rating as data attribute
+                playerRating.dataset.rating = rating || 0;
+
+                // Always show rating container
                 playerRating.style.display = 'flex';
-                playerRating.classList.remove('saving');
+                playerRating.classList.remove('saving', 'rated-success');
 
                 // Generate all 5 clickable stars
-                let starsHtml = '';
-                for (let i = 0; i < 5; i++) {
-                    const starNum = i + 1;
-                    const isEmpty = i >= (rating || 0);
-                    starsHtml += `<span class="player-rating-star${isEmpty ? ' empty' : ''}" data-rating="${starNum}">★</span>`;
-                }
-                starsContainer.innerHTML = starsHtml;
+                renderPlayerStars(starsContainer, rating || 0);
 
-                // Update rating description
-                if (descriptionEl) {
-                    if (rating && rating > 0 && RATING_DESCRIPTIONS[rating]) {
-                        descriptionEl.textContent = RATING_DESCRIPTIONS[rating];
-                        descriptionEl.style.display = 'block';
-                    } else {
-                        descriptionEl.style.display = 'none';
-                    }
-                }
-
-                // Add click handler to open modal
-                const stars = starsContainer.querySelectorAll('.player-rating-star');
-                stars.forEach((star) => {
-                    star.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        openRatingModal();
-                    });
-                });
-
-                // Make the whole rating container clickable to open modal
-                playerRating.onclick = (e) => {
-                    openRatingModal();
-                };
+                // Add hover and click handlers
+                setupPlayerRatingHandlers(starsContainer, playerRating);
 
                 // Start tracking playback time for rating prompt if no rating
                 if (!rating || rating === 0) {
@@ -34633,6 +36478,87 @@
                     stopPlaybackTimer();
                     hideRatingPrompt();
                 }
+            }
+
+            // Render stars with given rating
+            function renderPlayerStars(container, rating) {
+                let starsHtml = '';
+                for (let i = 0; i < 5; i++) {
+                    const starNum = i + 1;
+                    const isEmpty = i >= rating;
+                    starsHtml += `<span class="player-rating-star${isEmpty ? ' empty' : ''}" data-rating="${starNum}">★</span>`;
+                }
+                container.innerHTML = starsHtml;
+            }
+
+            // Setup hover and click handlers for player rating
+            function setupPlayerRatingHandlers(starsContainer, playerRating) {
+                const stars = starsContainer.querySelectorAll('.player-rating-star');
+                const originalRating = parseInt(playerRating.dataset.rating) || 0;
+
+                stars.forEach((star) => {
+                    const starRating = parseInt(star.dataset.rating);
+
+                    // Hover: preview this rating
+                    star.addEventListener('mouseenter', () => {
+                        stars.forEach((s, idx) => {
+                            if (idx < starRating) {
+                                s.classList.remove('empty');
+                                s.classList.add('hover-preview');
+                            } else {
+                                s.classList.add('empty');
+                                s.classList.remove('hover-preview');
+                            }
+                        });
+                    });
+
+                    // Click: submit this rating
+                    star.addEventListener('click', async (e) => {
+                        e.stopPropagation();
+
+                        // Immediately show the selected rating
+                        stars.forEach((s, idx) => {
+                            if (idx < starRating) {
+                                s.classList.remove('empty', 'hover-preview');
+                            } else {
+                                s.classList.add('empty');
+                                s.classList.remove('hover-preview');
+                            }
+                        });
+
+                        // Add saving animation
+                        playerRating.classList.add('saving');
+
+                        // Submit the rating
+                        await submitRating(starRating);
+
+                        // Show success animation - flying stars burst
+                        playerRating.classList.remove('saving');
+                        createFlyingStars(playerRating, 8);
+
+                        // Remove success class after animation
+                        setTimeout(() => {
+                            playerRating.classList.remove('rated-success');
+                        }, 1500);
+                    });
+                });
+
+                // Mouse leave: restore original rating
+                starsContainer.addEventListener('mouseleave', () => {
+                    stars.forEach((s, idx) => {
+                        s.classList.remove('hover-preview');
+                        if (idx < originalRating) {
+                            s.classList.remove('empty');
+                        } else {
+                            s.classList.add('empty');
+                        }
+                    });
+                });
+
+                // Prevent container click from doing anything else
+                playerRating.onclick = (e) => {
+                    e.stopPropagation();
+                };
             }
 
             // Submit rating to Coda API
