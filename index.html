@@ -9866,6 +9866,47 @@
             mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
         }
 
+        .nigun-mechaber-placeholder .album-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 3px solid var(--color-album);
+            position: relative;
+        }
+
+        .nigun-mechaber-placeholder .album-icon::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--color-album);
+        }
+
+        .nigun-mechaber-placeholder .document-icon {
+            width: 28px;
+            height: 36px;
+            border: 3px solid var(--color-document);
+            border-radius: 3px;
+            position: relative;
+        }
+
+        .nigun-mechaber-placeholder .document-icon::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 12px;
+            height: 12px;
+            background: white;
+            border-bottom: 3px solid var(--color-document);
+            border-left: 3px solid var(--color-document);
+            border-radius: 0 0 0 3px;
+        }
+
         .nigun-mechaber-name {
             font-weight: 600;
             color: white;
@@ -23680,13 +23721,15 @@
                             await fetchChatzerosInfo();
                             loadedCategories.chatzeros = true;
                         }
-                        // Also need songs for counts
-                        if (!loadedCategories.songs) {
-                            await fetchSongsInBackground();
-                        }
-                        // Load albums and documents info for chatzer detail pages
+                        // Load songs, mechabrim, albums, and documents in parallel
                         {
                             const chatzerosDataPromises = [];
+                            if (!loadedCategories.songs) {
+                                chatzerosDataPromises.push(fetchSongsInBackground());
+                            }
+                            if (!loadedCategories.mechabrim) {
+                                chatzerosDataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
+                            }
                             if (!loadedCategories.albums) {
                                 chatzerosDataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
                             }
@@ -29152,44 +29195,48 @@
                     ` : ''}
 
                     ${(type === 'chatzeros' && (chatzerAlbums.length > 0 || chatzerDocuments.length > 0)) ? `
-                        <div class="chatzer-related-sections">
-                            ${chatzerAlbums.length > 0 ? `
-                                <div class="zman-section section-albums">
-                                    <h3>אלבומס</h3>
-                                    <div class="zman-items-grid">
-                                        ${chatzerAlbums.sort((a, b) => a.localeCompare(b, 'he')).map(albumName => {
-                                            const albInfo = albumsInfo[albumName] || {};
-                                            const albId = albInfo.customId || albumName;
-                                            return `
-                                                <a class="zman-item-card" href="#/albums/${encodeURIComponent(albId)}" data-action="detail" data-category="albums" data-name="${escapeHtml(albumName)}">
-                                                    <div class="zman-item-header">
-                                                        <div class="zman-item-name">${albumName}</div>
-                                                    </div>
-                                                </a>
-                                            `;
-                                        }).join('')}
-                                    </div>
+                        ${chatzerAlbums.length > 0 ? `
+                            <div class="detail-albums-section">
+                                <div class="detail-section-header">
+                                    <h3>${chatzerAlbums.length} אלבומס</h3>
                                 </div>
-                            ` : ''}
-                            ${chatzerDocuments.length > 0 ? `
-                                <div class="zman-section section-documents">
-                                    <h3>דאקומענטן</h3>
-                                    <div class="zman-items-grid">
-                                        ${chatzerDocuments.sort((a, b) => a.localeCompare(b, 'he')).map(docName => {
-                                            const docInfo = documentsInfo[docName] || {};
-                                            const docId = docInfo.customId || docName;
-                                            return `
-                                                <a class="zman-item-card" href="#/documents/${encodeURIComponent(docId)}" data-action="detail" data-category="documents" data-name="${escapeHtml(docName)}">
-                                                    <div class="zman-item-header">
-                                                        <div class="zman-item-name">${docName}</div>
-                                                    </div>
-                                                </a>
-                                            `;
-                                        }).join('')}
-                                    </div>
+                                <div class="nigun-mechaber-grid">
+                                    ${chatzerAlbums.sort((a, b) => a.localeCompare(b, 'he')).map(albumName => {
+                                        const albInfo = albumsInfo[albumName] || {};
+                                        const albId = albInfo.customId || albumName;
+                                        const coverUrl = albInfo.cover || albInfo.image;
+                                        return `
+                                            <a class="nigun-mechaber-card" href="#/albums/${encodeURIComponent(albId)}" data-action="detail" data-category="albums" data-name="${escapeHtml(albumName)}">
+                                                ${coverUrl
+                                                    ? `<img class="nigun-mechaber-image" src="${coverUrl}" alt="${albumName}">`
+                                                    : `<div class="nigun-mechaber-placeholder"><div class="album-icon"></div></div>`
+                                                }
+                                                <div class="nigun-mechaber-name">${albumName}</div>
+                                            </a>
+                                        `;
+                                    }).join('')}
                                 </div>
-                            ` : ''}
-                        </div>
+                            </div>
+                        ` : ''}
+                        ${chatzerDocuments.length > 0 ? `
+                            <div class="detail-documents-section">
+                                <div class="detail-section-header">
+                                    <h3>${chatzerDocuments.length} דאקומענטן</h3>
+                                </div>
+                                <div class="nigun-mechaber-grid">
+                                    ${chatzerDocuments.sort((a, b) => a.localeCompare(b, 'he')).map(docName => {
+                                        const docInfo = documentsInfo[docName] || {};
+                                        const docId = docInfo.customId || docName;
+                                        return `
+                                            <a class="nigun-mechaber-card" href="#/documents/${encodeURIComponent(docId)}" data-action="detail" data-category="documents" data-name="${escapeHtml(docName)}">
+                                                <div class="nigun-mechaber-placeholder"><div class="document-icon"></div></div>
+                                                <div class="nigun-mechaber-name">${docName}</div>
+                                            </a>
+                                        `;
+                                    }).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
                     ` : ''}
 
                     ${(type === 'verter' && verterText) ? `
