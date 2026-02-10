@@ -21776,15 +21776,6 @@
                 buildCategoryIndices();
                 updateFilterMegaMenuContent();
                 updateNavCounts();
-
-                // If on songs page with empty grid, trigger song list rendering
-                if (currentPageView === 'songs') {
-                    updateSongsCount();
-                    const grid = document.getElementById('songsGrid');
-                    if (grid && grid.children.length === 0 && filteredSongs.length > 0) {
-                        loadMoreSongs(true);
-                    }
-                }
             }
 
             // Update allSongs with recordings from the IndexManager recordings index
@@ -22054,7 +22045,6 @@
 
             // Delegate hover events on play buttons to preload audio
             document.addEventListener('pointerenter', function(e) {
-                if (!e.target || !e.target.closest) return;
                 const btn = e.target.closest('.song-play-btn-new, .song-item-recording');
                 if (!btn) return;
 
@@ -22774,10 +22764,7 @@
                     }
 
                     // 5. For non-home pages: render after songs loaded
-                    // Use current hash (user may have navigated during song index load)
-                    const currentHash = window.location.hash || '';
-                    if (currentHash && currentHash !== '#/home' && currentHash !== '#/') {
-                        lastHandledHash = ''; // Reset debounce to ensure re-render
+                    if (hash && hash !== '#/home' && hash !== '#/') {
                         handleURLChange();
                     }
 
