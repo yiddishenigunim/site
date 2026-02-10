@@ -10845,6 +10845,7 @@
         @keyframes starInviteGlow {
 
             0%,
+            24%,
             100% {
                 transform: scale(1) translateY(0);
                 -webkit-text-fill-color: inherit;
@@ -10866,17 +10867,10 @@
                 filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
             }
 
-            20% {
-                transform: scale(1.05) translateY(0);
-                -webkit-text-fill-color: rgba(255, 255, 255, 0.7);
-                text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
-                filter: none;
-            }
-
-            28% {
-                transform: scale(1) translateY(0);
-                -webkit-text-fill-color: inherit;
-                text-shadow: none;
+            18% {
+                transform: scale(1.15) translateY(-1px);
+                -webkit-text-fill-color: rgba(255, 255, 255, 0.85);
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
                 filter: none;
             }
         }
@@ -10921,6 +10915,18 @@
             to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes popupSlideOut {
+            from {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+
+            to {
+                opacity: 0;
+                transform: translateY(10px) scale(0.95);
             }
         }
 
@@ -15465,14 +15471,14 @@
             display: flex;
             flex-direction: row-reverse;
             gap: 4px;
-            color: #fbbf24;
+            color: white;
         }
 
         .player-rating-star {
             font-size: 20px;
             cursor: pointer;
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.15s ease, text-shadow 0.2s ease;
-            color: #fbbf24;
+            color: white;
         }
 
         .player-rating-star.empty {
@@ -15482,12 +15488,13 @@
 
         .player-rating-star:hover {
             transform: scale(1.4);
-            text-shadow: 0 0 12px rgba(251, 191, 36, 0.8);
+            text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
         }
 
         .player-rating-star.hover-preview {
-            color: #fcd34d;
-            text-shadow: 0 0 15px rgba(251, 191, 36, 0.9), 0 0 30px rgba(251, 191, 36, 0.4);
+            color: white;
+            -webkit-text-fill-color: white;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.7), 0 0 20px rgba(255, 255, 255, 0.3);
             transform: scale(1.15);
         }
 
@@ -15812,7 +15819,7 @@
         }
 
         .player-tag-divider {
-            color: var(--color-nigun);
+            color: white;
             font-weight: bold;
             font-size: 0.9em;
             margin: 0 2px;
@@ -15841,101 +15848,92 @@
         }
 
         .player-tag-chatzer {
-            background: var(--color-chatzer);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+            background: var(--color-chatzer-pale);
+            color: var(--color-chatzer);
         }
 
         .player-tag-chatzer:hover {
-            background: var(--color-chatzer-dark);
+            background: var(--color-chatzer-light);
             transform: scale(1.05);
         }
 
         .player-tag-personality {
-            background: var(--color-mechaber);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+            background: var(--color-mechaber-pale);
+            color: var(--color-mechaber);
         }
 
         .player-tag-personality:hover {
-            background: var(--color-mechaber-dark);
+            background: var(--color-mechaber-light);
             transform: scale(1.05);
         }
 
         .player-tag-collection {
-            background: var(--color-collection);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+            background: var(--color-collection-pale);
+            color: var(--color-collection);
         }
 
         .player-tag-collection:hover {
-            background: var(--color-collection-dark);
+            background: var(--color-collection-light);
             transform: scale(1.05);
         }
 
         .player-tag-zman {
-            background: var(--color-zman);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+            background: var(--color-zman-pale);
+            color: var(--color-zman);
         }
 
         .player-tag-zman:hover {
-            background: var(--color-zman-dark);
+            background: var(--color-zman-light);
             transform: scale(1.05);
         }
 
         .player-tag-gezungen {
-            background: var(--color-piyut);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+            background: var(--color-piyut-pale);
+            color: var(--color-piyut);
         }
 
         .player-tag-gezungen:hover {
-            background: var(--color-piyut-dark);
+            background: var(--color-piyut-light);
             transform: scale(1.05);
         }
 
         .player-tag-verter {
-            background: var(--color-verter);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+            background: var(--color-verter-pale);
+            color: var(--color-verter);
         }
 
         .player-tag-verter:hover {
-            background: var(--color-verter-dark);
+            background: var(--color-verter-light);
             transform: scale(1.05);
         }
 
         .player-tag-pasig {
-            background: var(--color-piyut);
-            color: white;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2), inset 0 -1px 2px rgba(255, 255, 255, 0.15);
+            background: var(--color-piyut-pale);
+            color: var(--color-piyut);
         }
 
         .player-tag-pasig:hover {
-            background: var(--color-piyut-dark);
+            background: var(--color-piyut-light);
             transform: scale(1.05);
         }
 
         .player-tag-rhythm {
-            background: var(--color-music);
-            color: white;
-            box-shadow: 0 2px 6px rgba(255, 87, 34, 0.35);
+            background: var(--color-music-pale);
+            color: var(--color-music);
         }
 
         .player-tag-rhythm:hover {
-            background: var(--color-music-dark);
+            background: var(--color-music-light);
             transform: scale(1.05);
         }
 
         .player-tag-scale {
-            background: var(--color-music);
-            color: white;
-            box-shadow: 0 2px 6px rgba(96, 125, 139, 0.35);
+            background: var(--color-music-pale);
+            color: var(--color-music);
         }
 
         .player-tag-scale:hover {
-            background: var(--color-music-dark);
+            background: var(--color-music-light);
             transform: scale(1.05);
         }
 
@@ -36562,15 +36560,62 @@
                     });
                 });
 
-                // Hover on stars: open popup immediately
+                // Hover on individual stars: show white preview up to hovered star
+                stars.forEach((star) => {
+                    const starRating = parseInt(star.dataset.rating);
+
+                    star.addEventListener('mouseenter', () => {
+                        // If in invite mode, don't do hover preview
+                        if (playerRating.classList.contains('rating-invite')) return;
+                        stars.forEach((s) => {
+                            const sRating = parseInt(s.dataset.rating);
+                            if (sRating <= starRating) {
+                                s.classList.add('hover-preview');
+                                s.classList.remove('empty');
+                            } else {
+                                s.classList.remove('hover-preview');
+                                s.classList.add('empty');
+                            }
+                        });
+                    });
+                });
+
+                // Hover on stars container: open popup in invite mode
                 starsContainer.addEventListener('mouseenter', () => {
-                    openRatingPopup();
+                    if (playerRating.classList.contains('rating-invite')) {
+                        clearTimeout(ratingPopupCloseTimer);
+                        openRatingPopup();
+                    }
+                });
+
+                // Mouse leaves stars container
+                starsContainer.addEventListener('mouseleave', () => {
+                    // In invite mode: start delayed popup close
+                    if (playerRating.classList.contains('rating-invite')) {
+                        ratingPopupCloseTimer = setTimeout(() => {
+                            closeRatingPopup();
+                        }, 150);
+                    }
+                    // Always restore original rating display
+                    const currentRating = parseInt(playerRating.dataset.rating) || 0;
+                    stars.forEach((s) => {
+                        s.classList.remove('hover-preview');
+                        const sRating = parseInt(s.dataset.rating);
+                        if (sRating <= currentRating) {
+                            s.classList.remove('empty');
+                        } else {
+                            s.classList.add('empty');
+                        }
+                    });
                 });
 
                 // Prevent container click from doing anything else
                 playerRating.onclick = (e) => {
                     e.stopPropagation();
-                    openRatingPopup();
+                    // Only open popup in invite mode
+                    if (playerRating.classList.contains('rating-invite')) {
+                        openRatingPopup();
+                    }
                 };
             }
 
@@ -36638,8 +36683,7 @@
                     // Update the display
                     updatePlayerRating(newRating);
 
-                    // Show thank you notification
-                    showThankYouNotification();
+
 
                 } catch (error) {
                     console.error('Error submitting rating:', error);
@@ -36749,10 +36793,7 @@
                 const playerRating = document.getElementById('playerRating');
                 if (!playerRating) return;
 
-                // Create backdrop
-                const backdrop = document.createElement('div');
-                backdrop.className = 'rating-popup-backdrop';
-                backdrop.onclick = () => closeRatingPopup();
+                // No backdrop needed — popup closes on mouseleave
 
                 // Create popup card
                 const popup = document.createElement('div');
@@ -36799,8 +36840,18 @@
                 });
 
                 // Position popup above the stars
-                document.body.appendChild(backdrop);
                 document.body.appendChild(popup);
+
+                // Hover on popup: keep it open
+                popup.addEventListener('mouseenter', () => {
+                    clearTimeout(ratingPopupCloseTimer);
+                });
+                // Mouse leaves popup: start delayed close
+                popup.addEventListener('mouseleave', () => {
+                    ratingPopupCloseTimer = setTimeout(() => {
+                        closeRatingPopup();
+                    }, 150);
+                });
 
                 const rect = playerRating.getBoundingClientRect();
                 const popupRect = popup.getBoundingClientRect();
@@ -36827,10 +36878,19 @@
                 document.addEventListener('keydown', escHandler);
             }
 
-            // Close rating popup
+            // Timer for delayed popup close
+            let ratingPopupCloseTimer = null;
+
+            // Close rating popup with fade-out animation
             function closeRatingPopup() {
+                clearTimeout(ratingPopupCloseTimer);
                 const popup = document.getElementById('ratingPopup');
-                if (popup) popup.remove();
+                if (!popup || popup.dataset.closing) return;
+                popup.dataset.closing = 'true';
+                popup.style.animation = 'popupSlideOut 0.2s ease-in forwards';
+                setTimeout(() => {
+                    popup.remove();
+                }, 200);
                 document.querySelectorAll('.rating-popup-backdrop').forEach(b => b.remove());
             }
 
