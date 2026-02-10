@@ -32153,8 +32153,13 @@
                     playerSection.classList.remove('player-minimized');
                     const showBtn = document.getElementById('playerShowBtn');
                     if (showBtn) showBtn.classList.remove('visible');
+                } else {
+                    // Player is already visible - if minimized, expand it
+                    const playerSection = document.querySelector('.player-section');
+                    if (playerSection && playerSection.classList.contains('player-minimized')) {
+                        showPlayerBanner();
+                    }
                 }
-
             }
 
             // Hide the player banner (user clicked hide button)
@@ -32752,8 +32757,8 @@
                         mechaberAvatar.innerHTML = `<div class="placeholder"><span class="mechaber-icon"></span></div>`;
                     }
 
-                    // Set name - just use tagName
-                    mechaberNameEl.textContent = mechaberInfo?.tagName || '';
+                    // Set name - use tagName, fallback to raw name if mechabrimInfo not loaded yet
+                    mechaberNameEl.textContent = mechaberInfo?.tagName || firstMechaber;
 
                     mechaberProfile.style.display = 'flex';
                     const infoBox = document.querySelector('.player-info-box');
