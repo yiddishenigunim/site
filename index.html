@@ -7522,6 +7522,36 @@
             box-shadow: 0 6px 20px rgba(46, 139, 46, 0.25);
         }
 
+        /* Albums section header */
+        .zman-section.section-albums h3 {
+            color: var(--color-album);
+            border-bottom: 2px solid var(--color-album-pale);
+        }
+
+        /* Albums cards - teal gradient */
+        .zman-section.section-albums .zman-item-card .zman-item-header {
+            background: linear-gradient(135deg, var(--color-album) 0%, var(--color-album-dark) 100%);
+        }
+
+        .zman-section.section-albums .zman-item-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 131, 143, 0.25);
+        }
+
+        /* Documents section header */
+        .zman-section.section-documents h3 {
+            color: var(--color-document);
+            border-bottom: 2px solid var(--color-document-pale);
+        }
+
+        /* Documents cards - cyan gradient */
+        .zman-section.section-documents .zman-item-card .zman-item-header {
+            background: linear-gradient(135deg, var(--color-document) 0%, var(--color-document-dark) 100%);
+        }
+
+        .zman-section.section-documents .zman-item-card:hover {
+            box-shadow: 0 6px 20px rgba(0, 160, 176, 0.25);
+        }
+
         /* Mobile styles for zman-item-card */
         @media (max-width: 480px) {
             .zman-items-grid {
@@ -23124,7 +23154,7 @@
                                             info.piyutim = relatedNames;
                                         }
                                         // Store collections list for zmanim
-                                        if (colNameLower === 'קאלעקשאנס' || colNameLower.includes('קאלעקשן')) {
+                                        if (colNameLower === 'קאלעקשאנס' || colNameLower.includes('קאלעקשן') || colNameLower.includes('collection')) {
                                             info.collections = relatedNames;
                                         }
                                         // Store albums list for chatzeros
@@ -23181,6 +23211,14 @@
                                         if (colNameLower.includes('ניגונים') || colNameLower.includes('ניגון')) {
                                             if (!info.nigunim) info.nigunim = [];
                                             if (!info.nigunim.includes(relatedName)) info.nigunim.push(relatedName);
+                                        }
+                                        // Handle single collection lookup field for zmanim
+                                        if (colNameLower === 'קאלעקשאנס' || colNameLower.includes('קאלעקשן') || colNameLower.includes('collection')) {
+                                            info.collections = [relatedName];
+                                        }
+                                        // Handle single piyut lookup field for zmanim
+                                        if (colNameLower === 'פיוטים' || colNameLower.includes('פיוט')) {
+                                            info.piyutim = [relatedName];
                                         }
                                         // Handle single album lookup field for chatzeros
                                         if (colNameLower === 'אלבומס' || colNameLower.includes('אלבום')) {
@@ -23669,13 +23707,38 @@
                             await fetchZmanimInfo();
                             loadedCategories.zmanim = true;
                         }
-                        if (!loadedCategories.piyutim) {
-                            await fetchPiyutimInfo();
-                            loadedCategories.piyutim = true;
+                        {
+                            const zmanimExtraPromises = [];
+                            if (!loadedCategories.piyutim) {
+                                zmanimExtraPromises.push(fetchPiyutimInfo().then(() => loadedCategories.piyutim = true));
+                            }
+                            if (!loadedCategories.collections) {
+                                zmanimExtraPromises.push(fetchCollectionsInfo().then(() => loadedCategories.collections = true));
+                            }
+                            if (!loadedCategories.songs) {
+                                zmanimExtraPromises.push(fetchSongsInBackground());
+                            }
+                            if (zmanimExtraPromises.length > 0) {
+                                await Promise.all(zmanimExtraPromises);
+                            }
                         }
-                        if (!loadedCategories.songs) {
-                            await fetchSongsInBackground();
-                        }
+                        // Compute reverse mapping: collections → zmanim
+                        // If zmaninInfo doesn't have collections from its own table,
+                        // build them from collectionsInfo (which stores zmanim per collection)
+                        Object.entries(collectionsInfo).forEach(([colName, colInfo]) => {
+                            if (colInfo.zmanim && Array.isArray(colInfo.zmanim)) {
+                                colInfo.zmanim.forEach(zmanName => {
+                                    if (zmaninInfo[zmanName]) {
+                                        if (!zmaninInfo[zmanName].collections) {
+                                            zmaninInfo[zmanName].collections = [];
+                                        }
+                                        if (!zmaninInfo[zmanName].collections.includes(colName)) {
+                                            zmaninInfo[zmanName].collections.push(colName);
+                                        }
+                                    }
+                                });
+                            }
+                        });
                         break;
                     case 'collections':
                         if (!loadedCategories.collections) {
