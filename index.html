@@ -32918,10 +32918,13 @@
                     const maxChars = 25; // carousel rotates through chunks
                     let carouselData = [];
 
+                    // Strip markdown bold before splitting to avoid breaking **..** across chunks
+                    const cleanDisplayName = displayName.replace(/\*\*([^*]+)\*\*/g, '$1');
+
                     // Split recording name if too long
-                    if (displayName.length > maxChars) {
+                    if (cleanDisplayName.length > maxChars) {
                         // Split by words to avoid cutting mid-word
-                        const words = displayName.split(' ');
+                        const words = cleanDisplayName.split(' ');
                         let currentChunk = '';
                         for (const word of words) {
                             if ((currentChunk + ' ' + word).trim().length <= maxChars) {
