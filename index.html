@@ -21276,71 +21276,87 @@
                 },
 
                 async _doLoadSongIndex() {
-                    try {
-                        // Check if server has newer data
-                        const needsRefresh = await this.checkForUpdates();
+                    // Stale-while-revalidate: return cached data immediately, refresh in background
+                    const cached = localStorage.getItem(STORAGE_KEYS.SONG_INDEX);
+                    if (cached) {
+                        try {
+                            const parsed = JSON.parse(cached);
+                            if (parsed && parsed.length > 0) {
+                                this.songIndex = parsed;
+                                this._buildSongMap();
+                                console.log(`Loaded ${this.songIndex.length} songs from localStorage`);
 
-                        if (!needsRefresh) {
-                            const cached = localStorage.getItem(STORAGE_KEYS.SONG_INDEX);
-                            if (cached) {
-                                try {
-                                    const parsed = JSON.parse(cached);
-                                    if (parsed && parsed.length > 0) {
-                                        this.songIndex = parsed;
-                                        this._buildSongMap();
-                                        console.log(`Loaded ${this.songIndex.length} songs from localStorage`);
-                                        return this.songIndex;
-                                    }
-                                } catch (e) {
-                                    console.error('Error parsing cached song index:', e);
-                                }
+                                // Background: check for updates and refresh if needed
+                                this._refreshSongIndexInBackground();
+
+                                return this.songIndex;
                             }
+                        } catch (e) {
+                            console.error('Error parsing cached song index:', e);
                         }
+                    }
 
-                        // Fetch from API
-                        console.log('Fetching song index from API...');
+                    // No cache available - must fetch from API (blocking)
+                    console.log('Fetching song index from API (no cache)...');
+                    const response = await fetch(`${API_BASE}/api/song-index`);
+                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+                    const data = await response.json();
+
+                    this.songIndex = data.songs || [];
+                    this.lastUpdated = data.lastUpdated;
+                    this._buildSongMap();
+
+                    // Store in localStorage
+                    this._saveSongIndexToCache(data);
+
+                    console.log(`Song index loaded: ${this.songIndex.length} songs`);
+                    return this.songIndex;
+                },
+
+                // Background refresh: check for updates and re-fetch if server has newer data
+                async _refreshSongIndexInBackground() {
+                    try {
+                        const needsRefresh = await this.checkForUpdates();
+                        if (!needsRefresh) return;
+
+                        console.log('Refreshing song index from API...');
                         const response = await fetch(`${API_BASE}/api/song-index`);
                         if (!response.ok) throw new Error(`HTTP ${response.status}`);
                         const data = await response.json();
 
-                        this.songIndex = data.songs || [];
-                        this.lastUpdated = data.lastUpdated;
-                        this._buildSongMap();
+                        const newSongs = data.songs || [];
+                        if (newSongs.length > 0) {
+                            this.songIndex = newSongs;
+                            this.lastUpdated = data.lastUpdated;
+                            this._buildSongMap();
+                            this._saveSongIndexToCache(data);
 
-                        // Store in localStorage
-                        try {
-                            localStorage.setItem(STORAGE_KEYS.SONG_INDEX, JSON.stringify(this.songIndex));
-                            localStorage.setItem(STORAGE_KEYS.SONG_INDEX_TIMESTAMP, data.lastUpdated);
-                            console.log(`Cached ${this.songIndex.length} songs in localStorage`);
-                        } catch (e) {
-                            if (e.name === 'QuotaExceededError') {
-                                this._clearOldStorage();
-                                try {
-                                    localStorage.setItem(STORAGE_KEYS.SONG_INDEX, JSON.stringify(this.songIndex));
-                                    localStorage.setItem(STORAGE_KEYS.SONG_INDEX_TIMESTAMP, data.lastUpdated);
-                                } catch (e2) {
-                                    console.error('Failed to cache song index even after cleanup');
-                                }
+                            console.log(`Song index refreshed in background: ${this.songIndex.length} songs`);
+
+                            // Update allSongs with the fresh data
+                            populateAllSongsFromIndex(this.songIndex);
+                        }
+                    } catch (error) {
+                        console.error('Background song index refresh failed (not critical):', error);
+                    }
+                },
+
+                // Save song index to localStorage
+                _saveSongIndexToCache(data) {
+                    try {
+                        localStorage.setItem(STORAGE_KEYS.SONG_INDEX, JSON.stringify(this.songIndex));
+                        localStorage.setItem(STORAGE_KEYS.SONG_INDEX_TIMESTAMP, data.lastUpdated);
+                        console.log(`Cached ${this.songIndex.length} songs in localStorage`);
+                    } catch (e) {
+                        if (e.name === 'QuotaExceededError') {
+                            this._clearOldStorage();
+                            try {
+                                localStorage.setItem(STORAGE_KEYS.SONG_INDEX, JSON.stringify(this.songIndex));
+                                localStorage.setItem(STORAGE_KEYS.SONG_INDEX_TIMESTAMP, data.lastUpdated);
+                            } catch (e2) {
+                                console.error('Failed to cache song index even after cleanup');
                             }
                         }
-
-                        console.log(`Song index loaded: ${this.songIndex.length} songs`);
-                        return this.songIndex;
-                    } catch (error) {
-                        console.error('Error loading song index:', error);
-
-                        // Fallback to localStorage even if stale
-                        const cached = localStorage.getItem(STORAGE_KEYS.SONG_INDEX);
-                        if (cached) {
-                            try {
-                                this.songIndex = JSON.parse(cached);
-                                this._buildSongMap();
-                                console.log(`Using stale cached index: ${this.songIndex.length} songs`);
-                                return this.songIndex;
-                            } catch (e) { /* ignore parse error */ }
-                        }
-
-                        throw error;
                     }
                 },
 
