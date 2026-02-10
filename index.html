@@ -10732,23 +10732,7 @@
             text-shadow: none;
         }
 
-        /* Hover preview - dim non-preview stars */
-        .player-rating-stars:hover .player-rating-star:not(.hover-preview) {
-            -webkit-text-fill-color: rgba(255, 255, 255, 0.35);
-            color: rgba(255, 255, 255, 0.35);
-            text-shadow: none;
-        }
 
-        /* Hover-preview stars show full white */
-        .player-rating-stars:hover .player-rating-star.hover-preview {
-            -webkit-text-fill-color: white;
-            color: white;
-            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.6);
-        }
-
-        .player-rating:hover .player-rating-stars {
-            filter: brightness(1.1);
-        }
 
         /* Theme-specific star colors */
         .theme-mechaber .player-rating-stars .player-rating-star {
@@ -10831,219 +10815,187 @@
             opacity: 1;
         }
 
-        /* Rating prompt message */
-        .player-rating-prompt {
-            position: absolute;
-            top: -35px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.95);
-            color: var(--color-nigun);
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 0.85em;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-            animation: ratingPromptBounce 2s ease-in-out infinite;
-            cursor: pointer;
-            white-space: nowrap;
-            z-index: 10;
+        /* ======== RATING INVITE SYSTEM ======== */
+
+        /* Stars glow when inviting to rate — smooth calling wave */
+        .player-rating.rating-invite .player-rating-stars .player-rating-star {
+            animation: starInviteGlow 5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
         }
 
-        .player-rating-prompt::after {
-            content: '';
-            position: absolute;
-            bottom: -6px;
-            right: 20px;
-            width: 0;
-            height: 0;
-            border-left: 6px solid transparent;
-            border-right: 6px solid transparent;
-            border-top: 6px solid rgba(255, 255, 255, 0.95);
+        .player-rating.rating-invite .player-rating-stars .player-rating-star:nth-child(1) {
+            animation-delay: 0s;
         }
 
-        @keyframes ratingPromptBounce {
+        .player-rating.rating-invite .player-rating-stars .player-rating-star:nth-child(2) {
+            animation-delay: 0.12s;
+        }
+
+        .player-rating.rating-invite .player-rating-stars .player-rating-star:nth-child(3) {
+            animation-delay: 0.24s;
+        }
+
+        .player-rating.rating-invite .player-rating-stars .player-rating-star:nth-child(4) {
+            animation-delay: 0.36s;
+        }
+
+        .player-rating.rating-invite .player-rating-stars .player-rating-star:nth-child(5) {
+            animation-delay: 0.48s;
+        }
+
+        @keyframes starInviteGlow {
 
             0%,
             100% {
-                transform: translateY(0);
+                transform: scale(1) translateY(0);
+                -webkit-text-fill-color: inherit;
+                text-shadow: none;
+                filter: none;
             }
 
-            50% {
-                transform: translateY(-3px);
+            6% {
+                transform: scale(1.15) translateY(-1px);
+                -webkit-text-fill-color: rgba(255, 255, 255, 0.85);
+                text-shadow: 0 0 6px rgba(255, 255, 255, 0.3);
+                filter: none;
+            }
+
+            12% {
+                transform: scale(1.35) translateY(-3px);
+                -webkit-text-fill-color: white;
+                text-shadow: 0 0 14px rgba(255, 255, 255, 0.9), 0 0 28px rgba(255, 255, 255, 0.4), 0 2px 8px rgba(255, 255, 255, 0.3);
+                filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5));
+            }
+
+            20% {
+                transform: scale(1.05) translateY(0);
+                -webkit-text-fill-color: rgba(255, 255, 255, 0.7);
+                text-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+                filter: none;
+            }
+
+            28% {
+                transform: scale(1) translateY(0);
+                -webkit-text-fill-color: inherit;
+                text-shadow: none;
+                filter: none;
             }
         }
 
-        /* Rating Modal Overlay */
-        .rating-modal-overlay {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            background: rgba(0, 0, 0, 0.7) !important;
-            z-index: 999999 !important;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s ease, visibility 0.3s ease;
-            pointer-events: none;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
+        /* Disable hover effects during invite mode */
+        .player-rating.rating-invite .player-rating-stars .player-rating-star.hover-preview,
+        .player-rating.rating-invite .player-rating-stars:hover .player-rating-star.hover-preview {
+            -webkit-text-fill-color: inherit !important;
+            color: inherit !important;
+            text-shadow: inherit !important;
         }
 
-        .rating-modal-overlay.active {
-            opacity: 1 !important;
-            visibility: visible !important;
-            pointer-events: auto !important;
+        .player-rating.rating-invite .player-rating-stars:hover .player-rating-star:not(.hover-preview) {
+            -webkit-text-fill-color: inherit !important;
+            color: inherit !important;
+            text-shadow: inherit !important;
         }
 
-        .rating-modal-content {
-            background: red !important;
-            border-radius: 12px;
-            max-width: 320px;
-            width: 300px !important;
-            height: 300px !important;
-            min-width: 280px;
-            position: relative;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
-            border: 5px solid yellow !important;
-            padding: 20px;
-            transform: scale(1) !important;
+        .player-rating.rating-invite:hover .player-rating-stars {
+            filter: none !important;
         }
 
-        .rating-modal-overlay.active .rating-modal-content {
-            transform: scale(1) !important;
+        /* Rating popup card */
+        .rating-popup {
+            position: fixed;
+            background: white;
+            border-radius: 14px;
+            padding: 14px 16px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(0, 0, 0, 0.05);
+            z-index: 999999;
+            min-width: 240px;
+            max-width: 300px;
+            animation: popupSlideIn 0.25s ease-out;
         }
 
-        .rating-modal-close {
-            position: absolute;
-            top: 6px;
-            right: 6px;
-            background: none;
-            border: none;
-            font-size: 1.2em;
-            color: #999;
-            cursor: pointer;
-            width: 22px;
-            height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: all 0.2s ease;
-            line-height: 1;
-            padding: 0;
+        @keyframes popupSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
-        .rating-modal-close:hover {
-            background: #f0f0f0;
-            color: #333;
-            transform: rotate(90deg);
-        }
-
-        .rating-modal-header {
-            font-size: 0.9em;
+        .rating-popup-header {
+            font-size: 0.8em;
             font-weight: 700;
             color: var(--text-dark);
             text-align: center;
             margin-bottom: 10px;
-            padding-right: 20px;
+            line-height: 1.4;
         }
 
-        .rating-modal-options {
+        .rating-popup-options {
             display: flex;
             flex-direction: column;
-            gap: 6px;
+            gap: 5px;
         }
 
-        .rating-modal-option {
+        .rating-popup-option {
             display: flex;
             align-items: center;
             gap: 8px;
             padding: 8px 10px;
-            border: 1.5px solid #e0e0e0;
-            border-radius: 8px;
+            border: 1.5px solid #e8e8e8;
+            border-radius: 10px;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.15s ease;
             background: white;
         }
 
-        .rating-modal-option:hover {
+        .rating-popup-option:hover {
             border-color: var(--color-nigun);
-            background: linear-gradient(135deg, rgba(74, 124, 201, 0.05) 0%, rgba(150, 95, 160, 0.05) 100%);
-            transform: translateX(-3px);
+            background: linear-gradient(135deg, rgba(74, 124, 201, 0.06) 0%, rgba(150, 95, 160, 0.06) 100%);
+            transform: translateX(-2px);
         }
 
-        .rating-modal-option-stars {
+        .rating-popup-option:active {
+            transform: scale(0.97);
+        }
+
+        .rating-popup-option-stars {
             display: flex;
             gap: 1px;
-            font-size: 0.95em;
+            font-size: 0.9em;
+            direction: ltr;
         }
 
-        .rating-modal-option-stars .star {
-            background: linear-gradient(90deg, var(--color-nigun) 0%, var(--color-chatzer) 100%);
-            background-size: 500% 100%;
+        .rating-popup-option-stars .star {
+            background: linear-gradient(90deg, #e91e6c 0%, #9b4cba 35%, #6a5acd 65%, #4a7cc9 100%);
             -webkit-background-clip: text;
-            background-clip: text;
             -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
-        .rating-modal-option-stars .star:nth-child(1) {
-            background-position: 0% 0;
-        }
-
-        .rating-modal-option-stars .star:nth-child(2) {
-            background-position: 25% 0;
-        }
-
-        .rating-modal-option-stars .star:nth-child(3) {
-            background-position: 50% 0;
-        }
-
-        .rating-modal-option-stars .star:nth-child(4) {
-            background-position: 75% 0;
-        }
-
-        .rating-modal-option-stars .star:nth-child(5) {
-            background-position: 100% 0;
-        }
-
-        .rating-modal-option-stars .star.empty {
+        .rating-popup-option-stars .star.empty {
+            background: none;
             -webkit-text-fill-color: #ddd;
+            color: #ddd;
         }
 
-        .rating-modal-option-text {
+        .rating-popup-option-text {
             flex: 1;
             font-weight: 600;
             color: var(--text-dark);
-            font-size: 0.8em;
+            font-size: 0.78em;
         }
 
-        @media (max-width: 768px) {
-            /* Rating modal is already full-screen centered, no position changes needed */
-
-            .rating-modal-content {
-                max-width: 260px;
-                min-width: auto;
-                padding: 12px;
-            }
-
-            .rating-modal-header {
-                font-size: 0.85em;
-                margin-bottom: 8px;
-            }
-
-            .rating-modal-option {
-                padding: 7px 8px;
-            }
-
-            .rating-modal-option-stars {
-                font-size: 0.85em;
-            }
-
-            .rating-modal-option-text {
-                font-size: 0.75em;
-            }
+        /* Backdrop for popup */
+        .rating-popup-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 999998;
         }
 
         /* Thank You Notification */
@@ -15161,7 +15113,7 @@
             transform: translateY(-50%);
             font-size: 0.9em;
             font-weight: 600;
-            text-align: right;
+            text-align: center;
             white-space: nowrap;
             overflow: hidden;
             color: white;
@@ -15505,6 +15457,8 @@
             align-items: center;
             cursor: pointer;
             flex-shrink: 0;
+            position: relative;
+            overflow: visible;
         }
 
         .player-rating-stars {
@@ -20957,8 +20911,7 @@
                             </div>
                         </div>
                         <!-- Rating Stars - Left Side -->
-                        <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט"
-                            onclick="openRatingModal()">
+                        <div class="player-rating" id="playerRating" title="אודיאו קוואליטעט">
                             <span class="player-rating-stars" id="playerRatingStars"></span>
                         </div>
                     </div>
@@ -21628,22 +21581,6 @@
                     <a id="pdfDownloadLink" href="" target="_blank" class="pdf-download-btn">
                         דאונלאוד PDF
                     </a>
-                </div>
-            </div>
-        </div>
-
-        <!-- Rating Modal -->
-        <div class="rating-modal-overlay" id="ratingModalOverlay"
-            onclick="if(event.target === this) closeRatingModal()">
-            <div class="rating-modal-content"
-                style="background: red !important; width: 300px !important; height: 300px !important; border: 5px solid yellow !important; display: block !important;">
-                <button class="rating-modal-close" onclick="event.stopPropagation(); closeRatingModal()">×</button>
-                <div class="rating-modal-header" id="ratingModalHeader"
-                    style="color: white !important; font-size: 20px !important;">
-                    ביטע וועל אויס די קוואליטעט פון דעם רעקארדינג
-                </div>
-                <div class="rating-modal-options" id="ratingModalOptions" style="color: white !important;">
-                    <!-- Rating options will be populated by JavaScript -->
                 </div>
             </div>
         </div>
@@ -36331,10 +36268,7 @@
                     document.querySelectorAll('.sidebar-dropdown-content').forEach(d => d.classList.remove('show'));
                 }
 
-                // Handle player rating clicks with event delegation (works even if stars are regenerated)
-                if (e.target.closest('#playerRating') || e.target.closest('.player-rating-star')) {
-                    openRatingModal();
-                }
+
             });
 
             // Keyboard shortcuts
@@ -36592,30 +36526,22 @@
                 stars.forEach((star) => {
                     const starRating = parseInt(star.dataset.rating);
 
-                    // Hover: preview this rating
-                    star.addEventListener('mouseenter', () => {
-                        stars.forEach((s, idx) => {
-                            if (idx < starRating) {
-                                s.classList.remove('empty');
-                                s.classList.add('hover-preview');
-                            } else {
-                                s.classList.add('empty');
-                                s.classList.remove('hover-preview');
-                            }
-                        });
-                    });
-
-                    // Click: submit this rating
+                    // Click: submit this rating (only when NOT in invite mode)
                     star.addEventListener('click', async (e) => {
                         e.stopPropagation();
+
+                        // If in invite mode, open the popup instead of direct submit
+                        if (playerRating.classList.contains('rating-invite')) {
+                            openRatingPopup();
+                            return;
+                        }
 
                         // Immediately show the selected rating
                         stars.forEach((s, idx) => {
                             if (idx < starRating) {
-                                s.classList.remove('empty', 'hover-preview');
+                                s.classList.remove('empty');
                             } else {
                                 s.classList.add('empty');
-                                s.classList.remove('hover-preview');
                             }
                         });
 
@@ -36636,21 +36562,15 @@
                     });
                 });
 
-                // Mouse leave: restore original rating
-                starsContainer.addEventListener('mouseleave', () => {
-                    stars.forEach((s, idx) => {
-                        s.classList.remove('hover-preview');
-                        if (idx < originalRating) {
-                            s.classList.remove('empty');
-                        } else {
-                            s.classList.add('empty');
-                        }
-                    });
+                // Hover on stars: open popup immediately
+                starsContainer.addEventListener('mouseenter', () => {
+                    openRatingPopup();
                 });
 
                 // Prevent container click from doing anything else
                 playerRating.onclick = (e) => {
                     e.stopPropagation();
+                    openRatingPopup();
                 };
             }
 
@@ -36731,15 +36651,40 @@
                 }
             }
 
-            // Start playback timer to show rating prompt after 30 seconds
+            // Start playback timer to show rating invite after 10 seconds
+            let ratingInviteInterval = null;
             function startPlaybackTimer() {
-                // Clear any existing timer
+                // Clear any existing timer/interval
                 stopPlaybackTimer();
                 hasShownRatingPrompt = false;
 
-                // Set timer for 10 seconds
+                // After 10 seconds, start the first glow cycle
                 playbackTimer = setTimeout(() => {
-                    showRatingPrompt();
+                    startGlowPulse();
+                }, 10000);
+            }
+
+            // Glow pulse: 10s on, 30s off, repeat
+            function startGlowPulse() {
+                const playerRating = document.getElementById('playerRating');
+                const playerSection = document.querySelector('.player-section');
+                if (!playerRating) return;
+                if (playerSection && playerSection.classList.contains('player-minimized')) return;
+
+                // Turn glow ON
+                playerRating.classList.add('rating-invite');
+                hasShownRatingPrompt = true;
+                suppressRatingHover();
+
+                // After 10s, turn glow OFF
+                ratingInviteInterval = setTimeout(() => {
+                    playerRating.classList.remove('rating-invite');
+                    restoreRatingHover();
+
+                    // After 30s off, turn glow ON again
+                    ratingInviteInterval = setTimeout(() => {
+                        startGlowPulse();
+                    }, 30000);
                 }, 10000);
             }
 
@@ -36749,128 +36694,144 @@
                     clearTimeout(playbackTimer);
                     playbackTimer = null;
                 }
-            }
-
-            // Show rating prompt message
-            function showRatingPrompt() {
-                if (hasShownRatingPrompt) return;
-
-                const promptEl = document.getElementById('playerRatingPrompt');
-                const containerEl = document.getElementById('playerRating');
-                if (promptEl && containerEl) {
-                    promptEl.style.display = 'block';
-                    hasShownRatingPrompt = true;
-
-                    // Add click handler to open rating modal
-                    promptEl.onclick = (e) => {
-                        e.stopPropagation();
-                        openRatingModal();
-                    };
-
-                    // Also make the rating container clickable
-                    containerEl.onclick = (e) => {
-                        // Only if clicking on the container itself, not the stars
-                        if (e.target === containerEl || e.target.closest('.player-rating-container')) {
-                            openRatingModal();
-                        }
-                    };
+                if (ratingInviteInterval) {
+                    clearTimeout(ratingInviteInterval);
+                    ratingInviteInterval = null;
                 }
             }
 
-            // Hide rating prompt message
+            // Show rating invite - make stars glow/dance (only when player banner is open)
+            function showRatingPrompt() {
+                const playerSection = document.querySelector('.player-section');
+                if (playerSection && playerSection.classList.contains('player-minimized')) return;
+                const playerRating = document.getElementById('playerRating');
+                if (playerRating) {
+                    playerRating.classList.add('rating-invite');
+                    hasShownRatingPrompt = true;
+                    suppressRatingHover();
+                }
+            }
+
+            // Suppress hover effects and tooltip during invite
+            function suppressRatingHover() {
+                const playerRating = document.getElementById('playerRating');
+                if (playerRating) {
+                    playerRating.removeAttribute('title');
+                    playerRating.style.cursor = 'pointer';
+                }
+            }
+
+            // Restore hover effects and tooltip
+            function restoreRatingHover() {
+                const playerRating = document.getElementById('playerRating');
+                if (playerRating) {
+                    playerRating.setAttribute('title', 'אודיאו קוואליטעט');
+                }
+            }
+
+            // Hide rating invite
             function hideRatingPrompt() {
-                const promptEl = document.getElementById('playerRatingPrompt');
-                if (promptEl) {
-                    promptEl.style.display = 'none';
+                const playerRating = document.getElementById('playerRating');
+                if (playerRating) {
+                    playerRating.classList.remove('rating-invite');
                 }
                 hasShownRatingPrompt = false;
+                restoreRatingHover();
+                closeRatingPopup();
+                stopPlaybackTimer();
             }
 
-            // Open rating modal
-            function openRatingModal() {
-                const modal = document.getElementById('ratingModalOverlay');
-                const optionsContainer = document.getElementById('ratingModalOptions');
-                const headerContainer = document.getElementById('ratingModalHeader');
-                if (!modal || !optionsContainer) {
-                    return;
-                }
+            // Open rating popup near the stars
+            function openRatingPopup() {
+                // Remove any existing popup
+                closeRatingPopup();
 
-                // Get current nigun and recording info
-                let headerText = 'ביטע וועל אויס דעם קוואליטעט פון דעם רעקארדינג';
+                const playerRating = document.getElementById('playerRating');
+                if (!playerRating) return;
+
+                // Create backdrop
+                const backdrop = document.createElement('div');
+                backdrop.className = 'rating-popup-backdrop';
+                backdrop.onclick = () => closeRatingPopup();
+
+                // Create popup card
+                const popup = document.createElement('div');
+                popup.className = 'rating-popup';
+                popup.id = 'ratingPopup';
+
+                // Header
+                let headerHtml = '<div class="rating-popup-header">';
                 if (currentPlayingRecordingInfo) {
-                    const { songIdx, recordingIdx } = currentPlayingRecordingInfo;
+                    const { songIdx } = currentPlayingRecordingInfo;
                     const song = allSongs[songIdx];
                     if (song) {
-                        const nigunName = song.name || 'ניגון';
-                        const recording = song.recordings && song.recordings[recordingIdx];
-                        const recordingInfo = recording ? recording.displayName : '';
-
-                        // Build header with nigun name and recording info
-                        headerText = `<div style="font-size: 0.9em; margin-bottom: 8px; color: var(--color-nigun); font-weight: 800;">${nigunName}</div>`;
-                        if (recordingInfo) {
-                            headerText += `<div style="font-size: 0.8em; margin-bottom: 12px; color: #666; font-weight: 500;">${recordingInfo}</div>`;
-                        }
-                        headerText += '<div style="font-size: 0.85em; font-weight: 600;">ביטע וועל אויס דעם קוואליטעט פון דעם רעקארדינג</div>';
+                        headerHtml += `<div style="color: var(--color-nigun); font-weight: 800; margin-bottom: 4px;">${song.name || 'ניגון'}</div>`;
                     }
                 }
+                headerHtml += 'רעיט די אודיאו קוואליטעט</div>';
 
-                // Update header
-                if (headerContainer) {
-                    headerContainer.innerHTML = headerText;
-                }
-
-                // Populate rating options
-                let optionsHtml = '';
+                // Options
+                let optionsHtml = '<div class="rating-popup-options">';
                 for (let rating = 5; rating >= 1; rating--) {
-                    const description = RATING_DESCRIPTIONS[rating] || '';
-
-                    // Generate stars for this rating
-                    let starsHtml = '';
+                    const desc = RATING_DESCRIPTIONS[rating] || '';
+                    let stars = '';
                     for (let i = 1; i <= 5; i++) {
-                        const isEmpty = i > rating;
-                        starsHtml += `<span class="star${isEmpty ? ' empty' : ''}">★</span>`;
+                        stars += `<span class="star${i > rating ? ' empty' : ''}">★</span>`;
                     }
-
-                    optionsHtml += `
-                    <div class="rating-modal-option" data-rating="${rating}">
-                        <div class="rating-modal-option-stars">${starsHtml}</div>
-                        <div class="rating-modal-option-text">${description}</div>
-                    </div>
-                `;
+                    optionsHtml += `<div class="rating-popup-option" data-rating="${rating}"><div class="rating-popup-option-stars">${stars}</div><div class="rating-popup-option-text">${desc}</div></div>`;
                 }
-                optionsContainer.innerHTML = optionsHtml;
+                optionsHtml += '</div>';
+
+                popup.innerHTML = headerHtml + optionsHtml;
 
                 // Add click handlers
-                const options = optionsContainer.querySelectorAll('.rating-modal-option');
-                options.forEach(option => {
-                    option.addEventListener('click', () => {
+                popup.querySelectorAll('.rating-popup-option').forEach(option => {
+                    option.addEventListener('click', async () => {
                         const rating = parseInt(option.dataset.rating, 10);
-                        submitRating(rating);
-                        closeRatingModal();
+                        closeRatingPopup();
+                        // Remove invite glow
+                        playerRating.classList.remove('rating-invite');
+                        // Submit rating
+                        await submitRating(rating);
+                        // Show flying stars explosion
+                        createFlyingStars(playerRating, 10);
                     });
                 });
 
-                // Show modal
-                modal.classList.add('active');
-                document.body.style.overflow = 'hidden';
+                // Position popup above the stars
+                document.body.appendChild(backdrop);
+                document.body.appendChild(popup);
 
-                // Add Escape key handler
+                const rect = playerRating.getBoundingClientRect();
+                const popupRect = popup.getBoundingClientRect();
+
+                // Position above the stars, centered horizontally on the stars
+                let left = rect.left + rect.width / 2 - popupRect.width / 2;
+                let top = rect.top - popupRect.height - 12;
+
+                // Keep within viewport
+                if (left < 10) left = 10;
+                if (left + popupRect.width > window.innerWidth - 10) left = window.innerWidth - popupRect.width - 10;
+                if (top < 10) top = rect.bottom + 12; // If no room above, show below
+
+                popup.style.left = left + 'px';
+                popup.style.top = top + 'px';
+
+                // Escape key to close
                 const escHandler = (e) => {
                     if (e.key === 'Escape') {
-                        closeRatingModal();
+                        closeRatingPopup();
                         document.removeEventListener('keydown', escHandler);
                     }
                 };
                 document.addEventListener('keydown', escHandler);
             }
 
-            // Close rating modal
-            function closeRatingModal() {
-                const modal = document.getElementById('ratingModalOverlay');
-                if (modal) {
-                    modal.classList.remove('active');
-                    document.body.style.overflow = '';
-                }
+            // Close rating popup
+            function closeRatingPopup() {
+                const popup = document.getElementById('ratingPopup');
+                if (popup) popup.remove();
+                document.querySelectorAll('.rating-popup-backdrop').forEach(b => b.remove());
             }
 
             // Show thank you notification
