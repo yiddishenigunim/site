@@ -20182,7 +20182,7 @@
                 </div>
             </div>
         </div>
-        <audio id="audioPlayer" preload="auto"></audio>
+        <audio id="audioPlayer"></audio>
     </div>
 
     <!-- Hover Tooltip -->
@@ -22015,54 +22015,6 @@
 
             // Audio player
             const audioPlayer = document.getElementById('audioPlayer');
-
-            // Audio preload on hover - start loading before user clicks
-            let _preloadAudio = null;
-            let _preloadedUrl = null;
-            let _preconnected = new Set();
-
-            function preloadAudioUrl(url) {
-                if (!url || url === _preloadedUrl) return;
-                // Preconnect to the audio host (saves TLS handshake ~100-200ms)
-                try {
-                    const host = new URL(url).origin;
-                    if (!_preconnected.has(host)) {
-                        _preconnected.add(host);
-                        const link = document.createElement('link');
-                        link.rel = 'preconnect';
-                        link.href = host;
-                        link.crossOrigin = 'anonymous';
-                        document.head.appendChild(link);
-                    }
-                } catch (e) {}
-                // Preload audio data via hidden Audio element (uses browser HTTP cache)
-                if (_preloadAudio) { _preloadAudio.src = ''; _preloadAudio = null; }
-                _preloadedUrl = url;
-                _preloadAudio = new Audio();
-                _preloadAudio.preload = 'auto';
-                _preloadAudio.src = url;
-            }
-
-            // Delegate hover events on play buttons to preload audio
-            document.addEventListener('pointerenter', function(e) {
-                const btn = e.target.closest('.song-play-btn-new, .song-item-recording');
-                if (!btn) return;
-
-                const songIdx = parseInt(btn.dataset.songIdx, 10);
-                const recIdx = parseInt(btn.dataset.recIdx, 10);
-
-                if (!isNaN(songIdx) && songIdx >= 0 && songIdx < allSongs.length) {
-                    const song = allSongs[songIdx];
-                    if (!song) return;
-                    if (!isNaN(recIdx) && song.recordings && song.recordings[recIdx]) {
-                        preloadAudioUrl(song.recordings[recIdx].url);
-                    } else if (song.audioUrl) {
-                        preloadAudioUrl(song.audioUrl);
-                    } else if (song.recordings && song.recordings.length > 0) {
-                        preloadAudioUrl(song.recordings[0].url);
-                    }
-                }
-            }, true);
 
             // Helper function to extract text from Coda value
             function extractText(value) {
