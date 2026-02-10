@@ -29509,7 +29509,7 @@
                     
                     <!-- New Hero Header for Modal -->
                     <div class="nigun-modal-hero${firstMechaber ? '' : ' no-mechaber'}">
-                        <h1 class="nigun-modal-hero-title">${song.name}</h1>
+                        <h1 class="nigun-modal-hero-title">${formatDescription(song.name)}</h1>
                         
                         ${firstMechaber ? `
                             <a class="nigun-modal-mechaber-profile" href="#/mechabrim/${encodeURIComponent(firstMechaberId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(firstMechaber)}">
@@ -29697,7 +29697,7 @@
                                             <div class="nigun-recording-item" onclick="playOtherMediaAudio('${aud.url}', this)">
                                                 <div class="nigun-recording-number">♫</div>
                                                 <div class="nigun-recording-info">
-                                                    <div class="nigun-recording-name">${aud.name}</div>
+                                                    <div class="nigun-recording-name">${formatDescription(aud.name)}</div>
                                                 </div>
                                                 <button class="nigun-recording-play-btn">▶</button>
                                             </div>
@@ -30395,7 +30395,7 @@
                             return `
                                                                 <div class="music-song-item ${!hasAudio ? 'no-audio' : ''}" 
                                                                      onclick="${hasAudio ? `playSong(${songIdx})` : `showSongDetails(${songIdx})`}">
-                                                                    <span class="music-song-name">${song.name}</span>
+                                                                    <span class="music-song-name">${formatDescription(song.name)}</span>
                                                                     ${song.mechaber ? `<span class="music-song-meta">${song.mechaber}</span>` : ''}
                                                                     <button class="music-song-details" onclick="event.stopPropagation(); showSongDetails(${songIdx});">◉</button>
                                                                 </div>
@@ -31754,7 +31754,7 @@
                     }
                     // No recordings = no button (playBtnHtml stays empty)
 
-                    return `<div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}"><div class="song-number">${displayNum}</div><div class="song-info"><div class="song-name">${song.name}</div><div class="song-meta">${metaParts.join('<span class="song-meta-separator"> • </span>')}</div></div>${waveHtml}${playBtnHtml}</div>`;
+                    return `<div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}"><div class="song-number">${displayNum}</div><div class="song-info"><div class="song-name">${formatDescription(song.name)}</div><div class="song-meta">${metaParts.join('<span class="song-meta-separator"> • </span>')}</div></div>${waveHtml}${playBtnHtml}</div>`;
                 }
 
                 if (displayMode === 'recordings') {
@@ -31821,7 +31821,7 @@
                         <div class="song-item-header">
                             <div class="song-number">${displayNum}</div>
                             <div class="song-info">
-                                <div class="song-name">${song.name}</div>
+                                <div class="song-name">${formatDescription(song.name)}</div>
                                 <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                             </div>
                             ${waveHtml}
@@ -32039,7 +32039,7 @@
                         <div class="song-item-header song-full-header">
                             <div class="song-full-title-right">
                                 <div class="song-number">${displayNum}</div>
-                                <div class="song-name">${song.name}</div>
+                                <div class="song-name">${formatDescription(song.name)}</div>
                             </div>
                             ${centeredTagsHtml}
                             <div class="song-full-left-section">
@@ -32060,7 +32060,7 @@
                 <div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
                     <div class="song-number">${displayNum}</div>
                     <div class="song-info">
-                        <div class="song-name">${song.name}</div>
+                        <div class="song-name">${formatDescription(song.name)}</div>
                         <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                     </div>
                     ${waveHtml}
@@ -32593,14 +32593,14 @@
             // Update player UI
             function updatePlayerUI(song) {
                 const rightSongName = document.getElementById('playerRightSongName');
-                rightSongName.textContent = song.name;
+                rightSongName.innerHTML = formatDescription(song.name);
                 // Set data attribute for minimized pill display
-                document.querySelector('.player-section')?.setAttribute('data-song-name', song.name);
+                document.querySelector('.player-section')?.setAttribute('data-song-name', song.name.replace(/\*\*([^*]+)\*\*/g, '$1'));
 
                 // Update minimized player song name with marquee
                 const minimizedSongName = document.getElementById('minimizedSongName');
                 if (minimizedSongName) {
-                    minimizedSongName.textContent = song.name;
+                    minimizedSongName.innerHTML = formatDescription(song.name);
                     // Trigger marquee with delay
                     setTimeout(() => triggerMinimizedMarquee(), 200);
                 }
@@ -32610,7 +32610,7 @@
                     // Reset first to measure properly
                     rightSongName.classList.remove('marquee');
                     rightSongName.classList.remove('running');
-                    rightSongName.textContent = song.name;
+                    rightSongName.innerHTML = formatDescription(song.name);
                     rightSongName.style.removeProperty('--marquee-start');
                     rightSongName.style.removeProperty('--marquee-width');
                     rightSongName.style.removeProperty('--marquee-duration');
@@ -32624,7 +32624,8 @@
                         // Only scroll if overflow is more than 10px
                         if (overflow > 10) {
                             const separator = ' \u00A0\u00A0\u00A0 • \u00A0\u00A0\u00A0 ';
-                            const oneUnit = song.name + separator;
+                            const cleanName = song.name.replace(/\*\*([^*]+)\*\*/g, '$1');
+                            const oneUnit = cleanName + separator;
 
                             // Create temp element to measure one unit
                             const tempSpan = document.createElement('span');
@@ -32636,7 +32637,8 @@
                             tempSpan.remove();
 
                             // Wrap duplicated content in span for animation
-                            rightSongName.innerHTML = '<span>' + oneUnit + oneUnit + '</span>';
+                            const formattedUnit = formatDescription(song.name) + separator;
+                            rightSongName.innerHTML = '<span>' + formattedUnit + formattedUnit + '</span>';
 
                             // Set CSS variables
                             rightSongName.style.setProperty('--marquee-width', oneUnitWidth + 'px');
@@ -32668,7 +32670,7 @@
                 // Update the floating button song name if player is minimized
                 const playerSection = document.querySelector('.player-section');
                 if (playerSection.classList.contains('player-minimized')) {
-                    document.getElementById('showBtnSongName').textContent = song.name || 'ווייז פלעיער';
+                    document.getElementById('showBtnSongName').innerHTML = formatDescription(song.name) || 'ווייז פלעיער';
                 }
 
                 // Update mechaber profile in new player info box
@@ -32916,10 +32918,13 @@
                     const maxChars = 25; // carousel rotates through chunks
                     let carouselData = [];
 
+                    // Strip markdown bold before splitting to avoid breaking **..** across chunks
+                    const cleanDisplayName = displayName.replace(/\*\*([^*]+)\*\*/g, '$1');
+
                     // Split recording name if too long
-                    if (displayName.length > maxChars) {
+                    if (cleanDisplayName.length > maxChars) {
                         // Split by words to avoid cutting mid-word
-                        const words = displayName.split(' ');
+                        const words = cleanDisplayName.split(' ');
                         let currentChunk = '';
                         for (const word of words) {
                             if ((currentChunk + ' ' + word).trim().length <= maxChars) {
@@ -32948,7 +32953,7 @@
                         const span = document.createElement('span');
                         // Use correct class name for recording
                         span.className = item.type === 'recording' ? 'player-recording-name' : `player-${item.type}-tag`;
-                        span.textContent = item.text;
+                        span.innerHTML = formatDescription(item.text);
                         div.appendChild(span);
                         carouselContainer.appendChild(div);
                     });
@@ -36765,7 +36770,7 @@
                     const { songIdx } = currentPlayingRecordingInfo;
                     const song = allSongs[songIdx];
                     if (song) {
-                        headerHtml += `<div style="color: var(--color-nigun); font-weight: 800; margin-bottom: 4px;">${song.name || 'ניגון'}</div>`;
+                        headerHtml += `<div style="color: var(--color-nigun); font-weight: 800; margin-bottom: 4px;">${formatDescription(song.name) || 'ניגון'}</div>`;
                     }
                 }
                 headerHtml += 'רעיט די אודיאו קוואליטעט</div>';
