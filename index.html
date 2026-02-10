@@ -23127,6 +23127,14 @@
                                         if (colNameLower === 'קאלעקשאנס' || colNameLower.includes('קאלעקשן')) {
                                             info.collections = relatedNames;
                                         }
+                                        // Store albums list for chatzeros
+                                        if (colNameLower === 'אלבומס' || colNameLower.includes('אלבום')) {
+                                            info.albums = relatedNames;
+                                        }
+                                        // Store documents list for chatzeros
+                                        if (colNameLower === 'דאקומענטן' || colNameLower.includes('דאקומענט')) {
+                                            info.documents = relatedNames;
+                                        }
                                         // Store zmanim for piyutim (all of them)
                                         if (colNameLower === 'זמן' || colNameLower === 'zman') {
                                             info.zmanim = relatedNames; // Store all zmanim
@@ -23173,6 +23181,14 @@
                                         if (colNameLower.includes('ניגונים') || colNameLower.includes('ניגון')) {
                                             if (!info.nigunim) info.nigunim = [];
                                             if (!info.nigunim.includes(relatedName)) info.nigunim.push(relatedName);
+                                        }
+                                        // Handle single album lookup field for chatzeros
+                                        if (colNameLower === 'אלבומס' || colNameLower.includes('אלבום')) {
+                                            info.albums = [relatedName];
+                                        }
+                                        // Handle single document lookup field for chatzeros
+                                        if (colNameLower === 'דאקומענטן' || colNameLower.includes('דאקומענט')) {
+                                            info.documents = [relatedName];
                                         }
                                     }
                                     return;
@@ -23615,6 +23631,19 @@
                         // Also need songs for counts
                         if (!loadedCategories.songs) {
                             await fetchSongsInBackground();
+                        }
+                        // Load albums and documents info for chatzer detail pages
+                        {
+                            const chatzerosDataPromises = [];
+                            if (!loadedCategories.albums) {
+                                chatzerosDataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
+                            }
+                            if (!loadedCategories.documents) {
+                                chatzerosDataPromises.push(fetchDocumentsInfo().then(() => loadedCategories.documents = true));
+                            }
+                            if (chatzerosDataPromises.length > 0) {
+                                await Promise.all(chatzerosDataPromises);
+                            }
                         }
                         break;
                     case 'mechabrim':
@@ -28889,6 +28918,14 @@
                         });
                 }
 
+                // For chatzeros, get albums and documents
+                let chatzerAlbums = [];
+                let chatzerDocuments = [];
+                if (type === 'chatzeros') {
+                    chatzerAlbums = info.albums || [];
+                    chatzerDocuments = info.documents || [];
+                }
+
                 // For verter, get the lyrics text
                 let verterText = '';
                 if (type === 'verter') {
@@ -29036,7 +29073,48 @@
                             </div>
                         </div>
                     ` : ''}
-                    
+
+                    ${(type === 'chatzeros' && (chatzerAlbums.length > 0 || chatzerDocuments.length > 0)) ? `
+                        <div class="chatzer-related-sections">
+                            ${chatzerAlbums.length > 0 ? `
+                                <div class="zman-section section-albums">
+                                    <h3>אלבומס</h3>
+                                    <div class="zman-items-grid">
+                                        ${chatzerAlbums.sort((a, b) => a.localeCompare(b, 'he')).map(albumName => {
+                                            const albInfo = albumsInfo[albumName] || {};
+                                            const albId = albInfo.customId || albumName;
+                                            return `
+                                                <a class="zman-item-card" href="#/albums/${encodeURIComponent(albId)}" data-action="detail" data-category="albums" data-name="${escapeHtml(albumName)}">
+                                                    <div class="zman-item-header">
+                                                        <div class="zman-item-name">${albumName}</div>
+                                                    </div>
+                                                </a>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                            ${chatzerDocuments.length > 0 ? `
+                                <div class="zman-section section-documents">
+                                    <h3>דאקומענטן</h3>
+                                    <div class="zman-items-grid">
+                                        ${chatzerDocuments.sort((a, b) => a.localeCompare(b, 'he')).map(docName => {
+                                            const docInfo = documentsInfo[docName] || {};
+                                            const docId = docInfo.customId || docName;
+                                            return `
+                                                <a class="zman-item-card" href="#/documents/${encodeURIComponent(docId)}" data-action="detail" data-category="documents" data-name="${escapeHtml(docName)}">
+                                                    <div class="zman-item-header">
+                                                        <div class="zman-item-name">${docName}</div>
+                                                    </div>
+                                                </a>
+                                            `;
+                                        }).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                    ` : ''}
+
                     ${(type === 'verter' && verterText) ? `
                         <div class="detail-verter-section">
                             <span class="verter-box-icon">
@@ -30617,6 +30695,14 @@
             `;
                 }
 
+                // Count albums and documents for chatzeros
+                let albumsCount = 0;
+                let documentsCount = 0;
+                if (categoryKey === 'chatzeros') {
+                    albumsCount = info.albums?.length || 0;
+                    documentsCount = info.documents?.length || 0;
+                }
+
                 // Default layout for other categories (chatzer, verter, zman - mechaber-like style)
                 return `
                 <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
@@ -30628,6 +30714,8 @@
                     <div class="card-stats">
                         ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${pluralize(mechabrimCount, 'מחבר', 'מחברים')}</span>` : ''}
                         <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
+                        ${categoryKey === 'chatzeros' && albumsCount > 0 ? `<span class="card-stat">${pluralize(albumsCount, 'אלבום', 'אלבומס')}</span>` : ''}
+                        ${categoryKey === 'chatzeros' && documentsCount > 0 ? `<span class="card-stat">${pluralize(documentsCount, 'דאקומענט', 'דאקומענטן')}</span>` : ''}
                     </div>
                 </a>
                 `;
