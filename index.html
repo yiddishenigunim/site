@@ -15455,6 +15455,8 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             font-size: clamp(0.55em, 1.5vw, 0.8em);
+            color: inherit;
+            text-decoration: none;
         }
 
         /* Rating Stars - Left Side */
@@ -17460,12 +17462,13 @@
         /* File upload styling */
         .addinfo-file-upload {
             border: 2px dashed var(--color-nigun-pale);
-            border-radius: 12px;
+            border-radius: 12px 12px 0 0;
             padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.25s ease;
             background: rgba(74, 124, 201, 0.05);
+            margin-bottom: 0;
         }
 
         .addinfo-file-upload:hover {
@@ -17507,21 +17510,32 @@
 
         .addinfo-file-link-input {
             width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid var(--color-nigun-pale);
-            border-radius: 10px;
-            font-size: 0.85em;
-            background: rgba(74, 124, 201, 0.03);
+            padding: 14px 16px;
+            border: 2px solid var(--color-nigun-pale);
+            border-top: 1px dashed var(--color-nigun-pale);
+            border-radius: 0 0 12px 12px;
+            font-size: 0.95em;
+            font-family: inherit;
+            background: white;
             color: var(--text-primary);
             direction: ltr;
             text-align: left;
-            transition: border-color 0.2s;
+            transition: all 0.25s ease;
             box-sizing: border-box;
+            margin-top: 0;
+        }
+
+        .addinfo-file-link-input::placeholder {
+            direction: rtl;
+            text-align: right;
+            color: var(--color-nigun);
+            opacity: 0.6;
         }
 
         .addinfo-file-link-input:focus {
             outline: none;
             border-color: var(--color-nigun);
+            box-shadow: 0 0 0 4px rgba(74, 124, 201, 0.2), 0 4px 12px rgba(74, 124, 201, 0.15);
         }
 
         .addinfo-file-link-input.link-valid {
@@ -21256,9 +21270,8 @@
                                     <div class="addinfo-file-upload-text">אודיאו רעקארדירונג</div>
                                     <div class="addinfo-file-upload-hint">MP3, WAV, M4A</div>
                                 </div>
-                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
                                 <input type="url" class="addinfo-file-link-input" id="addnigun-audio-link"
-                                    placeholder="Google Drive / Dropbox לינק">
+                                    placeholder="אדער לייג דא אריין א גוגל דרייוו אדער דראפבאקס לינק צום פייל">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -21313,9 +21326,8 @@
                                     <div class="addinfo-file-upload-text">ווידיאוס, בילדער, און אנדערע פיילס</div>
                                     <div class="addinfo-file-upload-hint">ווידיאוס, בילדער, דאקומענטן</div>
                                 </div>
-                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
                                 <input type="url" class="addinfo-file-link-input" id="addnigun-files-link"
-                                    placeholder="Google Drive / Dropbox לינק">
+                                    placeholder="אדער לייג דא אריין א גוגל דרייוו אדער דראפבאקס לינק צום פייל">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -21522,9 +21534,8 @@
                                     <div class="addinfo-file-upload-text">אודיאו רעקארדירונג</div>
                                     <div class="addinfo-file-upload-hint">MP3, WAV, M4A</div>
                                 </div>
-                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
                                 <input type="url" class="addinfo-file-link-input" id="addinfo-audio-link"
-                                    placeholder="Google Drive / Dropbox לינק">
+                                    placeholder="אדער לייג דא אריין א גוגל דרייוו אדער דראפבאקס לינק צום פייל">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -21579,9 +21590,8 @@
                                     <div class="addinfo-file-upload-text">ווידיאוס, בילדער, און אנדערע פיילס</div>
                                     <div class="addinfo-file-upload-hint">ווידיאוס, בילדער, דאקומענטן</div>
                                 </div>
-                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
                                 <input type="url" class="addinfo-file-link-input" id="addinfo-files-link"
-                                    placeholder="Google Drive / Dropbox לינק">
+                                    placeholder="אדער לייג דא אריין א גוגל דרייוו אדער דראפבאקס לינק צום פייל">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -32210,7 +32220,7 @@
                     const textWidth = minimizedSongName.scrollWidth;
                     const overflow = textWidth - containerWidth;
 
-                    if (overflow > 10) {
+                    if (overflow > 0) {
                         const separator = ' \u00A0\u00A0\u00A0 • \u00A0\u00A0\u00A0 ';
                         const oneUnit = songName + separator;
 
@@ -32281,7 +32291,7 @@
                                 const textWidth = rightSongName.scrollWidth;
                                 const overflow = textWidth - containerWidth;
 
-                                if (overflow > 10) {
+                                if (overflow > 0) {
                                     const separator = ' \u00A0\u00A0\u00A0 • \u00A0\u00A0\u00A0 ';
                                     const oneUnit = songName + separator;
 
@@ -32693,8 +32703,8 @@
                         const textWidth = rightSongName.scrollWidth;
                         const overflow = textWidth - containerWidth;
 
-                        // Only scroll if overflow is more than 10px
-                        if (overflow > 10) {
+                        // Scroll if text is close to or exceeds container width
+                        if (overflow > 0) {
                             const separator = ' \u00A0\u00A0\u00A0 • \u00A0\u00A0\u00A0 ';
                             const oneUnit = song.name + separator;
 
@@ -33017,11 +33027,38 @@
                         div.className = `carousel-item carousel-${item.type}` + (idx === 0 ? ' active' : '');
                         div.id = `carouselItem${idx}`;
 
-                        const span = document.createElement('span');
-                        // Use correct class name for recording
-                        span.className = item.type === 'recording' ? 'player-recording-name' : `player-${item.type}-tag`;
-                        span.textContent = item.text;
-                        div.appendChild(span);
+                        if (item.type === 'personality') {
+                            // Clickable link to mechabrim detail
+                            const link = document.createElement('a');
+                            link.className = 'player-personality-tag';
+                            link.textContent = item.text;
+                            link.href = '#';
+                            link.onclick = function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                const info = mechabrimInfo[item.text] || {};
+                                const id = info.customId || item.text;
+                                navigateToDetail('mechabrim', id);
+                            };
+                            div.appendChild(link);
+                        } else if (item.type === 'album') {
+                            // Clickable link to albums detail
+                            const link = document.createElement('a');
+                            link.className = 'player-album-tag';
+                            link.textContent = item.text;
+                            link.href = '#';
+                            link.onclick = function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                navigateToDetail('albums', item.text);
+                            };
+                            div.appendChild(link);
+                        } else {
+                            const span = document.createElement('span');
+                            span.className = 'player-recording-name';
+                            span.textContent = item.text;
+                            div.appendChild(span);
+                        }
                         carouselContainer.appendChild(div);
                     });
 
@@ -34505,7 +34542,7 @@
 
             async function submitAddInfo() {
                 // Validate links if pasted
-                const invalidLink = document.querySelector('#addinfo-panel .addinfo-file-link-input.link-invalid');
+                const invalidLink = document.querySelector('#addinfoPanel .addinfo-file-link-input.link-invalid');
                 if (invalidLink && invalidLink.value.trim()) {
                     alert('ביטע נוצן א דירעקטע לינק פון Google Drive אדער Dropbox.');
                     invalidLink.focus();
@@ -34586,20 +34623,19 @@
 
 
                 // Get the submit button and save original text
-                const submitBtn = document.querySelector('#addinfo-panel .addinfo-submit-btn');
+                const submitBtn = document.querySelector('#addinfoPanel .addinfo-submit-btn');
                 const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+
+                // Show loading state immediately
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<span class="btn-spinner"></span>';
+                    submitBtn.classList.add('loading');
+                    submitBtn.disabled = true;
+                }
 
                 // Upload files to R2 if present, or use pasted links
                 let uploadedAudioUrl = '';
                 let uploadedOtherFilesUrls = [];
-
-                // Show uploading state if there are files or links to upload
-                const hasFilesToUpload = formData.audioFile || formData.audioLink || (formData.otherFiles && formData.otherFiles.length > 0) || formData.otherFilesLink;
-                if (hasFilesToUpload && submitBtn) {
-                    submitBtn.innerHTML = 'אפלאודינג<span class="btn-spinner"></span>';
-                    submitBtn.classList.add('loading');
-                    submitBtn.disabled = true;
-                }
 
                 if (formData.audioFile) {
                     const audioResult = await uploadFileToR2(formData.audioFile);
@@ -34858,7 +34894,7 @@
                 const audioFile = document.getElementById('addnigun-audio').files[0];
                 const rightsCheckbox = document.getElementById('addnigun-rights-confirm');
                 // Validate links if pasted
-                const invalidLink = document.querySelector('#addnigun-panel .addinfo-file-link-input.link-invalid');
+                const invalidLink = document.querySelector('#addnigunPanel .addinfo-file-link-input.link-invalid');
                 if (invalidLink && invalidLink.value.trim()) {
                     alert('ביטע נוצן א דירעקטע לינק פון Google Drive אדער Dropbox.');
                     invalidLink.focus();
@@ -34917,20 +34953,19 @@
                 };
 
                 // Get the submit button and save original text
-                const submitBtn = document.querySelector('#addnigun-panel .addinfo-submit-btn');
+                const submitBtn = document.querySelector('#addnigunPanel .addinfo-submit-btn');
                 const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+
+                // Show loading state immediately
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<span class="btn-spinner"></span>';
+                    submitBtn.classList.add('loading');
+                    submitBtn.disabled = true;
+                }
 
                 // Upload files to R2 if present, or use pasted links
                 let uploadedAudioUrl = '';
                 let uploadedOtherFilesUrls = [];
-
-                // Show uploading state if there are files or links to upload
-                const hasFilesToUpload = formData.audioFile || formData.audioLink || (formData.otherFiles && formData.otherFiles.length > 0) || formData.otherFilesLink;
-                if (hasFilesToUpload && submitBtn) {
-                    submitBtn.innerHTML = 'אפלאודינג<span class="btn-spinner"></span>';
-                    submitBtn.classList.add('loading');
-                    submitBtn.disabled = true;
-                }
 
                 if (formData.audioFile) {
                     const audioResult = await uploadFileToR2(formData.audioFile);
@@ -35312,6 +35347,17 @@
                     return;
                 }
 
+                // Get the submit button and save original text
+                const submitBtn = document.querySelector('#reportPanel .addinfo-submit-btn');
+                const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+
+                // Show loading state immediately
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<span class="btn-spinner"></span>';
+                    submitBtn.classList.add('loading');
+                    submitBtn.disabled = true;
+                }
+
                 // Category labels for Coda
                 const categoryLabels = {
                     'duplicate': 'דאפלטע ניגון',
@@ -35363,6 +35409,13 @@
                         if (modalBody) modalBody.style.display = 'none';
                         if (successMsg) successMsg.style.display = 'block';
 
+                        // Reset button
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
+
                         // Auto-close after 4 seconds
                         setTimeout(() => {
                             if (successMsg) successMsg.style.display = 'none';
@@ -35371,10 +35424,22 @@
                         }, 4000);
                     } else {
                         console.error('Report submission failed:', await response.text());
+                        // Reset button on error
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
                         alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
                     }
                 } catch (error) {
                     console.error('Report submission error:', error);
+                    // Reset button on error
+                    if (submitBtn) {
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.classList.remove('loading');
+                        submitBtn.disabled = false;
+                    }
                     alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
                 }
             }
