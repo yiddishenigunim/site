@@ -34384,21 +34384,46 @@
                 try {
                     // Upload to worker's /api/upload - send raw body with metadata in headers
                     const uploadUrl = WORKER_URL.replace(/api\/$/, 'api/upload');
+                    const versionUrl = WORKER_URL.replace(/api\/$/, 'api/version');
                     console.log('Uploading file to:', uploadUrl, 'size:', file.size);
-                    const response = await fetch(uploadUrl, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/octet-stream',
-                            'X-File-Name': encodeURIComponent(file.name),
-                            'X-Content-Type': file.type || 'application/octet-stream',
-                            'X-File-Size': String(file.size),
-                        },
-                        body: file
-                    });
 
-                    if (!response.ok) {
-                        const errorText = await response.text();
-                        console.error('File upload failed:', response.status, errorText);
+                    // Warm up the worker first to avoid cold start failures on large files
+                    try {
+                        await fetch(versionUrl, { method: 'GET' });
+                    } catch (e) { /* warmup failed, try upload anyway */ }
+
+                    // Upload with retry - if first attempt fails (cold start), try once more
+                    let response;
+                    let lastError;
+                    for (let attempt = 0; attempt < 2; attempt++) {
+                        try {
+                            response = await fetch(uploadUrl, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/octet-stream',
+                                    'X-File-Name': encodeURIComponent(file.name),
+                                    'X-Content-Type': file.type || 'application/octet-stream',
+                                    'X-File-Size': String(file.size),
+                                },
+                                body: file
+                            });
+                            if (response.ok) break; // Success, no need to retry
+                            console.warn(`Upload attempt ${attempt + 1} failed with status ${response.status}, retrying...`);
+                        } catch (e) {
+                            lastError = e;
+                            console.warn(`Upload attempt ${attempt + 1} error:`, e.message, '- retrying...');
+                            // Small delay before retry
+                            await new Promise(r => setTimeout(r, 1000));
+                        }
+                    }
+
+                    if (!response || !response.ok) {
+                        if (response) {
+                            const errorText = await response.text();
+                            console.error('File upload failed:', response.status, errorText);
+                        } else {
+                            console.error('File upload failed: all retry attempts failed', lastError?.message);
+                        }
                         return null;
                     }
 
