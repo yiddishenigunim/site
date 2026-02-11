@@ -14487,6 +14487,7 @@
             transition: all 0.4s ease;
             background: var(--color-nigun-pale);
             position: relative;
+            box-shadow: inset 0 0 0 1px rgba(74, 124, 201, 0.3), 0 2px 6px rgba(74, 124, 201, 0.15);
         }
 
         /* Border effect using pseudo-element - same as song-item */
@@ -14523,7 +14524,7 @@
         /* Recording items in modal get same style as regular song-items */
         .nigun-recordings-list .song-item-recording {
             background: var(--color-nigun-pale);
-            box-shadow: 0 2px 8px rgba(74, 124, 201, 0.1);
+            box-shadow: inset 0 0 0 1px rgba(74, 124, 201, 0.3), 0 2px 6px rgba(74, 124, 201, 0.15);
             margin: 6px auto;
             border-radius: 10px;
             padding: 12px 14px;
@@ -16472,7 +16473,7 @@
             transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 25px 80px rgba(0, 0, 0, 0.5);
             border: 3px solid var(--color-nigun);
-            padding-bottom: 150px;
+            padding-bottom: 30px;
         }
 
         /* Minimal scrollbar for nigun modal - just the thumb, no track */
@@ -16740,9 +16741,23 @@
             display: none;
         }
 
-        /* Remove page-level padding inside modal */
+        /* Remove page-level padding and min-height inside modal */
         .nigun-modal-content .detail-page {
             padding-top: 10px;
+        }
+
+        .nigun-modal-content .nigun-detail-page {
+            min-height: auto;
+            margin-left: 0;
+            margin-right: 0;
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        /* Hide fullpage report/addinfo buttons inside modal - modal has its own */
+        .nigun-modal-content .nigun-fullpage-report,
+        .nigun-modal-content .nigun-fullpage-addinfo {
+            display: none;
         }
 
         /* Fix overflow in modal - just hide horizontal scroll */
@@ -29054,7 +29069,7 @@
                     ${mechabrimFromChatzer.length > 0 ? `
                         <div class="detail-mechabrim-section">
                             <div class="detail-mechabrim-box">
-                                <div class="detail-mechabrim-header">${mechabrimFromChatzer.length} מחברים</div>
+                                <div class="detail-mechabrim-header">${pluralize(mechabrimFromChatzer.length, 'מחבר', 'מחברים')}</div>
                                 <div class="nigun-mechaber-grid">
                                     ${mechabrimFromChatzer.map(mech => `
                                         <a class="nigun-mechaber-card" href="#/mechabrim/${encodeURIComponent(mech.id)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(mech.name)}">
@@ -29096,7 +29111,7 @@
                         return `
                     <div class="detail-songs-section">
                         <div class="detail-section-header">
-                            <h3>${type === 'mechabrim' ? 'מחבר געווען ' : ''}${songs.length} ניגונים</h3>
+                            <h3>${type === 'mechabrim' ? 'מחבר געווען ' : ''}${pluralize(songs.length, 'ניגון', 'ניגונים')}</h3>
                         </div>
                         ${shouldCollapse ? `
                             <div class="songs-section-container">
@@ -29140,7 +29155,7 @@
                             return `
                                 <div class="detail-songs-section detail-related-songs ${isCollapsible ? 'collapsible-songs' : ''}">
                                     <div class="detail-section-header">
-                                        <h3>געהאט שייכות מיט ${personalitySongs.length} ניגונים</h3>
+                                        <h3>געהאט שייכות מיט ${pluralize(personalitySongs.length, 'ניגון', 'ניגונים')}</h3>
                                     </div>
                                     ${isCollapsible ? `
                                         <div class="songs-section-container">
@@ -29178,7 +29193,7 @@
                             return `
                                 <div class="detail-songs-section detail-related-recordings">
                                     <div class="detail-section-header">
-                                        <h3>רעקארדירט ${personalityRecordings.length} ניגונים</h3>
+                                        <h3>רעקארדירט ${pluralize(personalityRecordings.length, 'ניגון', 'ניגונים')}</h3>
                                     </div>
                                     <div class="detail-songs-list">
                                         ${personalityRecordings.map((item, i) => {
@@ -30159,9 +30174,9 @@
                             <div class="detail-header-text">
                                 <div class="detail-title">${zmanName}</div>
                                 <div class="detail-subtitle">
-                                    ${collections.length > 0 ? `<span>${collections.length} קאלעקשאנס</span>` : ''}
+                                    ${collections.length > 0 ? `<span>${pluralize(collections.length, 'קאלעקשאן', 'קאלעקשאנס')}</span>` : ''}
                                     ${piyutim.length > 0 && collections.length > 0 ? '<span class="detail-separator">•</span>' : ''}
-                                    ${piyutim.length > 0 ? `<span>${piyutim.length} פיוטים</span>` : ''}
+                                    ${piyutim.length > 0 ? `<span>${pluralize(piyutim.length, 'פיוט', 'פיוטים')}</span>` : ''}
                                 </div>
                             </div>
                         </div>
@@ -31426,7 +31441,7 @@
                     
                     ${relatedNigunim.length > 0 ? `
                         <div class="detail-section">
-                            <h3>פארבונדענע ניגונים (${relatedNigunim.length})</h3>
+                            <h3>פארבונדענע ${pluralize(relatedNigunim.length, 'ניגון', 'ניגונים')}</h3>
                             <div class="songs-card">
                                 <div class="all-songs-grid">
                                     ${(() => {
@@ -31507,7 +31522,7 @@
                     
                     ${relatedNigunim.length > 0 ? `
                         <div class="detail-section">
-                            <h3>פארבונדענע ניגונים (${relatedNigunim.length})</h3>
+                            <h3>פארבונדענע ${pluralize(relatedNigunim.length, 'ניגון', 'ניגונים')}</h3>
                             <div class="songs-card">
                                 <div class="all-songs-grid">
                                     ${(() => {
@@ -32021,7 +32036,7 @@
 
                         recordingsHtml = `
                         <div class="song-full-recordings ${recordingsCollapsed ? 'collapsed' : ''}">
-                            <div class="song-full-rec-title">${toggleArrow}רעקארדירונגען (${song.recordings.length})</div>
+                            <div class="song-full-rec-title">${toggleArrow}${pluralize(song.recordings.length, 'רעקארדירונג', 'רעקארדירונגען')}</div>
                             ${displayRecordings.map((rec, i) => {
                             const actualIndex = recordingsCollapsed && hasMultipleRecordings ? 0 : i;
                             const playlistParam = playlistIndices ? `, [${playlistIndices.join(',')}]` : '';
