@@ -17643,6 +17643,30 @@
             opacity: 1;
         }
 
+        /* File upload failed state */
+        .addinfo-file-upload.upload-failed {
+            border-color: #f44336;
+            border-style: solid;
+            background: rgba(244, 67, 54, 0.1);
+        }
+
+        .addinfo-file-upload.upload-failed .addinfo-file-upload-icon {
+            color: #f44336;
+        }
+
+        .addinfo-file-upload.upload-failed .addinfo-file-upload-icon::after {
+            content: ' ✗';
+        }
+
+        .addinfo-file-upload.upload-failed .addinfo-file-upload-text {
+            color: #c62828;
+        }
+
+        .addinfo-file-upload.upload-failed .addinfo-file-upload-hint {
+            color: #f44336;
+            opacity: 1;
+        }
+
         /* Submit button loading state */
         .addinfo-submit-btn.loading {
             pointer-events: none;
@@ -34797,6 +34821,23 @@
                     if (audioResult && audioResult.success) {
                         uploadedAudioUrl = audioResult.blobId;
                         console.log('Audio file uploaded, blobId:', uploadedAudioUrl);
+                    } else {
+                        // Show upload failed state
+                        const audioUploadEl = document.getElementById('addnigun-audio')?.closest('.addinfo-file-upload');
+                        if (audioUploadEl) {
+                            audioUploadEl.classList.remove('file-selected');
+                            audioUploadEl.classList.add('upload-failed');
+                            const textEl = audioUploadEl.querySelector('.addinfo-file-upload-text');
+                            const hintEl = audioUploadEl.querySelector('.addinfo-file-upload-hint');
+                            if (textEl) textEl.textContent = 'דער פייל איז נישט געווארן אפגעלאדן';
+                            if (hintEl) hintEl.textContent = 'פראביר נאכאמאל';
+                        }
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
+                        return;
                     }
                 } else if (formData.audioLink) {
                     // Proxy-download from link to avoid Coda HTML rejection
@@ -34804,19 +34845,66 @@
                     if (audioResult && audioResult.success) {
                         uploadedAudioUrl = audioResult.blobId;
                         console.log('Audio from link uploaded, blobId:', uploadedAudioUrl);
+                    } else {
+                        // Show link upload failed state
+                        const linkInput = document.getElementById('addnigun-audio-link');
+                        if (linkInput) {
+                            linkInput.classList.remove('link-valid');
+                            linkInput.classList.add('link-invalid');
+                            linkInput.value = 'דער לינק איז נישט געווארן אפגעלאדן. פראביר נאכאמאל.';
+                        }
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
+                        return;
                     }
                 }
 
                 if (formData.otherFiles && formData.otherFiles.length > 0) {
                     const otherResults = await uploadFilesToR2(formData.otherFiles);
-                    uploadedOtherFilesUrls = otherResults.map(r => r.blobId);
-                    console.log('Other files uploaded, blobIds:', uploadedOtherFilesUrls);
+                    if (otherResults && otherResults.length > 0 && otherResults.every(r => r && r.blobId)) {
+                        uploadedOtherFilesUrls = otherResults.map(r => r.blobId);
+                        console.log('Other files uploaded, blobIds:', uploadedOtherFilesUrls);
+                    } else {
+                        // Show upload failed state
+                        const filesUploadEl = document.getElementById('addnigun-files')?.closest('.addinfo-file-upload');
+                        if (filesUploadEl) {
+                            filesUploadEl.classList.remove('file-selected');
+                            filesUploadEl.classList.add('upload-failed');
+                            const textEl = filesUploadEl.querySelector('.addinfo-file-upload-text');
+                            const hintEl = filesUploadEl.querySelector('.addinfo-file-upload-hint');
+                            if (textEl) textEl.textContent = 'דער פייל איז נישט געווארן אפגעלאדן';
+                            if (hintEl) hintEl.textContent = 'פראביר נאכאמאל';
+                        }
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
+                        return;
+                    }
                 } else if (formData.otherFilesLink) {
                     // Proxy-download from link to avoid Coda HTML rejection
                     const otherResult = await uploadFromUrl(formData.otherFilesLink);
                     if (otherResult && otherResult.success) {
                         uploadedOtherFilesUrls = [otherResult.blobId];
                         console.log('Other files from link uploaded, blobIds:', uploadedOtherFilesUrls);
+                    } else {
+                        // Show link upload failed state
+                        const linkInput = document.getElementById('addnigun-files-link');
+                        if (linkInput) {
+                            linkInput.classList.remove('link-valid');
+                            linkInput.classList.add('link-invalid');
+                            linkInput.value = 'דער לינק איז נישט געווארן אפגעלאדן. פראביר נאכאמאל.';
+                        }
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
+                        return;
                     }
                 }
 
