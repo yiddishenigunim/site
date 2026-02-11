@@ -7536,36 +7536,6 @@
             box-shadow: 0 6px 20px rgba(46, 139, 46, 0.25);
         }
 
-        /* Albums section header */
-        .zman-section.section-albums h3 {
-            color: var(--color-album);
-            border-bottom: 2px solid var(--color-album-pale);
-        }
-
-        /* Albums cards - teal gradient */
-        .zman-section.section-albums .zman-item-card .zman-item-header {
-            background: linear-gradient(135deg, var(--color-album) 0%, var(--color-album-dark) 100%);
-        }
-
-        .zman-section.section-albums .zman-item-card:hover {
-            box-shadow: 0 6px 20px rgba(0, 131, 143, 0.25);
-        }
-
-        /* Documents section header */
-        .zman-section.section-documents h3 {
-            color: var(--color-document);
-            border-bottom: 2px solid var(--color-document-pale);
-        }
-
-        /* Documents cards - cyan gradient */
-        .zman-section.section-documents .zman-item-card .zman-item-header {
-            background: linear-gradient(135deg, var(--color-document) 0%, var(--color-document-dark) 100%);
-        }
-
-        .zman-section.section-documents .zman-item-card:hover {
-            box-shadow: 0 6px 20px rgba(0, 160, 176, 0.25);
-        }
-
         /* Mobile styles for zman-item-card */
         @media (max-width: 480px) {
             .zman-items-grid {
@@ -9864,47 +9834,6 @@
             background-color: var(--color-mechaber);
             -webkit-mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
             mask: url('assets/mechaber-placeholder.svg') center/contain no-repeat;
-        }
-
-        .nigun-mechaber-placeholder .album-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            border: 3px solid var(--color-album);
-            position: relative;
-        }
-
-        .nigun-mechaber-placeholder .album-icon::after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--color-album);
-        }
-
-        .nigun-mechaber-placeholder .document-icon {
-            width: 28px;
-            height: 36px;
-            border: 3px solid var(--color-document);
-            border-radius: 3px;
-            position: relative;
-        }
-
-        .nigun-mechaber-placeholder .document-icon::after {
-            content: '';
-            position: absolute;
-            top: -3px;
-            right: -3px;
-            width: 12px;
-            height: 12px;
-            background: white;
-            border-bottom: 3px solid var(--color-document);
-            border-left: 3px solid var(--color-document);
-            border-radius: 0 0 0 3px;
         }
 
         .nigun-mechaber-name {
@@ -15540,6 +15469,8 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             font-size: clamp(0.55em, 1.5vw, 0.8em);
+            color: inherit;
+            text-decoration: none;
         }
 
         /* Rating Stars - Left Side */
@@ -17545,12 +17476,13 @@
         /* File upload styling */
         .addinfo-file-upload {
             border: 2px dashed var(--color-nigun-pale);
-            border-radius: 12px;
+            border-radius: 12px 12px 0 0;
             padding: 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.25s ease;
             background: rgba(74, 124, 201, 0.05);
+            margin-bottom: 0;
         }
 
         .addinfo-file-upload:hover {
@@ -17592,21 +17524,32 @@
 
         .addinfo-file-link-input {
             width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid var(--color-nigun-pale);
-            border-radius: 10px;
-            font-size: 0.85em;
-            background: rgba(74, 124, 201, 0.03);
+            padding: 14px 16px;
+            border: 2px solid var(--color-nigun-pale);
+            border-top: 1px dashed var(--color-nigun-pale);
+            border-radius: 0 0 12px 12px;
+            font-size: 0.95em;
+            font-family: inherit;
+            background: white;
             color: var(--text-primary);
             direction: ltr;
             text-align: left;
-            transition: border-color 0.2s;
+            transition: all 0.25s ease;
             box-sizing: border-box;
+            margin-top: 0;
+        }
+
+        .addinfo-file-link-input::placeholder {
+            direction: rtl;
+            text-align: right;
+            color: var(--color-nigun);
+            opacity: 0.6;
         }
 
         .addinfo-file-link-input:focus {
             outline: none;
             border-color: var(--color-nigun);
+            box-shadow: 0 0 0 4px rgba(74, 124, 201, 0.2), 0 4px 12px rgba(74, 124, 201, 0.15);
         }
 
         .addinfo-file-link-input.link-valid {
@@ -21341,9 +21284,8 @@
                                     <div class="addinfo-file-upload-text">אודיאו רעקארדירונג</div>
                                     <div class="addinfo-file-upload-hint">MP3, WAV, M4A</div>
                                 </div>
-                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
                                 <input type="url" class="addinfo-file-link-input" id="addnigun-audio-link"
-                                    placeholder="Google Drive / Dropbox לינק">
+                                    placeholder="אדער לייג דא אריין א גוגל דרייוו אדער דראפבאקס לינק צום פייל">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -21398,9 +21340,8 @@
                                     <div class="addinfo-file-upload-text">ווידיאוס, בילדער, און אנדערע פיילס</div>
                                     <div class="addinfo-file-upload-hint">ווידיאוס, בילדער, דאקומענטן</div>
                                 </div>
-                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
                                 <input type="url" class="addinfo-file-link-input" id="addnigun-files-link"
-                                    placeholder="Google Drive / Dropbox לינק">
+                                    placeholder="אדער לייג דא אריין א גוגל דרייוו אדער דראפבאקס לינק צום פייל">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -21607,9 +21548,8 @@
                                     <div class="addinfo-file-upload-text">אודיאו רעקארדירונג</div>
                                     <div class="addinfo-file-upload-hint">MP3, WAV, M4A</div>
                                 </div>
-                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
                                 <input type="url" class="addinfo-file-link-input" id="addinfo-audio-link"
-                                    placeholder="Google Drive / Dropbox לינק">
+                                    placeholder="אדער לייג דא אריין א גוגל דרייוו אדער דראפבאקס לינק צום פייל">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -21664,9 +21604,8 @@
                                     <div class="addinfo-file-upload-text">ווידיאוס, בילדער, און אנדערע פיילס</div>
                                     <div class="addinfo-file-upload-hint">ווידיאוס, בילדער, דאקומענטן</div>
                                 </div>
-                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
                                 <input type="url" class="addinfo-file-link-input" id="addinfo-files-link"
-                                    placeholder="Google Drive / Dropbox לינק">
+                                    placeholder="אדער לייג דא אריין א גוגל דרייוו אדער דראפבאקס לינק צום פייל">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -23218,16 +23157,8 @@
                                             info.piyutim = relatedNames;
                                         }
                                         // Store collections list for zmanim
-                                        if (colNameLower === 'קאלעקשאנס' || colNameLower.includes('קאלעקשן') || colNameLower.includes('collection')) {
+                                        if (colNameLower === 'קאלעקשאנס' || colNameLower.includes('קאלעקשן')) {
                                             info.collections = relatedNames;
-                                        }
-                                        // Store albums list for chatzeros
-                                        if (colNameLower === 'אלבומס' || colNameLower.includes('אלבום')) {
-                                            info.albums = relatedNames;
-                                        }
-                                        // Store documents list for chatzeros
-                                        if (colNameLower === 'דאקומענטן' || colNameLower.includes('דאקומענט')) {
-                                            info.documents = relatedNames;
                                         }
                                         // Store zmanim for piyutim (all of them)
                                         if (colNameLower === 'זמן' || colNameLower === 'zman') {
@@ -23275,22 +23206,6 @@
                                         if (colNameLower.includes('ניגונים') || colNameLower.includes('ניגון')) {
                                             if (!info.nigunim) info.nigunim = [];
                                             if (!info.nigunim.includes(relatedName)) info.nigunim.push(relatedName);
-                                        }
-                                        // Handle single collection lookup field for zmanim
-                                        if (colNameLower === 'קאלעקשאנס' || colNameLower.includes('קאלעקשן') || colNameLower.includes('collection')) {
-                                            info.collections = [relatedName];
-                                        }
-                                        // Handle single piyut lookup field for zmanim
-                                        if (colNameLower === 'פיוטים' || colNameLower.includes('פיוט')) {
-                                            info.piyutim = [relatedName];
-                                        }
-                                        // Handle single album lookup field for chatzeros
-                                        if (colNameLower === 'אלבומס' || colNameLower.includes('אלבום')) {
-                                            info.albums = [relatedName];
-                                        }
-                                        // Handle single document lookup field for chatzeros
-                                        if (colNameLower === 'דאקומענטן' || colNameLower.includes('דאקומענט')) {
-                                            info.documents = [relatedName];
                                         }
                                     }
                                     return;
@@ -23730,24 +23645,9 @@
                             await fetchChatzerosInfo();
                             loadedCategories.chatzeros = true;
                         }
-                        // Load songs, mechabrim, albums, and documents in parallel
-                        {
-                            const chatzerosDataPromises = [];
-                            if (!loadedCategories.songs) {
-                                chatzerosDataPromises.push(fetchSongsInBackground());
-                            }
-                            if (!loadedCategories.mechabrim) {
-                                chatzerosDataPromises.push(fetchMechabrimInfo().then(() => loadedCategories.mechabrim = true));
-                            }
-                            if (!loadedCategories.albums) {
-                                chatzerosDataPromises.push(fetchAlbumsInfo().then(() => loadedCategories.albums = true));
-                            }
-                            if (!loadedCategories.documents) {
-                                chatzerosDataPromises.push(fetchDocumentsInfo().then(() => loadedCategories.documents = true));
-                            }
-                            if (chatzerosDataPromises.length > 0) {
-                                await Promise.all(chatzerosDataPromises);
-                            }
+                        // Also need songs for counts
+                        if (!loadedCategories.songs) {
+                            await fetchSongsInBackground();
                         }
                         break;
                     case 'mechabrim':
@@ -23773,38 +23673,13 @@
                             await fetchZmanimInfo();
                             loadedCategories.zmanim = true;
                         }
-                        {
-                            const zmanimExtraPromises = [];
-                            if (!loadedCategories.piyutim) {
-                                zmanimExtraPromises.push(fetchPiyutimInfo().then(() => loadedCategories.piyutim = true));
-                            }
-                            if (!loadedCategories.collections) {
-                                zmanimExtraPromises.push(fetchCollectionsInfo().then(() => loadedCategories.collections = true));
-                            }
-                            if (!loadedCategories.songs) {
-                                zmanimExtraPromises.push(fetchSongsInBackground());
-                            }
-                            if (zmanimExtraPromises.length > 0) {
-                                await Promise.all(zmanimExtraPromises);
-                            }
+                        if (!loadedCategories.piyutim) {
+                            await fetchPiyutimInfo();
+                            loadedCategories.piyutim = true;
                         }
-                        // Compute reverse mapping: collections → zmanim
-                        // If zmaninInfo doesn't have collections from its own table,
-                        // build them from collectionsInfo (which stores zmanim per collection)
-                        Object.entries(collectionsInfo).forEach(([colName, colInfo]) => {
-                            if (colInfo.zmanim && Array.isArray(colInfo.zmanim)) {
-                                colInfo.zmanim.forEach(zmanName => {
-                                    if (zmaninInfo[zmanName]) {
-                                        if (!zmaninInfo[zmanName].collections) {
-                                            zmaninInfo[zmanName].collections = [];
-                                        }
-                                        if (!zmaninInfo[zmanName].collections.includes(colName)) {
-                                            zmaninInfo[zmanName].collections.push(colName);
-                                        }
-                                    }
-                                });
-                            }
-                        });
+                        if (!loadedCategories.songs) {
+                            await fetchSongsInBackground();
+                        }
                         break;
                     case 'collections':
                         if (!loadedCategories.collections) {
@@ -29047,14 +28922,6 @@
                         });
                 }
 
-                // For chatzeros, get albums and documents
-                let chatzerAlbums = [];
-                let chatzerDocuments = [];
-                if (type === 'chatzeros') {
-                    chatzerAlbums = info.albums || [];
-                    chatzerDocuments = info.documents || [];
-                }
-
                 // For verter, get the lyrics text
                 let verterText = '';
                 if (type === 'verter') {
@@ -29202,52 +29069,7 @@
                             </div>
                         </div>
                     ` : ''}
-
-                    ${(type === 'chatzeros' && (chatzerAlbums.length > 0 || chatzerDocuments.length > 0)) ? `
-                        ${chatzerAlbums.length > 0 ? `
-                            <div class="detail-albums-section">
-                                <div class="detail-section-header">
-                                    <h3>${chatzerAlbums.length} אלבומס</h3>
-                                </div>
-                                <div class="nigun-mechaber-grid">
-                                    ${chatzerAlbums.sort((a, b) => a.localeCompare(b, 'he')).map(albumName => {
-                                        const albInfo = albumsInfo[albumName] || {};
-                                        const albId = albInfo.customId || albumName;
-                                        const coverUrl = albInfo.cover || albInfo.image;
-                                        return `
-                                            <a class="nigun-mechaber-card" href="#/albums/${encodeURIComponent(albId)}" data-action="detail" data-category="albums" data-name="${escapeHtml(albumName)}">
-                                                ${coverUrl
-                                                    ? `<img class="nigun-mechaber-image" src="${coverUrl}" alt="${albumName}">`
-                                                    : `<div class="nigun-mechaber-placeholder"><div class="album-icon"></div></div>`
-                                                }
-                                                <div class="nigun-mechaber-name">${albumName}</div>
-                                            </a>
-                                        `;
-                                    }).join('')}
-                                </div>
-                            </div>
-                        ` : ''}
-                        ${chatzerDocuments.length > 0 ? `
-                            <div class="detail-documents-section">
-                                <div class="detail-section-header">
-                                    <h3>${chatzerDocuments.length} דאקומענטן</h3>
-                                </div>
-                                <div class="nigun-mechaber-grid">
-                                    ${chatzerDocuments.sort((a, b) => a.localeCompare(b, 'he')).map(docName => {
-                                        const docInfo = documentsInfo[docName] || {};
-                                        const docId = docInfo.customId || docName;
-                                        return `
-                                            <a class="nigun-mechaber-card" href="#/documents/${encodeURIComponent(docId)}" data-action="detail" data-category="documents" data-name="${escapeHtml(docName)}">
-                                                <div class="nigun-mechaber-placeholder"><div class="document-icon"></div></div>
-                                                <div class="nigun-mechaber-name">${docName}</div>
-                                            </a>
-                                        `;
-                                    }).join('')}
-                                </div>
-                            </div>
-                        ` : ''}
-                    ` : ''}
-
+                    
                     ${(type === 'verter' && verterText) ? `
                         <div class="detail-verter-section">
                             <span class="verter-box-icon">
@@ -29638,11 +29460,13 @@
             function navigateToZmanDetail(name) {
                 // Check if this is a piyut or a zman
                 if (piyutimInfo[name]) {
-                    // This is a piyut, open in modal
-                    navigateToDetail('piyutim', name);
+                    // This is a piyut, navigate to piyutim detail page
+                    const piyutId = piyutimInfo[name].customId || name;
+                    window.location.hash = `#/piyutim/${encodeURIComponent(piyutId)}`;
                 } else if (zmaninInfo[name]) {
-                    // This is a zman, open in modal
-                    navigateToDetail('zmanim', name);
+                    // This is a zman, navigate to zman detail page
+                    const zmanId = zmaninInfo[name].customId || name;
+                    window.location.hash = `#/zman/${encodeURIComponent(zmanId)}`;
                 }
             }
 
@@ -29781,7 +29605,7 @@
                     
                     <!-- New Hero Header for Modal -->
                     <div class="nigun-modal-hero${firstMechaber ? '' : ' no-mechaber'}">
-                        <h1 class="nigun-modal-hero-title">${formatDescription(song.name)}</h1>
+                        <h1 class="nigun-modal-hero-title">${song.name}</h1>
                         
                         ${firstMechaber ? `
                             <a class="nigun-modal-mechaber-profile" href="#/mechabrim/${encodeURIComponent(firstMechaberId)}" data-action="detail" data-category="mechabrim" data-name="${escapeHtml(firstMechaber)}">
@@ -29969,7 +29793,7 @@
                                             <div class="nigun-recording-item" onclick="playOtherMediaAudio('${aud.url}', this)">
                                                 <div class="nigun-recording-number">♫</div>
                                                 <div class="nigun-recording-info">
-                                                    <div class="nigun-recording-name">${formatDescription(aud.name)}</div>
+                                                    <div class="nigun-recording-name">${aud.name}</div>
                                                 </div>
                                                 <button class="nigun-recording-play-btn">▶</button>
                                             </div>
@@ -30667,7 +30491,7 @@
                             return `
                                                                 <div class="music-song-item ${!hasAudio ? 'no-audio' : ''}" 
                                                                      onclick="${hasAudio ? `playSong(${songIdx})` : `showSongDetails(${songIdx})`}">
-                                                                    <span class="music-song-name">${formatDescription(song.name)}</span>
+                                                                    <span class="music-song-name">${song.name}</span>
                                                                     ${song.mechaber ? `<span class="music-song-meta">${song.mechaber}</span>` : ''}
                                                                     <button class="music-song-details" onclick="event.stopPropagation(); showSongDetails(${songIdx});">◉</button>
                                                                 </div>
@@ -30820,14 +30644,6 @@
             `;
                 }
 
-                // Count albums and documents for chatzeros
-                let albumsCount = 0;
-                let documentsCount = 0;
-                if (categoryKey === 'chatzeros') {
-                    albumsCount = info.albums?.length || 0;
-                    documentsCount = info.documents?.length || 0;
-                }
-
                 // Default layout for other categories (chatzer, verter, zman - mechaber-like style)
                 return `
                 <a class="category-card ${hasImage ? 'has-image' : ''}" href="#/${categoryKey}/${encodeURIComponent(itemId)}" data-action="detail" data-category="${categoryKey}" data-name="${escapeHtml(key)}">
@@ -30839,8 +30655,6 @@
                     <div class="card-stats">
                         ${categoryKey === 'chatzeros' && mechabrimCount > 0 ? `<span class="card-stat">${pluralize(mechabrimCount, 'מחבר', 'מחברים')}</span>` : ''}
                         <span class="card-stat">${pluralize(songCount, 'ניגון', 'ניגונים')}</span>
-                        ${categoryKey === 'chatzeros' && albumsCount > 0 ? `<span class="card-stat">${pluralize(albumsCount, 'אלבום', 'אלבומס')}</span>` : ''}
-                        ${categoryKey === 'chatzeros' && documentsCount > 0 ? `<span class="card-stat">${pluralize(documentsCount, 'דאקומענט', 'דאקומענטן')}</span>` : ''}
                     </div>
                 </a>
                 `;
@@ -32036,7 +31850,7 @@
                     }
                     // No recordings = no button (playBtnHtml stays empty)
 
-                    return `<div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}"><div class="song-number">${displayNum}</div><div class="song-info"><div class="song-name">${formatDescription(song.name)}</div><div class="song-meta">${metaParts.join('<span class="song-meta-separator"> • </span>')}</div></div>${waveHtml}${playBtnHtml}</div>`;
+                    return `<div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}"><div class="song-number">${displayNum}</div><div class="song-info"><div class="song-name">${song.name}</div><div class="song-meta">${metaParts.join('<span class="song-meta-separator"> • </span>')}</div></div>${waveHtml}${playBtnHtml}</div>`;
                 }
 
                 if (displayMode === 'recordings') {
@@ -32103,7 +31917,7 @@
                         <div class="song-item-header">
                             <div class="song-number">${displayNum}</div>
                             <div class="song-info">
-                                <div class="song-name">${formatDescription(song.name)}</div>
+                                <div class="song-name">${song.name}</div>
                                 <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                             </div>
                             ${waveHtml}
@@ -32321,7 +32135,7 @@
                         <div class="song-item-header song-full-header">
                             <div class="song-full-title-right">
                                 <div class="song-number">${displayNum}</div>
-                                <div class="song-name">${formatDescription(song.name)}</div>
+                                <div class="song-name">${song.name}</div>
                             </div>
                             ${centeredTagsHtml}
                             <div class="song-full-left-section">
@@ -32342,7 +32156,7 @@
                 <div class="song-item ${isActive ? 'active' : ''} ${!hasAudio ? 'no-audio' : ''}" data-song-idx="${globalIdx}" onclick="${clickAction}">
                     <div class="song-number">${displayNum}</div>
                     <div class="song-info">
-                        <div class="song-name">${formatDescription(song.name)}</div>
+                        <div class="song-name">${song.name}</div>
                         <div class="song-meta">${metaParts.join('<span style="color: var(--color-nigun-dark)"> • </span>')}</div>
                     </div>
                     ${waveHtml}
@@ -32420,7 +32234,7 @@
                     const textWidth = minimizedSongName.scrollWidth;
                     const overflow = textWidth - containerWidth;
 
-                    if (overflow > 10) {
+                    if (overflow > 0) {
                         const separator = ' \u00A0\u00A0\u00A0 • \u00A0\u00A0\u00A0 ';
                         const oneUnit = songName + separator;
 
@@ -32491,7 +32305,7 @@
                                 const textWidth = rightSongName.scrollWidth;
                                 const overflow = textWidth - containerWidth;
 
-                                if (overflow > 10) {
+                                if (overflow > 0) {
                                     const separator = ' \u00A0\u00A0\u00A0 • \u00A0\u00A0\u00A0 ';
                                     const oneUnit = songName + separator;
 
@@ -32875,14 +32689,14 @@
             // Update player UI
             function updatePlayerUI(song) {
                 const rightSongName = document.getElementById('playerRightSongName');
-                rightSongName.innerHTML = formatDescription(song.name);
+                rightSongName.textContent = song.name;
                 // Set data attribute for minimized pill display
-                document.querySelector('.player-section')?.setAttribute('data-song-name', song.name.replace(/\*\*([^*]+)\*\*/g, '$1'));
+                document.querySelector('.player-section')?.setAttribute('data-song-name', song.name);
 
                 // Update minimized player song name with marquee
                 const minimizedSongName = document.getElementById('minimizedSongName');
                 if (minimizedSongName) {
-                    minimizedSongName.innerHTML = formatDescription(song.name);
+                    minimizedSongName.textContent = song.name;
                     // Trigger marquee with delay
                     setTimeout(() => triggerMinimizedMarquee(), 200);
                 }
@@ -32892,7 +32706,7 @@
                     // Reset first to measure properly
                     rightSongName.classList.remove('marquee');
                     rightSongName.classList.remove('running');
-                    rightSongName.innerHTML = formatDescription(song.name);
+                    rightSongName.textContent = song.name;
                     rightSongName.style.removeProperty('--marquee-start');
                     rightSongName.style.removeProperty('--marquee-width');
                     rightSongName.style.removeProperty('--marquee-duration');
@@ -32903,11 +32717,10 @@
                         const textWidth = rightSongName.scrollWidth;
                         const overflow = textWidth - containerWidth;
 
-                        // Only scroll if overflow is more than 10px
-                        if (overflow > 10) {
+                        // Scroll if text is close to or exceeds container width
+                        if (overflow > 0) {
                             const separator = ' \u00A0\u00A0\u00A0 • \u00A0\u00A0\u00A0 ';
-                            const cleanName = song.name.replace(/\*\*([^*]+)\*\*/g, '$1');
-                            const oneUnit = cleanName + separator;
+                            const oneUnit = song.name + separator;
 
                             // Create temp element to measure one unit
                             const tempSpan = document.createElement('span');
@@ -32919,8 +32732,7 @@
                             tempSpan.remove();
 
                             // Wrap duplicated content in span for animation
-                            const formattedUnit = formatDescription(song.name) + separator;
-                            rightSongName.innerHTML = '<span>' + formattedUnit + formattedUnit + '</span>';
+                            rightSongName.innerHTML = '<span>' + oneUnit + oneUnit + '</span>';
 
                             // Set CSS variables
                             rightSongName.style.setProperty('--marquee-width', oneUnitWidth + 'px');
@@ -32952,7 +32764,7 @@
                 // Update the floating button song name if player is minimized
                 const playerSection = document.querySelector('.player-section');
                 if (playerSection.classList.contains('player-minimized')) {
-                    document.getElementById('showBtnSongName').innerHTML = formatDescription(song.name) || 'ווייז פלעיער';
+                    document.getElementById('showBtnSongName').textContent = song.name || 'ווייז פלעיער';
                 }
 
                 // Update mechaber profile in new player info box
@@ -33200,13 +33012,10 @@
                     const maxChars = 25; // carousel rotates through chunks
                     let carouselData = [];
 
-                    // Strip markdown bold before splitting to avoid breaking **..** across chunks
-                    const cleanDisplayName = displayName.replace(/\*\*([^*]+)\*\*/g, '$1');
-
                     // Split recording name if too long
-                    if (cleanDisplayName.length > maxChars) {
+                    if (displayName.length > maxChars) {
                         // Split by words to avoid cutting mid-word
-                        const words = cleanDisplayName.split(' ');
+                        const words = displayName.split(' ');
                         let currentChunk = '';
                         for (const word of words) {
                             if ((currentChunk + ' ' + word).trim().length <= maxChars) {
@@ -33232,11 +33041,38 @@
                         div.className = `carousel-item carousel-${item.type}` + (idx === 0 ? ' active' : '');
                         div.id = `carouselItem${idx}`;
 
-                        const span = document.createElement('span');
-                        // Use correct class name for recording
-                        span.className = item.type === 'recording' ? 'player-recording-name' : `player-${item.type}-tag`;
-                        span.innerHTML = formatDescription(item.text);
-                        div.appendChild(span);
+                        if (item.type === 'personality') {
+                            // Clickable link to mechabrim detail
+                            const link = document.createElement('a');
+                            link.className = 'player-personality-tag';
+                            link.textContent = item.text;
+                            link.href = '#';
+                            link.onclick = function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                const info = mechabrimInfo[item.text] || {};
+                                const id = info.customId || item.text;
+                                navigateToDetail('mechabrim', id);
+                            };
+                            div.appendChild(link);
+                        } else if (item.type === 'album') {
+                            // Clickable link to albums detail
+                            const link = document.createElement('a');
+                            link.className = 'player-album-tag';
+                            link.textContent = item.text;
+                            link.href = '#';
+                            link.onclick = function (e) {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                navigateToDetail('albums', item.text);
+                            };
+                            div.appendChild(link);
+                        } else {
+                            const span = document.createElement('span');
+                            span.className = 'player-recording-name';
+                            span.textContent = item.text;
+                            div.appendChild(span);
+                        }
                         carouselContainer.appendChild(div);
                     });
 
@@ -34720,7 +34556,7 @@
 
             async function submitAddInfo() {
                 // Validate links if pasted
-                const invalidLink = document.querySelector('#addinfo-panel .addinfo-file-link-input.link-invalid');
+                const invalidLink = document.querySelector('#addinfoPanel .addinfo-file-link-input.link-invalid');
                 if (invalidLink && invalidLink.value.trim()) {
                     alert('ביטע נוצן א דירעקטע לינק פון Google Drive אדער Dropbox.');
                     invalidLink.focus();
@@ -34801,20 +34637,19 @@
 
 
                 // Get the submit button and save original text
-                const submitBtn = document.querySelector('#addinfo-panel .addinfo-submit-btn');
+                const submitBtn = document.querySelector('#addinfoPanel .addinfo-submit-btn');
                 const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+
+                // Show loading state immediately
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<span class="btn-spinner"></span>';
+                    submitBtn.classList.add('loading');
+                    submitBtn.disabled = true;
+                }
 
                 // Upload files to R2 if present, or use pasted links
                 let uploadedAudioUrl = '';
                 let uploadedOtherFilesUrls = [];
-
-                // Show uploading state if there are files or links to upload
-                const hasFilesToUpload = formData.audioFile || formData.audioLink || (formData.otherFiles && formData.otherFiles.length > 0) || formData.otherFilesLink;
-                if (hasFilesToUpload && submitBtn) {
-                    submitBtn.innerHTML = 'אפלאודינג<span class="btn-spinner"></span>';
-                    submitBtn.classList.add('loading');
-                    submitBtn.disabled = true;
-                }
 
                 if (formData.audioFile) {
                     const audioResult = await uploadFileToR2(formData.audioFile);
@@ -35073,7 +34908,7 @@
                 const audioFile = document.getElementById('addnigun-audio').files[0];
                 const rightsCheckbox = document.getElementById('addnigun-rights-confirm');
                 // Validate links if pasted
-                const invalidLink = document.querySelector('#addnigun-panel .addinfo-file-link-input.link-invalid');
+                const invalidLink = document.querySelector('#addnigunPanel .addinfo-file-link-input.link-invalid');
                 if (invalidLink && invalidLink.value.trim()) {
                     alert('ביטע נוצן א דירעקטע לינק פון Google Drive אדער Dropbox.');
                     invalidLink.focus();
@@ -35132,20 +34967,19 @@
                 };
 
                 // Get the submit button and save original text
-                const submitBtn = document.querySelector('#addnigun-panel .addinfo-submit-btn');
+                const submitBtn = document.querySelector('#addnigunPanel .addinfo-submit-btn');
                 const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+
+                // Show loading state immediately
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<span class="btn-spinner"></span>';
+                    submitBtn.classList.add('loading');
+                    submitBtn.disabled = true;
+                }
 
                 // Upload files to R2 if present, or use pasted links
                 let uploadedAudioUrl = '';
                 let uploadedOtherFilesUrls = [];
-
-                // Show uploading state if there are files or links to upload
-                const hasFilesToUpload = formData.audioFile || formData.audioLink || (formData.otherFiles && formData.otherFiles.length > 0) || formData.otherFilesLink;
-                if (hasFilesToUpload && submitBtn) {
-                    submitBtn.innerHTML = 'אפלאודינג<span class="btn-spinner"></span>';
-                    submitBtn.classList.add('loading');
-                    submitBtn.disabled = true;
-                }
 
                 if (formData.audioFile) {
                     const audioResult = await uploadFileToR2(formData.audioFile);
@@ -35527,6 +35361,17 @@
                     return;
                 }
 
+                // Get the submit button and save original text
+                const submitBtn = document.querySelector('#reportPanel .addinfo-submit-btn');
+                const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
+
+                // Show loading state immediately
+                if (submitBtn) {
+                    submitBtn.innerHTML = '<span class="btn-spinner"></span>';
+                    submitBtn.classList.add('loading');
+                    submitBtn.disabled = true;
+                }
+
                 // Category labels for Coda
                 const categoryLabels = {
                     'duplicate': 'דאפלטע ניגון',
@@ -35578,6 +35423,13 @@
                         if (modalBody) modalBody.style.display = 'none';
                         if (successMsg) successMsg.style.display = 'block';
 
+                        // Reset button
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
+
                         // Auto-close after 4 seconds
                         setTimeout(() => {
                             if (successMsg) successMsg.style.display = 'none';
@@ -35586,10 +35438,22 @@
                         }, 4000);
                     } else {
                         console.error('Report submission failed:', await response.text());
+                        // Reset button on error
+                        if (submitBtn) {
+                            submitBtn.innerHTML = originalBtnText;
+                            submitBtn.classList.remove('loading');
+                            submitBtn.disabled = false;
+                        }
                         alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
                     }
                 } catch (error) {
                     console.error('Report submission error:', error);
+                    // Reset button on error
+                    if (submitBtn) {
+                        submitBtn.innerHTML = originalBtnText;
+                        submitBtn.classList.remove('loading');
+                        submitBtn.disabled = false;
+                    }
                     alert('עס איז געווען א פראבלעם. ביטע פרובירט שפעטער נאכאמאל.');
                 }
             }
