@@ -17496,6 +17496,44 @@
             margin-top: 4px;
         }
 
+        /* Link paste alternative */
+        .addinfo-file-link-divider {
+            text-align: center;
+            color: var(--color-nigun);
+            opacity: 0.6;
+            font-size: 0.8em;
+            margin: 10px 0 6px;
+        }
+
+        .addinfo-file-link-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1.5px solid var(--color-nigun-pale);
+            border-radius: 10px;
+            font-size: 0.85em;
+            background: rgba(74, 124, 201, 0.03);
+            color: var(--text-primary);
+            direction: ltr;
+            text-align: left;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+
+        .addinfo-file-link-input:focus {
+            outline: none;
+            border-color: var(--color-nigun);
+        }
+
+        .addinfo-file-link-input.link-valid {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.05);
+        }
+
+        .addinfo-file-link-input.link-invalid {
+            border-color: #f44336;
+            background: rgba(244, 67, 54, 0.05);
+        }
+
         /* File selected state */
         .addinfo-file-upload.file-selected {
             border-color: #4CAF50;
@@ -21194,6 +21232,9 @@
                                     <div class="addinfo-file-upload-text">אודיאו רעקארדירונג</div>
                                     <div class="addinfo-file-upload-hint">MP3, WAV, M4A</div>
                                 </div>
+                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
+                                <input type="url" class="addinfo-file-link-input" id="addnigun-audio-link"
+                                    placeholder="Google Drive / Dropbox לינק">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -21248,6 +21289,9 @@
                                     <div class="addinfo-file-upload-text">ווידיאוס, בילדער, און אנדערע פיילס</div>
                                     <div class="addinfo-file-upload-hint">ווידיאוס, בילדער, דאקומענטן</div>
                                 </div>
+                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
+                                <input type="url" class="addinfo-file-link-input" id="addnigun-files-link"
+                                    placeholder="Google Drive / Dropbox לינק">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -21454,6 +21498,9 @@
                                     <div class="addinfo-file-upload-text">אודיאו רעקארדירונג</div>
                                     <div class="addinfo-file-upload-hint">MP3, WAV, M4A</div>
                                 </div>
+                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
+                                <input type="url" class="addinfo-file-link-input" id="addinfo-audio-link"
+                                    placeholder="Google Drive / Dropbox לינק">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -21508,6 +21555,9 @@
                                     <div class="addinfo-file-upload-text">ווידיאוס, בילדער, און אנדערע פיילס</div>
                                     <div class="addinfo-file-upload-hint">ווידיאוס, בילדער, דאקומענטן</div>
                                 </div>
+                                <div class="addinfo-file-link-divider">אדער פייסט א לינק</div>
+                                <input type="url" class="addinfo-file-link-input" id="addinfo-files-link"
+                                    placeholder="Google Drive / Dropbox לינק">
                             </div>
                         </div>
                         <div class="addinfo-row">
@@ -34198,12 +34248,22 @@
                     const uploadBox = input.closest('.addinfo-file-upload');
                     if (uploadBox) {
                         uploadBox.classList.remove('file-selected');
+                        uploadBox.style.opacity = '';
+                        uploadBox.style.pointerEvents = '';
                         // Restore original text
                         const textEl = uploadBox.querySelector('.addinfo-file-upload-text');
                         const hintEl = uploadBox.querySelector('.addinfo-file-upload-hint');
                         if (textEl) textEl.textContent = textEl.dataset.originalText || textEl.textContent;
                         if (hintEl) hintEl.textContent = hintEl.dataset.originalHint || hintEl.textContent;
                     }
+                });
+
+                // Reset link inputs
+                const linkInputs = document.querySelectorAll('.addinfo-modal-body .addinfo-file-link-input');
+                linkInputs.forEach(input => {
+                    input.value = '';
+                    input.classList.remove('link-valid', 'link-invalid');
+                    input.disabled = false;
                 });
 
                 // Reset checkboxes
@@ -34243,6 +34303,9 @@
 
                         const textEl = uploadBox.querySelector('.addinfo-file-upload-text');
                         const hintEl = uploadBox.querySelector('.addinfo-file-upload-hint');
+                        // Find sibling link input
+                        const field = uploadBox.closest('.addinfo-field');
+                        const linkInput = field?.querySelector('.addinfo-file-link-input');
 
                         if (this.files && this.files.length > 0) {
                             uploadBox.classList.add('file-selected');
@@ -34256,10 +34319,48 @@
                                 const totalKB = Math.round(totalSize / 1024);
                                 if (hintEl) hintEl.textContent = totalKB > 1024 ? `${(totalKB / 1024).toFixed(1)} MB` : `${totalKB} KB`;
                             }
+                            // Disable link input when file is selected
+                            if (linkInput) {
+                                linkInput.value = '';
+                                linkInput.disabled = true;
+                                linkInput.classList.remove('link-valid', 'link-invalid');
+                            }
                         } else {
                             uploadBox.classList.remove('file-selected');
                             if (textEl) textEl.textContent = textEl.dataset.originalText || '';
                             if (hintEl) hintEl.textContent = hintEl.dataset.originalHint || '';
+                            // Re-enable link input
+                            if (linkInput) linkInput.disabled = false;
+                        }
+                    });
+                });
+
+                // Setup link input validation and mutual exclusion
+                const linkInputs = document.querySelectorAll('.addinfo-file-link-input');
+                linkInputs.forEach(linkInput => {
+                    linkInput.addEventListener('input', function () {
+                        const val = this.value.trim();
+                        const field = this.closest('.addinfo-field');
+                        const uploadBox = field?.querySelector('.addinfo-file-upload');
+                        const fileInput = field?.querySelector('input[type="file"]');
+
+                        if (val) {
+                            // Validate: must be Google Drive or Dropbox link
+                            const isValid = /^https:\/\/(drive\.google\.com|docs\.google\.com|www\.dropbox\.com|dl\.dropboxusercontent\.com)\//i.test(val);
+                            this.classList.toggle('link-valid', isValid);
+                            this.classList.toggle('link-invalid', !isValid);
+                            // Dim the file upload box
+                            if (uploadBox) {
+                                uploadBox.style.opacity = '0.4';
+                                uploadBox.style.pointerEvents = 'none';
+                            }
+                        } else {
+                            this.classList.remove('link-valid', 'link-invalid');
+                            // Restore file upload box
+                            if (uploadBox) {
+                                uploadBox.style.opacity = '';
+                                uploadBox.style.pointerEvents = '';
+                            }
                         }
                     });
                 });
@@ -34268,31 +34369,61 @@
             // Initialize file input handlers when modal opens
             document.addEventListener('DOMContentLoaded', setupFileInputHandlers);
 
-            // Upload file to R2 bucket via worker endpoint
-            async function uploadFileToR2(file) {
+            // Upload file to R2 storage via worker endpoint
+            async function uploadFileToR2(file, retryCount = 0) {
                 if (!file) return null;
 
+                // Check file size (max 100MB)
+                const MAX_FILE_SIZE = 100 * 1024 * 1024;
+                if (file.size > MAX_FILE_SIZE) {
+                    const sizeMB = (file.size / 1024 / 1024).toFixed(1);
+                    alert(`די פייל איז צו גרויס (${sizeMB}MB). מאקסימום ערלויבט איז 100MB.`);
+                    return null;
+                }
+
                 const formData = new FormData();
-                formData.append('file', file);
+                formData.append('file', file, file.name);
 
                 try {
-                    // Use WORKER_URL base (remove trailing 'api/' and add 'api/upload')
+                    // Upload to worker's /api/upload which stores in R2 and returns a public URL
                     const uploadUrl = WORKER_URL.replace(/api\/$/, 'api/upload');
+                    console.log('Uploading file to:', uploadUrl);
+
                     const response = await fetch(uploadUrl, {
                         method: 'POST',
                         body: formData
                     });
 
                     if (!response.ok) {
-                        console.error('File upload failed:', response.status);
+                        const errorText = await response.text();
+                        console.error('File upload failed:', response.status, errorText);
+
+                        // Retry on 502/503/timeout errors (up to 3 attempts)
+                        if ((response.status === 502 || response.status === 503) && retryCount < 2) {
+                            const delay = Math.pow(2, retryCount) * 1000; // 1s, 2s
+                            console.log(`Retrying upload in ${delay}ms (attempt ${retryCount + 2}/3)...`);
+                            await new Promise(resolve => setTimeout(resolve, delay));
+                            return uploadFileToR2(file, retryCount + 1);
+                        }
+
                         return null;
                     }
 
                     const result = await response.json();
-
-                    return result; // { success, fileName, size, storedAs, type }
+                    console.log('File uploaded successfully:', result);
+                    // Worker returns { success, url, blobId (=url), fileName, size, type }
+                    return result;
                 } catch (error) {
                     console.error('File upload error:', error);
+
+                    // Retry on network errors (up to 3 attempts)
+                    if (retryCount < 2) {
+                        const delay = Math.pow(2, retryCount) * 1000; // 1s, 2s
+                        console.log(`Retrying upload in ${delay}ms (attempt ${retryCount + 2}/3)...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        return uploadFileToR2(file, retryCount + 1);
+                    }
+
                     return null;
                 }
             }
@@ -34310,10 +34441,19 @@
             const ADDINFO_TABLE_ID = 'grid-LutCbIuQvQ';
 
             async function submitAddInfo() {
+                // Validate links if pasted
+                const invalidLink = document.querySelector('#addinfo-panel .addinfo-file-link-input.link-invalid');
+                if (invalidLink && invalidLink.value.trim()) {
+                    alert('ביטע נוצן א דירעקטע לינק פון Google Drive אדער Dropbox.');
+                    invalidLink.focus();
+                    return;
+                }
+
                 // Validate: if audio file is attached, checkbox must be checked
                 const audioFile = document.getElementById('addinfo-audio').files[0];
+                const audioLink = document.getElementById('addinfo-audio-link')?.value?.trim() || '';
                 const rightsCheckbox = document.getElementById('addinfo-rights-confirm');
-                if (audioFile && !rightsCheckbox.checked) {
+                if ((audioFile || audioLink) && !rightsCheckbox.checked) {
                     alert('Please confirm that you own the rights to this recording before submitting.');
                     rightsCheckbox.focus();
                     return;
@@ -34369,11 +34509,13 @@
                     documents: addinfoSelectedValues['addinfo-documents'] || [],
                     albums: addinfoSelectedValues['addinfo-albums'] || [],
                     audioFile: document.getElementById('addinfo-audio').files[0],
+                    audioLink: document.getElementById('addinfo-audio-link')?.value.trim() || '',
                     rightsConfirmed: document.getElementById('addinfo-rights-confirm').checked,
                     recordingDetails: document.getElementById('addinfo-recording-details').value,
                     recordingPersonality: addinfoSelectedValues['addinfo-recording-personality'] || [],
                     recordingAlbum: addinfoSelectedValues['addinfo-recording-album'] || [],
                     otherFiles: document.getElementById('addinfo-files').files,
+                    otherFilesLink: document.getElementById('addinfo-files-link')?.value.trim() || '',
                     filesDetails: document.getElementById('addinfo-files-details').value,
                     notes: document.getElementById('addinfo-notes').value
                 };
@@ -34384,7 +34526,7 @@
                 const submitBtn = document.querySelector('#addinfo-panel .addinfo-submit-btn');
                 const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
 
-                // Upload files to R2 if present
+                // Upload files to R2 if present, or use pasted links
                 let uploadedAudioUrl = '';
                 let uploadedOtherFilesUrls = [];
 
@@ -34399,17 +34541,21 @@
                 if (formData.audioFile) {
                     const audioResult = await uploadFileToR2(formData.audioFile);
                     if (audioResult && audioResult.success) {
-                        // Use blobId for Coda attachment columns
                         uploadedAudioUrl = audioResult.blobId;
                         console.log('Audio file uploaded, blobId:', uploadedAudioUrl);
                     }
+                } else if (formData.audioLink) {
+                    uploadedAudioUrl = formData.audioLink;
+                    console.log('Using audio link:', uploadedAudioUrl);
                 }
 
                 if (formData.otherFiles && formData.otherFiles.length > 0) {
                     const otherResults = await uploadFilesToR2(formData.otherFiles);
-                    // Use blobId for Coda attachment columns
                     uploadedOtherFilesUrls = otherResults.map(r => r.blobId);
                     console.log('Other files uploaded, blobIds:', uploadedOtherFilesUrls);
+                } else if (formData.otherFilesLink) {
+                    uploadedOtherFilesUrls = [formData.otherFilesLink];
+                    console.log('Using other files link:', formData.otherFilesLink);
                 }
 
 
@@ -34576,7 +34722,16 @@
                 // Validate: if audio file is attached, checkbox must be checked
                 const audioFile = document.getElementById('addnigun-audio').files[0];
                 const rightsCheckbox = document.getElementById('addnigun-rights-confirm');
-                if (audioFile && !rightsCheckbox.checked) {
+                // Validate links if pasted
+                const invalidLink = document.querySelector('#addnigun-panel .addinfo-file-link-input.link-invalid');
+                if (invalidLink && invalidLink.value.trim()) {
+                    alert('ביטע נוצן א דירעקטע לינק פון Google Drive אדער Dropbox.');
+                    invalidLink.focus();
+                    return;
+                }
+
+                const audioLink = document.getElementById('addnigun-audio-link')?.value?.trim() || '';
+                if ((audioFile || audioLink) && !rightsCheckbox.checked) {
                     alert('Please confirm that you own the rights to this recording before submitting.');
                     return;
                 }
@@ -34616,10 +34771,12 @@
                     documents: addinfoSelectedValues['addnigun-documents'] || [],
                     albums: addinfoSelectedValues['addnigun-albums'] || [],
                     audioFile: audioFile,
+                    audioLink: document.getElementById('addnigun-audio-link')?.value?.trim() || '',
                     recordingDetails: document.getElementById('addnigun-recording-details')?.value?.trim() || '',
                     recordingPersonality: addinfoSelectedValues['addnigun-recording-personality'] || [],
                     recordingAlbum: addinfoSelectedValues['addnigun-recording-album'] || [],
                     otherFiles: document.getElementById('addnigun-files')?.files,
+                    otherFilesLink: document.getElementById('addnigun-files-link')?.value?.trim() || '',
                     filesDetails: document.getElementById('addnigun-files-details')?.value?.trim() || '',
                     notes: document.getElementById('addnigun-notes')?.value?.trim() || ''
                 };
@@ -34628,7 +34785,7 @@
                 const submitBtn = document.querySelector('#addnigun-panel .addinfo-submit-btn');
                 const originalBtnText = submitBtn ? submitBtn.innerHTML : '';
 
-                // Upload files to R2 if present
+                // Upload files to R2 if present, or use pasted links
                 let uploadedAudioUrl = '';
                 let uploadedOtherFilesUrls = [];
 
@@ -34643,17 +34800,21 @@
                 if (formData.audioFile) {
                     const audioResult = await uploadFileToR2(formData.audioFile);
                     if (audioResult && audioResult.success) {
-                        // Use blobId for Coda attachment columns
                         uploadedAudioUrl = audioResult.blobId;
                         console.log('Audio file uploaded, blobId:', uploadedAudioUrl);
                     }
+                } else if (formData.audioLink) {
+                    uploadedAudioUrl = formData.audioLink;
+                    console.log('Using audio link:', uploadedAudioUrl);
                 }
 
                 if (formData.otherFiles && formData.otherFiles.length > 0) {
                     const otherResults = await uploadFilesToR2(formData.otherFiles);
-                    // Use blobId for Coda attachment columns
                     uploadedOtherFilesUrls = otherResults.map(r => r.blobId);
                     console.log('Other files uploaded, blobIds:', uploadedOtherFilesUrls);
+                } else if (formData.otherFilesLink) {
+                    uploadedOtherFilesUrls = [formData.otherFilesLink];
+                    console.log('Using other files link:', formData.otherFilesLink);
                 }
 
                 // Helper to convert a name to row ID using info objects
