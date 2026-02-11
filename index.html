@@ -34584,7 +34584,7 @@
             // Initialize file input handlers when modal opens
             document.addEventListener('DOMContentLoaded', setupFileInputHandlers);
 
-            // Upload file to KV storage via worker endpoint
+            // Upload file to R2 storage via worker endpoint (streaming - no FormData buffering)
             async function uploadFileToR2(file) {
                 if (!file) return null;
 
@@ -34596,16 +34596,18 @@
                     return null;
                 }
 
-                const formData = new FormData();
-                formData.append('file', file, file.name);
-
                 try {
-                    // Upload to worker's /api/upload which stores in KV and returns a public URL
+                    // Upload to worker's /api/upload - send raw body with metadata in headers
                     const uploadUrl = WORKER_URL.replace(/api\/$/, 'api/upload');
-                    console.log('Uploading file to:', uploadUrl);
+                    console.log('Uploading file to:', uploadUrl, 'size:', file.size);
                     const response = await fetch(uploadUrl, {
                         method: 'POST',
-                        body: formData
+                        headers: {
+                            'X-File-Name': encodeURIComponent(file.name),
+                            'X-Content-Type': file.type || 'application/octet-stream',
+                            'X-File-Size': String(file.size),
+                        },
+                        body: file
                     });
 
                     if (!response.ok) {
