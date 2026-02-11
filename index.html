@@ -26939,17 +26939,17 @@
                         break;
                     case 'recent':
                         // Sort by zugeleigt (added date) - most recent first
-                        // If zugeleigt is empty, put at the end
+                        // Fallback to id (higher id = newer) when zugeleigt is not available
                         filteredSongs.sort((a, b) => {
                             const dateA = a.zugeleigt || '';
                             const dateB = b.zugeleigt || '';
-                            // Empty dates go to the end
-                            if (!dateA && !dateB) return (a.name || '').localeCompare(b.name || '', 'he');
-                            if (!dateA) return 1;
-                            if (!dateB) return -1;
-                            // Compare dates (assuming format is consistent and comparable as strings)
-                            // Reverse order for most recent first
-                            return dateB.localeCompare(dateA);
+                            if (dateA || dateB) {
+                                if (!dateA) return 1;
+                                if (!dateB) return -1;
+                                return dateB.localeCompare(dateA);
+                            }
+                            // No zugeleigt on either - sort by id descending (higher id = newer)
+                            return (parseInt(b.id) || 0) - (parseInt(a.id) || 0);
                         });
                         break;
                     case 'random':
@@ -26997,10 +26997,12 @@
                         sorted.sort((a, b) => {
                             const dateA = a.zugeleigt || '';
                             const dateB = b.zugeleigt || '';
-                            if (!dateA && !dateB) return (a.name || '').localeCompare(b.name || '', 'he');
-                            if (!dateA) return 1;
-                            if (!dateB) return -1;
-                            return dateB.localeCompare(dateA);
+                            if (dateA || dateB) {
+                                if (!dateA) return 1;
+                                if (!dateB) return -1;
+                                return dateB.localeCompare(dateA);
+                            }
+                            return (parseInt(b.id) || 0) - (parseInt(a.id) || 0);
                         });
                         break;
                     case 'random':
