@@ -17053,7 +17053,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 99999;
+            z-index: 9999;
+            /* Base z-index, dynamically overridden when opened */
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
@@ -17148,6 +17149,52 @@
             margin-top: 8px;
             text-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
             letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: opacity 0.2s ease;
+        }
+
+        .addinfo-modal-song-name:hover {
+            opacity: 0.8;
+        }
+
+        /* Nigun selector in modal header (when no nigun pre-selected) */
+        .modal-nigun-selector {
+            margin-top: 8px;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .modal-nigun-selector .addinfo-autocomplete-input {
+            background: rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-align: center;
+            border-radius: 20px;
+            padding: 10px 20px;
+        }
+
+        .modal-nigun-selector .addinfo-autocomplete-input::placeholder {
+            color: var(--color-nigun);
+            opacity: 0.6;
+        }
+
+        .modal-nigun-selector .addinfo-autocomplete-input:focus {
+            background: rgba(255, 255, 255, 0.25);
+            border-color: rgba(255, 255, 255, 0.5);
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.15);
+        }
+
+        .modal-nigun-selector .addinfo-autocomplete-dropdown {
+            background: white;
+            color: var(--text-dark);
+            text-align: right;
+        }
+
+        .modal-nigun-selector .addinfo-selected-tags {
+            justify-content: center;
         }
 
         /* Add Nigun Name Input - styled like song name header */
@@ -18026,6 +18073,16 @@
             color: white;
             direction: rtl;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .addinfo-selected-tag .tag-text {
+            cursor: pointer;
+            transition: opacity 0.15s;
+        }
+
+        .addinfo-selected-tag .tag-text:hover {
+            opacity: 0.8;
+            text-decoration: underline;
         }
 
         /* Category-specific colors for selected tags */
@@ -21139,7 +21196,16 @@
                     <button class="addinfo-modal-toggle-btn" data-panel="report"
                         onclick="switchModalPanel('report')">רעפארט א פראבלעם</button>
                 </div>
-                <div class="addinfo-modal-song-name" id="addinfoSongName"></div>
+                <div class="addinfo-modal-song-name" id="addinfoSongName" onclick="openNigunFromAddInfoModal()"></div>
+                <!-- Nigun Selector (when no nigun pre-selected) -->
+                <div class="modal-nigun-selector" id="modalNigunSelector" style="display: none;">
+                    <div class="addinfo-autocomplete-wrapper" data-source="nigunim" data-multi="false">
+                        <input type="text" class="addinfo-autocomplete-input" id="modal-nigun-search"
+                            placeholder="וועל אויס א ניגון צוצולייגן די אינפארמאציע" autocomplete="off">
+                        <div class="addinfo-autocomplete-dropdown"></div>
+                        <div class="addinfo-selected-tags" id="modal-nigun-search-tags"></div>
+                    </div>
+                </div>
                 <!-- Nigun Name Input in header (only for Add Nigun panel) -->
                 <div class="addnigun-name-header-wrapper" id="addnigunNameHeader" style="display: none;">
                     <input type="text" id="addnigun-name" class="addnigun-name-input" placeholder="נאמען פונעם ניגון"
@@ -24891,9 +24957,8 @@
 
                     <div class="info-page-content contribute-content">
                         <!-- Main Nigun Button -->
-                        <a href="https://coda.io/form/_deegJpdfVC5" class="contribute-main-btn contribute-btn-main-gradient" target="_blank" rel="noopener">
+                        <a class="contribute-main-btn contribute-btn-main-gradient" onclick="openAddInfoModalFromContribute()" style="cursor:pointer;">
                             <span class="contribute-main-text">לייג צו / אפדעיט א <strong>ניגון</strong></span>
-                            <span class="btn-external">↗</span>
                         </a>
 
                         <!-- Category Buttons Grid -->
@@ -33972,6 +34037,10 @@
                 const wrappers = document.querySelectorAll('.addinfo-autocomplete-wrapper');
 
                 wrappers.forEach(wrapper => {
+                    // Skip wrappers that already have event listeners set up
+                    if (wrapper.dataset.autocompleteSetup === 'true') return;
+                    wrapper.dataset.autocompleteSetup = 'true';
+
                     const input = wrapper.querySelector('.addinfo-autocomplete-input');
                     const dropdown = wrapper.querySelector('.addinfo-autocomplete-dropdown');
                     const tagsContainer = wrapper.querySelector('.addinfo-selected-tags');
@@ -34006,8 +34075,8 @@
                     // For single-select: clicking on tags container allows re-selection
                     // For all: clicking on wrapper (empty space) focuses input
                     wrapper.addEventListener('click', (e) => {
-                        // Don't trigger if clicking the X button or input itself
-                        if (e.target.tagName === 'BUTTON' || e.target === input) return;
+                        // Don't trigger if clicking the X button, tag text, or input itself
+                        if (e.target.closest('button') || e.target.closest('.tag-text') || e.target === input) return;
 
                         // Focus the input and show dropdown
                         input.focus();
@@ -34172,6 +34241,11 @@
                 renderAddinfoTags(tagsContainer, fieldId, source);
                 input.value = '';
 
+                // If this is the modal nigun selector, update the song context
+                if (fieldId === 'modal-nigun-search') {
+                    handleModalNigunSelection(value, rowId || value);
+                }
+
                 // Only close dropdown for single-select, keep open for multi-select
                 if (!isMulti) {
                     dropdown.classList.remove('active');
@@ -34204,9 +34278,29 @@
                     const displayValue = (source === 'nigunim' && nigunNameByRowId[value])
                         ? nigunNameByRowId[value]
                         : value;
+                    // Map source to detail modal type
+                    const detailTypeMap = {
+                        'nigunim': 'nigunim',
+                        'mechabrim': 'mechabrim',
+                        'chatzeros': 'chatzeros',
+                        'verter': 'verter',
+                        'piyutim': 'piyutim',
+                        'collections': 'collections',
+                        'documents': 'documents',
+                        'albums': 'albums'
+                    };
+                    const detailType = detailTypeMap[source];
+                    const escapedDisplay = displayValue.replace(/'/g, "\\'");
+                    const escapedValue = value.replace(/'/g, "\\'");
+                    let tagTextOnclick = '';
+                    if (detailType === 'nigunim') {
+                        tagTextOnclick = `onclick="event.stopPropagation(); openNigunModalByName('${escapedDisplay}')"`;
+                    } else if (detailType) {
+                        tagTextOnclick = `onclick="event.stopPropagation(); openDetailModal('${detailType}', '${escapedDisplay}')"`;
+                    }
                     return `<span class="addinfo-selected-tag source-${source}">
-                    ${displayValue}
-                    <button type="button" onclick="removeAddinfoTag('${fieldId}', '${value.replace(/'/g, "\\'")}', '${source}')">×</button>
+                    <span class="tag-text" ${tagTextOnclick}>${displayValue}</span>
+                    <button type="button" onmousedown="event.preventDefault(); event.stopPropagation();" onclick="event.preventDefault(); event.stopPropagation(); removeAddinfoTag('${fieldId}', '${escapedValue}', '${source}')">×</button>
                 </span>`;
                 }).join('');
             }
@@ -34217,6 +34311,18 @@
                     addinfoSelectedValues[fieldId] = addinfoSelectedValues[fieldId].filter(v => v !== value);
                     const tagsContainer = document.getElementById(fieldId + '-tags');
                     renderAddinfoTags(tagsContainer, fieldId, source);
+
+                    // If removing the nigun from the modal selector, restore the selector UI
+                    if (fieldId === 'modal-nigun-search' && addinfoSelectedValues[fieldId].length === 0) {
+                        currentAddInfoSongName = '';
+                        currentAddInfoSongId = '';
+                        currentReportSongName = '';
+                        currentReportSongId = '';
+                        const songNameEl = document.getElementById('addinfoSongName');
+                        songNameEl.textContent = '';
+                        songNameEl.style.display = 'none';
+                        document.getElementById('modalNigunSelector').style.display = 'block';
+                    }
                 }
             }
 
@@ -34248,8 +34354,24 @@
                 currentReportSongName = songName;
                 currentReportSongId = songCustomId;
 
-                // Update modal with song name
-                document.getElementById('addinfoSongName').textContent = songName || 'ניגון';
+                // Update modal with song name and show/hide nigun selector
+                const songNameEl = document.getElementById('addinfoSongName');
+                const nigunSelector = document.getElementById('modalNigunSelector');
+                if (songName) {
+                    songNameEl.textContent = songName;
+                    songNameEl.style.display = '';
+                    nigunSelector.style.display = 'none';
+                } else {
+                    songNameEl.textContent = '';
+                    songNameEl.style.display = 'none';
+                    nigunSelector.style.display = 'block';
+                    // Reset nigun selector
+                    const nigunInput = document.getElementById('modal-nigun-search');
+                    if (nigunInput) nigunInput.value = '';
+                    addinfoSelectedValues['modal-nigun-search'] = [];
+                    const nigunTags = document.getElementById('modal-nigun-search-tags');
+                    if (nigunTags) nigunTags.innerHTML = '';
+                }
 
                 // Reset form
                 resetAddInfoForm();
@@ -34257,6 +34379,8 @@
                 // Switch to add info panel and show modal
                 switchModalPanel('addinfo');
                 document.getElementById('addinfoModalOverlay').classList.add('active');
+                // Use dynamic z-index so addinfo modal stacks properly with other modals
+                document.getElementById('addinfoModalOverlay').style.zIndex = modalZIndexCounter++;
                 document.body.style.overflow = 'hidden';
 
                 // Load all required data if not already loaded
@@ -34301,6 +34425,140 @@
 
                 // Setup autocomplete handlers
                 setupAddinfoAutocomplete();
+            }
+
+            // Open addinfo modal from contribute page (no nigun context)
+            async function openAddInfoModalFromContribute() {
+                // Clear any existing nigun context
+                currentNigunModalIdx = null;
+                window.currentDetailPageSongIdx = undefined;
+                // Don't clear currentSongIndex as that relates to the player
+                // But we need to signal that we want no song pre-selected
+                const savedSongIndex = currentSongIndex;
+                currentSongIndex = null;
+                await openAddInfoModal();
+                currentSongIndex = savedSongIndex;
+                // Default to Add Nigun panel when opening from contribute page
+                switchModalPanel('addnigun');
+            }
+
+            // Open nigun modal from the song name in the addinfo header
+            function openNigunFromAddInfoModal() {
+                const songName = document.getElementById('addinfoSongName').textContent;
+                if (!songName) return;
+                openNigunModalByName(songName);
+            }
+
+            // Open nigun modal by name
+            function openNigunModalByName(name) {
+                const idx = allSongs.findIndex(s => s.name === name);
+                if (idx !== -1) {
+                    openNigunModal(idx, allSongs[idx]);
+                }
+            }
+
+            // Setup the nigun selector autocomplete in the modal header
+            function setupModalNigunSelector() {
+                const wrapper = document.querySelector('#modalNigunSelector .addinfo-autocomplete-wrapper');
+                if (!wrapper) return;
+
+                const input = wrapper.querySelector('.addinfo-autocomplete-input');
+                const dropdown = wrapper.querySelector('.addinfo-autocomplete-dropdown');
+                const fieldId = 'modal-nigun-search';
+                const source = 'nigunim';
+                const isMulti = false;
+
+                if (!addinfoSelectedValues[fieldId]) {
+                    addinfoSelectedValues[fieldId] = [];
+                }
+
+                // Clone to remove old listeners
+                const newInput = input.cloneNode(true);
+                input.parentNode.replaceChild(newInput, input);
+
+                newInput.addEventListener('input', () => {
+                    const query = newInput.value.trim().toLowerCase();
+                    showAddinfoDropdown(wrapper, source, query, isMulti, fieldId);
+                });
+
+                newInput.addEventListener('focus', () => {
+                    const query = newInput.value.trim().toLowerCase();
+                    showAddinfoDropdown(wrapper, source, query, isMulti, fieldId);
+                });
+
+                newInput.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        dropdown.classList.remove('active');
+                    }, 200);
+                });
+
+                newInput.addEventListener('keydown', (e) => {
+                    const items = dropdown.querySelectorAll('.addinfo-autocomplete-item');
+                    const highlighted = dropdown.querySelector('.addinfo-autocomplete-item.highlighted');
+
+                    if (e.key === 'ArrowDown') {
+                        e.preventDefault();
+                        if (!highlighted && items.length > 0) {
+                            items[0].classList.add('highlighted');
+                        } else if (highlighted && highlighted.nextElementSibling) {
+                            highlighted.classList.remove('highlighted');
+                            highlighted.nextElementSibling.classList.add('highlighted');
+                        }
+                    } else if (e.key === 'ArrowUp') {
+                        e.preventDefault();
+                        if (highlighted && highlighted.previousElementSibling) {
+                            highlighted.classList.remove('highlighted');
+                            highlighted.previousElementSibling.classList.add('highlighted');
+                        }
+                    } else if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (highlighted) {
+                            handleModalNigunSelection(highlighted.textContent, highlighted.dataset.rowid);
+                        }
+                    } else if (e.key === 'Escape') {
+                        dropdown.classList.remove('active');
+                        newInput.blur();
+                    }
+                });
+
+                // Override click handler for dropdown items
+                const origShowDropdown = showAddinfoDropdown;
+                // We'll use a MutationObserver to catch new dropdown items
+                const observer = new MutationObserver(() => {
+                    dropdown.querySelectorAll('.addinfo-autocomplete-item').forEach(item => {
+                        item.onclick = () => {
+                            handleModalNigunSelection(item.textContent, item.dataset.rowid);
+                        };
+                    });
+                });
+                observer.observe(dropdown, { childList: true });
+            }
+
+            // Handle when a nigun is selected from the modal header selector
+            function handleModalNigunSelection(name, rowId) {
+                const song = allSongs.find(s => s.name === name || s.rowId === rowId);
+                if (!song) return;
+
+                const idx = allSongs.indexOf(song);
+
+                // Update the song name display and IDs
+                currentAddInfoSongName = song.name;
+                currentAddInfoSongId = song.rowId || '';
+                currentReportSongName = song.name;
+                currentReportSongId = song.customId || '';
+
+                const songNameEl = document.getElementById('addinfoSongName');
+                songNameEl.textContent = song.name;
+                songNameEl.style.display = '';
+
+                // Hide the nigun selector
+                document.getElementById('modalNigunSelector').style.display = 'none';
+
+                // Clear the selector input
+                const nigunInput = document.getElementById('modal-nigun-search');
+                if (nigunInput) nigunInput.value = '';
+                const dropdown = document.querySelector('#modalNigunSelector .addinfo-autocomplete-dropdown');
+                if (dropdown) dropdown.classList.remove('active');
             }
 
             // Close add info modal
@@ -35186,9 +35444,24 @@
                 currentReportSongName = songName;
                 currentReportSongId = songId;
 
-                // Use the combined modal - update song name
+                // Use the combined modal - update song name and show/hide nigun selector
                 const songNameEl = document.getElementById('addinfoSongName');
-                songNameEl.textContent = songName || 'אומבאקאנט';
+                const nigunSelector = document.getElementById('modalNigunSelector');
+                if (songName) {
+                    songNameEl.textContent = songName;
+                    songNameEl.style.display = '';
+                    nigunSelector.style.display = 'none';
+                } else {
+                    songNameEl.textContent = '';
+                    songNameEl.style.display = 'none';
+                    nigunSelector.style.display = 'block';
+                    // Reset nigun selector
+                    const nigunInput = document.getElementById('modal-nigun-search');
+                    if (nigunInput) nigunInput.value = '';
+                    addinfoSelectedValues['modal-nigun-search'] = [];
+                    const nigunTags = document.getElementById('modal-nigun-search-tags');
+                    if (nigunTags) nigunTags.innerHTML = '';
+                }
 
                 // Reset report form
                 document.getElementById('reportCategory').value = '';
@@ -35205,6 +35478,8 @@
                 // Switch to report panel and show modal
                 switchModalPanel('report');
                 document.getElementById('addinfoModalOverlay').classList.add('active');
+                // Use dynamic z-index so report modal stacks properly with other modals
+                document.getElementById('addinfoModalOverlay').style.zIndex = modalZIndexCounter++;
             }
 
             // Close report modal (uses combined modal)
@@ -35334,13 +35609,23 @@
                     btn.classList.toggle('active', btn.dataset.panel === panelName);
                 });
 
-                // Show/hide song name vs nigun input in header
+                // Show/hide song name vs nigun input/selector in header
+                const nigunSelector = document.getElementById('modalNigunSelector');
                 if (panelName === 'addnigun') {
                     songNameEl.style.display = 'none';
                     nigunNameHeader.style.display = 'block';
+                    nigunSelector.style.display = 'none';
                 } else {
-                    songNameEl.style.display = '';
                     nigunNameHeader.style.display = 'none';
+                    // Show song name if a nigun is selected, otherwise show the selector
+                    const hasSong = songNameEl.textContent && songNameEl.textContent.trim();
+                    if (hasSong) {
+                        songNameEl.style.display = '';
+                        nigunSelector.style.display = 'none';
+                    } else {
+                        songNameEl.style.display = 'none';
+                        nigunSelector.style.display = 'block';
+                    }
                 }
 
                 // If same panel, do nothing
