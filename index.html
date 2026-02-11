@@ -1599,6 +1599,20 @@
             max-width: 100%;
         }
 
+        .modal-hero-text {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .modal-hero-subtitle {
+            font-size: 0.9em;
+            color: rgba(255, 255, 255, 0.85);
+            text-align: center;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+        }
+
         .modal-hero-dates {
             font-size: 0.85em;
             color: rgba(255, 255, 255, 0.8);
@@ -35660,6 +35674,8 @@
                 let mechaberFullName = name;
                 let mechaberLifeDates = '';
                 let chatzerBadgesHTML = '';
+                let heroBadgesHTML = '';
+                let heroSubtitleHTML = '';
 
                 if (type === 'mechabrim') {
                     const { key: mechaberKey, info } = findEntityByNameOrId(mechabrimInfo, name);
@@ -35725,6 +35741,73 @@
                     }
                 }
 
+                // Albums hero: cover image, producer, chatzer, year
+                if (type === 'albums') {
+                    const { key: albumKey, info } = findEntityByNameOrId(albumsInfo, name);
+                    const coverUrl = info.cover || info.image;
+                    if (coverUrl) {
+                        profileImageHTML = `
+                        <div class="modal-hero-avatar">
+                            <img src="${coverUrl}" alt="${name}">
+                        </div>`;
+                    }
+                    const metaParts = [];
+                    const producer = info.producer?.replace(/\`\`\`/g, '') || '';
+                    if (producer) metaParts.push(producer);
+                    if (info.year) metaParts.push(`שנת ${info.year}`);
+                    if (metaParts.length > 0) {
+                        heroSubtitleHTML = `<div class="modal-hero-subtitle">${metaParts.join(' • ')}</div>`;
+                    }
+                    if (info.chatzer) {
+                        chatzerBadgesHTML = `
+                        <div class="modal-hero-badges">
+                            <span class="detail-chatzer-badge"
+                                  data-action="detail"
+                                  data-category="chatzeros"
+                                  data-name="${escapeHtml(info.chatzer)}"
+                                  style="cursor:pointer;">${info.chatzer}</span>
+                        </div>`;
+                    }
+                }
+
+                // Documents hero: sort type, chatzer
+                if (type === 'documents') {
+                    const { key: docKey, info } = findEntityByNameOrId(documentsInfo, name);
+                    const sortType = (info.allData?.['סארט'] || info.sort || '').replace(/\`\`\`/g, '');
+                    const metaParts = [];
+                    if (sortType) metaParts.push(sortType);
+                    if (info.serie) metaParts.push(info.serie.replace(/\`\`\`/g, ''));
+                    if (metaParts.length > 0) {
+                        heroSubtitleHTML = `<div class="modal-hero-subtitle">${metaParts.join(' • ')}</div>`;
+                    }
+                    if (info.chatzer) {
+                        chatzerBadgesHTML = `
+                        <div class="modal-hero-badges">
+                            <span class="detail-chatzer-badge"
+                                  data-action="detail"
+                                  data-category="chatzeros"
+                                  data-name="${escapeHtml(info.chatzer)}"
+                                  style="cursor:pointer;">${info.chatzer}</span>
+                        </div>`;
+                    }
+                }
+
+                // Collections hero: zmanim badges
+                if (type === 'collections') {
+                    const { key: colKey, info } = findEntityByNameOrId(collectionsInfo, name);
+                    if (info.zmanim && info.zmanim.length > 0) {
+                        heroBadgesHTML = `
+                        <div class="modal-hero-badges">
+                            ${info.zmanim.map(zman => `
+                                <span class="detail-zman-badge"
+                                      data-action="zman-detail"
+                                      data-name="${escapeHtml(zman)}"
+                                      style="cursor:pointer;">${zman}</span>
+                            `).join('')}
+                        </div>`;
+                    }
+                }
+
                 // Generate hero header with play-all button
                 const playAllBtnHTML = ['mechabrim', 'chatzeros', 'verter', 'piyutim', 'collections'].includes(type) ? `
                 <button class="play-all-btn" title="שפיל אלע" onclick="event.stopPropagation(); playAllFromDetailPage('${type}', '${escapeHtml(name).replace(/'/g, "\\'")}')" data-detail-type="${type}" data-detail-name="${escapeHtml(name)}">
@@ -35743,9 +35826,12 @@
                             ${mechaberLifeDates ? `<div class="modal-hero-dates">${mechaberLifeDates}</div>` : ''}
                         </div>
                         ` : ''}
-                        <h1 class="modal-hero-title">${type === 'mechabrim' ? mechaberFullName : name}</h1>
+                        <div class="modal-hero-text">
+                            <h1 class="modal-hero-title">${type === 'mechabrim' ? mechaberFullName : name}</h1>
+                            ${heroSubtitleHTML}
+                        </div>
                     </div>
-                    ${chatzerBadgesHTML ? `<div class="modal-hero-border-badges">${chatzerBadgesHTML}</div>` : ''}
+                    ${(chatzerBadgesHTML || heroBadgesHTML) ? `<div class="modal-hero-border-badges">${chatzerBadgesHTML}${heroBadgesHTML}</div>` : ''}
                 </div>
             `;
 
@@ -37175,7 +37261,7 @@
                     const { songIdx } = currentPlayingRecordingInfo;
                     const song = allSongs[songIdx];
                     if (song) {
-                        headerHtml += `<div style="color: var(--color-nigun); font-weight: 800; margin-bottom: 4px;">${song.name || 'ניגון'}</div>`;
+                        headerHtml += `<div style="color: var(--color-nigun); font-weight: 800; margin-bottom: 4px;">${formatDescription(song.name) || 'ניגון'}</div>`;
                     }
                 }
                 headerHtml += 'רעיט די אודיאו קוואליטעט</div>';
