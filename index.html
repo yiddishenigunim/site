@@ -34418,7 +34418,37 @@
                 return results.filter(result => result !== null);
             }
 
-            // Submit add info to Coda table
+            // Upload a file from a URL (Google Drive/Dropbox link) via worker proxy
+            async function uploadFromUrl(linkUrl) {
+                if (!linkUrl) return null;
+
+                try {
+                    const uploadUrl = WORKER_URL.replace(/api\/$/, 'api/upload-from-url');
+                    console.log('Uploading from URL:', linkUrl);
+                    const response = await fetch(uploadUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ url: linkUrl })
+                    });
+
+                    if (!response.ok) {
+                        const errorData = await response.json().catch(() => ({}));
+                        console.error('Upload from URL failed:', response.status, errorData);
+                        alert(errorData.error || 'עס איז נישט געלונגען אראפצולאדן דעם פייל פון דעם לינק.');
+                        return null;
+                    }
+
+                    const result = await response.json();
+                    console.log('File uploaded from URL:', result);
+                    return result;
+                } catch (error) {
+                    console.error('Upload from URL error:', error);
+                    alert('עס איז געווען א פראבלעם מיטן אראפלאדן פון דעם לינק.');
+                    return null;
+                }
+            }
+
+
             const ADDINFO_TABLE_ID = 'grid-LutCbIuQvQ';
 
             async function submitAddInfo() {
@@ -34511,8 +34541,8 @@
                 let uploadedAudioUrl = '';
                 let uploadedOtherFilesUrls = [];
 
-                // Show uploading state if there are files to upload
-                const hasFilesToUpload = formData.audioFile || (formData.otherFiles && formData.otherFiles.length > 0);
+                // Show uploading state if there are files or links to upload
+                const hasFilesToUpload = formData.audioFile || formData.audioLink || (formData.otherFiles && formData.otherFiles.length > 0) || formData.otherFilesLink;
                 if (hasFilesToUpload && submitBtn) {
                     submitBtn.innerHTML = 'אפלאודינג<span class="btn-spinner"></span>';
                     submitBtn.classList.add('loading');
@@ -34526,8 +34556,12 @@
                         console.log('Audio file uploaded, blobId:', uploadedAudioUrl);
                     }
                 } else if (formData.audioLink) {
-                    uploadedAudioUrl = formData.audioLink;
-                    console.log('Using audio link:', uploadedAudioUrl);
+                    // Proxy-download from link to avoid Coda HTML rejection
+                    const audioResult = await uploadFromUrl(formData.audioLink);
+                    if (audioResult && audioResult.success) {
+                        uploadedAudioUrl = audioResult.blobId;
+                        console.log('Audio from link uploaded, blobId:', uploadedAudioUrl);
+                    }
                 }
 
                 if (formData.otherFiles && formData.otherFiles.length > 0) {
@@ -34535,8 +34569,12 @@
                     uploadedOtherFilesUrls = otherResults.map(r => r.blobId);
                     console.log('Other files uploaded, blobIds:', uploadedOtherFilesUrls);
                 } else if (formData.otherFilesLink) {
-                    uploadedOtherFilesUrls = [formData.otherFilesLink];
-                    console.log('Using other files link:', formData.otherFilesLink);
+                    // Proxy-download from link to avoid Coda HTML rejection
+                    const otherResult = await uploadFromUrl(formData.otherFilesLink);
+                    if (otherResult && otherResult.success) {
+                        uploadedOtherFilesUrls = [otherResult.blobId];
+                        console.log('Other files from link uploaded, blobIds:', uploadedOtherFilesUrls);
+                    }
                 }
 
 
@@ -34770,8 +34808,8 @@
                 let uploadedAudioUrl = '';
                 let uploadedOtherFilesUrls = [];
 
-                // Show uploading state if there are files to upload
-                const hasFilesToUpload = formData.audioFile || (formData.otherFiles && formData.otherFiles.length > 0);
+                // Show uploading state if there are files or links to upload
+                const hasFilesToUpload = formData.audioFile || formData.audioLink || (formData.otherFiles && formData.otherFiles.length > 0) || formData.otherFilesLink;
                 if (hasFilesToUpload && submitBtn) {
                     submitBtn.innerHTML = 'אפלאודינג<span class="btn-spinner"></span>';
                     submitBtn.classList.add('loading');
@@ -34785,8 +34823,12 @@
                         console.log('Audio file uploaded, blobId:', uploadedAudioUrl);
                     }
                 } else if (formData.audioLink) {
-                    uploadedAudioUrl = formData.audioLink;
-                    console.log('Using audio link:', uploadedAudioUrl);
+                    // Proxy-download from link to avoid Coda HTML rejection
+                    const audioResult = await uploadFromUrl(formData.audioLink);
+                    if (audioResult && audioResult.success) {
+                        uploadedAudioUrl = audioResult.blobId;
+                        console.log('Audio from link uploaded, blobId:', uploadedAudioUrl);
+                    }
                 }
 
                 if (formData.otherFiles && formData.otherFiles.length > 0) {
@@ -34794,8 +34836,12 @@
                     uploadedOtherFilesUrls = otherResults.map(r => r.blobId);
                     console.log('Other files uploaded, blobIds:', uploadedOtherFilesUrls);
                 } else if (formData.otherFilesLink) {
-                    uploadedOtherFilesUrls = [formData.otherFilesLink];
-                    console.log('Using other files link:', formData.otherFilesLink);
+                    // Proxy-download from link to avoid Coda HTML rejection
+                    const otherResult = await uploadFromUrl(formData.otherFilesLink);
+                    if (otherResult && otherResult.success) {
+                        uploadedOtherFilesUrls = [otherResult.blobId];
+                        console.log('Other files from link uploaded, blobIds:', uploadedOtherFilesUrls);
+                    }
                 }
 
                 // Helper to convert a name to row ID using info objects
