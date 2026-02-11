@@ -34584,8 +34584,8 @@
             // Initialize file input handlers when modal opens
             document.addEventListener('DOMContentLoaded', setupFileInputHandlers);
 
-            // Upload file to R2 storage via worker endpoint
-            async function uploadFileToR2(file, retryCount = 0) {
+            // Upload file to KV storage via worker endpoint
+            async function uploadFileToR2(file) {
                 if (!file) return null;
 
                 // Check file size (max 100MB)
@@ -34600,10 +34600,9 @@
                 formData.append('file', file, file.name);
 
                 try {
-                    // Upload to worker's /api/upload which stores in R2 and returns a public URL
+                    // Upload to worker's /api/upload which stores in KV and returns a public URL
                     const uploadUrl = WORKER_URL.replace(/api\/$/, 'api/upload');
                     console.log('Uploading file to:', uploadUrl);
-
                     const response = await fetch(uploadUrl, {
                         method: 'POST',
                         body: formData
@@ -34612,15 +34611,6 @@
                     if (!response.ok) {
                         const errorText = await response.text();
                         console.error('File upload failed:', response.status, errorText);
-
-                        // Retry on 502/503/timeout errors (up to 3 attempts)
-                        if ((response.status === 502 || response.status === 503) && retryCount < 2) {
-                            const delay = Math.pow(2, retryCount) * 1000; // 1s, 2s
-                            console.log(`Retrying upload in ${delay}ms (attempt ${retryCount + 2}/3)...`);
-                            await new Promise(resolve => setTimeout(resolve, delay));
-                            return uploadFileToR2(file, retryCount + 1);
-                        }
-
                         return null;
                     }
 
@@ -34630,15 +34620,6 @@
                     return result;
                 } catch (error) {
                     console.error('File upload error:', error);
-
-                    // Retry on network errors (up to 3 attempts)
-                    if (retryCount < 2) {
-                        const delay = Math.pow(2, retryCount) * 1000; // 1s, 2s
-                        console.log(`Retrying upload in ${delay}ms (attempt ${retryCount + 2}/3)...`);
-                        await new Promise(resolve => setTimeout(resolve, delay));
-                        return uploadFileToR2(file, retryCount + 1);
-                    }
-
                     return null;
                 }
             }
@@ -34835,11 +34816,11 @@
                     // c-c-aKWszo9F: הערות / מער אינפארמאציע (text)
                     { column: 'c-c-aKWszo9F', value: formData.notes || '' },
 
-                    // c-6N7DQIohAK: אודיאו פייל URL
-                    { column: 'c-6N7DQIohAK', value: uploadedAudioUrl },
+                    // c-6N7DQIohAK: אודיאו פייל URL (attachment - must be array)
+                    { column: 'c-6N7DQIohAK', value: uploadedAudioUrl ? [uploadedAudioUrl] : '' },
 
-                    // c-EEhnRJ4fQT: אנדערע פיילס URLs
-                    { column: 'c-EEhnRJ4fQT', value: uploadedOtherFilesUrls.join(', ') }
+                    // c-EEhnRJ4fQT: אנדערע פיילס URLs (attachment - must be array)
+                    { column: 'c-EEhnRJ4fQT', value: uploadedOtherFilesUrls.length > 0 ? uploadedOtherFilesUrls : '' }
                 ];
 
                 // Filter out empty values to avoid sending unnecessary data
@@ -35102,11 +35083,11 @@
                     // c-c-aKWszo9F: הערות / מער אינפארמאציע (text)
                     { column: 'c-c-aKWszo9F', value: formData.notes || '' },
 
-                    // c-6N7DQIohAK: אודיאו פייל URL
-                    { column: 'c-6N7DQIohAK', value: uploadedAudioUrl },
+                    // c-6N7DQIohAK: אודיאו פייל URL (attachment - must be array)
+                    { column: 'c-6N7DQIohAK', value: uploadedAudioUrl ? [uploadedAudioUrl] : '' },
 
-                    // c-EEhnRJ4fQT: אנדערע פיילס URLs
-                    { column: 'c-EEhnRJ4fQT', value: uploadedOtherFilesUrls.join(', ') }
+                    // c-EEhnRJ4fQT: אנדערע פיילס URLs (attachment - must be array)
+                    { column: 'c-EEhnRJ4fQT', value: uploadedOtherFilesUrls.length > 0 ? uploadedOtherFilesUrls : '' }
                 ];
 
                 // Filter out empty values
