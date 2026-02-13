@@ -26938,18 +26938,9 @@
                         filteredSongs.sort((a, b) => (a.name || '').localeCompare(b.name || '', 'he'));
                         break;
                     case 'recent':
-                        // Sort by zugeleigt (added date) - most recent first
-                        // Fallback to id (higher id = newer) when zugeleigt is not available
+                        // Sort by customId descending (higher id = newer)
                         filteredSongs.sort((a, b) => {
-                            const dateA = a.zugeleigt || '';
-                            const dateB = b.zugeleigt || '';
-                            if (dateA || dateB) {
-                                if (!dateA) return 1;
-                                if (!dateB) return -1;
-                                return dateB.localeCompare(dateA);
-                            }
-                            // No zugeleigt on either - sort by id descending (higher id = newer)
-                            return (parseInt(b.id) || 0) - (parseInt(a.id) || 0);
+                            return (parseInt(b.customId) || 0) - (parseInt(a.customId) || 0);
                         });
                         break;
                     case 'random':
@@ -26995,14 +26986,7 @@
                         break;
                     case 'recent':
                         sorted.sort((a, b) => {
-                            const dateA = a.zugeleigt || '';
-                            const dateB = b.zugeleigt || '';
-                            if (dateA || dateB) {
-                                if (!dateA) return 1;
-                                if (!dateB) return -1;
-                                return dateB.localeCompare(dateA);
-                            }
-                            return (parseInt(b.id) || 0) - (parseInt(a.id) || 0);
+                            return (parseInt(b.customId) || 0) - (parseInt(a.customId) || 0);
                         });
                         break;
                     case 'random':
